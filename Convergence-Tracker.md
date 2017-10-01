@@ -1,6 +1,8 @@
 # K-point convergence tracker (Materials)
 
-## Overview
+> Ideal candidate: skilled DFT modeler proficient in python.
+
+# Overview
 
 The aim of this task is to create a python package that implements automatic convergence tracking mechanism for a materials simulations engine. The convergence is tracked with respect to the k-point sampling inside a reciprocal cell of a crystalline compound.
 
@@ -23,10 +25,13 @@ The aim of this task is to create a python package that implements automatic con
 # User story
 
 As a user of this software I can start it passing:
+
 - path to input data (eg. pw.in / POSCAR, INCAR, KPOINTS) and
 - kinetic energy cutoff
+
 as parameters and get the k-point dimensions (eg. 5 5 5).
 
 # Notes
+
 - create an account at exabyte.io and use it for the calculation purposes
 - suggested modeling engine: Quantum ESPRESSO

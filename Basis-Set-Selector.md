@@ -26,9 +26,11 @@ The aim of this task is to create a simple python package that implements automa
 # User story
 
 As a user of this software I can start it passing:
+
 - molecular structure
 - reference datapoint
 - tolerance (precision)
+
 as parameters and get the basis set that satisfies the tolerance criterion.
 
 # Notes
