@@ -4,7 +4,7 @@ REal WOrld TEstS
 
 # Overview
 
-This repository contains examples test assignments used to screen the applicants willing to join Exabyte.io.
+This repository contains example test assignments used to screen the applicants joining Exabyte.io.
 
 We found that the regular job interview questions can often mislead the process and therefore use a more engaged "real-world" examples instead.
 
