@@ -26,4 +26,4 @@ Create a python application that uploads a set of given files to a cloud object 
 
 # Notes
 
-We can provide temporary credentials to access AWS/Azure.
+- we can provide temporary credentials to access AWS/Azure.
