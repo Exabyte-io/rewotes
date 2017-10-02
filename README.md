@@ -1,12 +1,12 @@
-# rewotes
+# ReWoTes
 
 REal WOrld TEstS
 
 # Overview
 
-This repository contains example test assignments used to screen the applicants.
+This repository contains example test assignments used during our hiring process.
 
-We found that regular job interview questions can often mislead the process and therefore use more engaged "real-world" examples instead.
+We find that regular job interview questions can often be misleading and so use more engaged "real-world" examples instead.
 
 # Notes
 
@@ -14,6 +14,24 @@ These examples are only meant as guidelines and do not reflect on the type of wo
 
 Modifications to the individual assignments with an advance notice are encouraged.
 
+# Hiring process
+
+Our hiring process in more details:
+
+| Stage             | Target Duration   | Topic                          |
+| ----------------- | ----------------- | ------------------------------ |
+| 0. Email screen   |                   | why exabyte.io                 |
+| 1. Phone screen   | 15-20 min         | career goals, basic skillset   |
+| 2. ReWoTe         | 1-2h x 2-5 days   | real-world work/thought process|
+| 3. On-site meet   | 3-4 x 30 min      | personality fit                |
+| 4. Discuss offer  | 30 min            | cash/equity/benefits           |
+| 5. Decision       |                   | when to start                  |
+
+TOTAL: ~2 weeks tentative
+
+
 # Contact info
 
-With any questions about this repository please contact us at info@exabyte.io.
+With any questions about this repository or our hiring process in general please contact us at info@exabyte.io.
+
+© 2018 Exabyte Inc.
