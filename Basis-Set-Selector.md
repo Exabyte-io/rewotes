@@ -21,7 +21,7 @@ The aim of this task is to create a simple python package that implements automa
 
 # Timeline
 
-1-5 days total.
+We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # User story
 

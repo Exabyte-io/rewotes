@@ -4,7 +4,7 @@
 
 # Overview
 
-Create a skeleton IDE (integrated development environment) for materials design. Close to Adobe Dreamweaver (or any other IDE) - when you can change html-markup and simultaneously see the result in other tab. We edit material in XYZ format and view result in 3D.
+Create a skeleton IDE (integrated development environment) for materials design. Close to Adobe Dreamweaver (or any other IDE) - when you can change html-markup and simultaneously see the result in another tab. We edit material in XYZ format and view result in 3D.
 
 Front-end developers: use Meteor and React.js and minimalistic UX/UI.
 Pure UI/UX designers: create high fidelity mockups. 
@@ -20,19 +20,19 @@ Pure UI/UX designers: create high fidelity mockups. 
 # Expectations
 
 1. up and running application OR high fidelity clickable mockups
-2. general IDE layout (e.g. menu, toolboxes, etc. - put your ideas here)
+2. general IDE layout (e.g. menu, toolboxes)
 3. reactive material editor (edit material file → immediately see results on 3D representation)
 4. clean and documented code
 5. tests
 
 # Timeline
 
-1-5 days total.
+We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # Notes
 
-- use a designated github repo for version control and for submission
+- use a designated github repo for version control and submission
 
 # Examples
 
-In case you'd like to view more examples or discuss this task more in details, please [contact us](README.md).
+To view examples or discuss this task more in details, please [contact us](README.md).

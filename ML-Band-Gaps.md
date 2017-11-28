@@ -23,7 +23,7 @@ As a user of this software I can predict the value of an electronic band gap aft
 
 # Timeline
 
-1-3 days total
+We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # Notes
 

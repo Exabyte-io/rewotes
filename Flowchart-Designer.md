@@ -21,7 +21,7 @@ Pure UI/UX designers: create high fidelity mockups. 
 # Expectations
 
 1. up and running application OR high fidelity clickable mockups
-1. drag-and-drop flowchart builder with support basic arithmetics
+1. drag-and-drop flowchart builder with support for basic arithmetics
 1. clean and documented code
 1. tests
 
@@ -31,8 +31,8 @@ Pure UI/UX designers: create high fidelity mockups. 
 
 # Notes
 
-- use a designated github repo for version control and for submission
+- use a designated github repo for version control and submission
 
 # Examples
 
-In case you'd like to view more examples or discuss this task more in details, please [contact us](README.md).
+In case you'd like to view examples or discuss this task more in details, please [contact us](README.md).

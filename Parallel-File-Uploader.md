@@ -22,7 +22,7 @@ Create a python application that uploads a set of given files to a cloud object 
 
 # Timeline
 
-3-5 days total.
+We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # Notes
 
