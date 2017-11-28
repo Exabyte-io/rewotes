@@ -7,6 +7,7 @@
 Create a drag-and-drop flowchart designer close to a basic programming flowchart editor that is purpose-built for dealing with certain types of data.
 
 Front-end developers: use Meteor and React.js and minimalistic UX/UI.
+
 Pure UI/UX designers: create high fidelity mockups. 
 
 # Requirements
