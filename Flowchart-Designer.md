@@ -7,7 +7,6 @@
 Create a drag-and-drop flowchart designer close to a basic programming flowchart editor that is purpose-built for dealing with certain types of data.
 
 Front-end developers: use Meteor and React.js and minimalistic UX/UI.
-
 Pure UI/UX designers: create high fidelity mockups. 
 
 # Requirements
@@ -28,7 +27,7 @@ Pure UI/UX designers: create high fidelity mockups. 
 
 # Timeline
 
-1-5 days total.
+We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # Notes
 
@@ -36,4 +35,4 @@ Pure UI/UX designers: create high fidelity mockups. 
 
 # Examples
 
-In case you'd like to view examples or discuss this task more in details, please [contact us](README.md).
+To view examples or discuss this task more in details, please [contact us](README.md).
