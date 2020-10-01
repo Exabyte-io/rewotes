@@ -21,7 +21,7 @@ We suggest the following flow:
 5. Introduce any changes under the subfolder
 6. Submit a [pull request](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) into the `dev` branch of this repository
 
-See [dev branch](/exabyte-io/rewotes/tree/dev) also.
+See [dev branch](https://github.com/Exabyte-io/rewotes/tree/dev) also.
 
 ## Notes
 
