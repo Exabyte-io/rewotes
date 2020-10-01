@@ -1,6 +1,6 @@
 # Basis set selector (Chemistry)
 
-> Ideal candidate: skilled DFT modeler proficient in python.
+> Ideal candidate: scientists skilled in Density Functional Theory and proficient in python.
 
 # Overview
 

@@ -36,4 +36,4 @@ We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # Examples
 
-To view examples or discuss this task more in details, please [contact us](README.md).
+See [Materials Designer](https://github.com/Exabyte-io/materials-designer) repository also.
