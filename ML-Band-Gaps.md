@@ -8,7 +8,7 @@ The aim of this task is to create a python package that implements automatic pre
 
 # User story
 
-As a user of this software I can predict the value of an electronic band gap after passing training data and structural information about target the material.
+As a user of this software I can predict the value of an electronic band gap after passing training data and structural information about the target material.
 
 # Requirements
 
