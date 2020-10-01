@@ -2,7 +2,7 @@
 
 REal WOrld TEstS
 
-# Overview
+## Overview
 
 This repository contains example test assignments used during our hiring process.
 
@@ -10,7 +10,18 @@ We find that regular job interview questions can often be misleading and so use 
 
 Each file represents an assignment similar to what one would get when hired.
 
-# Notes
+## Usage
+
+We suggest the following flow:
+
+1. [Fork](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) this repository on GitHub
+2. Create a branch using your GitHub username as a branch name
+3. Create a subfolder with your GitHub username
+4. Copy one of the ReWoTe suggestions (`.md` files) to `README.md` in that subfolder and modify the content of the ReWoTe as necessary
+5. Introduce any changes under the subfolder
+6. Submit a [pull request](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) to the `dev` branch of this repository
+
+## Notes
 
 Examples listed here are only meant as guidelines and do not necessarily reflect on the type of work to be performed at the company.
 
@@ -18,7 +29,7 @@ Modifications to the individual assignments with an advance notice are encourage
 
 We will screen for the ability to pick up new concepts quickly and implement a working solution. We value attention to details and modularity.
 
-# Hiring process
+## Hiring process
 
 Our hiring process in more details:
 
@@ -34,8 +45,8 @@ Our hiring process in more details:
 TOTAL: ~2 weeks tentative
 
 
-# Contact info
+## Contact info
 
-With any questions about this repository or our hiring process in general please contact us at info@exabyte.io.
+With any questions about this repository or our hiring process please contact us at info@exabyte.io.
 
-© 2018 Exabyte Inc.
+© 2020 Exabyte Inc.
