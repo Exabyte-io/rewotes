@@ -9,6 +9,7 @@ def main():
         MP_json_dir=r"../data/training/materialsproject_json/" ,
         fname=sys.argv[1]
     )
+    print(f"created {sys.argv[1]}.json")
 
 if __name__ == '__main__':
     main()
