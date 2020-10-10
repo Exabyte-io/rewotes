@@ -8,6 +8,6 @@ class Material:
         self.params = { 
             "density__gm_per_cc": self.density,
             "volume": self.volume, 
-            "formation_energy_eV": self.formation_energy, 
+            "formation_energy__eV": self.formation_energy, 
         } 
         self.training_params = [ param for (param,value) in self.params.items() if value is not None ]
