@@ -1,0 +1,5 @@
+"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
+"mp-661","AlN","P63mc","-1.596","0","4.054","true","42.527","4","false","4","3.201","hexagonal",""
+"mp-1700","AlN","F43m","-1.575","0.021","3.468","true","21.317","2","true","","3.193","cubic",""
+"mp-13178","AlN","P63/mmc","-1.481","0.115","3.269","true","39.783","4","true","","3.422","hexagonal",""
+"mp-1330","AlN","Fm3m","-1.424","0.172","4.554","true","16.843","2","false","","4.041","cubic",""

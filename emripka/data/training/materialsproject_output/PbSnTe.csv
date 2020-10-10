@@ -1,0 +1,6 @@
+"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
+"mp-1218909","SnTe5Pb4","R3m","-0.38","0.003","0.666","false","352.034","10","true","5","7.479","trigonal",""
+"mp-1218924","SnTe2Pb","R3m","-0.347","0.003","0.426","true","136.614","4","true","","7.063","trigonal",""
+"mp-1218925","SnTe4Pb3","P4/mmm","-0.372","0.006","0.426","false","280.15","8","true","","7.413","tetragonal",""
+"mp-1218915","SnTe2Pb","P4/mmm","-0.342","0.008","0.402","true","136.754","4","true","","7.056","tetragonal",""
+"mp-1219009","Sn4Te5Pb","I4/mmm","-0.308","0.009","0.472","false","335.054","10","true","","6.542","tetragonal",""

@@ -1,0 +1,6 @@
+"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
+"mp-4840","GaCuSe2","I42d","-0.478","0","0.458","true","180.762","8","false","5","5.35","tetragonal",""
+"mp-1212666","Ga5CuSe8","P42m","-0.552","0.002","0.401","false","343.564","14","true","","5.045","tetragonal",""
+"mp-676349","Ga7(CuSe4)3","Cm","-0.491","0.036","0.000","true","532.191","22","true","","5.074","monoclinic",""
+"mp-38505","GaCuSe2","I41/amd","-0.242","0.236","0.000","true","150.076","8","true","","6.444","tetragonal",""
+"mp-1224788","GaCuSe2","P4/mmm","-0.229","0.249","0.000","true","75.019","4","true","","6.445","tetragonal",""

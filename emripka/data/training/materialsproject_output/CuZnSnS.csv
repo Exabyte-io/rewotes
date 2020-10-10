@@ -1,0 +1,4 @@
+"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
+"mp-1079541","ZnCu2SnS4","I4","-0.79","0","0.094","true","162.747","8","false","3","4.484","tetragonal",""
+"mp-1025500","ZnCu2SnS4","I42m","-0.787","0.003","0.000","true","162.726","8","false","","4.485","tetragonal",""
+"mp-1190224","ZnCu2SnS4","Pmn21","-0.781","0.009","0.002","true","329.476","16","false","","4.43","orthorhombic",""

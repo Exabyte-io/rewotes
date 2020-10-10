@@ -1,5 +1,6 @@
-from converters import *
 import sys
+sys.path.insert(1, "../src/")
+from converters import *
 
 # to-do: clean up pathing so can call this from any directory
 
