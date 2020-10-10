@@ -1,14 +1,16 @@
 import pandas as pd
 
 class BandGapDataFrame:
-    def __init__(self, data_dict, symbols):
+    def __init__(self, data_dict, symbols,material_training_params):
         self.data_dict = data_dict
         self.symbols = symbols
         # create new dictionary
         self.data_dict_clean = {
             "ID": [ ID for (ID, result) in self.data_dict.items() ],
         }
-        self.non_element_keys = ["band_gap__eV","density__gm_per_cc","volume","formation_energy__eV"] 
+        self.non_element_keys = ["band_gap__eV",]
+        for param in material_training_params:
+            self.non_element_keys.append(param)
         self.populate_data_dict_clean()
         # create dataframe from data_dict_clean 
         self.dataframe = pd.DataFrame(self.data_dict_clean) 
