@@ -1,0 +1,58 @@
+{
+    "mp-20351": {
+        "formula": "InP",
+        "spacegroup": "F43m",
+        "formation_energy__eV": -0.20600000000000002,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 0.466,
+        "has_bandstructure": true,
+        "volume": 52.84,
+        "Nsites": 2,
+        "theoretical": false,
+        "count": 4.0,
+        "density__gm_per_cc": 4.582,
+        "crystal_system": "cubic"
+    },
+    "mp-966800": {
+        "formula": "InP",
+        "spacegroup": "P63mc",
+        "formation_energy__eV": -0.201,
+        "E_above_hull__eV": 0.004,
+        "band_gap__eV": 0.514,
+        "has_bandstructure": true,
+        "volume": 105.96799999999999,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 4.569,
+        "crystal_system": "hexagonal"
+    },
+    "mp-20050": {
+        "formula": "InP3",
+        "spacegroup": "R3m",
+        "formation_energy__eV": -0.05,
+        "E_above_hull__eV": 0.053,
+        "band_gap__eV": 0.0,
+        "has_bandstructure": true,
+        "volume": 165.979,
+        "Nsites": 8,
+        "theoretical": false,
+        "count": NaN,
+        "density__gm_per_cc": 4.157,
+        "crystal_system": "trigonal"
+    },
+    "mp-20457": {
+        "formula": "InP",
+        "spacegroup": "Fm3m",
+        "formation_energy__eV": 0.03,
+        "E_above_hull__eV": 0.235,
+        "band_gap__eV": 0.0,
+        "has_bandstructure": true,
+        "volume": 42.45399999999999,
+        "Nsites": 2,
+        "theoretical": false,
+        "count": NaN,
+        "density__gm_per_cc": 5.702000000000001,
+        "crystal_system": "cubic"
+    }
+}

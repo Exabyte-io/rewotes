@@ -1,0 +1,44 @@
+{
+    "mp-1079541": {
+        "formula": "ZnCu2SnS4",
+        "spacegroup": "I4",
+        "formation_energy__eV": -0.79,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 0.094,
+        "has_bandstructure": true,
+        "volume": 162.747,
+        "Nsites": 8,
+        "theoretical": false,
+        "count": 3.0,
+        "density__gm_per_cc": 4.484,
+        "crystal_system": "tetragonal"
+    },
+    "mp-1025500": {
+        "formula": "ZnCu2SnS4",
+        "spacegroup": "I42m",
+        "formation_energy__eV": -0.787,
+        "E_above_hull__eV": 0.003,
+        "band_gap__eV": 0.0,
+        "has_bandstructure": true,
+        "volume": 162.726,
+        "Nsites": 8,
+        "theoretical": false,
+        "count": NaN,
+        "density__gm_per_cc": 4.485,
+        "crystal_system": "tetragonal"
+    },
+    "mp-1190224": {
+        "formula": "ZnCu2SnS4",
+        "spacegroup": "Pmn21",
+        "formation_energy__eV": -0.7809999999999999,
+        "E_above_hull__eV": 0.009000000000000001,
+        "band_gap__eV": 0.002,
+        "has_bandstructure": true,
+        "volume": 329.476,
+        "Nsites": 16,
+        "theoretical": false,
+        "count": NaN,
+        "density__gm_per_cc": 4.43,
+        "crystal_system": "orthorhombic"
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "mp-661": {
+        "formula": "AlN",
+        "spacegroup": "P63mc",
+        "formation_energy__eV": -1.5959999999999999,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 4.053999999999999,
+        "has_bandstructure": true,
+        "volume": 42.527,
+        "Nsites": 4,
+        "theoretical": false,
+        "count": 4.0,
+        "density__gm_per_cc": 3.201,
+        "crystal_system": "hexagonal"
+    },
+    "mp-1700": {
+        "formula": "AlN",
+        "spacegroup": "F43m",
+        "formation_energy__eV": -1.575,
+        "E_above_hull__eV": 0.021,
+        "band_gap__eV": 3.468,
+        "has_bandstructure": true,
+        "volume": 21.316999999999997,
+        "Nsites": 2,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 3.193,
+        "crystal_system": "cubic"
+    },
+    "mp-13178": {
+        "formula": "AlN",
+        "spacegroup": "P63/mmc",
+        "formation_energy__eV": -1.4809999999999999,
+        "E_above_hull__eV": 0.115,
+        "band_gap__eV": 3.2689999999999997,
+        "has_bandstructure": true,
+        "volume": 39.783,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 3.4219999999999997,
+        "crystal_system": "hexagonal"
+    },
+    "mp-1330": {
+        "formula": "AlN",
+        "spacegroup": "Fm3m",
+        "formation_energy__eV": -1.4240000000000002,
+        "E_above_hull__eV": 0.172,
+        "band_gap__eV": 4.553999999999999,
+        "has_bandstructure": true,
+        "volume": 16.843,
+        "Nsites": 2,
+        "theoretical": false,
+        "count": NaN,
+        "density__gm_per_cc": 4.041,
+        "crystal_system": "cubic"
+    }
+}
