@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+
 import sys
 sys.path.insert(1, "../src/")
 from converters import create_non_numeric_map
@@ -21,7 +24,8 @@ class BandGapDataFrame:
         # create dataframe from data_dict_clean 
         self.dataframe = pd.DataFrame(self.data_dict_clean) 
         # dropping rows which have a bandgap of zero
-        #self.dataframe = self.dataframe[self.dataframe['band_gap__eV'] != 0]
+        # not sure if I want to do this...
+        self.dataframe = self.dataframe[self.dataframe['band_gap__eV'] != 0]
 
     def populate_data_dict_clean(self):
         for non_element_key in self.non_element_keys:
@@ -47,3 +51,11 @@ class BandGapDataFrame:
             for symbol in self.symbols:
                 value = result["stoichiometry"][symbol] if symbol in elements else 0
                 self.data_dict_clean[symbol].append(value)
+
+    def get_train_test_splits(self):
+        X_keys = list(self.dataframe.keys())[2:]
+
+        X = np.asarray(self.dataframe[X_keys])
+        y = np.asarray(self.dataframe['band_gap__eV'])
+                
+        return train_test_split(X, y, test_size=0.33, shuffle= True) 
