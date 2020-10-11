@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(1, "../src/")
 from stoichiometry import get_norm_stoichiomertry
+from converters import create_non_numeric_map
 
 class MaterialsDataset:
     def __init__(self,materials):

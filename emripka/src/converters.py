@@ -56,3 +56,12 @@ def csv_to_json(MP_output_dir, MP_json_dir, fname):
     # dump dictionary to a json file
     with open(f"{MP_json_dir}/{fname}.json","w") as file:
         json.dump(data_dic,file,indent=4)
+
+def create_non_numeric_map(data_dict, non_numeric_key):
+    unique_keys_map = dict()
+    ii = 0
+    for value in data_dict[non_numeric_key]:
+        if value not in list(unique_keys_map.keys()):
+            unique_keys_map[value] = ii 
+            ii += 1
+    return unique_keys_map
