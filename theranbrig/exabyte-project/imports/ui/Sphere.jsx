@@ -22,7 +22,7 @@ const Sphere = (props) => {
       }}
     >
       <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial color={hovered ? 'skyblue' : 'green'} />
+      <meshStandardMaterial color={hovered ? '#2471a3' : 'green'} />
     </mesh>
   );
 };

@@ -22,7 +22,7 @@ const Line = ({ connection }) => {
       <lineBasicMaterial
         attach='material'
         color={'#9c88ff'}
-        linewidth={100}
+        linewidth={1}
         linecap={'round'}
         linejoin={'round'}
       />
