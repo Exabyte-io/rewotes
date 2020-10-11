@@ -28,6 +28,7 @@ class MaterialPredictionData:
     """
     def __init__(self, material, symbols):
         self.symbols = symbols
+        self.material_stoichiometry = dict()
         self.material_stoichiometry = get_norm_stoichiomertry(material.formula)  
         self.prediction_data = [ value for (param, value) in material.params.items() if value is not None ]
         self.material_elements = list(self.material_stoichiometry.keys())   

@@ -83,7 +83,6 @@ class BandGapDataset:
         self.json_path = json_path
         self.data_dict = dict()
         self.data_IDs = list() 
-        self.bad_formulas_IDs = list()
         self.convert_stored_csvs() 
         self.get_stored_data()
         self.set_stoichiometry()
@@ -115,14 +114,8 @@ class BandGapDataset:
     def set_stoichiometry(self):
         for ID, result in self.data_dict.items():
             formula = result["formula"]
-            if "(" not in formula:
-                norm_stoichiometry = get_norm_stoichiomertry(formula)
-                self.data_dict[ID]["stoichiometry"] = norm_stoichiometry
-            else:
-                self.bad_formulas_IDs.append(ID)
-
-        for ID in self.bad_formulas_IDs:
-            del self.data_dict[ID]
+            norm_stoichiometry = get_norm_stoichiomertry(formula)  
+            self.data_dict[ID]["stoichiometry"] = norm_stoichiometry 
 
 class BandGapDataFrame:
     def __init__(self, data_dict, symbols,material_training_params):
