@@ -2,20 +2,31 @@ import numpy as np
 from sklearn import linear_model, model_selection, metrics
 import sys
 sys.path.insert(1, "../src/")
+from periodictable import PeriodicTable
+from materialsdataset import MaterialsDataset
+from materialspredictiondata import MaterialsPredictionData
 from bandgapdataset import BandGapDataset
 from bandgapdataframe import BandGapDataFrame
 
 class BandGapPredictions:
+    """
+    - prediction made for each material
+    - unique model is trained for each material, as each material can have unique input parameters
+    """
     # To-do: create a class for each material to use, which are housed inside of BandGapPredictions
-    def __init__(self,materials_to_predict,csv_path,json_path,symbols,materials_dataset,materials_prediction_data):
-        self.materials_to_predict = materials_to_predict
-        self.symbols = symbols
+    def __init__(self,csv_path,json_path,materials_list):
+        self.periodic_table = PeriodicTable()
+        self.symbols = self.periodic_table.symbols
+
+        self.materials_list = materials_list 
+        self.materials_dataset = MaterialsDataset(self.materials_list) 
+        self.materials_to_predict = list(self.materials_dataset.materials_dict.keys())
+        self.materials_prediction_data = MaterialsPredictionData(self.materials_dataset,self.symbols)
+
         self.predictions = { material: dict() for material in self.materials_to_predict }
-        self.materials_dataset = materials_dataset
-        self.materials_prediction_data = materials_prediction_data
         self.materials_training_params = dict()
         self.band_gap_dataset = BandGapDataset(csv_path,json_path)  
-        for material in materials_to_predict:
+        for material in self.materials_to_predict:
             self.make_prediction(material)
 
     def make_band_gap_dataframe(self, material):
