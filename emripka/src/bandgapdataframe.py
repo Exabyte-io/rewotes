@@ -8,6 +8,7 @@ class BandGapDataFrame:
         self.data_dict = data_dict
         self.symbols = symbols
         self.crystal_system_map = dict()
+        self.spacegroup_map = dict()
         # create new dictionary
         self.data_dict_clean = {
             "ID": [ ID for (ID, result) in self.data_dict.items() ],
@@ -30,9 +31,14 @@ class BandGapDataFrame:
             self.data_dict_clean[symbol] = list() 
 
         self.populate_stoichiometry()
+
         if "crystal_system" in self.non_element_keys: 
             self.crystal_system_map = create_non_numeric_map(self.data_dict_clean, "crystal_system")
             self.data_dict_clean["crystal_system"] = [self.crystal_system_map[value] for value in self.data_dict_clean["crystal_system"] ] 
+
+        if "spacegroup" in self.non_element_keys: 
+            self.spacegroup_map = create_non_numeric_map(self.data_dict_clean, "spacegroup")
+            self.data_dict_clean["spacegroup"] = [self.spacegroup_map[value] for value in self.data_dict_clean["spacegroup"] ] 
     
     def populate_stoichiometry(self):
         # populate the dictionary with keys of all symbols of elements
