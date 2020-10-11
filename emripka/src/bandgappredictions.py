@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn import linear_model, model_selection, metrics
+from sklearn import linear_model, model_selection
 import sys
 sys.path.insert(1, "../src/")
 from periodictable import PeriodicTable
@@ -49,7 +49,18 @@ class BandGapPrediction:
 
     def train_model(self):
         X_train, X_test, y_train, y_test = self.band_gap_dataframe_obj.get_train_test_splits()
-        model = linear_model.Ridge(alpha=0.5)
+
+        # choose alpha
+        # https://github.com/marcopeix/ISL-Ridge-Lasso/blob/master/Lasso%20and%20Ridge%20Regression.ipynb
+        parameters = {
+           'alpha': np.linspace(1e-3,1e1,50),
+        }
+        ridge_regressor = model_selection.GridSearchCV(linear_model.Ridge(), parameters, scoring='neg_mean_squared_error', cv=10)
+        ridge_regressor.fit(X_train, y_train)
+        alpha_choice = ridge_regressor.best_params_["alpha"]
+        print(f"ridge regression alpha_choice = {alpha_choice}")
+
+        model = linear_model.Ridge(alpha=alpha_choice)
         model.fit(X_train, y_train)
 
         self.X_train = X_train 
