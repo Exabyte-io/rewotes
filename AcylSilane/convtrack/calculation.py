@@ -7,7 +7,8 @@ import ase.io
 
 
 class Calculation(object):
-    def __init__(self, incar: str, poscar: str, dims: typing.Iterable, calc_folder: str, kpoints: str = None):
+    def __init__(self, incar: str, poscar: str, potcar: str,
+                 dims: typing.Iterable, calc_folder: str, kpoints: str = None):
         """
         Object containing methods related to a VASP calculation.
 
@@ -15,6 +16,8 @@ class Calculation(object):
         :type incar: str
         :param poscar: Path to the POSCAR
         :type poscar: str
+        :param potcar: Path to the POTCAR
+        :type potcar: str
         :param dims: An iterable containing the unit cell's A/B/C size, in terms of number of repeating units.
         :type dims: typing.Iterable
         :param calc_folder: Location on the drive for the calculation
@@ -23,11 +26,27 @@ class Calculation(object):
         :type kpoints: str
         """
         self.incar = incar
-        self.poscar = poscar
+        self.crystal = ase.io.read(poscar) * dims
+        self.potcar = potcar
         self.kpoints = kpoints
-        self.crystal = ase.io.read(self.poscar) * dims
 
         self.calc_folder = calc_folder
+        if not os.path.isdir(self.calc_folder):
+            os.mkdir(self.calc_folder)
+
+    def setup_calc(self):
+        to_copy = {"INCAR" : self.incar,
+                   "KPOINTS" : self.kpoints,
+                   "POTCAR" : self.potcar}
+        for filename, source in to_copy.items():
+            path_to_file = os.path.join(self.calc_folder, filename)
+            if source is not None:
+                assert not os.path.isfile(path_to_file)
+                with open(source, "r") as inp, open(path_to_file, "w") as outp:
+                    for line in inp:
+                        outp.write(line)
+        ase.io.write(os.path.join(self.calc_folder, "POSCAR"), self.crystal, format="vasp")
+
 
     def started(self):
         """
@@ -77,7 +96,7 @@ class Calculation(object):
 
 
 class Convergence(object):
-    def __init__(self, incar, poscar, max_size, kpoints=None):
+    def __init__(self, incar, poscar, potcar, max_size, root_dir, kpoints=None):
         """
         Automatically tracks convergence and generates new calculations.
 
@@ -85,13 +104,23 @@ class Convergence(object):
         :type incar: str
         :param poscar: Path to the POSCAR
         :type poscar: str
+        :param potcar: Path to the POTCAR
+        :type potcar: str
+        :param max_size: Maximum supercell size to consider
+        :type max_size: int
+        :param root_dir: Root directory for the convergence calculation, locally
+        :type root_dir: str
         :param kpoints: Path to the KPOINTS
         :type kpoints: str
         """
         self.incar = incar
         self.poscar = poscar
+        self.potcar = potcar
         self.kpoints = kpoints
         self.max_size = max_size
+        self.created_dir = False
+        if root_dir is not None:
+            self.create_directory_skeleton(root_dir)
 
         self.calculations = {}
 
@@ -103,9 +132,18 @@ class Convergence(object):
                           )
         for size in cell_sizes:
             dims = "".join(map(str, size))
-            foldname = dims
-            calculation = Calculation(self.incar, self.poscar, size, foldname, self.kpoints)
+            foldname = os.path.join(root_dir, dims)
+            calculation = Calculation(self.incar, self.poscar,self.potcar, size, foldname, self.kpoints)
             self.calculations[dims] = calculation
+
+    def create_directory_skeleton(self, root_dir):
+        # Make sure we haven't made the directory structure before
+        assert not self.created_dir
+        self.root_dir = root_dir
+        self.created_dir = True
+        # Make the parent directory
+        os.mkdir(root_dir)
+
 
 
 if __name__ == "__main__":
