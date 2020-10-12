@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     #name="bandgappypredict-YOUR-USERNAME-HERE", # Replace with your own username
-    name="bandgappypredict", 
+    name="pypredictbandgaps", 
     version="0.0.1",
     author="EmilyRipka",
     author_email="emripka@gmail.com",

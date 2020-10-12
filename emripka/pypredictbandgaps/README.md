@@ -1,8 +1,13 @@
-# BandGapPyPredict 
+# pyPredictBandGaps
 
 A package to predict a material's bandgap for a given set of stoichiometric and physical parameters.
 
-# Usage 
+## Installation
+1. Clone this repository: ``git clone https://github.com/emripka/rewotes.git``
+2. Build the package inside the ``bandgappypredict`` outer directory: ``python3 setup.py build``
+3. Install the package inside the same directory: ``python3 setup.py install``
+
+## Usage 
 
 There are two distinct ways to use the package:
 
@@ -11,7 +16,7 @@ There are two distinct ways to use the package:
 ```python
 # input materials
 SiGe = Material(formula="SiGe",density=1.234,crystal_structure="cubic")
-Si2Ge3 = Material(formula="Si2Ge3",density=1.234,crystal_structure="cubic")
+Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_structure="cubic")
 
 # train the model and predict the bandgaps
 materials_list = [SiGe, Si2Ge3]
@@ -23,7 +28,7 @@ band_gap_predictions = BandGapPredictions(materials_list)
 ```python
 # input materials
 SiGe = Material(formula="SiGe",density=1.234,crystal_structure="cubic")
-Si2Ge3 = Material(formula="Si2Ge3",density=1.234,crystal_structure="cubic")
+Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_structure="cubic")
 
 # create training data
 Si_training_data = TrainingData("Si",band_gap=0.514,density=2.282,crystal_structure="hexagonal")
