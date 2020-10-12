@@ -2,11 +2,29 @@ import React, { useState } from 'react';
 import CanvasArea from './Canvas';
 import Editor from './Editor';
 import styled from 'styled-components';
-
+import { useTracker } from 'meteor/react-meteor-data';
+import { Materials } from '/imports/api/materials';
 export const App = () => {
   const [elements, setElements] = useState([]);
   const [connections, setConnections] = useState([]);
   const [hoveredElement, setHoveredElement] = useState(null);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [name, setName] = useState('');
+
+  const { materials } = useTracker(() => {
+    Meteor.subscribe('materials');
+    return { materials: Materials.find().fetch() };
+  });
+  console.log(materials);
+
+  const selectMaterial = (id) => {
+    const selected = materials.filter((material) => material._id === id)[0];
+    setSelectedMaterial(selected ?? null);
+    setConnections(selected ? [...selected.connections] : []);
+    setElements(selected ? [...selected.nodes] : []);
+    setName(selected ? selected.name : '');
+  };
+
   return (
     <MainContentStyling>
       <Editor
@@ -15,6 +33,11 @@ export const App = () => {
         connections={connections}
         setConnections={setConnections}
         hoveredElement={hoveredElement}
+        materials={materials}
+        selectMaterial={selectMaterial}
+        name={name}
+        setName={setName}
+        selectedMaterial={selectedMaterial}
       />
       <CanvasArea
         elements={elements}

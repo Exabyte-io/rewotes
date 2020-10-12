@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import CurrentPointsTable from './CurrentPointsTable';
 import AddCoordinateForm from './CreateNodeForm';
 import CreateConnectionForm from './CreateConnectionForm';
 import SaveMaterial from './SaveMaterial';
+import SelectSavedMaterials from './SelectSavedMaterials';
 
-const Editor = ({ setElements, elements, connections, setConnections, hoveredElement }) => {
-  const [name, setName] = useState('');
-
+const Editor = ({
+  setElements,
+  elements,
+  connections,
+  setConnections,
+  hoveredElement,
+  materials,
+  selectMaterial,
+  name,
+  setName,
+  selectedMaterial,
+}) => {
   const removeFromEditor = (id) => {
     if (window.confirm('Are you sure you want to remove this?')) {
       const newList = elements.filter((element) => {
@@ -28,6 +38,7 @@ const Editor = ({ setElements, elements, connections, setConnections, hoveredEle
   return (
     <FormStyles>
       <h1>Materials Editor</h1>
+      <SelectSavedMaterials materials={materials} selectMaterial={selectMaterial} />
       <AddCoordinateForm elements={elements} setElements={setElements} />
       {elements.length ? (
         <>
@@ -43,7 +54,13 @@ const Editor = ({ setElements, elements, connections, setConnections, hoveredEle
               elements={elements}
             />
           ) : null}
-          <SaveMaterial elements={elements} connections={setConnections} />
+          <SaveMaterial
+            elements={elements}
+            connections={connections}
+            name={name}
+            setName={setName}
+            selectedMaterial={selectedMaterial}
+          />
         </>
       ) : null}
     </FormStyles>
