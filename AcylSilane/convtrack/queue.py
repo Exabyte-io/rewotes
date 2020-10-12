@@ -6,11 +6,7 @@ class Queue(object):
     def __init__(self):
         pass
 
-    @property
     def qstat(self):
-        return self._check_qstat()
-
-    def _check_qstat(self):
         raw_qstat = subprocess.check_output("qstat").split("\n")
 
         # Format is Headers, followed by a series of dashed lines, followed by actual data
