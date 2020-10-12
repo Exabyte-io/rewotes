@@ -21,8 +21,8 @@ const Sphere = (props) => {
         setHover(false);
       }}
     >
-      <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial color={hovered ? '#2471a3' : 'green'} />
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color={hovered ? '#2471a3' : '#229954'} />
     </mesh>
   );
 };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import Sphere from './Sphere';
 import Controls from './Controls';
-import Line from './Connect';
+import LineConnection from './LineConnection';
 import styled from 'styled-components';
 
 const CanvasArea = ({ elements, connections, setHoveredElement }) => {
@@ -22,7 +22,7 @@ const CanvasArea = ({ elements, connections, setHoveredElement }) => {
           />
         ))}
         {connections.map((connection, idx) => (
-          <Line key={idx} connection={connection} />
+          <LineConnection key={idx} connection={connection} />
         ))}
         <Controls />
       </Canvas>
@@ -31,8 +31,10 @@ const CanvasArea = ({ elements, connections, setHoveredElement }) => {
 };
 
 const CanvasStyles = styled.div`
-  height: 100vh;
+  height: calc(100vh - 20px);
   width: 70%;
+  border: 1px solid white;
+  margin: 10px;
 `;
 
 export default CanvasArea;
