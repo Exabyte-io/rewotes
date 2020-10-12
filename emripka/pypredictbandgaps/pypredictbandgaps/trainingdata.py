@@ -7,6 +7,7 @@ from os.path import isfile, join
 from . import converters as converters
 from . import stoichiometry as stoichiometry
 
+from datetime import datetime
 import os
 this_dir, this_filename = os.path.split(__file__)
 
@@ -15,11 +16,11 @@ def create_id():
     Creates a unique id for each user input TrainingData object.
 
     Returns:
-        (str): of format "user-#####"
-
-    To-do: need to make this a unique value wrt all user data made and stored
+        (str): of format "user_ID_YYYY_MM_DD_HH_MM_SS"
     """
-    return "user-%05d" % np.random.randint(0,99999)  
+    date_time_str = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    ID = "%05d" % np.random.randint(0,99999)  
+    return f"user_{ID}_{date_time_str}"   
 
 class TrainingData:
     """
@@ -94,7 +95,6 @@ class TrainingData:
         self.make_data_dict()
 
         json_path = this_dir+"/data/training/materialsproject_json/"
-
         # open the existing user_data.json file
         with open(f"{json_path}/user_data.json","r") as fname:
             try:
@@ -117,9 +117,6 @@ class BandGapDataset:
         use_database_data (bool): decides useage of the package
             True: the database data is used to train the model, along with any input TrainingData objects 
             False: the database data is not used to train the model, and only input TrainingData is
-    To-do:
-        - Move the user_data.json file to /data/training/user_data_json/ and rename to the date and time
-          of the prediciton after predictions
     """
     def __init__(self, periodic_table_obj, use_database_data):
         self.use_database_data = use_database_data
@@ -156,7 +153,7 @@ class BandGapDataset:
         if self.use_database_data:
             json_files = [f for f in listdir(self.json_path) if isfile(join(self.json_path, f))]
         else:
-            json_files = [self.json_path+"user_data.json"]
+            json_files = ["user_data.json"]
         training_compounds = [f.split(".json")[0] for f in json_files]
 
         for training_compound in training_compounds:
@@ -247,10 +244,13 @@ class BandGapDataFrame:
                 value = result["stoichiometry"][symbol] if symbol in elements else 0
                 self.data_dict_clean[symbol].append(value)
 
-    def get_train_test_splits(self):
+    def get_train_test_splits(self, test_size=0.25):
         """
         Helper function used to extract the correctly formatted data for use in training
         the model.
+
+        Arguments:
+            test_size (float): optional input of test_size
 
         Returns:
             X_train (arr)
@@ -263,4 +263,4 @@ class BandGapDataFrame:
         X = np.asarray(self.dataframe[X_keys])
         y = np.asarray(self.dataframe['band_gap__eV'])
                 
-        return train_test_split(X, y, test_size=0.33, shuffle= True) 
+        return train_test_split(X, y, test_size=test_size, shuffle= True) 

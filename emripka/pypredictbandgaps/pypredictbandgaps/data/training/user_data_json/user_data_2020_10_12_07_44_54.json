@@ -1,0 +1,30 @@
+{
+    "user_17596_2020_10_12_07_43_57": {
+        "formula": "Si",
+        "spacegroup": "",
+        "formation_energy__eV": 0.0,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 0.514,
+        "has_bandstructure": false,
+        "volume": 0.0,
+        "Nsites": 0,
+        "theoretical": false,
+        "count": 0.0,
+        "density__gm_per_cc": 2.282,
+        "crystal_system": "hexagonal"
+    },
+    "user_47244_2020_10_12_07_43_57": {
+        "formula": "Ge",
+        "spacegroup": "",
+        "formation_energy__eV": 0.0,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 0.67,
+        "has_bandstructure": false,
+        "volume": 0.0,
+        "Nsites": 0,
+        "theoretical": false,
+        "count": 0.0,
+        "density__gm_per_cc": 4.445,
+        "crystal_system": "cubic"
+    }
+}

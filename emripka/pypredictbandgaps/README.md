@@ -15,8 +15,8 @@ There are two distinct ways to use the package:
 
 ```python
 # input materials
-SiGe = Material(formula="SiGe",density=1.234,crystal_structure="cubic")
-Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_structure="cubic")
+SiGe = Material(formula="SiGe",density=1.234,crystal_system="cubic")
+Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_system="cubic")
 
 # train the model and predict the bandgaps
 materials_list = [SiGe, Si2Ge3]
@@ -27,16 +27,16 @@ band_gap_predictions = BandGapPredictions(materials_list)
 
 ```python
 # input materials
-SiGe = Material(formula="SiGe",density=1.234,crystal_structure="cubic")
-Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_structure="cubic")
+SiGe = Material(formula="SiGe",density=1.234,crystal_system="cubic")
+Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_system="cubic")
 
 # create training data
-Si_training_data = TrainingData("Si",band_gap=0.514,density=2.282,crystal_structure="hexagonal")
-Ge_training_data = TrainingData("Ge",band_gap=0.67,density=4.445,crystal_structure="cubic")
+Si_training_data = TrainingData("Si",band_gap=0.514,density=2.282,crystal_system="hexagonal")
+Ge_training_data = TrainingData("Ge",band_gap=0.67,density=4.445,crystal_system="cubic")
 
 # train the model and predict the bandgaps
 # using only the input training data
 materials_list = [SiGe, Si2Ge3]
-input_training_data = [Si_training_data, Ge_Trainig_data]
+input_training_data = [Si_training_data, Ge_training_data]
 band_gap_predictions = BandGapPredictions(materials_list,input_training_data,use_database_data=False)
 ```
