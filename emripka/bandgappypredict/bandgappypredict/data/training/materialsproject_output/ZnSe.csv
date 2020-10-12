@@ -1,0 +1,7 @@
+"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
+"mp-1190","ZnSe","F43m","-0.715","0","1.614","true","47.338","2","false","6","5.064","cubic",""
+"mp-380","ZnSe","P63mc","-0.71","0.005","1.200","true","94.804","4","false","","5.057","hexagonal",""
+"mp-1102515","ZnSe2","Pa3","-0.33","0.147","1.176","true","258.978","12","false","","5.728","cubic",""
+"mp-569679","ZnSe","P4/nmm","-0.556","0.16","1.967","true","102.426","4","true","","4.681","tetragonal",""
+"mp-1187912","Zn3Se","Pm3m","0.131","0.489","0.000","true","71.307","4","true","","6.408","cubic",""
+"mp-982778","Zn3Se","P63/mmc","0.136","0.493","0.000","true","143.307","8","true","","6.377","hexagonal",""

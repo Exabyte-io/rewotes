@@ -1,0 +1,16 @@
+{
+    "mp-1223642": {
+        "formula": "InGaP2",
+        "spacegroup": "R3m",
+        "formation_energy__eV": -0.26899999999999996,
+        "E_above_hull__eV": 0.039,
+        "band_gap__eV": 0.7609999999999999,
+        "has_bandstructure": true,
+        "volume": 94.462,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": 1,
+        "density__gm_per_cc": 4.333,
+        "crystal_system": "trigonal"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "mp-1228891": {
+        "formula": "AlGaAs2",
+        "spacegroup": "R3m",
+        "formation_energy__eV": -0.41200000000000003,
+        "E_above_hull__eV": 0.006,
+        "band_gap__eV": 0.95,
+        "has_bandstructure": true,
+        "volume": 94.5,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": 1,
+        "density__gm_per_cc": 4.332,
+        "crystal_system": "trigonal"
+    }
+}

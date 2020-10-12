@@ -1,0 +1,72 @@
+{
+    "mp-2624": {
+        "formula": "AlSb",
+        "spacegroup": "F43m",
+        "formation_energy__eV": -0.159,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 1.261,
+        "has_bandstructure": true,
+        "volume": 60.56100000000001,
+        "Nsites": 2,
+        "theoretical": false,
+        "count": 5.0,
+        "density__gm_per_cc": 4.078,
+        "crystal_system": "cubic"
+    },
+    "mp-1018100": {
+        "formula": "AlSb",
+        "spacegroup": "P63mc",
+        "formation_energy__eV": -0.151,
+        "E_above_hull__eV": 0.008,
+        "band_gap__eV": 0.912,
+        "has_bandstructure": true,
+        "volume": 121.086,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 4.08,
+        "crystal_system": "hexagonal"
+    },
+    "mp-15621": {
+        "formula": "AlSb",
+        "spacegroup": "Pa3",
+        "formation_energy__eV": -0.042,
+        "E_above_hull__eV": 0.11699999999999999,
+        "band_gap__eV": 0.022000000000000002,
+        "has_bandstructure": true,
+        "volume": 441.16900000000004,
+        "Nsites": 16,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 4.479,
+        "crystal_system": "cubic"
+    },
+    "mp-1023918": {
+        "formula": "AlSb",
+        "spacegroup": "Cmcm",
+        "formation_energy__eV": 0.027999999999999997,
+        "E_above_hull__eV": 0.188,
+        "band_gap__eV": 0.0,
+        "has_bandstructure": true,
+        "volume": 96.24700000000001,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 5.132000000000001,
+        "crystal_system": "orthorhombic"
+    },
+    "mp-1228806": {
+        "formula": "AlSb",
+        "spacegroup": "I4m2",
+        "formation_energy__eV": 0.079,
+        "E_above_hull__eV": 0.239,
+        "band_gap__eV": 0.0,
+        "has_bandstructure": true,
+        "volume": 47.271,
+        "Nsites": 2,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 5.225,
+        "crystal_system": "tetragonal"
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "mp-624": {
+        "formula": "B6As",
+        "spacegroup": "R3m",
+        "formation_energy__eV": -0.17,
+        "E_above_hull__eV": 0.0,
+        "band_gap__eV": 2.972,
+        "has_bandstructure": true,
+        "volume": 130.68200000000002,
+        "Nsites": 14,
+        "theoretical": false,
+        "count": 3.0,
+        "density__gm_per_cc": 3.552,
+        "crystal_system": "trigonal"
+    },
+    "mp-10044": {
+        "formula": "BAs",
+        "spacegroup": "F43m",
+        "formation_energy__eV": -0.019,
+        "E_above_hull__eV": 0.08,
+        "band_gap__eV": 1.252,
+        "has_bandstructure": true,
+        "volume": 27.982,
+        "Nsites": 2,
+        "theoretical": false,
+        "count": NaN,
+        "density__gm_per_cc": 5.088,
+        "crystal_system": "cubic"
+    },
+    "mp-984718": {
+        "formula": "BAs",
+        "spacegroup": "P63mc",
+        "formation_energy__eV": -0.01,
+        "E_above_hull__eV": 0.08900000000000001,
+        "band_gap__eV": 1.179,
+        "has_bandstructure": true,
+        "volume": 55.858999999999995,
+        "Nsites": 4,
+        "theoretical": true,
+        "count": NaN,
+        "density__gm_per_cc": 5.0969999999999995,
+        "crystal_system": "hexagonal"
+    }
+}
