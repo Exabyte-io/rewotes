@@ -1,10 +1,10 @@
 # pyPredictBandGaps
 
-A package to predict a material's bandgap for a given set of stoichiometric and physical parameters.
+A package to predict a material's bandgap for a given set of stoichiometric and crystallographic properties.
 
 ## Installation
 1. Clone this repository: ``git clone https://github.com/emripka/rewotes.git``
-2. Build the package inside the ``bandgappypredict`` outer directory: ``python3 setup.py build``
+2. Build the package inside the ``pypredictbandgaps`` outer directory: ``python3 setup.py build``
 3. Install the package inside the same directory: ``python3 setup.py install``
 
 ## Usage 
