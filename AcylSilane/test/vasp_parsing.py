@@ -7,7 +7,8 @@ import ase.io
 import numpy as np
 from parameterized import parameterized
 
-from AcylSilane.convtrack.calculation import Calculation, Convergence
+from AcylSilane.convtrack.calculation import Calculation
+from AcylSilane.convtrack.convergence import Convergence
 
 
 class local_io_tests(unittest.TestCase):
