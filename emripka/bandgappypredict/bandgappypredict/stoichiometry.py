@@ -85,6 +85,15 @@ def get_stoichiomertry(formula):
 
     return stoichiometry
 
+def get_molecular_weight(formula, periodic_table_obj):
+    stoichiometry = get_stoichiomertry(formula)
+    molecular_weight = 0
+    for element_symbol, number in stoichiometry.items():
+        element_name = periodic_table_obj.symbol_to_element_map[element_symbol] 
+        element_weight = periodic_table_obj.periodic_table[element_name]["atomic_weight"]
+        molecular_weight += number * element_weight 
+    return molecular_weight
+
 def get_norm_stoichiomertry(formula):
     stoichiometry = get_stoichiomertry(formula)
     num_atoms = [ atoms for (element, atoms) in stoichiometry.items() ]

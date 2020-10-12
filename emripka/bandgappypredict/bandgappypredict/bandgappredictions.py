@@ -24,9 +24,9 @@ class BandGapPrediction:
     def __init__(self,material,periodic_table):
         self.material = material
         self.symbols = periodic_table.symbols
-        self.material_prediction_data = material_module.MaterialPredictionData(self.material, self.symbols)
+        self.material_prediction_data = material_module.MaterialPredictionData(self.material, self.symbols, periodic_table)
         self.material_training_params = [ param for (param,value) in self.material.params.items() if value is not None ]
-        self.band_gap_dataset = trainingdata.BandGapDataset()  
+        self.band_gap_dataset = trainingdata.BandGapDataset(periodic_table)  
         self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset.data_dict, self.symbols, self.material_training_params)
         self.make_prediction()
 

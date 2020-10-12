@@ -24,12 +24,13 @@ class MaterialPredictionData:
     - houses array of data to run through the model to predict the bandgap
     - also houses information needed to create the correct training data based on the user input
     """
-    def __init__(self, material, symbols):
+    def __init__(self, material, symbols, periodic_table):
         self.symbols = symbols
-        self.material_stoichiometry = dict()
+        self.molecular_weight = stoichiometry.get_molecular_weight(material.formula, periodic_table)
         self.material_stoichiometry = stoichiometry.get_norm_stoichiomertry(material.formula)  
         self.prediction_data = [ value for (param, value) in material.params.items() if value is not None ]
         self.material_elements = list(self.material_stoichiometry.keys())   
+        self.prediction_data.append(self.molecular_weight)
         for symbol in self.symbols:
             value = self.material_stoichiometry[symbol] if symbol in self.material_elements else 0
             self.prediction_data.append(value)

@@ -78,9 +78,10 @@ class TrainingData:
         fname.close()
 
 class BandGapDataset:
-    def __init__(self):
+    def __init__(self,periodic_table):
         self.csv_path = this_dir+"/data/training/materialsproject_output/"
         self.json_path = this_dir+"/data/training/materialsproject_json/"
+        self.periodic_table = periodic_table
         self.data_dict = dict()
         self.data_IDs = list() 
         self.convert_stored_csvs() 
@@ -107,7 +108,9 @@ class BandGapDataset:
             with open(f"{self.json_path}/{training_compound}.json") as fname:
                 training_compound_results = dict(json.load(fname))
                 for ID, training_compound_result in training_compound_results.items():
-                    self.data_dict[ID] = training_compound_result
+                    new_result = training_compound_result
+                    new_result["molecular_weight"] = stoichiometry.get_molecular_weight(new_result["formula"], self.periodic_table)  
+                    self.data_dict[ID] = new_result
 
         self.data_IDs = list(self.data_dict.keys())
 
@@ -123,6 +126,7 @@ class BandGapDataFrame:
         self.symbols = symbols
         self.crystal_system_map = dict()
         self.spacegroup_map = dict()
+
         # create new dictionary
         self.data_dict_clean = {
             "ID": [ ID for (ID, result) in self.data_dict.items() ],
@@ -130,12 +134,13 @@ class BandGapDataFrame:
         self.non_element_keys = ["band_gap__eV",]
         for param in material_training_params:
             self.non_element_keys.append(param)
+        self.non_element_keys.append("molecular_weight")
         self.populate_data_dict_clean()
 
         # create dataframe from data_dict_clean 
         self.dataframe = pd.DataFrame(self.data_dict_clean) 
-        # dropping rows which have a bandgap of zero
-        # not sure if I want to do this...
+
+        # dropping rows which have a bandgap of zero; not sure if I want to do this...
         self.dataframe = self.dataframe[self.dataframe['band_gap__eV'] != 0]
 
     def populate_data_dict_clean(self):
