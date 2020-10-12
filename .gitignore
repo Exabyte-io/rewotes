@@ -1,1 +1,11 @@
+#PyCharm stuff
+.idea
+
+# Sphinx build directory
 /AcylSilane/docs/_build/
+
+
+# VASP files that can't or shouldn't be uploaded
+POTCAR*
+WAVECAR*
+CHGCAR*
