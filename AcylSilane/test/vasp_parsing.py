@@ -14,7 +14,10 @@ class vasp_interface_tests(unittest.TestCase):
         self.incar = os.path.join(self.data_dir, "INCAR")
         self.poscar = os.path.join(self.data_dir, "POSCAR")
         self.kpoints = os.path.join(self.data_dir, "KPOINTS")
-        self.calc = Calculation(self.incar, self.poscar, dims=(1, 1, 1), kpoints=self.kpoints)
+        self.calc = Calculation(self.incar, self.poscar,
+                                dims=(1, 1, 1),
+                                calc_folder=self.data_dir,
+                                kpoints=self.kpoints)
 
     def tearDown(self):
         pass
@@ -27,8 +30,20 @@ class vasp_interface_tests(unittest.TestCase):
     def test_detects_job_has_started(self):
         self.assertTrue(self.calc.started())
 
+    def test_detects_job_has_not_started(self):
+        self.calc.calc_folder = "../data/cu_vasp_files"
+        self.assertFalse(self.calc.started())
+
     def test_calculation_detects_finished_job(self):
         self.assertTrue(self.calc.complete())
+
+    def test_calculation_returns_energy_if_complete(self):
+        true_energy = -8.31258263
+        self.assertEqual(self.calc.energy(), true_energy)
+
+    def test_calculation_returns_None_energy_if_incomplete(self):
+        self.calc.calc_folder = "../data/cu_vasp_files"
+        self.assertIsNone(self.calc.energy())
 
 
 class supercell_creation_tests(unittest.TestCase):
@@ -38,7 +53,10 @@ class supercell_creation_tests(unittest.TestCase):
         self.incar = os.path.join(self.data_dir, "INCAR")
         self.poscar = os.path.join(self.data_dir, "POSCAR")
         self.kpoints = os.path.join(self.data_dir, "KPOINTS")
-        self.calc = Calculation(self.incar, self.poscar, dims=(1, 1, 1), kpoints=self.kpoints)
+        self.calc = Calculation(self.incar, self.poscar,
+                                dims=(1, 1, 1),
+                                calc_folder=self.data_dir,
+                                kpoints=self.kpoints)
 
         # Build Convergence object
         self.convergence = Convergence(self.incar, self.poscar, max_size=3, kpoints=self.kpoints)
