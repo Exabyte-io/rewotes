@@ -88,5 +88,16 @@ export const EditorFormStyles = styled.div`
     color: white;
     text-align: center;
   }
+  .remove-button {
+    background: transparent;
+    border: 1px solid white;
+    padding: 5px 15px;
+    box-shadow: none;
+    border-radius: 9999rem;
+    margin-top: 10px;
+    img {
+      height: 20px;
+    }
+  }
 `;
 export default CreateNodeForm;

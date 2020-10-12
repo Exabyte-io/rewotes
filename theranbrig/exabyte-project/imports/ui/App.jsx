@@ -15,14 +15,18 @@ export const App = () => {
     Meteor.subscribe('materials');
     return { materials: Materials.find().fetch() };
   });
-  console.log(materials);
 
-  const selectMaterial = (id) => {
-    const selected = materials.filter((material) => material._id === id)[0];
-    setSelectedMaterial(selected ?? null);
+  const clearEditor = (selected) => {
+    setSelectedMaterial(selected ? selected : null);
     setConnections(selected ? [...selected.connections] : []);
     setElements(selected ? [...selected.nodes] : []);
     setName(selected ? selected.name : '');
+  };
+
+  const selectMaterial = (id) => {
+    const selected = materials.filter((material) => material._id === id)[0];
+    console.log(selected);
+    clearEditor(selected);
   };
 
   return (
@@ -38,6 +42,7 @@ export const App = () => {
         name={name}
         setName={setName}
         selectedMaterial={selectedMaterial}
+        clearEditor={clearEditor}
       />
       <CanvasArea
         elements={elements}

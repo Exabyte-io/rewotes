@@ -17,6 +17,7 @@ const Editor = ({
   name,
   setName,
   selectedMaterial,
+  clearEditor,
 }) => {
   const removeFromEditor = (id) => {
     if (window.confirm('Are you sure you want to remove this?')) {
@@ -37,7 +38,7 @@ const Editor = ({
 
   return (
     <FormStyles>
-      <h1>Materials Editor</h1>
+      <h1>{selectedMaterial ? `${selectedMaterial.name} Editor` : 'Materials Editor'}</h1>
       <SelectSavedMaterials materials={materials} selectMaterial={selectMaterial} />
       <AddCoordinateForm elements={elements} setElements={setElements} />
       {elements.length ? (
@@ -59,6 +60,7 @@ const Editor = ({
             connections={connections}
             name={name}
             setName={setName}
+            clearEditor={clearEditor}
             selectedMaterial={selectedMaterial}
           />
         </>

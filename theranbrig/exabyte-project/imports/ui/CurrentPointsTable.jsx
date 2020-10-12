@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CurrentPointsTable = ({ elements, hoveredElement, removeFromEditor }) => {
+const CurrentNodesTable = ({ elements, hoveredElement, removeFromEditor }) => {
   return (
     <TableStyles>
       <h3>Current Points</h3>
@@ -24,7 +24,7 @@ const CurrentPointsTable = ({ elements, hoveredElement, removeFromEditor }) => {
               <td>{element.z}</td>
               <td>
                 <button className='remove-button' onClick={() => removeFromEditor(element.id)}>
-                  X
+                  <img src='/images/delete.svg'/>
                 </button>
               </td>
             </tr>
@@ -35,7 +35,6 @@ const CurrentPointsTable = ({ elements, hoveredElement, removeFromEditor }) => {
   );
 };
 
-export default CurrentPointsTable;
 
 export const TableStyles = styled.div`
   td,
@@ -80,4 +79,9 @@ export const TableStyles = styled.div`
     border: none;
     color: white;
   }
+  img {
+    height: 16px;
+  }
 `;
+
+export default CurrentNodesTable;
