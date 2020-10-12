@@ -1,7 +1,0 @@
-"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
-"mp-2201","PbSe","Fm3m","-0.561","0","0.908","true","60.254","2","false","6","7.886","cubic",""
-"mp-1063670","PbSe","Cmcm","-0.509","0.052","0.924","true","119.501","4","false","","7.953","orthorhombic",""
-"mp-1079172","PbSe","Pnma","-0.508","0.053","1.654","true","260.114","8","false","","7.307","orthorhombic",""
-"mp-982261","PbSe2","I4/mcm","-0.32","0.054","0.000","true","167.123","6","false","","7.256","tetragonal",""
-"mp-22009","PbSe","Fmm2","-0.487","0.074","1.314","true","233.91","4","false","","4.063","orthorhombic",""
-"mp-21214","PbSe","Pm3m","-0.324","0.237","0.000","true","54.196","2","false","","8.768","cubic",""

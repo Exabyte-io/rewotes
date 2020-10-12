@@ -1,5 +1,0 @@
-"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
-"mp-1120716","CdHg3Te4","P43m","-0.239","0","0.000","false","295.598","8","true","4","6.879","cubic",""
-"mp-1226741","CdHgTe2","R3m","-0.309","0.005","0.000","true","147.189","4","true","","6.41","trigonal",""
-"mp-1226794","CdHg4Te5","Immm","-0.053","0.171","0.000","false","290.768","10","true","","8.868","orthorhombic",""
-"mp-1246872","Cd(HgTe2)2","P4m2","0.01","0.237","0.000","false","220.463","7","true","","7.713","tetragonal",""
