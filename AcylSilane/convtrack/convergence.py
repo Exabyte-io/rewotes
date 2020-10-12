@@ -5,7 +5,7 @@ from AcylSilane.convtrack.calculation import Calculation
 
 
 class Convergence(object):
-    def __init__(self, incar, poscar, potcar, max_size, root_dir, kpoints=None):
+    def __init__(self, incar, poscar, potcar, max_size, root_dir, kpoints=None, uniform_supercell=True):
         """
         Automatically tracks convergence and generates new calculations.
 
@@ -21,12 +21,15 @@ class Convergence(object):
         :type root_dir: str
         :param kpoints: Path to the KPOINTS
         :type kpoints: str
+        :param uniform_supercell: Whether to only consider NxNxN supercells, or to allow uneven sizes
+        :type uniform_supercell: bool
         """
         self.incar = incar
         self.poscar = poscar
         self.potcar = potcar
         self.kpoints = kpoints
         self.max_size = max_size
+        self.uniform_supercell = uniform_supercell
         self.created_dir = False
         if root_dir is not None:
             self.create_directory_skeleton(root_dir)
@@ -50,14 +53,19 @@ class Convergence(object):
 
     def create_calculations(self):
         """
-        Creates the actual Calculation objects, and lets them create their subfolders.-
+        Creates the actual Calculation objects, and lets them create their subfolders.
         :return:
         """
-        cell_sizes = list(itertools.product(range(1, self.max_size + 1),
-                                            range(1, self.max_size + 1),
-                                            range(1, self.max_size + 1)
-                                            )
-                          )
+        if self.uniform_supercell:
+            # Create supercells with uniform repetition in each direction up to self.max_size
+            cell_sizes = [(i,i,i) for i in range(1, self.max_size + 1)]
+        else:
+            # Create all possible supercells (e.g. [1,1,1], [1,1,2], [1,2,1], etc) up to self.max_size
+            cell_sizes = list(itertools.product(range(1, self.max_size + 1),
+                                                range(1, self.max_size + 1),
+                                                range(1, self.max_size + 1)
+                                                )
+                              )
         for size in cell_sizes:
             dims = "".join(map(str, size))
             foldname = os.path.join(self.root_dir, dims)

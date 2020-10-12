@@ -1,7 +1,6 @@
 import os
 import shutil
 import unittest
-from unittest.mock import patch
 
 import ase.io
 import numpy as np
@@ -25,8 +24,8 @@ class local_io_tests(unittest.TestCase):
         self.output_path = os.path.join(self.local_path, "temp_io")
         # Ensure our temp directory doesn't exist already
         assert not os.path.isdir(self.output_path)
-        self.convergence = Convergence(self.incar, self.poscar, self.potcar, max_size=3,root_dir=self.output_path,
-                                       kpoints=self.kpoints)
+        self.convergence = Convergence(self.incar, self.poscar, self.potcar, max_size=3, root_dir=self.output_path,
+                                       kpoints=self.kpoints, uniform_supercell=False)
         self.ase_obj = ase.io.read(self.poscar)
 
     def tearDown(self):
@@ -45,7 +44,7 @@ class local_io_tests(unittest.TestCase):
         (3, 3, 3)
     ])
     def test_calculators_create_subfolders(self, a, b, c):
-        subfolder = "".join(map(str, (a,b,c)))
+        subfolder = "".join(map(str, (a, b, c)))
         expected_path = os.path.join(self.output_path, subfolder)
         self.assertTrue(os.path.isdir(expected_path))
 
@@ -56,7 +55,6 @@ class local_io_tests(unittest.TestCase):
         for filename in ["INCAR", "POSCAR", "POTCAR", "KPOINTS"]:
             path_to_file = os.path.join(expected_path, filename)
             self.assertTrue(os.path.isfile(path_to_file))
-
 
 
 class vasp_interface_tests(unittest.TestCase):
@@ -97,6 +95,7 @@ class vasp_interface_tests(unittest.TestCase):
         self.calc.calc_folder = "../data/cu_vasp_files"
         self.assertIsNone(self.calc.energy())
 
+
 class supercell_creation_tests(unittest.TestCase):
     def setUp(self):
         # Build Calculation object
@@ -116,8 +115,8 @@ class supercell_creation_tests(unittest.TestCase):
 
         # Build Convergence object
 
-        self.convergence = Convergence(self.incar, self.poscar, self.potcar, max_size=3,root_dir=self.output_path,
-                                       kpoints=self.kpoints)
+        self.convergence = Convergence(self.incar, self.poscar, self.potcar, max_size=3, root_dir=self.output_path,
+                                       kpoints=self.kpoints, uniform_supercell=False)
         self.ase_obj = ase.io.read(self.poscar)
 
     def tearDown(self):
@@ -135,10 +134,57 @@ class supercell_creation_tests(unittest.TestCase):
         (2, 1, 1),
         (3, 3, 3)
     ])
-    def test_convergence_creates_NxNxN_calculation(self, a, b, c):
+    def test_convergence_creates_XxYxZ_calculation(self, a, b, c):
         dims = self.ase_obj.cell * (a, b, c)
         dict_key = "".join(map(str, (a, b, c)))
         self.assertTrue(np.all(self.convergence.calculations[dict_key].crystal.cell == dims))
+
+
+class uniform_supercell_tests(unittest.TestCase):
+    def setUp(self):
+        # Build Calculation object
+        self.local_path = os.path.dirname(__file__)
+        self.data_dir = os.path.join(os.path.dirname(self.local_path), "data/cu_vasp_files")
+        self.output_path = os.path.join(self.local_path, "temp_io")
+        # Ensure our temp directory doesn't exist already
+        assert not os.path.isdir(self.output_path)
+        self.incar = os.path.join(self.data_dir, "INCAR")
+        self.poscar = os.path.join(self.data_dir, "POSCAR")
+        self.potcar = os.path.join(self.data_dir, "POTCAR")
+        self.kpoints = os.path.join(self.data_dir, "KPOINTS")
+        # Build Convergence object
+        self.convergence = Convergence(self.incar, self.poscar, self.potcar, max_size=5, root_dir=self.output_path,
+                                       kpoints=self.kpoints)
+        self.ase_obj = ase.io.read(self.poscar)
+
+    def tearDown(self):
+        if os.path.isdir(self.output_path):
+            shutil.rmtree(self.output_path)
+
+    @parameterized.expand([
+        # Supercell size
+        (1, 1, 1),
+        (2, 2, 2),
+        (3, 3, 3),
+        (4, 4, 4),
+        (5, 5, 5)
+    ])
+    def test_convergence_uniform_creates_NxNxN_calculations(self, a, b, c):
+        dims = self.ase_obj.cell * (a, b, c)
+        dict_key = "".join(map(str, (a, b, c)))
+        self.assertTrue(np.all(self.convergence.calculations[dict_key].crystal.cell == dims))
+
+    @parameterized.expand([
+        # Supercell size
+        (1, 1, 2),
+        (2, 2, 1),
+        (3, 1, 1),
+        (2, 4, 5),
+        (5, 1, 3)
+    ])
+    def test_convergence_uniform_spacing_avoids_uneven_supercells(self, a, b, c):
+        dict_key = "".join(map(str, (a, b, c)))
+        self.assertNotIn(dict_key, self.convergence.calculations.keys())
 
 
 if __name__ == "__main__":
