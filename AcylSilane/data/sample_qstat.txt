@@ -1,0 +1,4 @@
+Job-ID                                                   Username    Queue    Jobname    SessID    State    Nodes     Req'd Time    Rem'g Time
+-------------------------------------------------------  ----------  -------  ---------  --------  -------  --------  ------------  ------------
+76174.master-production-20160630-cluster-001.exabyte.io  jrd101      OR       VASP-TEST  --        Q        1:ppn=36  00:10:00      --
+76174.master-production-20160630-cluster-001.exabyte.io  jrd101      OR       VASP-TEST  --        Q        1:ppn=36  00:10:00      --
