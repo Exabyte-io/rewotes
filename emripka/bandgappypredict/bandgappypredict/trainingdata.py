@@ -78,13 +78,15 @@ class TrainingData:
         fname.close()
 
 class BandGapDataset:
-    def __init__(self,periodic_table):
+    def __init__(self,periodic_table,use_database_data):
+        self.use_database_data = use_database_data
         self.csv_path = this_dir+"/data/training/materialsproject_output/"
         self.json_path = this_dir+"/data/training/materialsproject_json/"
         self.periodic_table = periodic_table
         self.data_dict = dict()
         self.data_IDs = list() 
-        self.convert_stored_csvs() 
+        if self.use_database_data:
+            self.convert_stored_csvs() 
         self.get_stored_data()
         self.set_stoichiometry()
 
@@ -101,7 +103,10 @@ class BandGapDataset:
                 print(f"created {csv_file}.json")
 
     def get_stored_data(self):
-        json_files = [f for f in listdir(self.json_path) if isfile(join(self.json_path, f))]
+        if self.use_database_data:
+            json_files = [f for f in listdir(self.json_path) if isfile(join(self.json_path, f))]
+        else:
+            json_files = [self.json_path+"user_data.json"]
         training_compounds = [f.split(".json")[0] for f in json_files]
 
         for training_compound in training_compounds:

@@ -53,6 +53,17 @@ def csv_to_json(fname):
         json.dump(data_dic,file,indent=4)
 
 def create_non_numeric_map(data_dict, non_numeric_key):
+    """
+    Creates a dictionary used to map non-numeric training parameters to 
+    unique identifier integer value.
+
+    Arguments:
+        data_dict (dict)
+        non_numeric_key (str)
+
+    Returns:
+        unique_keys_map (dict)
+    """
     unique_keys_map = dict()
     ii = 0
     for value in data_dict[non_numeric_key]:
