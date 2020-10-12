@@ -1,5 +1,0 @@
-"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
-"mp-1009813","SiSn","F43m","0.147","0.147","0.411","true","55.892","2","true","4","4.361","cubic",""
-"mp-1187081","SiSn3","P1","0.308","0.308","0.000","true","101.045","4","true","","6.314","triclinic",""
-"mp-978494","SiSn3","Pm3m","0.325","0.325","0.000","true","100.52","4","true","","6.347","cubic",""
-"mp-1094080","Si18Sn","Cm","0.865","0.865","0.000","false","1101.908","19","true","","0.941","monoclinic",""
