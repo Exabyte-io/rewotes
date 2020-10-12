@@ -8,6 +8,6 @@ function insertMaterial(name, nodes, connections) {
 Meteor.startup(() => {
   // If the Links collection is empty, add some data.
   if (Materials.find().count() === 0) {
-    insertMaterial('Big Material', [], []);
+    insertMaterial('My First Material', [], []);
   }
 });
