@@ -34,9 +34,13 @@ class Calculation(object):
             os.mkdir(self.calc_folder)
 
     def setup_calc(self):
-        to_copy = {"INCAR" : self.incar,
-                   "KPOINTS" : self.kpoints,
-                   "POTCAR" : self.potcar}
+        """
+        Sets up a calculation, by copying in the INCAR / KPOINTS / POTCAR, and writing a POSCAR.
+        :return:  None
+        """
+        to_copy = {"INCAR": self.incar,
+                   "KPOINTS": self.kpoints,
+                   "POTCAR": self.potcar}
         for filename, source in to_copy.items():
             path_to_file = os.path.join(self.calc_folder, filename)
             if source is not None:
@@ -48,7 +52,7 @@ class Calculation(object):
 
     def started(self):
         """
-        Checks whether a calculation has started or not
+        Checks whether a calculation has started or not by looking at whether OUTCAR has been created.
         :return: True if the job has started, otherwise False
         """
         contents = os.listdir(self.calc_folder)
@@ -60,7 +64,7 @@ class Calculation(object):
 
     def complete(self):
         """
-        Checks whether the corresponding VASP job has completed
+        Checks whether the corresponding VASP job has completed by checking whether the timing info is in the OUTCAR.
         :return: True if the job has completed, otherwise False
         """
         complete = False
@@ -78,7 +82,7 @@ class Calculation(object):
     def energy(self):
         """
         Checks the OUTCAR for energy
-        :return: A float containing the energy if the job has completed, otherwise None
+        :return: A float containing the energy (in eV) if the job has completed, otherwise None
         """
         energy = None
         if self.complete():

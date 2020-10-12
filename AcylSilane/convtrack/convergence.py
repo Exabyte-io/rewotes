@@ -33,22 +33,37 @@ class Convergence(object):
 
         self.calculations = {}
 
-        # Create the calculations and assign subfolders
-        cell_sizes = list(itertools.product(range(1, max_size + 1),
-                                            range(1, max_size + 1),
-                                            range(1, max_size + 1)
-                                            )
-                          )
-        for size in cell_sizes:
-            dims = "".join(map(str, size))
-            foldname = os.path.join(root_dir, dims)
-            calculation = Calculation(self.incar, self.poscar,self.potcar, size, foldname, self.kpoints)
-            self.calculations[dims] = calculation
+        self.create_calculations()
 
     def create_directory_skeleton(self, root_dir):
+        """
+        Sets up a calculation in a root dir, setting self.root_dir if it hasn't been set before.
+        :param root_dir:
+        :return:
+        """
         # Make sure we haven't made the directory structure before
         assert not self.created_dir
         self.root_dir = root_dir
         self.created_dir = True
         # Make the parent directory
         os.mkdir(root_dir)
+
+    def create_calculations(self):
+        """
+        Creates the actual Calculation objects, and lets them create their subfolders.-
+        :return:
+        """
+        cell_sizes = list(itertools.product(range(1, self.max_size + 1),
+                                            range(1, self.max_size + 1),
+                                            range(1, self.max_size + 1)
+                                            )
+                          )
+        for size in cell_sizes:
+            dims = "".join(map(str, size))
+            foldname = os.path.join(self.root_dir, dims)
+            calculation = Calculation(self.incar, self.poscar, self.potcar, size, foldname, self.kpoints)
+            self.calculations[dims] = calculation
+
+
+if __name__ == "__main__":
+    pass
