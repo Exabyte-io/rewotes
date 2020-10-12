@@ -10,8 +10,13 @@ class BandGapPredictions:
     trained for each material, as each material can have unique input parameters.
     
     Arguments:
-        materials_list (list):
+        materials_list (list of Material objects):
             material (Material object)
+        input_training_data (list of TrainingData objects)
+        use_database_data (bool): decides useage of the package
+            True: the database data is used to train the model, along with any input TrainingData objects 
+            False: the database data is not used to train the model, and only input TrainingData is
+    To-do:
     """
     def __init__(self, materials_list,input_training_data=None,use_database_data=True):
         self.periodic_table = periodictable.PeriodicTable()
@@ -33,6 +38,9 @@ class BandGapPrediction:
     Arguments:
         material (Material object)
         periodic_table (PeriodicTable object)
+        use_database_data (bool): decides useage of the package
+            True: the database data is used to train the model, along with any input TrainingData objects 
+            False: the database data is not used to train the model, and only input TrainingData is
     """
     def __init__(self, material, periodic_table, use_database_data):
         self.material = material

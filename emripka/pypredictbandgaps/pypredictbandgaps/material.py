@@ -3,6 +3,21 @@ import numpy as np
 from . import stoichiometry as stoichiometry 
 
 class Material:
+    """
+    Class used for user to create new material object for predictin of it's material.
+    A formula is required input, and each additional input added will be used as a 
+    training parameter.
+
+    Arguments:
+        formula (str)
+        spacegroup (str)
+        formation_energy (float)
+        E_above_hull (float)
+        volume (float)
+        Nsites (int)
+        density (float)
+        crystal_system (str)
+    """
     def __init__(self,formula,spacegroup=None,formation_energy=None,E_above_hull=None,
                     volume=None,Nsites=None,density=None,crystal_system=None):
         self.formula = formula
@@ -19,10 +34,14 @@ class Material:
 
 class MaterialPredictionData:
     """
-    - the user creates an object of this type to use the package
-    - takes in a MaterialsDatset type object which contains materials and their params to use for prediction
-    - houses array of data to run through the model to predict the bandgap
-    - also houses information needed to create the correct training data based on the user input
+    Class used to create input data for each material. 
+        - training parameters selected based on user input
+        - material stoichiometry set 
+
+    Arguments:
+        material (Material object)
+        symbols (list of str)
+        periodic_table (PeriodicTable object)
     """
     def __init__(self, material, symbols, periodic_table):
         self.symbols = symbols

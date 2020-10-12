@@ -2,6 +2,10 @@ from urllib.request import urlopen
 import json
 
 class PeriodicTable:
+    """
+    Class which houses the Exabyte.io periodic table json file, as well as a list
+    of elemental symbols and a map from symbol to element name.
+    """
     def __init__(self):
         # use period table from exabyte.io github:
         self.periodic_table_url = urlopen(
