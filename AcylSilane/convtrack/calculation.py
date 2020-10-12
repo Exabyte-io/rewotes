@@ -1,6 +1,6 @@
 import itertools
 import typing
-
+import os
 import ase.io, ase.build
 
 
@@ -22,6 +22,33 @@ class Calculation(object):
         self.poscar = poscar
         self.kpoints = kpoints
         self.crystal = ase.io.read(self.poscar)*dims
+
+        self.calc_folder = "../data/sample_si_calc"
+
+    def started(self):
+        contents = os.listdir(self.calc_folder)
+        if "OUTCAR" in contents:
+            started = True
+        else:
+            started = False
+        return started
+
+    def complete(self):
+        """
+        Checks whether the corresponding VASP job has completed
+        :return:
+        """
+        complete = False
+        if self.started():
+            # The timing information is only reported when the job successfully ends, and as far as I know is the only
+            # consistent/reliable method to determine whether the code ended without error.
+            termination_indicator = "General timing and accounting informations for this job"
+            with open(os.path.join(self.calc_folder, "OUTCAR"), "r") as outcar:
+                for line in outcar:
+                    if termination_indicator in line:
+                        complete = True
+                        break
+        return complete
 
 
 

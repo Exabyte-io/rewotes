@@ -24,6 +24,12 @@ class vasp_interface_tests(unittest.TestCase):
         self.assertEqual(self.calc.poscar, self.poscar)
         self.assertEqual(self.calc.kpoints, self.kpoints)
 
+    def test_detects_job_has_started(self):
+        self.assertTrue(self.calc.started())
+
+    def test_calculation_detects_finished_job(self):
+        self.assertTrue(self.calc.complete())
+
 
 class supercell_creation_tests(unittest.TestCase):
     def setUp(self):
