@@ -8,7 +8,7 @@ from AcylSilane.convtrack.queue import Queue
 
 class qstat_tests(unittest.TestCase):
     # Classwide qstat, for mocking subprocess.check_output('qstat')
-    qstat_path = os.path.join(os.path.dirname(os.getcwd()), "data/sample_qstat.txt")
+    qstat_path = os.path.join(os.path.dirname(os.getcwd()), "data/simulated_qstat.txt")
     with open(qstat_path, "r") as qstat:
         sample_qstat = qstat.read()
 
@@ -26,8 +26,8 @@ class qstat_tests(unittest.TestCase):
     @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
                 return_value=sample_qstat)
     def test_qstat_correct_length(self, mock_subprocess):
-        expected_len = 2
-        self.assertEqual(len(self.queue.qstat()), 2)
+        expected_len = 4
+        self.assertEqual(len(self.queue.qstat()), expected_len)
 
     @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
                 return_value=sample_qstat)
@@ -42,7 +42,7 @@ class qstat_tests(unittest.TestCase):
                          "Req'd Time": "00:10:00",
                          "Rem'g Time": "--"}
         for key, val in expected_vals.items():
-            for job in self.queue.qstat():
+            for job in self.queue.qstat()[0:2]:
                 self.assertEqual(job[key],val)
 
 if __name__ == "__main__":
