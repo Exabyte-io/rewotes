@@ -79,62 +79,53 @@ class BandGapDataset:
             True: the database data is used to train the model, along with any input TrainingData objects 
             False: the database data is not used to train the model, and only input TrainingData is
     """
-    def __init__(self, use_database_data):
-        self.use_database_data = use_database_data
-        self.csv_path = this_dir+"/data/training/materialsproject_output/"
-        self.json_path = this_dir+"/data/training/materialsproject_json/"
+    def __init__(self, material):
+        self.material = material
+        self.material_elements = list({ element.value: material.composition.get_atomic_fraction(element) for element in material.composition }.keys())
         self.data_dict = dict()
-        self.data_IDs = list() 
-        if self.use_database_data:
-            self.convert_stored_csvs() 
-        self.get_stored_data()
-        self.set_stoichiometry()
+        self.get_data()
 
-    def convert_stored_csvs(self):
-        """
-        Converts the stored csv data to json files if this hasn't been previously done.
-        """
-        csv_files = [f for f in listdir(self.csv_path) if isfile(join(self.csv_path, f))]
-        json_files = [f for f in listdir(self.json_path) if isfile(join(self.json_path, f))]
+    def get_data(self):
+        composition = mg.Composition(self.material.formula)
+        chemical_system = composition.chemical_system
 
-        csv_files_stripped = [f.split(".csv")[0] for f in csv_files]
-        json_files_stripped = [f.split(".json")[0] for f in json_files]
+        with MPRester() as mpr:
+            print(f"... getting mp ids for the chemical system: {chemical_system} ...")
+            training_ids = mpr.get_materials_ids(chemical_system)        
+            num_ids = len(training_ids)
 
-        for csv_file in csv_files_stripped:
-            if csv_file not in json_files_stripped:
-                converters.csv_to_json(csv_file)
-                print(f"created {csv_file}.json")
+            for idx, training_id in enumerate(training_ids):
+                print(f" {training_id}: {idx+1} of {num_ids} mp ids")
 
-    def get_stored_data(self):
-        """
-        Accesses the stored json file data and populates it in self.data_dict.
-            - sets the molecular_weight parameter as well
-        """
-        if self.use_database_data:
-            json_files = [f for f in listdir(self.json_path) if isfile(join(self.json_path, f))]
-        else:
-            json_files = ["user_data.json"]
-        training_compounds = [f.split(".json")[0] for f in json_files]
+                print(f"  ... getting structure ...")
+                structure = mpr.get_structure_by_material_id(training_id)
+                print(f"  ... getting band structure ...")
+                try:
+                    band_structure = mpr.get_bandstructure_by_material_id(training_id)
+                except:
+                    print("       failed")
+                    continue
 
-        for training_compound in training_compounds:
-            with open(f"{self.json_path}/{training_compound}.json") as fname:
-                training_compound_results = dict(json.load(fname))
-                for ID, training_compound_result in training_compound_results.items():
-                    new_result = training_compound_result
-                    composition = mg.Composition(new_result["formula"])
-                    new_result["molecular_weight"] = composition.weight  
-                    self.data_dict[ID] = new_result
+                tmp_data_dict = dict()
+                if band_structure is not None: 
+                    structure_dict = structure.as_dict()
+                    band_structure_dict = band_structure.get_band_gap()
+                    tmp_data_dict["formula"] = structure.composition.alphabetical_formula
+                    for lattice_param in ["a","b","c","alpha","beta","gamma","volume"]:
+                        tmp_data_dict[lattice_param] = structure_dict["lattice"][lattice_param]  
+                    tmp_data_dict["band_gap"] = band_structure_dict["energy"]
 
-        self.data_IDs = list(self.data_dict.keys())
+                    composition = mg.Composition(tmp_data_dict["formula"])
+                    tmp_data_dict["molecular_weight"] = composition.weight 
+                    
+                    for element in composition:
+                        tmp_data_dict[element.value] = composition.get_atomic_fraction(element)
 
-    def set_stoichiometry(self):
-        """
-        Sets the stoichiometry parameters for the material.
-            Example: { "Cu": 0.4, "S": 0.6 }
-        """
-        for ID, result in self.data_dict.items():
-            composition = mg.Composition(result["formula"])
-            self.data_dict[ID]["stoichiometry"] = { element.value: composition.get_atomic_fraction(element) for element in composition }
+                    for material_element in self.material_elements:
+                        if material_element not in list(tmp_data_dict.keys()):
+                            tmp_data_dict[material_element] = 0 
+
+                    self.data_dict[training_id] = tmp_data_dict
 
 class BandGapDataFrame:
     """
@@ -152,8 +143,8 @@ class BandGapDataFrame:
     def __init__(self, data_dict, symbols, material_training_params):
         self.data_dict = data_dict
         self.symbols = symbols
-        self.crystal_system_map = dict()
-        self.spacegroup_map = dict()
+        #self.crystal_system_map = dict()
+        #self.spacegroup_map = dict()
 
         # create new dictionary
         self.data_dict_clean = {
@@ -172,7 +163,7 @@ class BandGapDataFrame:
         self.dataframe = pd.DataFrame(self.data_dict_clean) 
 
         # dropping rows which have a bandgap of zero; not sure if I want to do this...
-        self.dataframe = self.dataframe[self.dataframe['band_gap'] != 0]
+        #self.dataframe = self.dataframe[self.dataframe['band_gap'] != 0]
 
     def populate_data_dict_clean(self):
         """
@@ -181,30 +172,14 @@ class BandGapDataFrame:
         for non_element_key in self.non_element_keys:
             self.data_dict_clean[non_element_key] = [ result[non_element_key] for (ID, result) in self.data_dict.items() ] 
 
-        for symbol in self.symbols:
-            self.data_dict_clean[symbol] = list() 
+        #if "crystal_system" in self.non_element_keys: 
+        #    self.crystal_system_map = converters.create_non_numeric_map(self.data_dict_clean, "crystal_system")
+        #    self.data_dict_clean["crystal_system"] = [self.crystal_system_map[value] for value in self.data_dict_clean["crystal_system"] ] 
 
-        self.populate_stoichiometry()
-
-        if "crystal_system" in self.non_element_keys: 
-            self.crystal_system_map = converters.create_non_numeric_map(self.data_dict_clean, "crystal_system")
-            self.data_dict_clean["crystal_system"] = [self.crystal_system_map[value] for value in self.data_dict_clean["crystal_system"] ] 
-
-        if "spacegroup" in self.non_element_keys: 
-            self.spacegroup_map = converters.create_non_numeric_map(self.data_dict_clean, "spacegroup")
-            self.data_dict_clean["spacegroup"] = [self.spacegroup_map[value] for value in self.data_dict_clean["spacegroup"] ] 
+        #if "spacegroup" in self.non_element_keys: 
+        #    self.spacegroup_map = converters.create_non_numeric_map(self.data_dict_clean, "spacegroup")
+        #    self.data_dict_clean["spacegroup"] = [self.spacegroup_map[value] for value in self.data_dict_clean["spacegroup"] ] 
     
-    def populate_stoichiometry(self):
-        """
-        Sets the stoichiometry parameters for the material for each element in the 
-        periodic table.
-        """
-        for ID, result in self.data_dict.items():
-            elements = list(result["stoichiometry"].keys())   
-            for symbol in self.symbols:
-                value = result["stoichiometry"][symbol] if symbol in elements else 0
-                self.data_dict_clean[symbol].append(value)
-
     def get_train_test_splits(self, test_size=0.25):
         """
         Helper function used to extract the correctly formatted data for use in training
@@ -220,6 +195,7 @@ class BandGapDataFrame:
             y_test (arr)
         """
         X_keys = list(self.dataframe.keys())[2:]
+        print("training params=",X_keys)
 
         X = np.asarray(self.dataframe[X_keys])
         y = np.asarray(self.dataframe['band_gap'])

@@ -3,8 +3,9 @@
 A package to predict a material's bandgap for a given set of stoichiometric and crystallographic properties.
 
 ## Dependencies
-1. **pymatgen**: follow installation instructions as suggested [here](https://pymatgen.org/index.html). 
-- Add you Materials Project API: ``pmg config --add PMG_MAPI_KEY <USER_API_KEY>``
+**pymatgen**
+    - follow installation instructions as suggested [here](https://pymatgen.org/index.html). 
+    - Add your Materials Project API: ``pmg config --add PMG_MAPI_KEY <USER_API_KEY>``
 
 ## Installation
 1. Clone this repository: ``git clone https://github.com/emripka/rewotes.git``

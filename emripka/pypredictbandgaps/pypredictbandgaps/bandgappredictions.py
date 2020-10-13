@@ -10,17 +10,6 @@ from datetime import datetime
 import os
 this_dir, this_filename = os.path.split(__file__)
 
-def create_user_data_filename():
-    """
-    Creates a unique filename for the user_data.json file used in this set of 
-    predictions.
-
-    Returns:
-        (str): of format "user_data_YYYY_MM_DD_HH_MM_SS"
-    """
-    date_time_str = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    return f"user_data_{date_time_str}"   
-
 class BandGapPredictions:
     """ 
     Class used to predict the band gap of a set of materials. A unique model is 
@@ -29,24 +18,11 @@ class BandGapPredictions:
     Arguments:
         materials_list (list of Material objects):
             material (Material object)
-        input_training_data (list of TrainingData objects)
-        use_database_data (bool): decides useage of the package
-            True: the database data is used to train the model, along with any input TrainingData objects 
-            False: the database data is not used to train the model, and only input TrainingData is
     """
-    def __init__(self, materials_list,input_training_data=None,use_database_data=True):
-        self.periodic_table = periodictable.PeriodicTable()
-        self.use_database_data = use_database_data
-        if input_training_data is not None:
-            for input_data in input_training_data:
-                input_data.store_data()
-        else:
-            self.use_database_data = True
+    def __init__(self, materials_list):
         self.band_gap_prediction_objects = { 
-            material.formula: BandGapPrediction(material, self.periodic_table, use_database_data) for material in materials_list 
+            material.formula: BandGapPrediction(material) for material in materials_list 
         }
-        if input_training_data is not None:
-            self.move_user_data()
 
     def move_user_data(self):
         """ 
@@ -70,19 +46,17 @@ class BandGapPrediction:
 
     Arguments:
         material (Material object)
-        periodic_table (PeriodicTable object)
-        use_database_data (bool): decides useage of the package
-            True: the database data is used to train the model, along with any input TrainingData objects 
-            False: the database data is not used to train the model, and only input TrainingData is
     """
-    def __init__(self, material, periodic_table, use_database_data):
+    def __init__(self, material):
         self.material = material
-        self.use_database_data = use_database_data
-        self.material_prediction_data = material_module.MaterialPredictionData(self.material, periodic_table.symbols, periodic_table)
-        self.material_training_params = list(self.material.features.keys())
-        self.band_gap_dataset_obj = trainingdata.BandGapDataset(periodic_table, self.use_database_data)  
-        self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, periodic_table.symbols, self.material_training_params)
-        self.map_non_numeric_params()
+        self.periodic_table = periodictable.PeriodicTable()
+
+        self.material_prediction_data = material_module.MaterialPredictionData(self.material)
+        self.material_training_params = self.material_prediction_data.training_params
+
+        self.band_gap_dataset_obj = trainingdata.BandGapDataset(self.material)  
+        self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, self.periodic_table.symbols, self.material_training_params)
+        #self.map_non_numeric_params()
         self.train_model()
         self.make_prediction()
 
@@ -110,15 +84,13 @@ class BandGapPrediction:
             X_train (arr)
             y_train (arr)
         """
-        if self.use_database_data:
-            parameters = {
-               'alpha': np.linspace(1e-3,1e1,50),
-            }
-            ridge_regressor = model_selection.GridSearchCV(linear_model.Ridge(), parameters, scoring='neg_mean_squared_error', cv=10)
-            ridge_regressor.fit(X_train, y_train)
-            alpha_choice = ridge_regressor.best_params_["alpha"]
-        else: 
-            alpha_choice = 0.5
+        cv = 10 if np.shape(X_train)[0] > 10 else np.shape(X_train)[0] 
+        parameters = {
+           'alpha': np.linspace(1e-3,1e1,50),
+        }
+        ridge_regressor = model_selection.GridSearchCV(linear_model.Ridge(), parameters, scoring='neg_mean_squared_error', cv=cv)
+        ridge_regressor.fit(X_train, y_train)
+        alpha_choice = ridge_regressor.best_params_["alpha"]
 
         print(f"ridge regression alpha_choice = {alpha_choice}")
         return alpha_choice
@@ -127,6 +99,7 @@ class BandGapPrediction:
         """
         Alpha parameter selection and Ridge Regression model training.   
         """
+        print("Training the model...")
         X_train, X_test, y_train, y_test = self.band_gap_dataframe_obj.get_train_test_splits()
 
         alpha_choice = self.choose_alpha(X_train, y_train)
@@ -146,8 +119,11 @@ class BandGapPrediction:
         Reshapes the user-input material data and makes a prediction of the 
         band gap of the material using the trained model.
         """
+        print("Making predictions...")
         # predicting the bandgap
         this_prediction_data = np.asarray(self.material_prediction_data.prediction_data)
         this_prediction_data = np.reshape(this_prediction_data, (1,np.shape(this_prediction_data)[0]))
+
+        print("prediciton data:",this_prediction_data)
 
         self.predicted_band_gap = self.model.predict(this_prediction_data)[0]
