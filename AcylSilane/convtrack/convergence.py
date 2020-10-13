@@ -1,5 +1,6 @@
 import itertools
 import os
+import typing
 
 from .calculation import Calculation
 
@@ -52,7 +53,7 @@ class Convergence(object):
         # Make the parent directory
         os.mkdir(root_dir)
 
-    def create_calculations(self) -> None:
+    def create_calculations(self, submit:bool=False) -> None:
         """
         Creates the actual Calculation objects, and lets them create their subfolders.
         :return:
@@ -71,8 +72,73 @@ class Convergence(object):
             dims = "".join(map(str, size))
             foldname = os.path.join(self.root_dir, dims)
             calculation = Calculation(self.incar, self.poscar, self.potcar, size, foldname, self.kpoints,
-                                      create=True)
+                                      create=True, submit=submit)
             self.calculations[dims] = calculation
+
+    def all_calculations_done(self) -> bool:
+        """
+        Returns the status of all calculations being held in the Convergence object.
+        :return: True if all are done, else false.
+        """
+        for cellsize, calculation in self.calculations.items():
+            if not calculation.complete():
+                return False
+        return True
+
+    def energies_to_csv(self, filename: str) -> None:
+        """
+        Writes the calculation energies to a CSV
+        """
+        energies = {}
+        if self.all_calculations_done():
+            for cellsize, calculation in self.calculations.items():
+                energies[cellsize] = calculation.energy()
+        with open(filename, "w") as outp:
+            outp.write("Cell_Dimensions,Energy_eV\n")
+            for cellsize, energy in energies:
+                outp.write(f"{cellsize},{energy}\n")
+
+    def calc_converged_size(self, convergence_criterion:float) -> typing.List[int]:
+        """
+        Returns the supercell size at which the energy has converged
+        :param convergence_criterion: Convergence criterion, in eV
+        :return:
+        """
+        if len(self.calculations) <= 1:
+            raise ValueError("Too few calculations to determine convergence. You need at least two.")
+
+        # Todo: Extend this method to non-uniform cells
+        if not self.uniform_supercell:
+            raise NotImplementedError("Current version only supports uniformly-sized supercells.")
+
+        ref_energy = self.calculations["111"].energy
+        best_convergence = None
+        best_i = None
+        for i in range(2,self.max_size+1):
+            # We're checking the energy difference relative to the next-smallest calculation
+            cell_key = f"{i}{i}{i}"
+            abs_energy = self.calculations[cell_key]
+            delta_energy = abs(abs_energy - ref_energy)
+
+            # Log best convergence, in case we don't actually satisfy the convergence criterion
+            if best_convergence is None:
+                best_convergence = delta_energy
+                best_i = i
+            elif delta_energy < best_convergence:
+                best_convergence = delta_energy
+                best_i = i
+
+            # Break early if we're converged in supercell size
+            if delta_energy < convergence_criterion:
+                return [i,i,i]
+            ref_energy = abs_energy
+
+        raise ValueError(f"Supercells are not converged. Best convergence is {best_convergence} eV at {best_i}/{best_i}/{best_i}.")
+
+
+
+
+
 
 
 if __name__ == "__main__":
