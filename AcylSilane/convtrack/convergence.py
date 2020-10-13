@@ -1,7 +1,7 @@
 import itertools
 import os
 
-from AcylSilane.convtrack.calculation import Calculation
+from .calculation import Calculation
 
 
 class Convergence(object):

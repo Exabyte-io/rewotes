@@ -24,8 +24,7 @@ class QueueInterface(object):
         :type cores_per_node: int
         :param walltime: Walltime, as a string, in a format acceptable for the PBS scheduler.
         :type walltime: str
-        :param quality_of_service: Quality of service string, per the Exabyte documentation. Examples include "D", "OR",
-                                    "OR4", etc.
+        :param quality_of_service: Quality of service string, per the Exabyte documentation. Examples include "D", "OR", "OR4", etc.
         :type quality_of_service: str
         :param email: Optional. Which email to contact when a job completes.
         :type email: str
@@ -77,7 +76,7 @@ class QueueInterface(object):
         Calls the system's qsub method, and returns a job ID for tracking purposes.
         :param path_to_file: path to the file being called
         :type path_to_file: str
-        :return:
+        :return: None
         """
         job_id = subprocess.check_output(['qsub', path_to_file])
         return job_id

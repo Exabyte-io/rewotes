@@ -3,7 +3,7 @@ import typing
 
 import ase.build
 import ase.io
-from AcylSilane.convtrack.queueinterface import QueueInterface
+from .queueinterface import QueueInterface
 
 
 class Calculation(object):
