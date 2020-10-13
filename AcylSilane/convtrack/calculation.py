@@ -3,6 +3,7 @@ import typing
 
 import ase.build
 import ase.io
+from AcylSilane.convtrack.queueinterface import QueueInterface
 
 
 class Calculation(object):
@@ -26,14 +27,15 @@ class Calculation(object):
         """
         self.incar = incar
         self.crystal = ase.io.read(poscar) * dims
+        self.dims = dims
         self.potcar = potcar
         self.kpoints = kpoints
-
+        self.job_id = None
         self.calc_folder = calc_folder
         if not os.path.isdir(self.calc_folder):
             os.mkdir(self.calc_folder)
 
-    def setup_calc(self):
+    def setup_calc(self) -> None:
         """
         Sets up a calculation, by copying in the INCAR / KPOINTS / POTCAR, and writing a POSCAR.
         :return:  None
@@ -50,7 +52,19 @@ class Calculation(object):
                         outp.write(line)
         ase.io.write(os.path.join(self.calc_folder, "POSCAR"), self.crystal, format="vasp")
 
-    def started(self):
+        #Todo: make calc parameters non non-hardcoded
+        script_location = os.path.join(self.calc_folder, "job_vasp.pbs")
+        QueueInterface.write_submission_script(script_location,
+                                               jobname=f"Cu_{list(map(str,self.dims))}",
+                                               n_nodes=1,
+                                               cores_per_node=8,
+                                               walltime="00:00:30:00",
+                                               quality_of_service="OR",
+                                               email="jrd101@pitt.edu")
+
+
+
+    def started(self) -> bool:
         """
         Checks whether a calculation has started or not by looking at whether OUTCAR has been created.
         :return: True if the job has started, otherwise False
@@ -62,7 +76,7 @@ class Calculation(object):
             started = False
         return started
 
-    def complete(self):
+    def complete(self) -> bool:
         """
         Checks whether the corresponding VASP job has completed by checking whether the timing info is in the OUTCAR.
         :return: True if the job has completed, otherwise False
@@ -79,7 +93,7 @@ class Calculation(object):
                         break
         return complete
 
-    def energy(self):
+    def energy(self) -> float:
         """
         Checks the OUTCAR for energy
         :return: A float containing the energy (in eV) if the job has completed, otherwise None

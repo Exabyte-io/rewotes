@@ -5,7 +5,8 @@ from AcylSilane.convtrack.calculation import Calculation
 
 
 class Convergence(object):
-    def __init__(self, incar, poscar, potcar, max_size, root_dir, kpoints=None, uniform_supercell=True):
+    def __init__(self, incar: str, poscar: str, potcar: str, max_size: int, root_dir: str,
+                 kpoints: str = None, uniform_supercell: bool = True):
         """
         Automatically tracks convergence and generates new calculations.
 
@@ -38,7 +39,7 @@ class Convergence(object):
 
         self.create_calculations()
 
-    def create_directory_skeleton(self, root_dir):
+    def create_directory_skeleton(self, root_dir: str) -> None:
         """
         Sets up a calculation in a root dir, setting self.root_dir if it hasn't been set before.
         :param root_dir:
@@ -51,14 +52,14 @@ class Convergence(object):
         # Make the parent directory
         os.mkdir(root_dir)
 
-    def create_calculations(self):
+    def create_calculations(self) -> None:
         """
         Creates the actual Calculation objects, and lets them create their subfolders.
         :return:
         """
         if self.uniform_supercell:
             # Create supercells with uniform repetition in each direction up to self.max_size
-            cell_sizes = [(i,i,i) for i in range(1, self.max_size + 1)]
+            cell_sizes = [(i, i, i) for i in range(1, self.max_size + 1)]
         else:
             # Create all possible supercells (e.g. [1,1,1], [1,1,2], [1,2,1], etc) up to self.max_size
             cell_sizes = list(itertools.product(range(1, self.max_size + 1),

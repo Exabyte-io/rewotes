@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest import mock
 
-from AcylSilane.convtrack.queue import Queue
+from AcylSilane.convtrack.queueinterface import QueueInterface
 
 
 class qstat_tests(unittest.TestCase):
@@ -12,23 +12,23 @@ class qstat_tests(unittest.TestCase):
         sample_qstat = qstat.read()
 
     def setUp(self):
-        self.queue = Queue()
+        self.queue = QueueInterface()
 
     def tearDown(self):
         pass
 
-    @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
+    @mock.patch("AcylSilane.convtrack.queueinterface.subprocess.check_output",
                 return_value="")
     def test_qstat_returns_empty_list_if_no_jobs(self, mock_subprocess):
         self.assertEqual(self.queue.qstat(), [])
 
-    @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
+    @mock.patch("AcylSilane.convtrack.queueinterface.subprocess.check_output",
                 return_value=sample_qstat)
     def test_qstat_correct_length(self, mock_subprocess):
         expected_len = 4
         self.assertEqual(len(self.queue.qstat()), expected_len)
 
-    @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
+    @mock.patch("AcylSilane.convtrack.queueinterface.subprocess.check_output",
                 return_value=sample_qstat)
     def test_qstat_parsed(self, mock_subprocess):
         expected_vals = {"Job-ID": "76174.master-production-20160630-cluster-001.exabyte.io",
@@ -52,12 +52,12 @@ class qsub_tests(unittest.TestCase):
         sample_qsub = qsub.read()
 
     def setUp(self):
-        self.queue = Queue()
+        self.queue = QueueInterface()
 
     def tearDown(self):
         pass
 
-    @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
+    @mock.patch("AcylSilane.convtrack.queueinterface.subprocess.check_output",
                 return_value=sample_qsub)
     def test_qsub_returns_jobid(self, mock_qsub):
         job_id = self.queue.qsub("job_vasp.pbs")
