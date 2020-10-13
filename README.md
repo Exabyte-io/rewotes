@@ -25,11 +25,10 @@ See [dev branch](https://github.com/Exabyte-io/rewotes/tree/dev) also.
 
 ## Notes
 
-Examples listed here are only meant as guidelines and do not necessarily reflect on the type of work to be performed at the company.
+Examples listed here are only meant as guidelines and do not necessarily reflect on the type of work to be performed at the company. Modifications to the individual assignments with an advance notice are encouraged.
 
-Modifications to the individual assignments with an advance notice are encouraged. Candidates are free to share the results.
+We will screen for the ability to (1) pick up new concepts quickly, (2) implement a working proof-of-concept solution, and (3) outline how the PoC can become more mature. We value attention to details and modularity.
 
-We will screen for the ability to pick up new concepts quickly and implement a working solution. We value attention to details and modularity.
 
 ## Hiring process
 
