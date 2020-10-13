@@ -33,11 +33,11 @@ As a user of this software I can start it passing:
 - path to input data (eg. pw.in / POSCAR, INCAR, KPOINTS) and
 - kinetic energy cutoff
 
-as parameters and get the k-point dimensions (eg. 5 5 5).
+as parameters and get the supercell dimensions (eg. 5 5 5).
 
 # Notes
 
 - create an account at exabyte.io and use it for the calculation purposes
-- suggested modeling engine: Quantum ESPRESSO
+- modeling engine: VASP
 
 [1]: <https://www.cp2k.org/faq:kpoints> "CP2K FAQ: Which features are working with k-point sampling in CP2K?"
