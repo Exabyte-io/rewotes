@@ -54,7 +54,10 @@ class QueueInterface(object):
         Calls the system's qstat and parses its results.
         :return: A list of dictionaries, each containing job information.
         """
-        raw_qstat = subprocess.check_output("qstat").split("\n")
+        result = subprocess.check_output("qstat")
+        if isinstance(result, bytes):
+            result = result.decode("utf-8")
+        raw_qstat = result.split("\n")
 
         # Format is Headers, followed by a series of dashed lines, followed by actual data
         keys = re.split("\s{2,}", raw_qstat[0])
@@ -79,4 +82,6 @@ class QueueInterface(object):
         :return: None
         """
         job_id = subprocess.check_output(['qsub', path_to_file])
+        if isinstance(job_id, bytes):
+            job_id.decode("utf-8")
         return job_id
