@@ -10,7 +10,7 @@ from .queueinterface import QueueInterface
 class Calculation(object):
     def __init__(self, incar: str, poscar: str, potcar: str,
                  dims: typing.Iterable, calc_folder: str, kpoints: str = None,
-                 create=False, submit=False):
+                 create=False):
         """
         Object containing methods related to a VASP calculation.
 
@@ -37,7 +37,7 @@ class Calculation(object):
         if not os.path.isdir(self.calc_folder):
             os.mkdir(self.calc_folder)
         if create:
-            self.setup_calc(submit)
+            self.setup_calc()
 
     def setup_calc(self, submit=False) -> None:
         """
@@ -61,15 +61,20 @@ class Calculation(object):
         QueueInterface.write_submission_script(script_location,
                                                jobname=f"Cu_{''.join(list(map(str, self.dims)))}",
                                                n_nodes=1,
-                                               cores_per_node=8,
+                                               cores_per_node=16,
                                                walltime="00:00:30:00",
-                                               quality_of_service="OR",
+                                               quality_of_service="SR16",
                                                email="jrd101@pitt.edu")
-        if submit:
-            cwd = os.getcwd()
-            os.chdir(self.calc_folder)
-            jobid = QueueInterface.qsub("job_vasp.pbs")
-            os.chdir(cwd)
+
+    def submit(self) -> None:
+        """
+        Submits the calculation
+        :return: None
+        """
+        cwd = os.getcwd()
+        os.chdir(self.calc_folder)
+        jobid = QueueInterface.qsub("job_vasp.pbs")
+        os.chdir(cwd)
 
     def started(self) -> bool:
         """
@@ -114,6 +119,18 @@ class Calculation(object):
                     if indicator in line:
                         # Energy is the last value on the line
                         energy = float(line.strip().split()[-1])
+        return energy
+
+    def intensive_energy(self) -> float:
+        """
+        Returns the intensive energy (i.e. scaled per number of atoms) of the unit cell.
+        :return: A float containing the energy (in eV/atoms), if the job has completed. Otherwise None.
+        """
+        energy = self.energy()
+        if energy is not None:
+            self.crystal: ase.Atoms
+            n_atoms = len(self.crystal)
+            energy /= n_atoms
         return energy
 
 

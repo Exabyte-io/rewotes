@@ -37,8 +37,8 @@ class Convergence(object):
             self.create_directory_skeleton(root_dir)
 
         self.calculations = {}
-
         self.create_calculations()
+
 
     def create_directory_skeleton(self, root_dir: str) -> None:
         """
@@ -53,7 +53,7 @@ class Convergence(object):
         # Make the parent directory
         os.mkdir(root_dir)
 
-    def create_calculations(self, submit:bool=False) -> None:
+    def create_calculations(self) -> None:
         """
         Creates the actual Calculation objects, and lets them create their subfolders.
         :return:
@@ -72,8 +72,16 @@ class Convergence(object):
             dims = "".join(map(str, size))
             foldname = os.path.join(self.root_dir, dims)
             calculation = Calculation(self.incar, self.poscar, self.potcar, size, foldname, self.kpoints,
-                                      create=True, submit=submit)
+                                      create=True)
             self.calculations[dims] = calculation
+
+    def submit_calculations(self) -> None:
+        """
+        Submits the calculations
+        :return: None
+        """
+        for key, calculation in self.calculations.items():
+            calculation.submit()
 
     def all_calculations_done(self) -> bool:
         """
@@ -101,7 +109,7 @@ class Convergence(object):
     def calc_converged_size(self, convergence_criterion:float) -> typing.List[int]:
         """
         Returns the supercell size at which the energy has converged
-        :param convergence_criterion: Convergence criterion, in eV
+        :param convergence_criterion: Convergence criterion, in eV/atom
         :return:
         """
         if len(self.calculations) <= 1:
@@ -111,13 +119,13 @@ class Convergence(object):
         if not self.uniform_supercell:
             raise NotImplementedError("Current version only supports uniformly-sized supercells.")
 
-        ref_energy = self.calculations["111"].energy
+        ref_energy = self.calculations["111"].intensive_energy()
         best_convergence = None
         best_i = None
         for i in range(2,self.max_size+1):
             # We're checking the energy difference relative to the next-smallest calculation
             cell_key = f"{i}{i}{i}"
-            abs_energy = self.calculations[cell_key]
+            abs_energy = self.calculations[cell_key].intensive_energy()
             delta_energy = abs(abs_energy - ref_energy)
 
             # Log best convergence, in case we don't actually satisfy the convergence criterion
