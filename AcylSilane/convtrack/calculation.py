@@ -8,7 +8,8 @@ from .queueinterface import QueueInterface
 
 class Calculation(object):
     def __init__(self, incar: str, poscar: str, potcar: str,
-                 dims: typing.Iterable, calc_folder: str, kpoints: str = None):
+                 dims: typing.Iterable, calc_folder: str, kpoints: str = None,
+                 create = False):
         """
         Object containing methods related to a VASP calculation.
 
@@ -34,6 +35,8 @@ class Calculation(object):
         self.calc_folder = calc_folder
         if not os.path.isdir(self.calc_folder):
             os.mkdir(self.calc_folder)
+        if create:
+            self.setup_calc()
 
     def setup_calc(self) -> None:
         """
@@ -55,7 +58,7 @@ class Calculation(object):
         #Todo: make calc parameters non non-hardcoded
         script_location = os.path.join(self.calc_folder, "job_vasp.pbs")
         QueueInterface.write_submission_script(script_location,
-                                               jobname=f"Cu_{list(map(str,self.dims))}",
+                                               jobname=f"Cu_{''.join(list(map(str,self.dims)))}",
                                                n_nodes=1,
                                                cores_per_node=8,
                                                walltime="00:00:30:00",

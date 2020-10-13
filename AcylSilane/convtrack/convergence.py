@@ -70,7 +70,8 @@ class Convergence(object):
         for size in cell_sizes:
             dims = "".join(map(str, size))
             foldname = os.path.join(self.root_dir, dims)
-            calculation = Calculation(self.incar, self.poscar, self.potcar, size, foldname, self.kpoints)
+            calculation = Calculation(self.incar, self.poscar, self.potcar, size, foldname, self.kpoints,
+                                      create=True)
             self.calculations[dims] = calculation
 
 

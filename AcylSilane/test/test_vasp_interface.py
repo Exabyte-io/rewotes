@@ -48,15 +48,6 @@ class local_io_tests(unittest.TestCase):
         expected_path = os.path.join(self.output_path, subfolder)
         self.assertTrue(os.path.isdir(expected_path))
 
-    def test_calculators_setup_calculations(self):
-        cell_size = "222"
-        expected_path = os.path.join(self.output_path, cell_size)
-        self.convergence.calculations[cell_size].setup_calc()
-        for filename in ["INCAR", "POSCAR", "POTCAR", "KPOINTS"]:
-            path_to_file = os.path.join(expected_path, filename)
-            self.assertTrue(os.path.isfile(path_to_file))
-
-
 class vasp_interface_tests(unittest.TestCase):
     def setUp(self):
         self.data_dir = os.path.join(os.path.dirname(os.getcwd()), "data/sample_si_calc")

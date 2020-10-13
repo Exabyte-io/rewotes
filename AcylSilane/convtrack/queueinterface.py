@@ -36,12 +36,12 @@ class QueueInterface(object):
                  f"#PBS -N {jobname}",
                  "#PBS -j oe",
                  f"#PBS -l nodes={n_nodes}",
-                 f"PBS -l ppn={cores_per_node}",
-                 f"PBS -l walltime={walltime}",
-                 f"PBS -q {quality_of_service}"]
+                 f"#PBS -l ppn={cores_per_node}",
+                 f"#PBS -l walltime={walltime}",
+                 f"#PBS -q {quality_of_service}"]
         if email:
-            lines += ["PBS -m abe",
-                      f"PBS -M {email}"]
+            lines += ["#PBS -m abe",
+                      f"#PBS -M {email}"]
         lines += ["module add vasp/535-i-174-impi-044",
                   "cd $PBS_O_WORKDIR",
                   "mpirun -np $PBS_NP vasp > vasp.log"]
