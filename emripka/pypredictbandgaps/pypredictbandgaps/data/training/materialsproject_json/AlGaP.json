@@ -2,15 +2,15 @@
     "mp-1228888": {
         "formula": "AlGaP2",
         "spacegroup": "P4m2",
-        "formation_energy__eV": -0.506,
-        "E_above_hull__eV": 0.003,
-        "band_gap__eV": 1.6640000000000001,
+        "formation_energy": -0.506,
+        "E_above_hull": 0.003,
+        "band_gap": 1.6640000000000001,
         "has_bandstructure": true,
         "volume": 83.39399999999999,
         "Nsites": 4,
         "theoretical": true,
         "count": 1,
-        "density__gm_per_cc": 3.159,
+        "density": 3.159,
         "crystal_system": "tetragonal"
     }
 }

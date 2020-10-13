@@ -2,29 +2,29 @@
     "mp-81": {
         "formula": "Au",
         "spacegroup": "Fm3m",
-        "formation_energy__eV": 0.0,
-        "E_above_hull__eV": 0.0,
-        "band_gap__eV": 0.0,
+        "formation_energy": 0.0,
+        "E_above_hull": 0.0,
+        "band_gap": 0.0,
         "has_bandstructure": true,
         "volume": 18.145,
         "Nsites": 1,
         "theoretical": false,
         "count": 2.0,
-        "density__gm_per_cc": 18.026,
+        "density": 18.026,
         "crystal_system": "cubic"
     },
     "mp-1008634": {
         "formula": "Au",
         "spacegroup": "P63/mmc",
-        "formation_energy__eV": 0.005,
-        "E_above_hull__eV": 0.005,
-        "band_gap__eV": 0.0,
+        "formation_energy": 0.005,
+        "E_above_hull": 0.005,
+        "band_gap": 0.0,
         "has_bandstructure": true,
         "volume": 36.474000000000004,
         "Nsites": 2,
         "theoretical": true,
         "count": NaN,
-        "density__gm_per_cc": 17.934,
+        "density": 17.934,
         "crystal_system": "hexagonal"
     }
 }

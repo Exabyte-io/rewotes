@@ -79,7 +79,7 @@ class BandGapPrediction:
         self.material = material
         self.use_database_data = use_database_data
         self.material_prediction_data = material_module.MaterialPredictionData(self.material, periodic_table.symbols, periodic_table)
-        self.material_training_params = [ param for (param,value) in self.material.params.items() if value is not None ]
+        self.material_training_params = list(self.material.features.keys())
         self.band_gap_dataset_obj = trainingdata.BandGapDataset(periodic_table, self.use_database_data)  
         self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, periodic_table.symbols, self.material_training_params)
         self.map_non_numeric_params()

@@ -2,15 +2,15 @@
     "mp-126": {
         "formula": "Pt",
         "spacegroup": "Fm3m",
-        "formation_energy__eV": 0,
-        "E_above_hull__eV": 0,
-        "band_gap__eV": 0.0,
+        "formation_energy": 0,
+        "E_above_hull": 0,
+        "band_gap": 0.0,
         "has_bandstructure": true,
         "volume": 15.722999999999999,
         "Nsites": 1,
         "theoretical": false,
         "count": 1,
-        "density__gm_per_cc": 20.603,
+        "density": 20.603,
         "crystal_system": "cubic"
     }
 }

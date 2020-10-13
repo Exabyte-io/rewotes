@@ -2,15 +2,15 @@
     "mp-1215797": {
         "formula": "Zn2Cu10Sb4S13",
         "spacegroup": "I42m",
-        "formation_energy__eV": -0.556,
-        "E_above_hull__eV": 0.040999999999999995,
-        "band_gap__eV": 0.519,
+        "formation_energy": -0.556,
+        "E_above_hull": 0.040999999999999995,
+        "band_gap": 0.519,
         "has_bandstructure": false,
         "volume": 568.565,
         "Nsites": 29,
         "theoretical": true,
         "count": 1,
-        "density__gm_per_cc": 4.878,
+        "density": 4.878,
         "crystal_system": "tetragonal"
     }
 }

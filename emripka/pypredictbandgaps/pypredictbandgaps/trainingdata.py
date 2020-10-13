@@ -5,11 +5,13 @@ import json
 from os import listdir
 from os.path import isfile, join
 from . import converters as converters
-from . import stoichiometry as stoichiometry
 
 from datetime import datetime
 import os
 this_dir, this_filename = os.path.split(__file__)
+
+import pymatgen as mg
+from pymatgen.ext.matproj import MPRester
 
 def create_id():
     """
@@ -27,8 +29,10 @@ class TrainingData:
     User input training data class. A formula and band_gap are required, with all other input parameters
     optional, but will strengthen the model if using just user training data to predict.
 
-    Arguments:
+    Args:
         formula (str)
+    
+    Kwargs:
         band_gap (float)
         spacegroup (str)
         formation_energy (float)
@@ -40,60 +44,18 @@ class TrainingData:
         density (float)
         crystal_system (str)
     """
-    def __init__(self,formula,band_gap,spacegroup="",formation_energy=0.0,E_above_hull=0.0,has_bandstructure=False,
-                    volume=0.0,Nsites=0,theoretical=False,count=0.0,density=0.0,crystal_system=""):
+    def __init__(self, formula, **kwargs):
         self.ID = create_id() 
         self.formula = formula
-        self.spacegroup = spacegroup 
-        self.formation_energy = formation_energy 
-        self.E_above_hull = E_above_hull 
-        self.band_gap = band_gap 
-        self.has_bandstructure = has_bandstructure 
-        self.volume = volume 
-        self.Nsites = Nsites 
-        self.theoretical = theoretical 
-        self.count = count 
-        self.density = density 
-        self.crystal_system = crystal_system 
-        self.data_dict = dict() 
-
-    def make_data_dict(self):
-        """
-        Populate's the object's data_dict a dictionary from input parameters 
-        to match the structure found in materialsproject.org's json files.
-        """
-        data_dict = {
-            self.ID: {
-                "formula": self.formula,
-                "spacegroup": self.spacegroup,
-                "formation_energy__eV": self.formation_energy,
-                "E_above_hull__eV": self.E_above_hull,
-                "band_gap__eV": self.band_gap,
-                "has_bandstructure": self.has_bandstructure,
-                "volume": self.volume,
-                "Nsites": self.Nsites,
-                "theoretical": self.theoretical,
-                "count": self.count,
-                "density__gm_per_cc": self.density,
-                "crystal_system": self.crystal_system 
-            }
-        }
-        self.data_dict = data_dict
-
-    def show_data(self):
-        """
-        Helper function for user to see the parameters they have input. 
-        """
-        self.make_data_dict()
-        print(self.data_dict)
+        self.features = dict(**kwargs)
+        self.features["formula"] = formula
+        self.data_dict = { self.ID: self.features } 
 
     def store_data(self):
         """ 
         Stores the user training data to the data directory in the 
         user_data.json file for use in training the model.
         """
-        self.make_data_dict()
-
         json_path = this_dir+"/data/training/materialsproject_json/"
         # open the existing user_data.json file
         with open(f"{json_path}/user_data.json","r") as fname:
@@ -113,16 +75,14 @@ class BandGapDataset:
     Class to create a house the training data for the model.
 
     Arguments:
-        periodic_table_obj (PeriodicTable object)
         use_database_data (bool): decides useage of the package
             True: the database data is used to train the model, along with any input TrainingData objects 
             False: the database data is not used to train the model, and only input TrainingData is
     """
-    def __init__(self, periodic_table_obj, use_database_data):
+    def __init__(self, use_database_data):
         self.use_database_data = use_database_data
         self.csv_path = this_dir+"/data/training/materialsproject_output/"
         self.json_path = this_dir+"/data/training/materialsproject_json/"
-        self.periodic_table_obj = periodic_table_obj
         self.data_dict = dict()
         self.data_IDs = list() 
         if self.use_database_data:
@@ -142,7 +102,7 @@ class BandGapDataset:
 
         for csv_file in csv_files_stripped:
             if csv_file not in json_files_stripped:
-                converters.csv_to_json(self.csv_path,self.json_path,fname=csv_file)
+                converters.csv_to_json(csv_file)
                 print(f"created {csv_file}.json")
 
     def get_stored_data(self):
@@ -161,7 +121,8 @@ class BandGapDataset:
                 training_compound_results = dict(json.load(fname))
                 for ID, training_compound_result in training_compound_results.items():
                     new_result = training_compound_result
-                    new_result["molecular_weight"] = stoichiometry.get_molecular_weight(new_result["formula"], self.periodic_table_obj)  
+                    composition = mg.Composition(new_result["formula"])
+                    new_result["molecular_weight"] = composition.weight  
                     self.data_dict[ID] = new_result
 
         self.data_IDs = list(self.data_dict.keys())
@@ -172,9 +133,8 @@ class BandGapDataset:
             Example: { "Cu": 0.4, "S": 0.6 }
         """
         for ID, result in self.data_dict.items():
-            formula = result["formula"]
-            norm_stoichiometry = stoichiometry.get_norm_stoichiomertry(formula)  
-            self.data_dict[ID]["stoichiometry"] = norm_stoichiometry 
+            composition = mg.Composition(result["formula"])
+            self.data_dict[ID]["stoichiometry"] = { element.value: composition.get_atomic_fraction(element) for element in composition }
 
 class BandGapDataFrame:
     """
@@ -201,9 +161,10 @@ class BandGapDataFrame:
         }
 
         # select training params 
-        self.non_element_keys = ["band_gap__eV",]
+        self.non_element_keys = ["band_gap",]
         for param in material_training_params:
-            self.non_element_keys.append(param)
+            if type(param) == str:
+                self.non_element_keys.append(param)
         self.non_element_keys.append("molecular_weight")
         self.populate_data_dict_clean()
 
@@ -211,14 +172,14 @@ class BandGapDataFrame:
         self.dataframe = pd.DataFrame(self.data_dict_clean) 
 
         # dropping rows which have a bandgap of zero; not sure if I want to do this...
-        self.dataframe = self.dataframe[self.dataframe['band_gap__eV'] != 0]
+        self.dataframe = self.dataframe[self.dataframe['band_gap'] != 0]
 
     def populate_data_dict_clean(self):
         """
         Populates data_dict_clean with training params only in self.non_element_keys.
         """
         for non_element_key in self.non_element_keys:
-            self.data_dict_clean[non_element_key] = [result[non_element_key] for (ID, result) in self.data_dict.items() ] 
+            self.data_dict_clean[non_element_key] = [ result[non_element_key] for (ID, result) in self.data_dict.items() ] 
 
         for symbol in self.symbols:
             self.data_dict_clean[symbol] = list() 
@@ -261,6 +222,6 @@ class BandGapDataFrame:
         X_keys = list(self.dataframe.keys())[2:]
 
         X = np.asarray(self.dataframe[X_keys])
-        y = np.asarray(self.dataframe['band_gap__eV'])
+        y = np.asarray(self.dataframe['band_gap'])
                 
         return train_test_split(X, y, test_size=test_size, shuffle= True) 

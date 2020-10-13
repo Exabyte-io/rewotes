@@ -168,25 +168,3 @@ def get_norm_stoichiomertry(formula):
     num_atoms_total = sum(num_atoms)
     norm_stoichiometry = { element:atoms/num_atoms_total for (element, atoms) in stoichiometry.items()} 
     return norm_stoichiometry
-
-def get_molecular_weight(formula, periodic_table_obj):
-    """
-    Finds the molecular weight of a material using the Exabyte.io periodic table json
-    as a reference.
-
-    Arguments:
-        formula (str): a formula in string format with no spaces or formatting 
-            Example: "Cu2S3"
-        periodic_table_obj (PeriodicTable object)
-
-    Returns:
-        molecular_weight (float): the molecular weight of the material in g/mol
-            Example: 223.287 
-    """
-    stoichiometry = get_stoichiomertry(formula)
-    molecular_weight = 0
-    for element_symbol, number in stoichiometry.items():
-        element_name = periodic_table_obj.symbol_to_element_map[element_symbol] 
-        element_weight = periodic_table_obj.periodic_table[element_name]["atomic_weight"]
-        molecular_weight += number * element_weight 
-    return molecular_weight
