@@ -34,12 +34,12 @@ class MaterialPredictionData:
         - training parameters selected based on user input
         - material molecular weight and stoichiometry set 
 
-    Arguments:
-        material (Material object)
+    Args:
+        material (Material)
     """
     def __init__(self, material):
 
-        self.molecular_weight = material.composition.weight
+        #self.molecular_weight = material.composition.weight
         self.material_stoichiometry = { element.value: material.composition.get_atomic_fraction(element) for element in material.composition }
 
         # stores numeric data for prediction
@@ -54,4 +54,4 @@ class MaterialPredictionData:
 
         for element in material.composition:
             self.prediction_data.append(material.composition.get_atomic_fraction(element))
-        self.prediction_data.append(self.molecular_weight)
+        #self.prediction_data.append(self.molecular_weight)

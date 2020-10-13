@@ -6,8 +6,8 @@ this_dir, this_filename = os.path.split(__file__)
 def csv_to_json(fname):
     """ Simple function to convert data from https://materialsproject.org/ to JSON format.
 
-    Arguments:
-        fname (string):
+    Args:
+        fname (str)
             This is the file you wish to convert, without the file end.
                 Example: "Si"
 
@@ -57,7 +57,7 @@ def create_non_numeric_map(data_dict, non_numeric_key):
     Creates a dictionary used to map non-numeric training parameters to 
     unique identifier integer value.
 
-    Arguments:
+    Args:
         data_dict (dict)
         non_numeric_key (str)
 

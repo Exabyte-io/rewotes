@@ -15,14 +15,12 @@ class BandGapPredictions:
     Class used to predict the band gap of a set of materials. A unique model is 
     trained for each material, as each material can have unique input parameters.
     
-    Arguments:
-        materials_list (list of Material objects):
-            material (Material object)
+    Args:
+        materials (list of Material objects)
+        training_data (list of str)
     """
-    def __init__(self, materials_list):
-        self.band_gap_prediction_objects = { 
-            material.formula: BandGapPrediction(material) for material in materials_list 
-        }
+    def __init__(self, materials, training_data=None):
+        self.band_gap_prediction_objects = { material.formula: BandGapPrediction(material) for material in materials }
 
     def move_user_data(self):
         """ 
@@ -44,8 +42,8 @@ class BandGapPrediction:
     Unique training dataset created and used to train the model for a user-defined 
     Material object. 
 
-    Arguments:
-        material (Material object)
+    Args:
+        material (Material)
     """
     def __init__(self, material):
         self.material = material
@@ -56,6 +54,7 @@ class BandGapPrediction:
 
         self.band_gap_dataset_obj = trainingdata.BandGapDataset(self.material)  
         self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, self.periodic_table.symbols, self.material_training_params)
+
         #self.map_non_numeric_params()
         self.train_model()
         self.make_prediction()
@@ -80,7 +79,7 @@ class BandGapPrediction:
         Alpha parameter selection for Ridge Regression.
         https://github.com/marcopeix/ISL-Ridge-Lasso/blob/master/Lasso%20and%20Ridge%20Regression.ipynb
 
-        Arguments:
+        Args:
             X_train (arr)
             y_train (arr)
         """
@@ -120,10 +119,8 @@ class BandGapPrediction:
         band gap of the material using the trained model.
         """
         print("Making predictions...")
-        # predicting the bandgap
         this_prediction_data = np.asarray(self.material_prediction_data.prediction_data)
         this_prediction_data = np.reshape(this_prediction_data, (1,np.shape(this_prediction_data)[0]))
 
         print("prediciton data:",this_prediction_data)
-
         self.predicted_band_gap = self.model.predict(this_prediction_data)[0]

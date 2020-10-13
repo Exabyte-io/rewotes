@@ -1,8 +1,0 @@
-"Materials Id","Formula","Spacegroup","Formation Energy (eV)","E Above Hull (eV)","Band Gap (eV)","Has Bandstructure","Volume","Nsites","Theoretical","Count","Density (gm/cc)","Crystal System",""
-"mp-1228943","AlGa3N4","Pm","-0.896","0.005","2.239","true","91.651","8","true","7","5.294","monoclinic",""
-"mp-1228436","Al3GaN4","Pm","-1.359","0.005","3.410","true","87.157","8","true","","3.938","monoclinic",""
-"mp-1228953","Al2GaN3","Cm","-1.279","0.007","3.405","true","131.765","12","true","","4.177","monoclinic",""
-"mp-1228894","AlGaN2","P3m1","-1.123","0.009","2.720","true","44.711","4","true","","4.632","trigonal",""
-"mp-1019508","AlGa3N4","P43m","-0.889","0.011","2.819","true","91.548","8","true","","5.3","cubic",""
-"mp-1008556","AlGaN2","P4m2","-1.117","0.016","2.669","true","44.727","4","true","","4.63","tetragonal",""
-"mp-1019378","Al3GaN4","P43m","-1.345","0.019","3.752","true","87.031","8","true","","3.944","cubic",""

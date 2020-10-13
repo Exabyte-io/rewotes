@@ -1,6 +1,6 @@
 # pyPredictBandGaps
 
-A package to predict a material's bandgap for a given set of stoichiometric and crystallographic properties.
+A package to predict a material's bandgap for a given set of stoichiometric and crystallographic properties. 
 
 ## Dependencies
 **pymatgen**
@@ -16,32 +16,31 @@ A package to predict a material's bandgap for a given set of stoichiometric and 
 
 There are two distinct ways to use the package:
 
-1. User inputs a novel material's stoichiometric and crystallographic properties, and the built-in database of training data is used to train the model. 
+1. User inputs a novel material's stoichiometric and crystallographic properties, and the database of information at the Materials Project is used to train the model on the chemical system to which the material belongs. 
 
 ```python
 # input materials
-SiGe = Material(formula="SiGe",density=1.234,crystal_system="cubic")
-Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_system="cubic")
+SiGe = Material(formula="SiGe",a=3.95,b=3.95,c=3.95,alpha=59.99,beta=59.99,gamma=59.99,volume=43.7409)
+Si2Ge3 = Material(formula="Si2Ge3",a=4.25,b=4.25,c=4.25,alpha=59.99,beta=59.99,gamma=59.99,volume=45.222)
 
 # train the model and predict the bandgaps
-materials_list = [SiGe, Si2Ge3]
-band_gap_predictions = BandGapPredictions(materials_list)
+materials = [SiGe, Si2Ge3]
+band_gap_predictions = BandGapPredictions(materials)
 ```
 
-2. User inputs a novel material's stoichiometric and crystallographic properties, as well as training data, and choose to use only this new training data to train the model, or use it in conjunction with the database. 
+2. Alternativel,y the user inputs a novel material's stoichiometric and crystallographic properties, along with a input training data.  
 
 ```python
 # input materials
-SiGe = Material(formula="SiGe",density=1.234,crystal_system="cubic")
-Si2Ge3 = Material(formula="Si2Ge3",density=2.135,crystal_system="cubic")
+SiGe = Material(formula="SiGe",a=3.95,b=3.95,c=3.95,alpha=59.99,beta=59.99,gamma=59.99,volume=43.7409)
+Si2Ge3 = Material(formula="Si2Ge3",a=4.25,b=4.25,c=4.25,alpha=59.99,beta=59.99,gamma=59.99,volume=45.222)
 
 # create training data
-Si_training_data = TrainingData("Si",band_gap=0.514,density=2.282,crystal_system="hexagonal")
-Ge_training_data = TrainingData("Ge",band_gap=0.67,density=4.445,crystal_system="cubic")
+Si_training_data = TrainingData("Si",band_gap=0.514,a=3.95,b=3.95,c=3.95,alpha=59.99,beta=59.99,gamma=59.99,volume=43.7409)
+Ge_training_data = TrainingData("Ge",band_gap=0.67,a=4.25,b=4.25,c=4.25,alpha=59.99,beta=59.99,gamma=59.99,volume=45.222)
 
-# train the model and predict the bandgaps
-# using only the input training data
-materials_list = [SiGe, Si2Ge3]
-input_training_data = [Si_training_data, Ge_training_data]
-band_gap_predictions = BandGapPredictions(materials_list,input_training_data,use_database_data=False)
+# train the model and predict the bandgaps using the input training data
+materials = [SiGe, Si2Ge3]
+training_data = [Si_training_data, Ge_training_data]
+band_gap_predictions = BandGapPredictions(materials, training_data)
 ```

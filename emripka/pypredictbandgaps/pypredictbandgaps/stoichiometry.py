@@ -4,11 +4,11 @@ def formula_has_repeating_unit(formula):
     """
     Decides if a formula has a repeating unit in it.
 
-    Arguments:
+    Args:
         formula (str)
 
     Returns:
-        boolean
+        (bool)
     """
     if "(" in formula:
         return True
@@ -19,11 +19,11 @@ def formula_has_number(formula):
     """
     Decides if a formula has a numeric value in it.
 
-    Arguments:
+    Args:
         formula (str)
 
     Returns:
-        boolean
+        (bool)
     """
     for ii in formula:
         if ii.isnumeric():
@@ -34,7 +34,7 @@ def simple_formula_split(formula):
     """
     Splits a formula into substrings if it doesn't have a numeric value it.
 
-    Arguments:
+    Args:
         formula (str)
 
     Returns:
@@ -46,7 +46,7 @@ def numbered_formula_split(formula):
     """
     Splits a formula into substrings if it has numeric value it.
 
-    Arguments:
+    Args:
         formula (str)
 
     Returns:
@@ -65,7 +65,7 @@ def get_stoichiometry_for_simple_formula(split_formula, stoichiometry):
     Populates input stoichiometry dictionary for a given formula with no numeric values
     which has been split into its constituent elements.
 
-    Arguments:
+    Args:
         split_formula (list of str): output from simple_formula_split
             Example: ["Cu", "S"] 
         stoichiometry (dict): empty dictionary 
@@ -79,7 +79,7 @@ def get_stoichiometry_for_numbered_formula(split_formula,stoichiometry):
     Populates input stoichiometry dictionary for a given formula with numeric values
     which has been split into its constituent elements and subscripts.
 
-    Arguments:
+    Args:
         split_formula (list of str): output from simple_formula_split
             Example: ["Cu", 2, "S", 3] 
         stoichiometry (dict): empty dictionary 
@@ -99,7 +99,7 @@ def get_stoichiomertry(formula):
     Creates a stoichiometry dictionary which contains a key value pair of the 
     constituent elements and their number of atoms.
 
-    Arguments:
+    Args:
         formula (str): a formula in string format with no spaces or formatting 
             Example: "Cu2S3"
 
@@ -155,7 +155,7 @@ def get_norm_stoichiomertry(formula):
     Creates a normalized stoichiometry dictionary which contains a key value pair of the 
     constituent elements and their elemental ratio.
 
-    Arguments:
+    Args:
         formula (str): a formula in string format with no spaces or formatting 
             Example: "Cu2S3"
 

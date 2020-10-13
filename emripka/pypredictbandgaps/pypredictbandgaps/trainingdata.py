@@ -74,20 +74,22 @@ class BandGapDataset:
     """
     Class to create a house the training data for the model.
 
-    Arguments:
-        use_database_data (bool): decides useage of the package
-            True: the database data is used to train the model, along with any input TrainingData objects 
-            False: the database data is not used to train the model, and only input TrainingData is
+    Args:
+        material (Material)
     """
     def __init__(self, material):
+        self.cif_dir = this_dir+"/data/cif/"  
         self.material = material
         self.material_elements = list({ element.value: material.composition.get_atomic_fraction(element) for element in material.composition }.keys())
         self.data_dict = dict()
         self.get_data()
 
     def get_data(self):
+        """
+        """
         composition = mg.Composition(self.material.formula)
         chemical_system = composition.chemical_system
+        cif_files = [f for f in listdir(self.cif_dir) if isfile(join(self.cif_dir, f))]
 
         with MPRester() as mpr:
             print(f"... getting mp ids for the chemical system: {chemical_system} ...")
@@ -95,37 +97,54 @@ class BandGapDataset:
             num_ids = len(training_ids)
 
             for idx, training_id in enumerate(training_ids):
-                print(f" {training_id}: {idx+1} of {num_ids} mp ids")
-
-                print(f"  ... getting structure ...")
-                structure = mpr.get_structure_by_material_id(training_id)
-                print(f"  ... getting band structure ...")
-                try:
-                    band_structure = mpr.get_bandstructure_by_material_id(training_id)
-                except:
-                    print("       failed")
-                    continue
+                print(f" getting training data for {training_id}: {idx+1} of {num_ids} mp ids")
 
                 tmp_data_dict = dict()
-                if band_structure is not None: 
-                    structure_dict = structure.as_dict()
-                    band_structure_dict = band_structure.get_band_gap()
-                    tmp_data_dict["formula"] = structure.composition.alphabetical_formula
-                    for lattice_param in ["a","b","c","alpha","beta","gamma","volume"]:
-                        tmp_data_dict[lattice_param] = structure_dict["lattice"][lattice_param]  
-                    tmp_data_dict["band_gap"] = band_structure_dict["energy"]
+                tmp_data_dict["formula"] = mpr.get_data(training_id,prop="pretty_formula")[0]["pretty_formula"]
 
-                    composition = mg.Composition(tmp_data_dict["formula"])
-                    tmp_data_dict["molecular_weight"] = composition.weight 
-                    
-                    for element in composition:
-                        tmp_data_dict[element.value] = composition.get_atomic_fraction(element)
+                # get cif file
+                cif_fname = self.cif_dir + training_id + ".cif"
+                if cif_fname not in cif_files:
+                    cif = mpr.get_data(training_id,prop="cif")[0]["cif"]
+                    f = open(cif_fname, "a")
+                    f.write(cif)
+                    f.close()
+                    structure = mg.Structure.from_file(cif_fname)
+                else:
+                    structure = mg.Structure.from_file(cif_fname)
 
-                    for material_element in self.material_elements:
-                        if material_element not in list(tmp_data_dict.keys()):
-                            tmp_data_dict[material_element] = 0 
+                for ii, lattice_abc in enumerate(["a","b","c"]):
+                    tmp_data_dict[lattice_abc] = structure.lattice.abc[ii]   
 
-                    self.data_dict[training_id] = tmp_data_dict
+                #for ii, lattice_angle in enumerate(["alpha","beta","gamma"]):
+                #    tmp_data_dict[lattice_angle = structure.lattice.abc[ii]   
+
+                tmp_data_dict["band_gap"] = mpr.get_data(training_id,prop="band_gap")[0]["band_gap"] 
+                composition = mg.Composition(tmp_data_dict["formula"])
+                
+                for element in composition:
+                    tmp_data_dict[element.value] = composition.get_atomic_fraction(element)
+
+                # if training data doesn't contain all elements, create zero-entry
+                # for training puposes
+                for material_element in self.material_elements:
+                    if material_element not in list(tmp_data_dict.keys()):
+                        tmp_data_dict[material_element] = 0 
+
+                ## unit cell formula
+                #unit_cell_formula = MPRester().get_data(training_id,prop="unit_cell_formula")[0]["unit_cell_formula"]
+                #for element, value in unit_cell_formula.items():
+                #    element_key = "unit_cell_"+element
+                #    tmp_data_dict[element_key] = value
+
+                ## if training data doesn't contain all unit cell elements, create zero-entry
+                ## for training puposes
+                #for material_element in self.material_elements:
+                #    material_element_key = "unit_cell_"+material_element
+                #    if material_element not in list(tmp_data_dict.keys()):
+                #        tmp_data_dict[material_element_key] = 0 
+
+                self.data_dict[training_id] = tmp_data_dict
 
 class BandGapDataFrame:
     """
@@ -133,7 +152,7 @@ class BandGapDataFrame:
     to train the model.
 
     Arguments:
-        data_dict (dict of dicts)
+        data_dict (dict of dict)
         symbols (list of str): symbols of all elements (from PeriodicTable object's symbols variable)
             Example: ["H", "He", ..., "Uuo"]
         material_training_params (list of str): contains the parameters which will be used to train the
@@ -156,7 +175,7 @@ class BandGapDataFrame:
         for param in material_training_params:
             if type(param) == str:
                 self.non_element_keys.append(param)
-        self.non_element_keys.append("molecular_weight")
+        #self.non_element_keys.append("molecular_weight")
         self.populate_data_dict_clean()
 
         # create dataframe from data_dict_clean 
@@ -185,7 +204,7 @@ class BandGapDataFrame:
         Helper function used to extract the correctly formatted data for use in training
         the model.
 
-        Arguments:
+        Args:
             test_size (float): optional input of test_size
 
         Returns:
