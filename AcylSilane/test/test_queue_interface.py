@@ -5,7 +5,6 @@ from unittest import mock
 from AcylSilane.convtrack.queue import Queue
 
 
-
 class qstat_tests(unittest.TestCase):
     # Classwide qstat, for mocking subprocess.check_output('qstat')
     qstat_path = os.path.join(os.path.dirname(os.getcwd()), "data/simulated_qstat.txt")
@@ -43,7 +42,24 @@ class qstat_tests(unittest.TestCase):
                          "Rem'g Time": "--"}
         for key, val in expected_vals.items():
             for job in self.queue.qstat()[0:2]:
-                self.assertEqual(job[key],val)
+                self.assertEqual(job[key], val)
 
-if __name__ == "__main__":
-    unittest.main()
+
+class qsub_tests(unittest.TestCase):
+    # Classwide qsub, for mocking subprocess.check_output('qstat')
+    qsub_path = os.path.join(os.path.dirname(os.getcwd()), "data/simulated_qsub.txt")
+    with open(qsub_path, "r") as qsub:
+        sample_qsub = qsub.read()
+
+    def setUp(self):
+        self.queue = Queue()
+
+    def tearDown(self):
+        pass
+
+    @mock.patch("AcylSilane.convtrack.queue.subprocess.check_output",
+                return_value=sample_qsub)
+    def test_qsub_returns_jobid(self, mock_qsub):
+        job_id = self.queue.qsub("job_vasp.pbs")
+        mock_qsub.assert_called_with(["qsub", "job_vasp.pbs"])
+        self.assertEqual(job_id, self.sample_qsub)

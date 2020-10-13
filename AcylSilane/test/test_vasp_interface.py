@@ -185,7 +185,3 @@ class uniform_supercell_tests(unittest.TestCase):
     def test_convergence_uniform_spacing_avoids_uneven_supercells(self, a, b, c):
         dict_key = "".join(map(str, (a, b, c)))
         self.assertNotIn(dict_key, self.convergence.calculations.keys())
-
-
-if __name__ == "__main__":
-    unittest.main()

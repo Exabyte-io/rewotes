@@ -22,3 +22,11 @@ class Queue(object):
             else:
                 vals.append(re.split("\s{2,}", line.strip()))
         return [dict(zip(keys, val)) for val in vals]
+
+    def qsub(self, path_to_file):
+        job_id = subprocess.check_output(['qsub', path_to_file])
+        return job_id
+
+
+
+
