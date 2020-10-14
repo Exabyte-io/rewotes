@@ -43,13 +43,13 @@ class BandGapPrediction:
         print(f"\nStarting prediciton for {material.formula} using {model_type} model type...")
         self.material = material
         self.model_type = model_type
-        self.periodic_table = periodictable.PeriodicTable()
+        #self.periodic_table = periodictable.PeriodicTable()
 
-        self.material_prediction_data = material_module.MaterialPredictionData(self.material)
+        self.material_prediction_data = material_module.MaterialPredictionData(self.material, model_type)
         self.material_training_params = self.material_prediction_data.training_params
 
         self.band_gap_dataset_obj = trainingdata.BandGapDataset(self.material)  
-        self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, self.periodic_table.symbols, self.material_training_params)
+        self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, self.material_training_params, model_type)
 
         #self.map_non_numeric_params()
         self.train_model()

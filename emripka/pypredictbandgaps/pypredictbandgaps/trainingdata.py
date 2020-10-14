@@ -5,6 +5,7 @@ import json
 from os import listdir
 from os.path import isfile, join
 from . import converters as converters
+import re
 
 from datetime import datetime
 import os
@@ -37,6 +38,7 @@ class BandGapDataset:
         spacegroup_int = [SpaceGroup(spacegroup).int_number]
         composition = mg.Composition(self.material.formula)
         chemical_system = composition.chemical_system
+        groups = [ element.group for element in composition ] 
 
         properties = ["material_id","pretty_formula","band_gap","spacegroup","cif"]
 
@@ -52,19 +54,30 @@ class BandGapDataset:
             results.append(result)
         num_results += len(results_tmp)
         print(f"Number of {chemical_system} system entries in Materials Project: {len(results_tmp)}") 
-        for material_element in self.material_elements:
-            results_tmp = mpr.query(criteria=material_element,properties=properties)
+        for material_element in composition:
+            # getting all mp data based on contained elements
+            results_tmp = mpr.query(criteria=material_element.value,properties=properties)
             for result in results_tmp:
                 results.append(result)
             num_results += len(results_tmp)
             print(f"Number of {material_element} entries in Materials Project: {len(results_tmp)}") 
+        ## getting all mp data based on contained elements' groups
+        ## https://matgenb.materialsvirtuallab.org/2017/03/02/Getting-data-from-Materials-Project.html
+        #anon_formula = composition.anonymized_formula
+        ## We need to convert the formula to the dict form used in the database.
+        #anon_formula = {m.group(1): int(m.group(2)) for m in re.finditer(r"([A-Z]+)(\d+)", anon_formula)}
+        #results_tmp = mpr.query(criteria={"anonymous_formula": anon_formula}, properties=properties)
+        #for result in results_tmp:
+        #    results.append(result)
+        #num_results += len(results_tmp)
+        #print(f"Number of elements' group entries in Materials Project: {len(results_tmp)}") 
         print(f"Number of results for training: {num_results}") 
 
         for result in results:
             tmp_data_dict = dict()
             tmp_data_dict["formula"] = result["pretty_formula"]  
             tmp_data_dict["band_gap"] = result["band_gap"]  
-            #tmp_data_dict["spacegroup"] = result["spacegroup"]["number"]
+            tmp_data_dict["spacegroup"] = result["spacegroup"]["number"]
 
             # get cif file
             cif_fname = self.cif_dir + result["material_id"] + ".cif"
@@ -84,15 +97,19 @@ class BandGapDataset:
             composition = mg.Composition(tmp_data_dict["formula"])
             for element in composition:
                 tmp_data_dict[element.value] = composition.get_atomic_fraction(element)
+                tmp_data_dict[element.value+"_group"] = element.group
+                tmp_data_dict[element.value+"_electronegativity"] = element.X
 
             # if training data doesn't contain all elements, create zero-entry
             # for training puposes
             for material_element in self.material_elements:
                 if material_element not in list(tmp_data_dict.keys()):
                     tmp_data_dict[material_element] = 0 
+                    tmp_element = mg.Element(material_element)
+                    tmp_data_dict[material_element+"_group"] = tmp_element.group 
+                    tmp_data_dict[material_element+"_electronegativity"] = tmp_element.X 
 
-            #tmp_data_dict["molecular_weight"] = composition.weight
-
+            tmp_data_dict["molecular_weight"] = composition.weight
             self.data_dict[result["material_id"]] = tmp_data_dict
 
 class BandGapDataFrame:
@@ -104,8 +121,10 @@ class BandGapDataFrame:
         data_dict (dict of dict)
         material_training_params (list of str): contains the parameters which will be used to train the model 
             Example: ["density","crystal_system"]
+        model_type (str): choose from the following models:
+            ["ridge_regression", "svm", "decision_tree", "random_forest"]
     """
-    def __init__(self, data_dict, material_training_params):
+    def __init__(self, data_dict, material_training_params, model_type):
         self.data_dict = data_dict
         #self.crystal_system_map = dict()
         #self.spacegroup_map = dict()
@@ -125,8 +144,9 @@ class BandGapDataFrame:
         # create dataframe from data_dict_clean 
         self.dataframe = pd.DataFrame(self.data_dict_clean) 
 
-        # dropping rows which have a bandgap of zero; not sure if I want to do this...
-        #self.dataframe = self.dataframe[self.dataframe['band_gap'] != 0]
+        #if model_type == "ridge_regression":
+        #    # dropping rows which have a bandgap of zero; not sure if I want to do this...
+        #    self.dataframe = self.dataframe[self.dataframe['band_gap'] != 0]
 
     def populate_data_dict_clean(self):
         """
