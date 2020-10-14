@@ -22,8 +22,8 @@
 
 ```python
 # input materials
-Si2Ge3 = Material(formula="Si2Ge3",spacegroup="F-43m",a=4.12,b=4.12,c=4.12,alpha=59.99,beta=59.99,gamma=59.99,volume=45)
-Si82Ge17 = Material(formula="Si82Ge17",spacegroup="F-43m",a=3.98,b=3.98,c=3.98,alpha=59.99,beta=59.99,gamma=59.99,volume=39)
+Si2Ge3 = Material(formula="Si2Ge3",spacegroup="F-43m",a=4.12,b=4.12,c=4.12,alpha=59.99,beta=59.99,gamma=59.99)
+Si82Ge17 = Material(formula="Si82Ge17",spacegroup="F-43m",a=3.98,b=3.98,c=3.98,alpha=59.99,beta=59.99,gamma=59.99)
 
 # train the model and predict the bandgaps
 materials_list = [Cd2Se3, Si82Ge17]

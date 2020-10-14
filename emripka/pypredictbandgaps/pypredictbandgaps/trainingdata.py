@@ -127,12 +127,9 @@ class BandGapDataFrame:
     def __init__(self, data_dict, material_training_params, model_type):
         self.data_dict = data_dict
         #self.crystal_system_map = dict()
-        #self.spacegroup_map = dict()
 
         # create new dictionary
-        self.data_dict_clean = {
-            "ID": [ ID for (ID, result) in self.data_dict.items() ],
-        }
+        self.data_dict_clean = { "ID": [ ID for (ID, result) in self.data_dict.items() ], }
 
         # select training params 
         self.non_element_keys = ["band_gap",]
@@ -159,10 +156,6 @@ class BandGapDataFrame:
         #    self.crystal_system_map = converters.create_non_numeric_map(self.data_dict_clean, "crystal_system")
         #    self.data_dict_clean["crystal_system"] = [self.crystal_system_map[value] for value in self.data_dict_clean["crystal_system"] ] 
 
-        #if "spacegroup" in self.non_element_keys: 
-        #    self.spacegroup_map = converters.create_non_numeric_map(self.data_dict_clean, "spacegroup")
-        #    self.data_dict_clean["spacegroup"] = [self.spacegroup_map[value] for value in self.data_dict_clean["spacegroup"] ] 
-    
     def get_all_train_data(self):
         """
         Helper function for some training models. 
@@ -172,6 +165,7 @@ class BandGapDataFrame:
             y (arr)
         """
         X_keys = list(self.dataframe.keys())[2:]
+        print("training params=",X_keys)
         X = np.asarray(self.dataframe[X_keys])
         y = np.asarray(self.dataframe['band_gap'])
         return X, y
@@ -192,10 +186,8 @@ class BandGapDataFrame:
         """
         X_keys = list(self.dataframe.keys())[2:]
         print("training params=",X_keys)
-
         X = np.asarray(self.dataframe[X_keys])
         y = np.asarray(self.dataframe['band_gap'])
-                
         return train_test_split(X, y, test_size=test_size, shuffle= True) 
 
 class TrainingData:
@@ -246,5 +238,3 @@ class TrainingData:
         with open(f"{json_path}/user_data.json","w") as fname:
             json.dump(user_data,fname,indent=4)
         fname.close()
-
-

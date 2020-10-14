@@ -28,7 +28,6 @@ class Material:
         self.formula = formula 
         self.composition = mg.Composition(self.formula)
         self.features = dict(**kwargs)
-        #self.spacegroup = spacegroup
         self.spacegroup = self.features["spacegroup"]
         spacegroup_map = { sg_symbol_from_int_number(ii):ii for ii in range(1,231)}
         self.features["spacegroup"] = spacegroup_map[self.features["spacegroup"]]
