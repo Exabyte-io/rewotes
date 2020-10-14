@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:07062e0d4c1015a966cddba0c572ee34f8cd34b21d6fe3d2caa1224e1c5999be
-size 77
+SYSTEM =  Si
+ISMEAR = 0
+SIGMA  = 0.05
+LWAVE  = .FALSE.
+LCHARG = .FALSE.

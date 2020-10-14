@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:dde85c8872e1ae4867e3632ed819e92044c0c27ab69f2c37d0eecacf1bd330c8
-size 57
+76182.master-production-20160630-cluster-001.exabyte.io

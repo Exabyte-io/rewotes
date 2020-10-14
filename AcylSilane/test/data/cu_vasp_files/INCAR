@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6f0950e134406ba18442ddcb6ee9e329ac7aad3c8237a070c720e0de479a2943
-size 335
+System = Cu
+
+ISTART = 0
+ICHARG = 2
+
+NSW    = 0
+EDIFF  = 1E-05
+ALGO   = Fast
+LREAL  = Auto
+ENCUT  = 295 ! VASP Manual's recommended cutoff for PAW/PBE/Cu pseudopotential, ideally you'd go converge this too.
+PREC   = Med
+
+ISMEAR = 0 ! Since we're just using a single gamma, we're going with Gaussian smearing
+SIGMA  = 0.05
