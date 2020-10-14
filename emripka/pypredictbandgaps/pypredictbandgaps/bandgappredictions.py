@@ -3,6 +3,7 @@ from sklearn import linear_model, model_selection
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 from . import periodictable as periodictable
 from . import material as material_module
@@ -19,12 +20,13 @@ class BandGapPredictions:
     """ 
     Class used to predict the band gap of a set of materials. A unique model is 
     trained for each material, as each material can have unique input parameters.
-    
+
     Args:
         materials (list of Material objects)
-        training_data (list of str)
+        model_type (str): choose from the following models:
+            ["ridge_regression", "svm", "decision_tree", "random_forest"]
     """
-    def __init__(self, materials, model_type, training_data=None):
+    def __init__(self, materials, model_type="ridge_regression"):
         self.band_gap_prediction_objects = { material.formula: BandGapPrediction(material, model_type) for material in materials }
 
 class BandGapPrediction:
@@ -34,6 +36,8 @@ class BandGapPrediction:
 
     Args:
         material (Material)
+        model_type (str): choose from the following models:
+            ["ridge_regression", "svm", "decision_tree", "random_forest"]
     """
     def __init__(self, material, model_type):
         print(f"\nStarting prediciton for {material.formula} using {model_type} model type...")
@@ -43,7 +47,6 @@ class BandGapPrediction:
 
         self.material_prediction_data = material_module.MaterialPredictionData(self.material)
         self.material_training_params = self.material_prediction_data.training_params
-        print(f"Material training params: {self.material_training_params}")
 
         self.band_gap_dataset_obj = trainingdata.BandGapDataset(self.material)  
         self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, self.periodic_table.symbols, self.material_training_params)
@@ -69,6 +72,7 @@ class BandGapPrediction:
 
     def train_model(self):
         """
+        Chooses model based on user choice.
         """
         if self.model_type == "ridge_regression":
             self.train_model_ridge_regression()
@@ -76,6 +80,8 @@ class BandGapPrediction:
             self.train_model_svm()
         elif self.model_type == "decision_tree":
             self.train_model_decision_tree()
+        elif self.model_type == "random_forest":
+            self.train_model_random_forest()
 
     def choose_alpha(self, X_train, y_train):
         """
@@ -151,12 +157,35 @@ class BandGapPrediction:
     def train_model_decision_tree(self):
         """
         Decision Tree model training.
+        https://developer.ibm.com/tutorials/learn-regression-algorithms-using-python-and-scikit-learn/
         """
         print("Training the model...")
         X_train, X_test, y_train, y_test = self.band_gap_dataframe_obj.get_train_test_splits()
 
         regressor = DecisionTreeRegressor(random_state=0)#, max_features=30)
         #model = Pipeline(steps=[("preprocessorAll", preprocessorForAllColumns),("regressor", regressor)])
+        model = regressor.fit(X_train, y_train)
+
+        self.X_train = X_train 
+        self.X_test = X_test 
+        self.y_train = y_train 
+        self.y_test = y_test 
+        self.model = model 
+
+        print("Making predictions...")
+        this_prediction_data = np.asarray(self.material_prediction_data.prediction_data)
+        this_prediction_data = np.reshape(this_prediction_data, (1,np.shape(this_prediction_data)[0]))
+        self.predicted_band_gap = model.predict(this_prediction_data)[0]
+
+    def train_model_random_forest(self):
+        """
+        Random Forest model training.
+        https://developer.ibm.com/tutorials/learn-regression-algorithms-using-python-and-scikit-learn/
+        """
+        print("Training the model...")
+        X_train, X_test, y_train, y_test = self.band_gap_dataframe_obj.get_train_test_splits()
+
+        regressor = RandomForestRegressor(n_estimators=100,max_depth=15,random_state=0)
         model = regressor.fit(X_train, y_train)
 
         self.X_train = X_train 

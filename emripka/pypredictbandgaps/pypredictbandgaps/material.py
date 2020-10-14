@@ -24,14 +24,14 @@ class Material:
         gamma (float)
         volume (float)
     """
-    def __init__(self, formula, **kwargs): 
+    def __init__(self, formula, spacegroup, **kwargs): 
         self.formula = formula 
         self.composition = mg.Composition(self.formula)
         self.features = dict(**kwargs)
-        self.spacegroup = self.features["spacegroup"]
-        spacegroup_map = { sg_symbol_from_int_number(ii):ii for ii in range(1,231)}
-        self.features["spacegroup"] = spacegroup_map[self.features["spacegroup"]]
-
+        self.spacegroup = spacegroup
+        #self.spacegroup = self.features["spacegroup"]
+        #spacegroup_map = { sg_symbol_from_int_number(ii):ii for ii in range(1,231)}
+        #self.features["spacegroup"] = spacegroup_map[self.features["spacegroup"]]
 
 class MaterialPredictionData:
     """
@@ -60,6 +60,6 @@ class MaterialPredictionData:
         for element in material.composition:
             self.prediction_data.append(material.composition.get_atomic_fraction(element))
 
-        self.training_params.append("molecular_weight")
-        composition = mg.Composition(material.formula)
-        self.prediction_data.append(composition.weight)
+        #self.training_params.append("molecular_weight")
+        #composition = mg.Composition(material.formula)
+        #self.prediction_data.append(composition.weight)
