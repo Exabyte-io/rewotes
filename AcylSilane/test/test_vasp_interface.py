@@ -14,7 +14,7 @@ class local_io_tests(unittest.TestCase):
     def setUp(self):
         # Build Calculation object
         self.local_path = os.path.dirname(__file__)
-        self.data_dir = os.path.join(os.path.dirname(self.local_path), "data/cu_vasp_files")
+        self.data_dir = os.path.join(self.local_path, "data/cu_vasp_files")
         self.incar = os.path.join(self.data_dir, "INCAR")
         self.poscar = os.path.join(self.data_dir, "POSCAR")
         self.potcar = os.path.join(self.data_dir, "POTCAR")
@@ -50,7 +50,7 @@ class local_io_tests(unittest.TestCase):
 
 class vasp_interface_tests(unittest.TestCase):
     def setUp(self):
-        self.data_dir = os.path.join(os.path.dirname(os.getcwd()), "data/sample_si_calc")
+        self.data_dir = os.path.join(os.path.dirname(__file__), "data/sample_si_calc")
         self.incar = os.path.join(self.data_dir, "INCAR")
         self.poscar = os.path.join(self.data_dir, "POSCAR")
         self.potcar = os.path.join(self.data_dir, "POTCAR")
@@ -72,7 +72,7 @@ class vasp_interface_tests(unittest.TestCase):
         self.assertTrue(self.calc.started())
 
     def test_detects_job_has_not_started(self):
-        self.calc.calc_folder = "../data/cu_vasp_files"
+        self.calc.calc_folder = "data/cu_vasp_files"
         self.assertFalse(self.calc.started())
 
     def test_calculation_detects_finished_job(self):
@@ -83,7 +83,7 @@ class vasp_interface_tests(unittest.TestCase):
         self.assertEqual(self.calc.energy(), true_energy)
 
     def test_calculation_returns_None_energy_if_incomplete(self):
-        self.calc.calc_folder = "../data/cu_vasp_files"
+        self.calc.calc_folder = "data/cu_vasp_files"
         self.assertIsNone(self.calc.energy())
 
 
@@ -91,7 +91,7 @@ class supercell_creation_tests(unittest.TestCase):
     def setUp(self):
         # Build Calculation object
         self.local_path = os.path.dirname(__file__)
-        self.data_dir = os.path.join(os.path.dirname(self.local_path), "data/cu_vasp_files")
+        self.data_dir = os.path.join(self.local_path, "data/cu_vasp_files")
         self.output_path = os.path.join(self.local_path, "temp_io")
         # Ensure our temp directory doesn't exist already
         assert not os.path.isdir(self.output_path)
@@ -135,7 +135,7 @@ class uniform_supercell_tests(unittest.TestCase):
     def setUp(self):
         # Build Calculation object
         self.local_path = os.path.dirname(__file__)
-        self.data_dir = os.path.join(os.path.dirname(self.local_path), "data/cu_vasp_files")
+        self.data_dir = os.path.join(self.local_path, "data/cu_vasp_files")
         self.output_path = os.path.join(self.local_path, "temp_io")
         # Ensure our temp directory doesn't exist already
         assert not os.path.isdir(self.output_path)

@@ -7,7 +7,7 @@ from AcylSilane.convtrack.queueinterface import QueueInterface
 
 class qstat_tests(unittest.TestCase):
     # Classwide qstat, for mocking subprocess.check_output('qstat')
-    qstat_path = os.path.join(os.path.dirname(os.getcwd()), "data/simulated_qstat.txt")
+    qstat_path = os.path.join(os.getcwd(), "data/simulated_qstat.txt")
     with open(qstat_path, "r") as qstat:
         sample_qstat = qstat.read()
 
@@ -47,7 +47,7 @@ class qstat_tests(unittest.TestCase):
 
 class qsub_tests(unittest.TestCase):
     # Classwide qsub, for mocking subprocess.check_output('qstat')
-    qsub_path = os.path.join(os.path.dirname(os.getcwd()), "data/simulated_qsub.txt")
+    qsub_path = os.path.join(os.getcwd(), "data/simulated_qsub.txt")
     with open(qsub_path, "r") as qsub:
         sample_qsub = qsub.read()
 
