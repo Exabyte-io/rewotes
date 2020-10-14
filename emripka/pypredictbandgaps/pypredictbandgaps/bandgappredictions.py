@@ -2,6 +2,7 @@ import numpy as np
 from sklearn import linear_model, model_selection
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
 
 from . import periodictable as periodictable
 from . import material as material_module
@@ -26,21 +27,6 @@ class BandGapPredictions:
     def __init__(self, materials, model_type, training_data=None):
         self.band_gap_prediction_objects = { material.formula: BandGapPrediction(material, model_type) for material in materials }
 
-    def move_user_data(self):
-        """ 
-        Moves the user_data.json file to /data/training/user_data_json/ and rename to the date and time
-        of the prediciton after predictions
-        """
-        json_path = this_dir+"/data/training/materialsproject_json"
-        user_data_path = this_dir+"/data/training/user_data_json"
-        fname = create_user_data_filename()   
-        shutil.move(f"{json_path}/user_data.json", f"{user_data_path}/{fname}.json")
-
-        # create empty user_data.json file
-        with open(f"{json_path}/user_data.json","w") as fname:
-            json.dump(dict(),fname,indent=4)
-        fname.close()
-
 class BandGapPrediction:
     """
     Unique training dataset created and used to train the model for a user-defined 
@@ -50,18 +36,21 @@ class BandGapPrediction:
         material (Material)
     """
     def __init__(self, material, model_type):
+        print(f"\nStarting prediciton for {material.formula} using {model_type} model type...")
         self.material = material
         self.model_type = model_type
         self.periodic_table = periodictable.PeriodicTable()
 
         self.material_prediction_data = material_module.MaterialPredictionData(self.material)
         self.material_training_params = self.material_prediction_data.training_params
+        print(f"Material training params: {self.material_training_params}")
 
         self.band_gap_dataset_obj = trainingdata.BandGapDataset(self.material)  
         self.band_gap_dataframe_obj = trainingdata.BandGapDataFrame(self.band_gap_dataset_obj.data_dict, self.periodic_table.symbols, self.material_training_params)
 
         #self.map_non_numeric_params()
         self.train_model()
+        print("predicted bandgap for ",self.material.formula, ":",self.predicted_band_gap) 
 
     def map_non_numeric_params(self):
         """
@@ -79,10 +68,14 @@ class BandGapPrediction:
                 self.material_prediction_data.prediction_data[idx] = band_gap_map[value]            
 
     def train_model(self):
+        """
+        """
         if self.model_type == "ridge_regression":
             self.train_model_ridge_regression()
         elif self.model_type == "svm":
             self.train_model_svm()
+        elif self.model_type == "decision_tree":
+            self.train_model_decision_tree()
 
     def choose_alpha(self, X_train, y_train):
         """
@@ -112,6 +105,8 @@ class BandGapPrediction:
         X_train, X_test, y_train, y_test = self.band_gap_dataframe_obj.get_train_test_splits()
 
         alpha_choice = self.choose_alpha(X_train, y_train)
+
+        print("Making predictions...")
         model = linear_model.Ridge(alpha=alpha_choice)
         model.fit(X_train, y_train)
 
@@ -123,17 +118,15 @@ class BandGapPrediction:
         self.model_score = model.score(X_test, y_test)
         self.model_weights = model.coef_
 
-        print("Making predictions...")
         this_prediction_data = np.asarray(self.material_prediction_data.prediction_data)
         this_prediction_data = np.reshape(this_prediction_data, (1,np.shape(this_prediction_data)[0]))
-        print("prediciton data:",this_prediction_data)
         self.predicted_band_gap = self.model.predict(this_prediction_data)[0]
-        print("predicted bandgap:", self.predicted_band_gap) 
 
     def train_model_svm(self):
         """
         Support Vector Machine model training.   
         """
+        print("Training the model...")
         X, y = self.band_gap_dataframe_obj.get_all_train_data()
         sc_X = StandardScaler()
         sc_y = StandardScaler()
@@ -146,13 +139,33 @@ class BandGapPrediction:
         self.X = X
         self.y = y 
 
+        print("Making predictions...")
         regressor = SVR(kernel='rbf')
         model = regressor.fit(X, y)
         self.model = model
 
+        this_prediction_data = np.asarray(self.material_prediction_data.prediction_data)
+        this_prediction_data = np.reshape(this_prediction_data, (1,np.shape(this_prediction_data)[0]))
+        self.predicted_band_gap = sc_y.inverse_transform((regressor.predict (sc_X.transform(this_prediction_data))))
+
+    def train_model_decision_tree(self):
+        """
+        Decision Tree model training.
+        """
+        print("Training the model...")
+        X_train, X_test, y_train, y_test = self.band_gap_dataframe_obj.get_train_test_splits()
+
+        regressor = DecisionTreeRegressor(random_state=0)#, max_features=30)
+        #model = Pipeline(steps=[("preprocessorAll", preprocessorForAllColumns),("regressor", regressor)])
+        model = regressor.fit(X_train, y_train)
+
+        self.X_train = X_train 
+        self.X_test = X_test 
+        self.y_train = y_train 
+        self.y_test = y_test 
+        self.model = model 
+
         print("Making predictions...")
         this_prediction_data = np.asarray(self.material_prediction_data.prediction_data)
         this_prediction_data = np.reshape(this_prediction_data, (1,np.shape(this_prediction_data)[0]))
-        print("prediciton data:",this_prediction_data)
-        self.predicted_band_gap = sc_y.inverse_transform((regressor.predict (sc_X.transform(this_prediction_data))))
-        print("predicted bandgap:", self.predicted_band_gap) 
+        self.predicted_band_gap = model.predict(this_prediction_data)[0]

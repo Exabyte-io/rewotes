@@ -143,6 +143,8 @@ class BandGapDataset:
                 if material_element not in list(tmp_data_dict.keys()):
                     tmp_data_dict[material_element] = 0 
 
+            tmp_data_dict["molecular_weight"] = composition.weight
+
             self.data_dict[result["material_id"]] = tmp_data_dict
 
 class BandGapDataFrame:
@@ -174,7 +176,6 @@ class BandGapDataFrame:
         for param in material_training_params:
             if type(param) == str:
                 self.non_element_keys.append(param)
-        #self.non_element_keys.append("molecular_weight")
         self.populate_data_dict_clean()
 
         # create dataframe from data_dict_clean 

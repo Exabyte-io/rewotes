@@ -47,7 +47,6 @@ class MaterialPredictionData:
         #self.molecular_weight = material.composition.weight
         self.material_stoichiometry = { element.value: material.composition.get_atomic_fraction(element) for element in material.composition }
 
-
         # stores numeric data for prediction
         self.prediction_data = [ value for feature, value in material.features.items() ] 
 
@@ -60,4 +59,7 @@ class MaterialPredictionData:
 
         for element in material.composition:
             self.prediction_data.append(material.composition.get_atomic_fraction(element))
-        #self.prediction_data.append(self.molecular_weight)
+
+        self.training_params.append("molecular_weight")
+        composition = mg.Composition(material.formula)
+        self.prediction_data.append(composition.weight)
