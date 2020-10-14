@@ -37,7 +37,7 @@ const Editor = ({
   };
 
   return (
-    <FormStyles>
+    <EditorStyles>
       <h1>{selectedMaterial ? `${selectedMaterial.name} Editor` : 'Materials Editor'}</h1>
       <SelectSavedMaterials materials={materials} selectMaterial={selectMaterial} />
       <AddCoordinateForm elements={elements} setElements={setElements} />
@@ -65,11 +65,11 @@ const Editor = ({
           />
         </>
       ) : null}
-    </FormStyles>
+    </EditorStyles>
   );
 };
 
-const FormStyles = styled.div`
+const EditorStyles = styled.div`
   width: 30%;
   display: flex;
   flex-direction: column;

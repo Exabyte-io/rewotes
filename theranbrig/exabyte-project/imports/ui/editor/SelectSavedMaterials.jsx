@@ -31,7 +31,6 @@ export const SelectStyles = styled.div`
     position: relative;
     width: 100%;
   }
-
   select::-ms-expand {
     display: none;
   }
@@ -63,7 +62,6 @@ export const SelectStyles = styled.div`
     -moz-appearance: none;
     appearance: none;
     width: 100%;
-
     float: right;
     font-size: 16px;
     line-height: 1.75;

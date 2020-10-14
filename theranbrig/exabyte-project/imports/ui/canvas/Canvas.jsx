@@ -6,7 +6,6 @@ import LineConnection from './LineConnection';
 import styled from 'styled-components';
 
 const CanvasArea = ({ elements, connections, setHoveredElement }) => {
-  console.log('Connections', connections);
   return (
     <CanvasStyles>
       <Canvas camera={{ position: [5, 5, 2] }}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import CanvasArea from './Canvas';
-import Editor from './Editor';
+import CanvasArea from './canvas/Canvas';
+import Editor from './editor/Editor';
 import styled from 'styled-components';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Materials } from '/imports/api/materials';
@@ -25,7 +25,6 @@ export const App = () => {
 
   const selectMaterial = (id) => {
     const selected = materials.filter((material) => material._id === id)[0];
-    console.log(selected);
     clearEditor(selected);
   };
 
