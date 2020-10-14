@@ -1,10 +1,10 @@
 # pyPredictBandGaps
 
-A package to predict a material's bandgap for a given set of stoichiometric and crystallographic properties. 
+* A package to predict a material's bandgap for a given set of stoichiometric and crystallographic properties. 
     * Relies on the Materials Project query funcionality for training data. 
 
 ## Dependencies
-**pymatgen**
+* **pymatgen**
     * follow installation instructions as suggested [here](https://pymatgen.org/index.html). 
     * Add your Materials Project API key: ``pmg config --add PMG_MAPI_KEY <USER_API_KEY>``
 
