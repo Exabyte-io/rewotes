@@ -11,7 +11,9 @@ import os
 this_dir, this_filename = os.path.split(__file__)
 
 import pymatgen as mg
+from pymatgen.symmetry.groups import SpaceGroup
 from pymatgen.ext.matproj import MPRester
+mpr = MPRester()
 
 def create_id():
     """
@@ -87,64 +89,61 @@ class BandGapDataset:
     def get_data(self):
         """
         """
+        spacegroup = self.material.spacegroup
+        spacegroup_int = [SpaceGroup(spacegroup).int_number]
         composition = mg.Composition(self.material.formula)
         chemical_system = composition.chemical_system
-        cif_files = [f for f in listdir(self.cif_dir) if isfile(join(self.cif_dir, f))]
 
-        with MPRester() as mpr:
-            print(f"... getting mp ids for the chemical system: {chemical_system} ...")
-            training_ids = mpr.get_materials_ids(chemical_system)        
-            num_ids = len(training_ids)
+        properties = ["material_id","pretty_formula","band_gap","spacegroup","cif"]
 
-            for idx, training_id in enumerate(training_ids):
-                print(f" getting training data for {training_id}: {idx+1} of {num_ids} mp ids")
+        #print(f"Getting MP data for the spacegroup: {spacegroup} ...")
+        #results_sg = mpr.query(criteria={'spacegroup.number': {'$in': spacegroup_int}}, properties=properties)
+        #num_results_sg = len(results_sg)
+        #print(f"Number of {spacegroup} entries in Materials Project: {num_results_sg}") 
+        print(f"\nGetting Materials Project data for the chemical system: {chemical_system} ...")
+        results_sys = mpr.query(criteria=chemical_system,properties=properties)
+        num_results_sys = len(results_sys)
+        num_results = num_results_sys# + num_results_sg  
+        print(f"Number of {chemical_system} system entries in Materials Project: {num_results_sys}") 
+        print(f"Number of results for training: {num_results}") 
 
-                tmp_data_dict = dict()
-                tmp_data_dict["formula"] = mpr.get_data(training_id,prop="pretty_formula")[0]["pretty_formula"]
+        results = results_sys
+        #results = results_sg
+        #for result in results_sys:
+        #    results.append(result)
 
-                # get cif file
-                cif_fname = self.cif_dir + training_id + ".cif"
-                if cif_fname not in cif_files:
-                    cif = mpr.get_data(training_id,prop="cif")[0]["cif"]
-                    f = open(cif_fname, "a")
-                    f.write(cif)
-                    f.close()
-                    structure = mg.Structure.from_file(cif_fname)
-                else:
-                    structure = mg.Structure.from_file(cif_fname)
+        for result in results:
+            tmp_data_dict = dict()
+            tmp_data_dict["formula"] = result["pretty_formula"]  
+            tmp_data_dict["band_gap"] = result["band_gap"]  
+            tmp_data_dict["spacegroup"] = result["spacegroup"]["number"]
 
-                for ii, lattice_abc in enumerate(["a","b","c"]):
-                    tmp_data_dict[lattice_abc] = structure.lattice.abc[ii]   
+            # get cif file
+            cif_fname = self.cif_dir + result["material_id"] + ".cif"
+            f = open(cif_fname, "a")
+            f.write(result["cif"])
+            f.close()
+            structure = mg.Structure.from_file(cif_fname)
 
-                #for ii, lattice_angle in enumerate(["alpha","beta","gamma"]):
-                #    tmp_data_dict[lattice_angle = structure.lattice.abc[ii]   
+            tmp_data_dict["volume"] = structure.lattice.volume
 
-                tmp_data_dict["band_gap"] = mpr.get_data(training_id,prop="band_gap")[0]["band_gap"] 
-                composition = mg.Composition(tmp_data_dict["formula"])
-                
-                for element in composition:
-                    tmp_data_dict[element.value] = composition.get_atomic_fraction(element)
+            for ii, lattice_abc in enumerate(["a","b","c"]):
+                tmp_data_dict[lattice_abc] = structure.lattice.abc[ii]   
 
-                # if training data doesn't contain all elements, create zero-entry
-                # for training puposes
-                for material_element in self.material_elements:
-                    if material_element not in list(tmp_data_dict.keys()):
-                        tmp_data_dict[material_element] = 0 
+            for ii, lattice_angle in enumerate(["alpha","beta","gamma"]):
+                tmp_data_dict[lattice_angle] = structure.lattice.angles[ii]   
 
-                ## unit cell formula
-                #unit_cell_formula = MPRester().get_data(training_id,prop="unit_cell_formula")[0]["unit_cell_formula"]
-                #for element, value in unit_cell_formula.items():
-                #    element_key = "unit_cell_"+element
-                #    tmp_data_dict[element_key] = value
+            composition = mg.Composition(tmp_data_dict["formula"])
+            for element in composition:
+                tmp_data_dict[element.value] = composition.get_atomic_fraction(element)
 
-                ## if training data doesn't contain all unit cell elements, create zero-entry
-                ## for training puposes
-                #for material_element in self.material_elements:
-                #    material_element_key = "unit_cell_"+material_element
-                #    if material_element not in list(tmp_data_dict.keys()):
-                #        tmp_data_dict[material_element_key] = 0 
+            # if training data doesn't contain all elements, create zero-entry
+            # for training puposes
+            for material_element in self.material_elements:
+                if material_element not in list(tmp_data_dict.keys()):
+                    tmp_data_dict[material_element] = 0 
 
-                self.data_dict[training_id] = tmp_data_dict
+            self.data_dict[result["material_id"]] = tmp_data_dict
 
 class BandGapDataFrame:
     """
@@ -199,6 +198,14 @@ class BandGapDataFrame:
         #    self.spacegroup_map = converters.create_non_numeric_map(self.data_dict_clean, "spacegroup")
         #    self.data_dict_clean["spacegroup"] = [self.spacegroup_map[value] for value in self.data_dict_clean["spacegroup"] ] 
     
+    def get_all_train_data(self):
+        """
+        """
+        X_keys = list(self.dataframe.keys())[2:]
+        X = np.asarray(self.dataframe[X_keys])
+        y = np.asarray(self.dataframe['band_gap'])
+        return X, y
+
     def get_train_test_splits(self, test_size=0.25):
         """
         Helper function used to extract the correctly formatted data for use in training

@@ -3,7 +3,7 @@ import numpy as np
 from . import stoichiometry as stoichiometry 
 
 import pymatgen as mg
-from pymatgen.ext.matproj import MPRester
+from pymatgen.symmetry.groups import sg_symbol_from_int_number
 
 class Material:
     """
@@ -13,6 +13,7 @@ class Material:
 
     Args:
         formula (str)
+        spacegroup (float)
 
     Kwargs:
         a (float)
@@ -27,6 +28,10 @@ class Material:
         self.formula = formula 
         self.composition = mg.Composition(self.formula)
         self.features = dict(**kwargs)
+        self.spacegroup = self.features["spacegroup"]
+        spacegroup_map = { sg_symbol_from_int_number(ii):ii for ii in range(1,231)}
+        self.features["spacegroup"] = spacegroup_map[self.features["spacegroup"]]
+
 
 class MaterialPredictionData:
     """
@@ -41,6 +46,7 @@ class MaterialPredictionData:
 
         #self.molecular_weight = material.composition.weight
         self.material_stoichiometry = { element.value: material.composition.get_atomic_fraction(element) for element in material.composition }
+
 
         # stores numeric data for prediction
         self.prediction_data = [ value for feature, value in material.features.items() ] 
