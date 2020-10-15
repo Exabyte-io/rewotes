@@ -4,10 +4,12 @@ from ase.vibrations import Vibrations
 from ase.optimize import BFGS
 from rdkit import Chem
 from rdkit.Chem import AllChem
-
+import numpy as np
+import os
 
 class Molecule(object):
-    def __init__(self,input_file_path='',smiles_string=''):
+    def __init__(self,input_file_path='',smiles_string='', label='', reference_value=None):
+        self.label=label
         if input_file_path is not '':
             self.atoms=self.atoms_from_file(input_file_path)
         elif smiles_string is not '':
@@ -34,36 +36,47 @@ class Molecule(object):
         atoms=Atoms(symbols=atomic_symbols,positions=positions)
         return atoms
 
-    def calculate_energy(self,basis_set):
-        calc=nwchem.NWChem(
-              dft=dict(maxiter=2000,
-                       xc='B3LYP'),
-              basis=basis_set)
-        self.atoms.calc=calc
-        #BFGS(self.atoms).run(fmax=0.01)
-        energy=self.atoms.get_potential_energy()
+
+    
+
+class Calculator(object):
+    def __init__(self,basis_set='STO-2G',property='energy',use_reference_calculator=False):
+        if use_reference_calculator:
+             self.calc=nwchem.NWChem(
+                theory='ccsd'
+            )
+        else:
+            self.calc=nwchem.NWChem(
+                dft=dict(maxiter=2000,
+                        xc='B3LYP'
+                ),
+                basis=basis_set
+            )
+
+        self.property=property
+        if self.property == 'energy':
+            self.calculate_property=self.calculate_energy
+
+        elif self.property == 'vibrational_energy':
+            self.calculate_property=self.calculate_vibrational_energy
+    
+    def optimize(self,molecule):
+        molecule.atoms.calc=self.calc
+        BFGS(molecule.atoms).run(fmax=0.01)
+
+    def calculate_energy(self,molecule):
+        molecule.atoms.calc=self.calc
+        energy=molecule.atoms.get_potential_energy()
         return energy
-    
-    def calculate_vibrational_frequency(self,basis_set):
-        calc=nwchem.NWChem(
-              dft=dict(maxiter=2000,
-                       xc='B3LYP'),
-              basis=basis_set)
-        self.atoms.calc=calc
-        BFGS(self.atoms).run(fmax=0.01)
-        vib = Vibrations(self.atoms)
+
+    def calculate_vibrational_energy(self,molecule):
+        molecule.atoms.calc=self.calc
+        BFGS(molecule.atoms).run(fmax=0.01)
+        vib = Vibrations(molecule.atoms)
         vib.run()
-        vibrational_energy=vib.get_energies()[0]
-        return vibrational_energy
+        vibrational_energy=vib.get_energies()
 
-    
-
-
+        os.system("rm vib.*")
+        return np.abs(vibrational_energy[0])
 
 
-
-
-calc = nwchem.NWChem(label='calc/nwchem',
-              dft=dict(maxiter=2000,
-                       xc='B3LYP'),
-              basis='6-31+G*')
