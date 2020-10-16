@@ -1,39 +1,23 @@
-# Basis set selector (Chemistry)
+# Basis set selector
 
-> Ideal candidate: scientists skilled in Density Functional Theory and proficient in python.
-
-# Overview
-
-The aim of this task is to create a simple python package that implements automatic basis set selection mechanism for a quantum chemistry engine.
+This package finds a basis set which can compute a chosen property with a given precision on a set of molecules.
 
 # Requirements
 
-1. automatically find the basis set delivering a particular precision, passed as argument (eg. within 0.01% from reference)
-1. use either experimental data or higher-fidelity modeling results (eg. coupled cluster) as reference data
-1. example properties to converge: HOMO-LUMO gaps, vibrational frequencies
+In addition to a working installation of NWChem, this package requires the python libraries ase, rdkit, and numpy.
 
-# Expectations
 
-- mine reference data for use during the project
-- correctly find a basis set that satisfies a desired tolerance for a set of 10-100 molecules, starting from H2, as simplest, up to a 10-20-atom ones
-- modular and object-oriented implementation
-- commit early and often - at least once per 24 hours
+# Usage
+First, use the script "select_basis_set.py" to select a basis set (or several) which meets your criteria. Usage of this script is as follows:
 
-# Timeline
 
-We leave exact timing to the candidate. Must fit Within 5 days total.
+    python select_basis_set.py --input_files_path=test --property=energy --tolerance=0.1 --reference_values_file=example_energies.txt
 
-# User story
 
-As a user of this software I can start it passing:
+If you do not provide an argument to "reference_values_file", it will compute the reference values usind CCSD.
 
-- molecular structure
-- reference datapoint
-- tolerance (precision)
+When complete, this script will print out a list of basis sets that meets your tolerance requirement. 
+These basis sets can be used as an argument to "calculate_property.py":
 
-as parameters and get the basis set that satisfies the tolerance criterion.
+    python calculate_property.py --input_file=example.xyz --property=energy --basis_set='3-21G'
 
-# Notes
-
-- create an account at exabyte.io and use it for the calculation purposes
-- suggested modeling engine: NWCHEM or SIESTA

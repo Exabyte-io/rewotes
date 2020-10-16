@@ -8,6 +8,7 @@ import numpy as np
 import os
 
 class Molecule(object):
+    #class for constructing an ase.Atoms object from either an xyz file input for a smiles_string input
     def __init__(self,input_file_path='',smiles_string='', label='', reference_value=None):
         self.label=label
         if input_file_path is not '':
@@ -20,10 +21,11 @@ class Molecule(object):
 
     def atoms_from_smiles_string(self,smiles_string):
         mol=Chem.MolFromSmiles(smiles_string)
-        AllChem.Compute2DCoords(mol)
-        conf=mol.GetConformer()
+        mol2=Chem.AddHs(mol)
+        AllChem.Compute2DCoords(mol2)
+        conf=mol2.GetConformer()
         positions=conf.GetPositions()
-        atoms=mol.GetAtoms()
+        atoms=mol2.GetAtoms()
         atomic_symbols=[x.GetSymbol() for x in atoms]
         atoms=Atoms(symbols=atomic_symbols,positions=positions)
         return atoms
@@ -40,6 +42,7 @@ class Molecule(object):
     
 
 class Calculator(object):
+    #class for initializing a calculator which can be used to calculate a variety of different properties on a molcules object
     def __init__(self,basis_set='STO-2G',property='energy',use_reference_calculator=False):
         if use_reference_calculator:
              self.calc=nwchem.NWChem(
@@ -52,13 +55,14 @@ class Calculator(object):
                 ),
                 basis=basis_set
             )
-
+        
         self.property=property
         if self.property == 'energy':
             self.calculate_property=self.calculate_energy
-
         elif self.property == 'vibrational_energy':
             self.calculate_property=self.calculate_vibrational_energy
+        elif self.property == 'dipole_moment':
+            self.calcualte_property=self.calculate_dipole_moment
     
     def optimize(self,molecule):
         molecule.atoms.calc=self.calc
@@ -78,5 +82,11 @@ class Calculator(object):
 
         os.system("rm vib.*")
         return np.abs(vibrational_energy[0])
+
+    def calculate_dipole_moment(self,molecule):
+        molecule.atoms.calc=self.calc
+        dipole_moment=molecule.atoms.calc.get_dipole_moment()
+        return np.sqrt(np.sum(np.square(dipole_moment)))
+
 
 
