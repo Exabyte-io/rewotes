@@ -42,4 +42,4 @@ module add espresso/540-i-174-impi-044
 cd $PBS_O_WORKDIR
 
 # run the calculation
-mpirun -np $PBS_NP pw.x -in pw.in > pw.out
+mpirun -np $PBS_NP pw.x -in pw_${ecut}.in > pw_${ecut}.out

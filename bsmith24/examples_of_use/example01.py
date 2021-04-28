@@ -9,4 +9,4 @@ ecutwfcs = ['28','30','32']
 kpoints = ['4 4 4 0 0 0']
 
 espresso_job = Espresso_Calculation(files, ecutwfcs, kpoints)
-#espresso_job.perform_convergence_test()
+espresso_job.run_convergence_test()

@@ -8,15 +8,14 @@
     tprnfor= .true.
     outdir= './'
     wfcdir= './'
-    prefix= '__prefix__'
+    prefix= ${ecut}
     pseudo_dir= '/export/share/pseudo/si/gga/pbe/gbrv/1.0/us/'
 /
 &SYSTEM
     ibrav=0
     nat=2
     ntyp=1
-    ecutwfc= 40
-    ecutrho= 200
+    ecutwfc= ${ecut}
     occupations= 'smearing'
     degauss= 0.005
 /
@@ -41,5 +40,4 @@ ATOMIC_POSITIONS crystal
 Si 0.000000000 0.000000000 0.000000000
 Si 0.250000000 0.250000000 0.250000000
 K_POINTS automatic
-10 10 10 0 0 0
-
+${kpoint_mesh}
