@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest import mock
 
@@ -28,6 +29,19 @@ class Test_Espresso_Utilities(unittest.TestCase):
         self.espresso_calculation.get_espresso_submit_template()
         builtin_open_calls = [mock.call('../files/job.pbs')]
         mock_builtin_open.assert_has_calls(builtin_open_calls)
+
+    @mock.patch('os.mkdir')
+    @mock.patch('builtins.open')
+    def test_make_espresso_driver_assertion1(self, mock_builtin_open, mock_os_mkdir):
+        self.espresso_calculation.espresso_submit_template = ['foo\n', 'bar\n']
+        self.assertRaises(AssertionError, self.espresso_calculation.make_espresso_driver)
+
+    @mock.patch('os.mkdir')
+    @mock.patch('builtins.open')
+    def test_make_espresso_driver_assertion2(self, mock_builtin_open, mock_os_mkdir):
+        self.espresso_calculation.espresso_input_template=['foo\n', 'bar\n']
+        self.assertRaises(AssertionError, self.espresso_calculation.make_espresso_driver)
+
 
 if __name__ == '__main__':
    unittest.main()
