@@ -10,8 +10,9 @@ should be general enough to accomidate other electronic structre programs, such 
 
 ## Folder Descriptions
 
-src/ - Contains scripts that contain electronic structure program specific methods. Also contains unittest scripts.\
-files/ - Contains template files for input and job submission scripts.\
-examples_of_use/ - Contains scripts that show example use cases of the program.\
+src - Contains scripts that contain electronic structure program specific methods. Also contains scripts for general purpose methods.\
+files - Contains template files for the convergence jobs.\
+examples_of_use - Contains scripts that show example use cases of the program.\
+tests - Contains unittests for the modules in the src/ directory.
 
 © 2020 Exabyte Inc.

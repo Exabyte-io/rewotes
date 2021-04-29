@@ -1,89 +1,66 @@
 import os
 
+from src.general_utilities import General_Utilities
+
+
 class Espresso_Calculation:
     """
     This class contains utilities / methods for making and performing calculations with the Quantum Espresso program.
     """
 
-    def __init__(self, template_files_path, ecutwfcs, kpoints):
-        self.template_files_path = template_files_path
+    def __init__(self, template_file_path, ecutwfcs, kpoints):
+        self.template_file_path = template_file_path
         self.ecutwfcs = ecutwfcs
         self.kpoints = kpoints
-        self.espresso_input_template = None
-        self.espresso_submit_template = None
+        self.espresso_job_template = None
 
 
     # Make a map of the workflow ..
     def run_convergence_test(self):
-        self.get_espresso_input_template()
-        self.get_espresso_submit_template()
-        self.make_espresso_driver()       
-        self.submit_calculations()     
-
-
-    def submit_calculations(self):
         """
-        This function submits the quantum espresso calculations and updates the job status to submitted
-        """
-        os.system('sh outdir/run.sh')
-
-    def make_espresso_driver(self):
-        """
-        This function makes the 'run.sh' driver script that makes and submits the quantum espresso
-        calculations.
+        This is a wrapper function for the workflow of the convergence test. It allows the user to
+        perform the convergence test as: obj.run_convergence_test().
 
         Returns:
             None
         """
-        os.mkdir(os.getcwd()+'/outdir')
-        driver_script = os.path.join(os.getcwd(), 'outdir/run.sh')
-        with open(driver_script, 'w') as espresso_driver_script:
-            espresso_driver_script.write('#!/bin/sh/\n')
-            espresso_driver_script.write('EMAIL=brendansmithphd@gmail.com\n')
-            espresso_driver_script.write('kpoint_mesh='+"'"+' '.join(self.kpoints)+"'"+'\n')
-            espresso_driver_script.write('cd outdir\n')
-            espresso_driver_script.write('for ecut in '+' '.join(self.ecutwfcs)+'\n')     
-            espresso_driver_script.write('do\n    ')
-            espresso_driver_script.write('mkdir -p ${ecut}\n    ')
-            espresso_driver_script.write('cd ${ecut}\n    ')
-            espresso_driver_script.write('cat > pw_${ecut}.in <<EOF\n')
-            assert self.espresso_input_template is not None
-            for line in self.espresso_input_template:
-                espresso_driver_script.write(line)
-            espresso_driver_script.write('EOF\n    ')
-            espresso_driver_script.write('cat > job_${ecut}.pbs <<EOF\n')
-            assert self.espresso_submit_template is not None
-            for line in self.espresso_submit_template:
-                espresso_driver_script.write(line)
-            espresso_driver_script.write('EOF\n    ')
-            espresso_driver_script.write('qsub job_${ecut}.pbs\n    ')
-            espresso_driver_script.write('cd ..\n')
-            espresso_driver_script.write('done')
+ 
+        self.get_espresso_job_template()
+        self.update_espresso_job_template()       
+        self.write_espresso_driver_script()
 
 
-    def get_espresso_input_template(self):
+    def get_espresso_job_template(self):
         """
-        This function reads the espresso input template located in self.template_files_path
-        and stores it as a list of strings via updating self.espresso_input_template.
+        A wrapper-like function for the get_job_template() function in the general_utilities module.
         
         Returns:
-            None, but updates self.espresso_input_template.
+            None, but updates self.espresso_template.
         """
-
-        espresso_input_template_path = os.path.join(self.template_files_path, 'pw.in')
-        with open(espresso_input_template_path) as template_file:
-            self.espresso_input_template = template_file.readlines()
+        self.espresso_job_template = General_Utilities.get_job_template(self.template_file_path)
 
 
-    def get_espresso_submit_template(self):
+    def update_espresso_job_template(self):
         """
-        This function reads the espresso submit file template located in self.template_files_path
-        and stores it as a list of strings via updating self.espresso_submit_template.
-        
+        This function updates updates self.espresso_job_template with the kpoints and ecutwfcs
+        values given by the user. 
+
         Returns:
-            None, but updates self.espresso_submit_template.
+            None, but updates self.espresso_job_template
         """
+        assert self.espresso_job_template is not None
+        self.espresso_job_template[1] = 'kpoints='+"'"+' '.join(self.kpoints)+"'"+'\n'
+        self.espresso_job_template[2] = 'for ecut in '+' '.join(self.ecutwfcs)+'\n'
 
-        espresso_submit_template_path = os.path.join(self.template_files_path, 'job.pbs')
-        with open(espresso_submit_template_path) as template_file:
-            self.espresso_submit_template = template_file.readlines()
+
+    def write_espresso_driver_script(self):
+        """
+        This function makes a file 'run.sh' with the contents of self.espresso_job_template.
+
+        Returns:
+            None
+        """
+        with open('run.sh', 'w') as file:
+            for line in self.espresso_job_template:
+                file.write(line)
+

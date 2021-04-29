@@ -1,3 +1,10 @@
+#!/bin/sh/
+kpoints=
+for ecut in
+do
+    mkdir -p ${ecut}
+    cd ${ecut}
+    cat > pw_${ecut}.in <<EOF
 &CONTROL
     calculation= 'scf'
     title= ''
@@ -40,4 +47,27 @@ ATOMIC_POSITIONS crystal
 Si 0.000000000 0.000000000 0.000000000
 Si 0.250000000 0.250000000 0.250000000
 K_POINTS automatic
-${kpoint_mesh}
+${kpoints}
+EOF
+    cat > job_${ecut}.pbs <<EOF
+#PBS -N QE-TEST
+#PBS -j oe
+#PBS -l nodes=1
+#PBS -l ppn=1
+#PBS -l walltime=00:00:10:00
+#PBS -q D
+#PBS -m abe
+#PBS -M brendansmithphd@gmail.com
+
+# load module
+module add espresso/540-i-174-impi-044
+
+# go to the job working directory
+cd \$PBS_O_WORKDIR
+
+# run the calculation
+mpirun -np \$PBS_NP pw.x -in pw_${ecut}.in > pw_${ecut}.out
+EOF
+    qsub job_${ecut}.pbs
+    cd ..
+done
