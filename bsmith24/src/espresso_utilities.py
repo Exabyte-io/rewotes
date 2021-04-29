@@ -17,10 +17,15 @@ class Espresso_Calculation:
     def run_convergence_test(self):
         self.get_espresso_input_template()
         self.get_espresso_submit_template()
-        self.make_espresso_driver()
-        #self.run_espresso_convergence_test()     
-        pass
+        self.make_espresso_driver()       
+        self.submit_calculations()     
 
+
+    def submit_calculations(self):
+        """
+        This function submits the quantum espresso calculations and updates the job status to submitted
+        """
+        os.system('sh outdir/run.sh')
 
     def make_espresso_driver(self):
         """
@@ -36,8 +41,11 @@ class Espresso_Calculation:
             espresso_driver_script.write('#!/bin/sh/\n')
             espresso_driver_script.write('EMAIL=brendansmithphd@gmail.com\n')
             espresso_driver_script.write('kpoint_mesh='+"'"+' '.join(self.kpoints)+"'"+'\n')
+            espresso_driver_script.write('cd outdir\n')
             espresso_driver_script.write('for ecut in '+' '.join(self.ecutwfcs)+'\n')     
-            espresso_driver_script.write('do\n'    )
+            espresso_driver_script.write('do\n    ')
+            espresso_driver_script.write('mkdir -p ${ecut}\n    ')
+            espresso_driver_script.write('cd ${ecut}\n    ')
             espresso_driver_script.write('cat > pw_${ecut}.in <<EOF\n')
             assert self.espresso_input_template is not None
             for line in self.espresso_input_template:
@@ -48,7 +56,8 @@ class Espresso_Calculation:
             for line in self.espresso_submit_template:
                 espresso_driver_script.write(line)
             espresso_driver_script.write('EOF\n    ')
-            espresso_driver_script.write('qsub job_${ecut}.pbs\n')
+            espresso_driver_script.write('qsub job_${ecut}.pbs\n    ')
+            espresso_driver_script.write('cd ..\n')
             espresso_driver_script.write('done')
 
 
