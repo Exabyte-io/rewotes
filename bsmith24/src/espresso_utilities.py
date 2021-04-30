@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from src.general_utilities import General_Utilities
 
@@ -12,31 +13,18 @@ class Espresso_Calculation:
         self.template_file_path = template_file_path
         self.ecutwfcs = ecutwfcs
         self.kpoints = kpoints
-        self.espresso_job_template = None
-
-
-    # Make a map of the workflow ..
-    def run_convergence_test(self):
-        """
-        This is a wrapper function for the workflow of the convergence test. It allows the user to
-        perform the convergence test as: obj.run_convergence_test().
-
-        Returns:
-            None
-        """
- 
-        self.get_espresso_job_template()
-        self.update_espresso_job_template()       
-        self.write_espresso_driver_script()
-
+        self.total_energies = None
+        self.espresso_job_template = None       
 
     def get_espresso_job_template(self):
         """
-        A wrapper-like function for the get_job_template() function in the general_utilities module.
+        A light wrapper-like function for the get_job_template() function in the 
+        general_utilities module.
         
         Returns:
             None, but updates self.espresso_template.
         """
+
         self.espresso_job_template = General_Utilities.get_job_template(self.template_file_path)
 
 
@@ -48,19 +36,55 @@ class Espresso_Calculation:
         Returns:
             None, but updates self.espresso_job_template
         """
+
         assert self.espresso_job_template is not None
         self.espresso_job_template[1] = 'kpoints='+"'"+' '.join(self.kpoints)+"'"+'\n'
         self.espresso_job_template[2] = 'for ecut in '+' '.join(self.ecutwfcs)+'\n'
 
 
-    def write_espresso_driver_script(self):
+    def get_espresso_total_energy(self, espresso_output_file):
         """
-        This function makes a file 'run.sh' with the contents of self.espresso_job_template.
+        This function extracts the total energy a quantum espresso output file.
+
+        Args:
+            espresso_output_file (string): The the quantum espresso output file.
 
         Returns:
-            None
+            total_energy (float): The total energy, in units of meV. 
         """
-        with open('run.sh', 'w') as file:
-            for line in self.espresso_job_template:
-                file.write(line)
+
+        command = 'grep "! *total energy" '+espresso_output_file
+        total_energy_Ry = float(subprocess.getoutput([command]).split()[4])
+        total_energy_meV = total_energy_Ry * 13605.662285137
+        return total_energy_meV
+
+
+    def get_each_espresso_total_energy(self):
+        """
+        This function loops through the different espresso directories, and 
+        extracts the total energy.
+
+        Returns:
+            None, but updates self.total_energies
+        """
+
+        self.total_energies = []
+        for ecut in self.ecutwfcs:
+            espresso_output_file = os.path.join(ecut, 'pw.out')
+            self.total_energies.append(self.get_espresso_total_energy(espresso_output_file))
+
+
+    def run_convergence_test(self):
+        """
+        This is a wrapper function for the workflow of the convergence test. It allows the user to
+        perform the convergence test as: obj.run_convergence_test().
+
+        Returns:
+            None, but executes the workflow for the convergence test for the user's convenience,
+        """
+
+        self.get_espresso_job_template()
+        self.update_espresso_job_template()
+        General_Utilities.write_driver_script(self.espresso_job_template)
+        General_Utilities.submit_job()
 

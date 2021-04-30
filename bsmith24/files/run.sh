@@ -4,7 +4,7 @@ for ecut in
 do
     mkdir -p ${ecut}
     cd ${ecut}
-    cat > pw_${ecut}.in <<EOF
+    cat > pw.in <<EOF
 &CONTROL
     calculation= 'scf'
     title= ''
@@ -49,7 +49,7 @@ Si 0.250000000 0.250000000 0.250000000
 K_POINTS automatic
 ${kpoints}
 EOF
-    cat > job_${ecut}.pbs <<EOF
+    cat > job.pbs <<EOF
 #PBS -N QE-TEST
 #PBS -j oe
 #PBS -l nodes=1
@@ -66,8 +66,8 @@ module add espresso/540-i-174-impi-044
 cd \$PBS_O_WORKDIR
 
 # run the calculation
-mpirun -np \$PBS_NP pw.x -in pw_${ecut}.in > pw_${ecut}.out
+mpirun -np \$PBS_NP pw.x -in pw.in > pw.out
 EOF
-    qsub job_${ecut}.pbs
+    qsub job.pbs
     cd ..
 done
