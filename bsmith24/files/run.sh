@@ -68,6 +68,5 @@ cd \$PBS_O_WORKDIR
 # run the calculation
 mpirun -np \$PBS_NP pw.x -in pw.in > pw.out
 EOF
-    qsub job.pbs
     cd ..
 done

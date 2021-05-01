@@ -1,5 +1,6 @@
 import os
 
+
 class General_Utilities:
     """
     This class contains methods that perform tasks not specific to any particular
@@ -76,15 +77,4 @@ class General_Utilities:
                 prev_value = curr_value
         if count == len(values)-1:
             return [False, None, None]
-
-
-    @staticmethod
-    def submit_job():
-        """
-        A light wrapper-like function to execute run.sh.
-  
-        Returns:
-            None, but executes run.sh
-        """
-        os.system('sh run.sh')
 

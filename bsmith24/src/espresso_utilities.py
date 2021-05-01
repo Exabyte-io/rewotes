@@ -2,6 +2,7 @@ import os
 import subprocess
 
 from src.general_utilities import General_Utilities
+from src.job_utilities import Job, Submit_Utilities
 
 
 class Espresso_Calculation:
@@ -15,6 +16,8 @@ class Espresso_Calculation:
         self.kpoints = kpoints
         self.total_energies = None
         self.espresso_job_template = None       
+        self.espresso_jobs = [Job() for ecut in ecutwfcs]               
+
 
     def get_espresso_job_template(self):
         """
@@ -74,7 +77,22 @@ class Espresso_Calculation:
             self.total_energies.append(self.get_espresso_total_energy(espresso_output_file))
 
 
-    def run_convergence_test(self):
+    def submit_espresso_jobs(self):
+        """
+        Goes into each espresso job folder and submits each quantum espresso job.
+
+        Returns:
+            None, but will submit each quantum espresso job.
+        """
+
+        for job, ecut in enumerate(self.ecutwfcs):
+            os.chdir(ecut)
+            self.espresso_jobs[job].job_id = self.espresso_jobs[job].submit_pbs_job('job.pbs')
+            self.espresso_jobs[job].is_submitted = True
+            os.chdir('..')
+
+
+    def run_espresso_convergence_test(self):
         """
         This is a wrapper function for the workflow of the convergence test. It allows the user to
         perform the convergence test as: obj.run_convergence_test().
@@ -86,5 +104,6 @@ class Espresso_Calculation:
         self.get_espresso_job_template()
         self.update_espresso_job_template()
         General_Utilities.write_driver_script(self.espresso_job_template)
-        General_Utilities.submit_job()
+        Submit_Utilities.submit_driver_script()
+        self.submit_espresso_jobs()
 
