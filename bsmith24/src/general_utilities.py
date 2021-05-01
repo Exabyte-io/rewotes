@@ -75,6 +75,5 @@ class General_Utilities:
                 return [True, values[count-1], count-1]
             else:
                 prev_value = curr_value
-        if count == len(values)-1:
-            return [False, None, None]
+        return [False, None, None]
 
