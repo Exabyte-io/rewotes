@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 
 from src.general_utilities import General_Utilities
 from src.job_utilities import Job, Submit_Utilities
@@ -45,6 +46,21 @@ class Espresso_Calculation:
         self.espresso_job_template[2] = 'for ecut in '+' '.join(self.ecutwfcs)+'\n'
 
 
+    def get_each_espresso_total_energy(self):
+        """
+        This function loops through the different espresso directories, and 
+        extracts the total energy.
+
+        Returns:
+            None, but updates self.total_energies
+        """
+
+        self.total_energies = []
+        for ecut in self.ecutwfcs:
+            espresso_output_file = os.path.join(ecut, 'pw.out')
+            self.total_energies.append(self.get_espresso_total_energy(espresso_output_file))
+
+
     def get_espresso_total_energy(self, espresso_output_file):
         """
         This function extracts the total energy a quantum espresso output file.
@@ -62,21 +78,6 @@ class Espresso_Calculation:
         return total_energy_meV
 
 
-    def get_each_espresso_total_energy(self):
-        """
-        This function loops through the different espresso directories, and 
-        extracts the total energy.
-
-        Returns:
-            None, but updates self.total_energies
-        """
-
-        self.total_energies = []
-        for ecut in self.ecutwfcs:
-            espresso_output_file = os.path.join(ecut, 'pw.out')
-            self.total_energies.append(self.get_espresso_total_energy(espresso_output_file))
-
-
     def submit_espresso_jobs(self):
         """
         Goes into each espresso job folder and submits each quantum espresso job.
@@ -89,7 +90,40 @@ class Espresso_Calculation:
             os.chdir(ecut)
             self.espresso_jobs[job].job_id = self.espresso_jobs[job].submit_pbs_job('job.pbs')
             self.espresso_jobs[job].is_submitted = True
+            self.espresso_jobs[job].is_finished = False
             os.chdir('..')
+
+
+    def update_each_espresso_job_status(self):
+        """
+        Updates the status of each quantum espresso calculation.
+
+        Returns:
+            None, but updates self.espresso_jobs[job].is_finished for each job.
+        """
+
+        for job, ecut in enumerate(self.ecutwfcs):
+            espresso_output_file = os.path.join(ecut, 'pw.out')
+            self.espresso_jobs[job].is_finished = self.update_espresso_job_status(espresso_output_file)
+
+
+    def update_espresso_job_status(self, espresso_output_file):
+        """
+        Updates the status of a certain quantum espresso calculation. Checks two things:
+        1) Checks if the file pw.out exists.
+        2) Checks if the calculation is finished.
+
+        Returns:
+            None, but updates self.espresso_jobs[job].is_finished
+        """
+
+        if os.path.isfile(espresso_output_file):
+            with open(espresso_output_file) as output_file:
+               for line in output_file.readlines():
+                   if 'JOB DONE' in line:
+                       return True 
+        else:
+            return False 
 
 
     def run_espresso_convergence_test(self):
@@ -98,7 +132,7 @@ class Espresso_Calculation:
         perform the convergence test as: obj.run_convergence_test().
 
         Returns:
-            None, but executes the workflow for the convergence test for the user's convenience,
+            None, but executes the workflow for the convergence test for the user's convenience.
         """
 
         self.get_espresso_job_template()
@@ -106,4 +140,15 @@ class Espresso_Calculation:
         General_Utilities.write_driver_script(self.espresso_job_template)
         Submit_Utilities.submit_driver_script()
         self.submit_espresso_jobs()
+        count = 0
+        while False in [job.is_finished for job in self.espresso_jobs]:
+            self.update_each_espresso_job_status()
+            time.sleep(10)
+            if count > 100:
+                break
+        self.get_each_espresso_total_energy()
+        convergence_results = General_Utilities.is_converged(self.total_energies, tolerance=1.0)
+        print('Quantum Espresso convergence calculation complete.')
+        print('Convergence has been achieved:', convergence_results[0])
+        print('Converged value of ecutwfc:', self.ecutwfcs[convergence_results[2]])
 
