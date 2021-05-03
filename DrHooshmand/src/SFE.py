@@ -158,6 +158,9 @@ if __name__ =="__main__":
 
     ch_fold = "POSCARs_tilt"  #Chain folder to write the files
     cdir = os.getcwd()
+    os.chdir(join(cdir,"../example") )
+    cdir = os.getcwd()
+    print(cdir)
     clear_fold(ch_fold)
 
     file = "POSCAR_UC_cartesian_basal_3X3_cart" #input file (should be provided in Cartesian coordinates)
