@@ -158,7 +158,7 @@ if __name__ =="__main__":
 
     ch_fold = "POSCARs_tilt"  #Chain folder to write the files
     cdir = os.getcwd()
-    os.chdir(join(cdir,"../example") )
+    os.chdir(join(cdir,"../example") ) # go to the example directory
     cdir = os.getcwd()
     print(cdir)
     clear_fold(ch_fold)
