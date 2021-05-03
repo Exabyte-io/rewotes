@@ -1,3 +1,4 @@
+import sys
 import os
 import subprocess
 import time
@@ -94,7 +95,7 @@ class Espresso_Calculation:
             os.chdir('..')
 
 
-    def update_each_espresso_job_status(self):
+    def update_each_espresso_calculation_status(self):
         """
         Updates the status of each quantum espresso calculation.
 
@@ -104,17 +105,17 @@ class Espresso_Calculation:
 
         for job, ecut in enumerate(self.ecutwfcs):
             espresso_output_file = os.path.join(ecut, 'pw.out')
-            self.espresso_jobs[job].is_finished = self.update_espresso_job_status(espresso_output_file)
+            self.espresso_jobs[job].is_finished = self.update_espresso_calculation_status(espresso_output_file)
 
 
-    def update_espresso_job_status(self, espresso_output_file):
+    def update_espresso_calculation_status(self, espresso_output_file):
         """
         Updates the status of a certain quantum espresso calculation. Checks two things:
         1) Checks if the file pw.out exists.
         2) Checks if the calculation is finished.
 
         Returns:
-            None, but updates self.espresso_jobs[job].is_finished
+            None.
         """
 
         if os.path.isfile(espresso_output_file):
@@ -126,13 +127,27 @@ class Espresso_Calculation:
             return False 
 
 
+    def update_espresso_job_states(self):
+        """
+        Updates the states of each espresso Job().job_state.
+
+        Returns:
+            None.
+        """
+
+        job_ids = [job.job_id for job in self.espresso_jobs]
+        job_states = Submit_Utilities.get_pbs_job_states(job_ids)
+        for index, state in enumerate(job_states):
+            self.espresso_jobs[index].job_state = state
+
+
     def run_espresso_convergence_test(self):
         """
         This is a wrapper function for the workflow of the convergence test. It allows the user to
         perform the convergence test as: obj.run_convergence_test().
 
         Returns:
-            None, but executes the workflow for the convergence test for the user's convenience.
+            None.
         """
 
         self.get_espresso_job_template()
@@ -140,12 +155,16 @@ class Espresso_Calculation:
         General_Utilities.write_driver_script(self.espresso_job_template)
         Submit_Utilities.submit_driver_script()
         self.submit_espresso_jobs()
-        count = 0
-        while False in [job.is_finished for job in self.espresso_jobs]:
-            self.update_each_espresso_job_status()
+        self.update_espresso_job_states()
+        while any(state in [job.job_state for job in self.espresso_jobs] for state in('Q', 'R')): 
+            #print([job.job_state for job in self.espresso_jobs])
+            self.update_espresso_job_states()
             time.sleep(10)
-            if count > 100:
-                break
+        print('Calculations have finished. Checking for Quantum Espresso output files')
+        self.update_each_espresso_calculation_status()
+        if False in [job.is_finished for job in self.espresso_jobs]:
+            print('ERROR: Cannot find the files pw.out')
+            sys.exit(0)
         self.get_each_espresso_total_energy()
         convergence_results = General_Utilities.is_converged(self.total_energies, tolerance=1.0)
         print('Quantum Espresso convergence calculation complete.')
