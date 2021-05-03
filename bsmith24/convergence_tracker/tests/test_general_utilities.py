@@ -3,7 +3,7 @@ from unittest import mock
 
 import sys
 sys.path.append('..')
-from src.general_utilities import General_Utilities
+from general_utilities import General_Utilities
 
 
 class Test_General_Utilities(unittest.TestCase):

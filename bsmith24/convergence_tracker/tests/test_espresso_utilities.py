@@ -3,8 +3,7 @@ from unittest import mock
 
 import sys
 sys.path.append('..')
-from src.espresso_utilities import Espresso_Calculation
-
+from espresso_utilities import Espresso_Calculation
 
 class Test_Espresso_Utilities(unittest.TestCase):
 

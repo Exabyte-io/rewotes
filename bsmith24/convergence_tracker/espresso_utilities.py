@@ -3,8 +3,8 @@ import os
 import subprocess
 import time
 
-from src.general_utilities import General_Utilities
-from src.job_utilities import Job, Submit_Utilities
+from convergence_tracker.general_utilities import General_Utilities
+from convergence_tracker.job_utilities import Job, Submit_Utilities
 
 
 class Espresso_Calculation:
