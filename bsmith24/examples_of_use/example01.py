@@ -1,10 +1,14 @@
 import sys
 sys.path.append('..')
-from convergence_tracker.espresso_utilities import Espresso_Calculation
+from convergence_tracker import Convergence_Tracker
 
-files = '../files'
-ecutwfcs = ['22','23','24','25','26','27','28']
-kpoints = ['8 8 8 0 0 0']
+program_name = 'espresso'
+kwargs = {
+    'input_template':'../files/pw.in',
+    'submit_template':'../files/job.pbs',
+    'convergence_variables':[22,23,24,25]
+    }
 
-espresso_job = Espresso_Calculation(files, ecutwfcs, kpoints)
-espresso_job.run_espresso_convergence_test()
+convergence_test = Convergence_Tracker(program_name, **kwargs)
+convergence_test.run_convergence_test()
+
