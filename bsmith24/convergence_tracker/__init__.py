@@ -17,7 +17,7 @@ class Convergence_Tracker:
 
     def get_job(self, *args, **kwargs):
         """
-        As of right now, this function returns an instance of the EspressoJob class.
+        As of right now, this function returns an instance of a certain es_software's Job class.
         """
         if self.program_name in settings.PROGRAMS_REGISTRY:
             program_class = settings.PROGRAMS_REGISTRY[self.program_name]
@@ -34,13 +34,11 @@ class Convergence_Tracker:
         while any(state in [job.job_state for job in self.jobs] for state in ('Q', 'R')):
             [job.update_job_state() for job in self.jobs]
             print([job.job_state for job in self.jobs])
+        [job.update_output_file(index) for index, job in enumerate(self.jobs)]
         [job.update_calculation_status(index) for index, job in enumerate(self.jobs)]
-        if False in [job.is_finished for job in self.jobs]:
-            print('ERROR: Cannot find the files pw.out')
-            sys.exit(0)
-        [job.update_convergence_property_value(index, 'total_energy') for index, job in enumerate(self.jobs)]
+        [job.update_convergence_property_value(job.convergence_property) for job in self.jobs]
         total_energies = [job.convergence_property_value for job in self.jobs]
         convergence_results = general_utilities.is_converged(total_energies, tolerance=1.0)
-        print('Quantum Espresso convergence calculation complete.')
+        print('Convergence calculation complete.')
         print('Convergence has been achieved:', convergence_results[0])
-        print('Converged value of ecutwfc:', self.convergence_variables[convergence_results[2]])
+        print('Converged value for convergence variable is:', self.convergence_variables[convergence_results[2]])
