@@ -31,7 +31,7 @@ class Job(ABC):
         pass
 
     @abstractmethod
-    def update_output_file(self, folder_name):
+    def update_output_file_content(self, folder_name):
         pass
 
     @abstractmethod
@@ -42,9 +42,19 @@ class Job(ABC):
     def run_job(self, folder_name):
         pass
 
-    def submit_job(self):
+    def submit_job(self) -> None:
+        """
+        A wrapper-like function to submit_pbs_job method in the job_utilities
+        module. This function submits the job (to execute the electronic structure 
+        program, obtains the job_id, and updates the is_submmited class variable.
+        """
         self.job_id = job_utilities.submit_pbs_job('job.pbs')
-        self.is_submitted = True
-     
-    def update_job_state(self):
+        self.is_submitted = True    
+
+    def update_job_state(self) -> None:
+        """
+        A wrapper-like function to get_pbs_job method in the job_utilities
+        module. In this function, job_state is updated. 
+        """
         self.job_state = job_utilities.get_pbs_job_state(self.job_id)
+

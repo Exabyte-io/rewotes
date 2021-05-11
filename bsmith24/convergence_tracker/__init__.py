@@ -17,8 +17,17 @@ class Convergence_Tracker:
 
     def get_job(self, *args, **kwargs):
         """
-        As of right now, this function returns an instance of a certain es_software's Job class.
+        This function returns an instance of a certain es_software's Job class.
+
+        Args:
+             arguments: These are passed to the class instance.
+             keyword_arguments: These are passed to the class instance.
+
+        Returns:
+            Instance of a certain electronic structure software's class defined in 
+            es_software_programs.
         """
+
         if self.program_name in settings.PROGRAMS_REGISTRY:
             program_class = settings.PROGRAMS_REGISTRY[self.program_name]
         else:
@@ -29,13 +38,18 @@ class Convergence_Tracker:
 
 
     def run_convergence_test(self):
+        """
+        This function impliments a general convergence test workflow for the 
+        user's conveneience.
+        """
+
         [job.run_job(index) for index, job in enumerate(self.jobs)]
         [job.update_job_state() for job in self.jobs]
         while any(state in [job.job_state for job in self.jobs] for state in ('Q', 'R')):
             [job.update_job_state() for job in self.jobs]
-            print([job.job_state for job in self.jobs])
-        [job.update_output_file(index) for index, job in enumerate(self.jobs)]
-        [job.update_calculation_status(index) for index, job in enumerate(self.jobs)]
+            #print([job.job_state for job in self.jobs])
+        [job.update_output_file_content(index) for index, job in enumerate(self.jobs)]
+        [job.update_calculation_status() for job in self.jobs]
         [job.update_convergence_property_value() for job in self.jobs]
         total_energies = [job.convergence_property_value for job in self.jobs]
         convergence_results = general_utilities.is_converged(total_energies, tolerance=1.0)
