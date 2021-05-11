@@ -47,12 +47,13 @@ class Convergence_Tracker:
         [job.update_job_state() for job in self.jobs]
         while any(state in [job.job_state for job in self.jobs] for state in ('Q', 'R')):
             [job.update_job_state() for job in self.jobs]
-            #print([job.job_state for job in self.jobs])
+            print([job.job_state for job in self.jobs])
         [job.update_output_file_content(index) for index, job in enumerate(self.jobs)]
         [job.update_calculation_status() for job in self.jobs]
         [job.update_convergence_property_value() for job in self.jobs]
         total_energies = [job.convergence_property_value for job in self.jobs]
         convergence_results = general_utilities.is_converged(total_energies, tolerance=1.0)
+        print(total_energies)
         print('Convergence calculation complete.')
         print('Convergence has been achieved:', convergence_results[0])
         print('Converged value for convergence variable is:', self.convergence_variables[convergence_results[2]])

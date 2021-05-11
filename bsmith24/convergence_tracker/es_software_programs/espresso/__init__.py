@@ -9,6 +9,7 @@ class EspressoJob(Job):
 
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
+        self.convergence_variable = kwargs['convergence_variable']
         self.convergence_variables = kwargs['convergence_variables']
         self.input_filename = 'pw.in'
         self.output_filename = 'pw.out'
@@ -25,11 +26,10 @@ class EspressoJob(Job):
                 self.convergence_variable. 
         """
 
-        if self.convergence_property == 'ecutwfc':
+        if self.convergence_variable == 'ecutwfc':
             for index, line in enumerate(self.input_template):            
                 if 'ecutwfc' in line:
                     self.input_template[index] = 'ecutwfc = '+str(convergence_variable)+'\n'
-            
 
     def edit_submit_template(self) -> None:
         """
@@ -60,7 +60,7 @@ class EspressoJob(Job):
        if self.convergence_property == 'total_energy':
            for line in self.output_file_content:
                if '!    total energy' in line:
-                   self.convergence_property_value = float(line.split()[4])    
+                   self.convergence_property_value = float(line.split()[4])*13605.6622    
 
 
     def update_calculation_status(self) -> None:
