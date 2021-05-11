@@ -29,43 +29,18 @@ class Convergence_Tracker:
 
 
     def run_convergence_test(self):
-
-        for index, job in enumerate(self.jobs):
-            os.mkdir(str(index))
-            os.chdir(str(index))
-            job.edit_input_template(self.convergence_variables[index])
-            with open('pw.in','w') as input_file:
-                for line in job.input_template:
-                    input_file.write(line)
-            with open('job.pbs', 'w') as submit_file:
-                for line in job.submit_template:
-                    submit_file.write(line)
-            job.submit_job('job.pbs')
-            os.chdir('..')
-
-        for index, job in enumerate(self.jobs):
-            job.update_job_state()
+        [job.run_job(index) for index, job in enumerate(self.jobs)]
+        [job.update_job_state() for job in self.jobs]
         while any(state in [job.job_state for job in self.jobs] for state in ('Q', 'R')):
-            for index, job in enumerate(self.jobs):
-                job.update_job_state()
+            [job.update_job_state() for job in self.jobs]
             print([job.job_state for job in self.jobs])
-
-        for index, job in enumerate(self.jobs):
-            job_output_file = os.path.join(str(index), 'pw.out')
-            job.update_calculation_status(job_output_file)
-
+        [job.update_calculation_status(index) for index, job in enumerate(self.jobs)]
         if False in [job.is_finished for job in self.jobs]:
             print('ERROR: Cannot find the files pw.out')
             sys.exit(0)
-  
-        total_energies = []
-        for index, job in enumerate(self.jobs):
-            job_output_file = os.path.join(str(index), 'pw.out')
-            total_energies.append( job.get_property(job_output_file, 'total_energy') )
-        print(total_energies)
-
+        [job.update_convergence_property_value(index, 'total_energy') for index, job in enumerate(self.jobs)]
+        total_energies = [job.convergence_property_value for job in self.jobs]
         convergence_results = general_utilities.is_converged(total_energies, tolerance=1.0)
         print('Quantum Espresso convergence calculation complete.')
         print('Convergence has been achieved:', convergence_results[0])
         print('Converged value of ecutwfc:', self.convergence_variables[convergence_results[2]])
-

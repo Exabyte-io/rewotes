@@ -4,6 +4,7 @@ from abc import abstractmethod
 from convergence_tracker.utilities import job_utilities
 from convergence_tracker.utilities import general_utilities
 
+
 class Job(ABC):
 
     def __init__(self, *args, **kwargs):
@@ -23,20 +24,20 @@ class Job(ABC):
         pass
 
     @abstractmethod
-    def get_property(self):
+    def update_convergence_property_value(self):
         pass
 
     @abstractmethod
     def update_calculation_status(self):
         pass
 
-    def setup(self, folder_name):
+    @abstractmethod
+    def run_job(self, folder_name):
         pass 
 
-    def submit_job(self, filename):
-        self.job_id = job_utilities.submit_pbs_job(filename)
+    def submit_job(self):
+        self.job_id = job_utilities.submit_pbs_job('job.pbs')
         self.is_submitted = True
      
     def update_job_state(self):
         self.job_state = job_utilities.get_pbs_job_state(self.job_id)
-
