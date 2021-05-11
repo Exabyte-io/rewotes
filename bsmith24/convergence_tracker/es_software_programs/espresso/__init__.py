@@ -27,8 +27,8 @@ class EspressoJob(Job):
         espresso_output_file = os.path.join(str(index), self.output_filename)
         self.output_file = general_utilities.read_file(espresso_output_file) 
 
-    def update_convergence_property_value(self, property_to_get):
-       if property_to_get == 'total_energy':
+    def update_convergence_property_value(self):
+       if self.convergence_property == 'total_energy':
            for line in self.output_file:
                if '!    total energy' in line:
                    self.convergence_property_value = float(line.split()[4])    

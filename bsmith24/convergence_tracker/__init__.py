@@ -36,7 +36,7 @@ class Convergence_Tracker:
             print([job.job_state for job in self.jobs])
         [job.update_output_file(index) for index, job in enumerate(self.jobs)]
         [job.update_calculation_status(index) for index, job in enumerate(self.jobs)]
-        [job.update_convergence_property_value(job.convergence_property) for job in self.jobs]
+        [job.update_convergence_property_value() for job in self.jobs]
         total_energies = [job.convergence_property_value for job in self.jobs]
         convergence_results = general_utilities.is_converged(total_energies, tolerance=1.0)
         print('Convergence calculation complete.')
