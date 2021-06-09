@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Install requirements.
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+
+# Start syncing.
+python3 main.py &
