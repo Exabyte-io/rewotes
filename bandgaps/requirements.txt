@@ -1,0 +1,5 @@
+pymatgen
+matminer
+megnet
+sklearn
+pandas
