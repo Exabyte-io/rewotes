@@ -9,7 +9,7 @@ from matminer.utils.io import load_dataframe_from_json
 
 from sklearn.model_selection import train_test_split
 
-from utils import RandomForestRegressor
+from utils import RandomForestRegressor, clean_dataframe
 
 
 DATA_SEED = 42
@@ -27,33 +27,7 @@ df = load_dataframe_from_json(
 )
 
 print("Clean the Data Set")
-# As we're using a composition based model here we cannot distinguish polymorphs
-# to ensure a clear mapping between composition and the target
-df["composition"] = df["final_structure"].apply(lambda x: x.composition)
-df["formula"] = df["composition"].apply(lambda x: x.reduced_formula)
-df = df.sort_values(by=["formula", "e_above_hull"], ascending=True, kind="mergesort")
-df = df.drop_duplicates(["formula"], keep="first")
-
-# discard structures with isolated atoms (no neighbours within 4\AA)
-all_iso = []
-some_iso = []
-for idx, crystal in zip(df.index, df["final_structure"]):
-    self_idx, nbr_idx, *_ = crystal.get_neighbor_list(
-        R_CUT,
-        numerical_tol=1e-8,
-    )
-
-    if len(self_idx) == 0:
-        all_iso.append(idx)
-    elif len(nbr_idx) == 0:
-        all_iso.append(idx)
-    elif set(self_idx) != set(range(crystal.num_sites)):
-        some_iso.append(idx)
-
-if (len(all_iso) > 0) or (len(some_iso) > 0):
-    # drop the structures with isolated atoms
-    df = df.drop(df[df.index.isin(all_iso)].index)
-    df = df.drop(df[df.index.isin(some_iso)].index)
+df = clean_dataframe(df, R_CUT)
 
 # Use the features from MAGPIE
 print("Construct Composition-Based Descriptors")
@@ -69,7 +43,7 @@ df = comp_features.featurize_dataframe(df, col_id="composition")
 
 df = df.dropna()
 
-print("Perform Stratefied Train-Test Split")
+print("Perform Stratified Train-Test Split")
 df_metals = df[df["band_gap"] == 0]
 df_non_metals = df[df["band_gap"] > 0]
 

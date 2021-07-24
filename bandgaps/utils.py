@@ -62,3 +62,46 @@ class RandomForestRegressor(skrfr):
         y_var /= len(trees)
         y_var -= predictions ** 2
         return y_var ** 0.5
+
+
+def clean_dataframe(df, r_cut=4.0):
+    """Apply the following cleaning operations to a dataframe:
+        - remove all bar the lowest energy structure for each composition
+        - remove any structures the have isolated atoms given the radius cutoff provided
+
+    Args:
+        df (DataFrame): [description]
+        r_cut (float, optional): Radius cutoof for finding isolated atoms. Defaults to 4.0.
+
+    Returns:
+        cleaned DataFrame
+    """
+    # As we're using a composition based model here we cannot distinguish polymorphs
+    # to ensure a clear mapping between composition and the target
+    df["composition"] = df["final_structure"].apply(lambda x: x.composition)
+    df["formula"] = df["composition"].apply(lambda x: x.reduced_formula)
+    df = df.sort_values(by=["formula", "e_above_hull"], ascending=True, kind="mergesort")
+    df = df.drop_duplicates(["formula"], keep="first")
+
+    # discard structures with isolated atoms (no neighbours within 4\AA)
+    all_iso = []
+    some_iso = []
+    for idx, crystal in zip(df.index, df["final_structure"]):
+        self_idx, nbr_idx, *_ = crystal.get_neighbor_list(
+            r_cut,
+            numerical_tol=1e-8,
+        )
+
+        if len(self_idx) == 0:
+            all_iso.append(idx)
+        elif len(nbr_idx) == 0:
+            all_iso.append(idx)
+        elif set(self_idx) != set(range(crystal.num_sites)):
+            some_iso.append(idx)
+
+    if (len(all_iso) > 0) or (len(some_iso) > 0):
+        # drop the structures with isolated atoms
+        df = df.drop(df[df.index.isin(all_iso)].index)
+        df = df.drop(df[df.index.isin(some_iso)].index)
+
+    return df
