@@ -41,7 +41,7 @@ y_pred, y_unc = model.predict(df_test_comps[feature_labels], return_std=True)
 plt.figure(figsize=(8, 8))
 plt.xlim
 plt.plot(np.linspace(0, 1), y_pred, label="RFR Prediction")
-plt.fill_between(np.linspace(0, 1), y_pred+y_unc, y_pred-y_unc, label="RFR Prediction", alpha=0.4)
+plt.fill_between(np.linspace(0, 1), y_pred+y_unc, y_pred-y_unc, alpha=0.4)
 
 # https://journals.aps.org/prb/abstract/10.1103/PhysRevB.40.5683
 fitted = [1.155 - 0.43*x + 0.206*x**2 if x < 0.85 else 2.010 - 1.270*x for x in np.linspace(0, 1)]
@@ -56,7 +56,7 @@ ax.set_ylim(0, 1.5)
 
 plt.legend(frameon=False)
 
-xlabel = r"$x$" + " in " + r"$Si_{x}Ge_{1-x}$"
+xlabel = r"$x$" + " in " + r"$Si_{1-x}Ge_{x}$"
 ax.set_xlabel(xlabel)
 
 ylabel = r"$E_g$" + " / eV"
