@@ -1,4 +1,4 @@
-# ML Band Gaps (Materials)
+# SiGe Band Gap Estimator (ML, Materials)
 
 > Ideal candidate: skilled ML data scientist with solid knowledge of materials science.
 
