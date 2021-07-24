@@ -14,8 +14,6 @@ from utils import RandomForestRegressor, clean_dataframe
 
 DATA_SEED = 42
 R_CUT = 4
-R_BASIS = 10
-R_SMEAR = 0.5
 PATH = os.path.dirname(os.path.abspath(__file__))
 
 data = "non-metals"
