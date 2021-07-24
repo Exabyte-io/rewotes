@@ -10,7 +10,7 @@ from pymatgen.core.composition import Composition
 from matminer.featurizers import composition as cf
 from matminer.featurizers.base import MultipleFeaturizer
 
-from utils import RandomForestRegressor
+from utils import RandomForestRegressor  # needed to load model
 
 
 PATH = os.path.dirname(os.path.abspath(__file__))
