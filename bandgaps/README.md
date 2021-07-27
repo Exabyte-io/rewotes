@@ -9,15 +9,14 @@
 
 ## Frameworks
 
-* As we're using MP as a data source we will use frameworks built around pymatgen. This means using Matminer for shallow learning applications and MEGNet for Structure-based deep learning applications.
-* We will first train a composition based model on all the data queried and show it's predictions in the Si-Ge chemical system. For this we will use the Magpie descriptor set.
-* MEGNet provides a pre-trained bandstructure model from 2018. For the sake of this task we will use this model for downstream investigations but provide code that would enable such a model to be trained from scratch.
+* As we're using MP as a data source it is most natural to use frameworks built around `pymatgen`. This means using `matminer` for shallow learning applications and `MEGNet` for Structure-based deep learning applications.
 
-## Deliverables
+## Planned Deliverables
 
 - [x] Code to query relevant data from the Materials Project.
 - [x] Code to train a Random Forest Regression model (sklearn) using the Magpie descriptor set (Matminer).
-- [ ] Code to train a MEGNet regression model (tensorflow, megnet).
+- [x] Code to train a MEGNet regression model (tensorflow, megnet).
 - [x] Code to generate predictions over the entire compositon space for compositon based models.
-- [ ] Code to generate supercells in the Si-Ge phase space to explore the variations in predictions of structure-based models.
-- [ ] Dicussion document.
+- [x] Code to generate supercells in the Si-Ge phase space to explore the variations in predictions of structure-based models.
+- [x] Dicussion document.
+
