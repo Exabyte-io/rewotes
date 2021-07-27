@@ -10,9 +10,9 @@ Initial work was carried out in google colab notebook before being split out int
 
 * `explore-composition.py` - this script plots the band gap as a function of composition in the Si-Ge chemical system.
 
-* `structure.py` - this script trains a `MEGNet` model taking `pymatgen` `Structures` as input.  One limitation of `MEGNet` is that the code for generating the neighbour lists and distances (i.e. the graphs on which the graph neural network operates) is handled inside `pymatgen`. This means that the `MEGNet` codebase is not well suited to the prediction of forces as the co-ordinates are not present in the computation graph meaning that the forces cannot be computed by automatic differentation of the energy with respect to the input co-ordinates.
+* `structure.py` - this script trains a `MEGNet` model taking `pymatgen` `Structures` as input.
 
-* `explore-structure.py` - this script was intended to plot the bandgap as a function of composition for enumerated disordered variants in the Si-Ge chemical system under the ssumption that we have a solid solution that maintains the ground state Si structure. I attempted to implemnet this using the `EnumerateStructureTransformation` from `pymatgen` however I encountered errors whilst compiling the `enumlib` package used by the transformation class. I was unable as of yet to resolve this problem -- the most likely path to a solution would be to contact the `enumlib` developers.
+* `explore-structure.py` - this script was intended to plot the bandgap as a function of composition for enumerated disordered variants in the Si-Ge chemical system under the ssumption that we have a solid solution that maintains the ground state Si structure. This is implemented using the`EnumerateStructureTransformation` from `pymatgen`. We produce two plots one where the structures are unscaled and another where we scale based on the estimated volume.
 
 ## Scientific Discussion
 
@@ -66,6 +66,7 @@ The conclusion from the rewote exercise is that the data available in the Materi
 2. Likewise we could in-principle implement hyperparameter searching for the `MEGNet` model but as training deep neural networks is much more expensive and time consuming there was not really a sufficient value proposition for hyperparameter seaching at this time. Accross the literature `MPNN` such as `MEGNet` tends to be relatively robust to selection of hyperparameters - this can be seen from only the slight differences in performance between the 2018 and 2019 pre-trained models that have different hyperparameters.
 3. Whilst `MEGNet` satisfies the requirement of being easily adaptable to other materials properties it is not well-suited for the calculation of forces. This is because `MEGNet` uses distances calculated in `pymatgen` outside of the `tensorflow` computation graph. In general if the aim was to build a ML-PES/FF then other models are better suited to the task. Importantly many alternatives already have LAMMPS interfaces making their adoption much easier - Notable examples include Gaussian Approximation Potentials based of the SOAP descriptor, `Flare++` based on using a linearised GP on Atomic Cluster Expansion features, or `NEQUIP` which is an equivariant `MPNN`.
 4. `MEGNet` takes a long time for each training epoch (~13 minutes) as the neighbour lists are evaluated through the `GraphConverter` each time an item of data is called. Alternative models opt to pre-computed neighbour lists or cache them to speed up training.
+5. Provide useage instructions to allow the work to be reproduced once the update to conda-forge is made.
 
 ## Time breakdown
 
