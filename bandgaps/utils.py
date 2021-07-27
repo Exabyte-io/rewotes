@@ -52,8 +52,7 @@ class RandomForestRegressor(skrfr):
         """
         y_var = np.zeros(len(X_test))
 
-        # This derives std(y | X_test) as described in sec. 4.3.2 of
-        # http://arxiv.org/pdf/1211.0906v2.pdf
+        # This derives std(y | X_test) as described in sec. 4.3.2 of http://arxiv.org/pdf/1211.0906v2.pdf
         for tree in trees:
             var_tree = tree.tree_.impurity[tree.apply(X_test)]
             mean_tree = tree.predict(X_test)

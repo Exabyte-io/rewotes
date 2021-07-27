@@ -9,6 +9,8 @@ from matminer.utils.io import load_dataframe_from_json
 
 from sklearn.model_selection import train_test_split
 
+from ml_matrics.metrics import regression_metrics
+
 from utils import RandomForestRegressor, clean_dataframe
 
 
@@ -16,11 +18,12 @@ DATA_SEED = 42
 R_CUT = 4
 PATH = os.path.dirname(os.path.abspath(__file__))
 
-data = "non-metals"
-# data = "combined"
+# data = "non-metals"
+data = "combined"
 
 df = load_dataframe_from_json(
-    PATH + "/data/mp-query-exabyte_24_07_2021.json.gz"
+    PATH
+    + "/data/mp-query-exabyte_24_07_2021.json.gz"
     # PATH + "/data/mp-query-exabyte-test_23_07_2021.json.gz"
 )
 
@@ -29,12 +32,14 @@ df = clean_dataframe(df, R_CUT)
 
 # Use the features from MAGPIE
 print("Construct Composition-Based Descriptors")
-comp_features = MultipleFeaturizer([
-    cf.Stoichiometry(),
-    cf.ElementProperty.from_preset("magpie"),
-    cf.ValenceOrbital(props=["avg"]),
-    cf.IonProperty(fast=True)
-])
+comp_features = MultipleFeaturizer(
+    [
+        cf.Stoichiometry(),
+        cf.ElementProperty.from_preset("magpie"),
+        cf.ValenceOrbital(props=["avg"]),
+        cf.IonProperty(fast=True),
+    ]
+)
 
 feature_labels = comp_features.feature_labels()
 df = comp_features.featurize_dataframe(df, col_id="composition")
@@ -45,8 +50,12 @@ print("Perform Stratified Train-Test Split")
 df_metals = df[df["band_gap"] == 0]
 df_non_metals = df[df["band_gap"] > 0]
 
-df_metal_train, df_metal_test = train_test_split(df_metals, test_size=0.2, random_state=DATA_SEED)
-df_non_metal_train, df_non_metal_test = train_test_split(df_non_metals, test_size=0.2, random_state=DATA_SEED)
+df_metal_train, df_metal_test = train_test_split(
+    df_metals, test_size=0.2, random_state=DATA_SEED
+)
+df_non_metal_train, df_non_metal_test = train_test_split(
+    df_non_metals, test_size=0.2, random_state=DATA_SEED
+)
 
 if data == "combined":
     df_train = pd.concat((df_metal_train, df_non_metal_train))
@@ -61,4 +70,19 @@ print("Train Random Forest Regressor")
 model.fit(df_train[feature_labels].values, df_train["band_gap"].values)
 
 # Save the model
-dump(model, PATH+f"/models/composition-rfr-{data}.pkl.gz", )
+dump(
+    model,
+    PATH + f"/models/composition-rfr-{data}.pkl.gz",
+)
+
+df_test["pred_band_gap"] = model.predict(df_test[feature_labels].values)
+
+regression_metrics(df_test["band_gap"], df_test["pred_band_gap"], verbose=True)
+
+if data == "combined":
+    regression_metrics(
+        df_test["band_gap"][df_test["band_gap"] > 0],
+        df_test["pred_band_gap"][df_test["band_gap"] > 0],
+        verbose=True,
+    )
+

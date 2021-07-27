@@ -7,10 +7,12 @@ from pymatgen.core import SETTINGS
 from pymatgen.ext.matproj import MPRester
 from matminer.utils.io import store_dataframe_as_json
 
+
 PATH = os.path.dirname(os.path.abspath(__file__))
-# Materials project provides a python API via pymatgen
-# API key obtained from https://materialsproject.org/open
-# place the key in ~/.pmgrc.yaml config file
+
+
+# Materials project provides a python API via pymatgen API key obtained from https://materialsproject.org/open
+# place the key in ~/.pmgrc.yaml config file using: pmg config --add PMG_MAPI_KEY <PMG_MAPI_KEY>
 MP_API_KEY = SETTINGS.get("PMG_MAPI_KEY")
 
 m = MPRester(MP_API_KEY)

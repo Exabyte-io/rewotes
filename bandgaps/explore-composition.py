@@ -51,9 +51,6 @@ ax = plt.gca()
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1.5)
 
-# plt.scatter((0, 0.125, 0.25, 0.5, 0.75, 1), (0.8527, 0.8585, 0.0000, 0.4267, 0.0000, 0.0000), color="red", marker="x", clip_on=False, zorder=3, label="Training Data")
-# plt.scatter((0, 0.125, 0.5), (0.8527, 0.8585, 0.4267), color="red", marker="x", clip_on=False, zorder=3, label="Training Data")
-
 plt.legend(frameon=False)
 
 xlabel = r"$x$" + " in " + r"$Si_{1-x}Ge_{x}$"
