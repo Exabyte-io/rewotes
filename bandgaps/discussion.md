@@ -42,6 +42,7 @@ allow the model to accomodate metallic and insulating polymorphs provided they h
 Whilst we provided a script capable of training a `MEGNet` model we did not train one in this instance due to available time and resources (Whilst google colab is good for prototyping it is not well suited to long training runs due to the fact that instances are terminate when not interacted with for long periods of time i.e. training a deep model from scratch.)
 
 Due to computational resources I have opted to use the pretrained band gap model provided by `MEGNet` for futher exploration of how structure based ML models perform in the Si-Ge chemical system.
+The original authors claim this model has a MAE of 0.33 for their test split of the Materials Project data base.
 The Si-Ge chemcial system is as both Si and Ge adopt the same ground state structure and there are no other stable structures in the phase diagram at the DFT level using a
 PBE functional.
 The experimental band gap (as measured and parameterised in [2]) shows a cross over in behaviour at Si0.15Ge0.85.
