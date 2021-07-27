@@ -4,6 +4,7 @@ import SiGe_estimator
 
 ###************************** Function calculates number of Si and Ge elements ****
 def get_Si_Ge_numbers (df):
+    
     formula=df['formula'].str.split('G', n=1, expand=True).rename(columns={0:'Si_Num',1:'Ge_Num'}).fillna(0)
     formula['Si_Num']=formula['Si_Num'].apply(lambda x:0 if x=='' else x)
     formula['Si_Num']=formula['Si_Num'].apply(lambda x:1 if x=='Si' else x)
