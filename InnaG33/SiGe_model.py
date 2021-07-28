@@ -1,4 +1,4 @@
-###****************************** Model_v3 ***************************************
+###****************************** Model_v4 with Features Fingerprints automated selection **************
 ### SVR for smaller datasets
 ###****************************** Libraries Imports ******************************
 import numpy as np
@@ -13,25 +13,12 @@ from scipy.stats import randint
 ### feature 'a/A' is highly correlating with 'b/A' --> removing 'a/A' (corr.coeff=0.85)
 ### feature 'alpha' is highly correlating with 'beta' --> removing 'alpha' (corr.coeff=0.93)
 
-features=['b/A', 'c/A', 'beta', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
-fingerprints=[
-    'Band_Gap/eV', 
-    'Bulk_modulus',
-    'Thermal_expan_coeff', 
-    'Melting_point',
-    'Thermal_conductivity',
-    'Dielectric_const',
-    'Optical_photon_energy',
-    'Density',
-    'Surface_microhardness',
-    'Number_atoms_1cm3'
-]
+features=['a/A', 'c/A', 'alpha', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
+
 ###****************************** Model Train (Pipleline)**********************************
 def train_model(df, target):
-#   print('data size: ', df.shape)
 
     X=df.loc[:,features]
-#    y=df[fingerprints[0]]
     y=df[target]
 
     X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=0.1, random_state=775)
@@ -57,8 +44,8 @@ def tune_model(df, test_df, target):
     else:
         X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=0.1, random_state=573)
 
-    C_list=[float(x) for x in np.linspace(4.0, 1.5, num=24)]
-    epsilon_list=[float(x) for x in np.linspace(0.15, 0.4, num=24)]
+    C_list=[float(x) for x in np.linspace(1.5, 4.0, num=12)]
+    epsilon_list=[float(x) for x in np.linspace(0.15, 0.4, num=12)]
 
     params={
         'svr__kernel':['rbf', 'linear', 'poly', 'sigmoid'],

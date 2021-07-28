@@ -1,47 +1,62 @@
+###*********************** Performs estimations of SiGe properties based on the lattice parameters *********
+'''
+> Minimum required features are SiGe formula (or Si, Ge alone), lattice size, angles, and volume
+> User's train and test dataset are used from 'data' subfolder
+> Automated selection of minimum required features from user's train / test dataset
+> Automated alocation for rest of found features as target varibales (SiGe fingerprints)
+> SVR algorithm deals with small datasets (suggested data size up to 10,000 rows)
+> Option for model tune --> per user's choice and data quality
+> Test dataset (with min one row) can only include minimum required features --> 
+model will predict target variable per what is found in the train dataset
+and model score will be based on a split from the train dataset.
+'''
+
+import sys
 import pandas as pd
 
 import SiGe_estimator
 
-###************************** Function calculates number of Si and Ge elements ****
-def get_Si_Ge_numbers (df):
-    
-    formula=df['formula'].str.split('G', n=1, expand=True).rename(columns={0:'Si_Num',1:'Ge_Num'}).fillna(0)
-    formula['Si_Num']=formula['Si_Num'].apply(lambda x:0 if x=='' else x)
-    formula['Si_Num']=formula['Si_Num'].apply(lambda x:1 if x=='Si' else x)
-    formula['Ge_Num']=formula['Ge_Num'].apply(lambda x:1 if x=='e' else x)
-    formula['Si_Num']=formula['Si_Num'].apply(lambda x:int(x.split('i')[1]) if type(x)==str else x)
-    formula['Ge_Num']=formula['Ge_Num'].apply(lambda x:int(x.split('e')[1]) if type(x)==str else x)
-    df['Si_Num']=formula['Si_Num']
-    df['Ge_Num']=formula['Ge_Num']
-    
-    return df
-
 ###****************************** Data read ***************************************
-train_df=pd.read_csv('SiGe_lattice_params_train.csv') 
-test_df=pd.read_csv('SiGe_lattice_params_test.csv')   #separate test data file (avoid data leakage on model train)
+try:
+    train_df=pd.read_csv('./data/SiGe_lattice_params_train.csv', low_memory=False, encoding = 'utf8') 
+    test_df=pd.read_csv('./data/SiGe_lattice_params_test.csv',low_memory=False, encoding = 'utf8')   #separate test data file (avoid data leakage on model train)
+except: 
+    FileNotFoundError
+    print('please add your dataset in the "data" folder and try again')
+    sys.exit()
 
 ###****************************** Data prep for modeling **************************
-train_df=get_Si_Ge_numbers(train_df)
+train_df=SiGe_estimator.get_Si_Ge_numbers(train_df)
 train_df.drop(['formula'], axis=1, inplace=True)
 
-test_df=get_Si_Ge_numbers(test_df)
+test_df=SiGe_estimator.get_Si_Ge_numbers(test_df)
 test_df.drop(['formula'], axis=1, inplace=True)
 
-###****************************** Train the model and make prediction *************
-
-y_test, pred, R2, model_score = SiGe_estimator.estimator(train_df, test_df)
-
-print(f'Model score is: {model_score}\nActual Bang Gap: {y_test.to_list()}\nPredicted Band Gap: {pred}\nTest data score {R2}')
+###****************************** Fingerprints Selection for target variables *************
+fprints=SiGe_estimator.fprints_selection(train_df)
 print()
+print('Found following fprints for modeling: ', fprints)
+print()
+###****************************** Train the model and make prediction *************
+y_test_list, predictions, R2_list, model_scores = SiGe_estimator.estimator(train_df, test_df, fprints)
+
+for i in range(len(fprints)):
+    print(
+        f'Model score is: {model_scores[i]}\nActual {fprints[i]}: {y_test_list[i]}\nPredicted {fprints[i]}: {predictions[i]}\nTest data score {R2_list[i]}'
+        )
+    print()
 ###****************************** Model tune - optional per user's data & choice *************
 
 user_choice=str(input('Would you like try tuning the model (may take few minutes): y/n? '))
 print()
-yes_list=['y', 'yes', 'yeah', 'yo', 'ya', 'da', 'ken', 'si']
 
-if user_choice.lower() in yes_list:
-    y_test, pred_1, R2_1, tuned_model_score = SiGe_estimator.tune(train_df, test_df)
-    print(f'Tuned model score is: {tuned_model_score}\nActual Bang Gap: {y_test.to_list()}\nPredicted Band Gap: {pred_1}\nTuned test data score {R2_1}')
+if user_choice.lower()=='y':
+    y_test_list, predictions, R2_list, model_scores = SiGe_estimator.tune(train_df, test_df, fprints)
+    for i in range(len(fprints)):
+        print(
+            f'Model score is: {model_scores[i]}\nActual {fprints[i]}: {y_test_list[i]}\nPredicted {fprints[i]}: {predictions[i]}\nTest data score {R2_list[i]}'
+            )
+        print()
 else:
     print ('run completed')
 
