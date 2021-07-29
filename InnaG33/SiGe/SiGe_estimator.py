@@ -5,8 +5,8 @@ import pandas as pd
 import SiGe_model
 
 ###****************************** Features and Fingerprints selection *******************
-### feature 'a/A' is highly correlating with 'b/A' --> removing 'b/A' (corr.coeff=0.85)
-### feature 'alpha' is highly correlating with 'beta' --> removing 'beta' (corr.coeff=0.93)
+### feature 'a/A' is highly correlating with 'b/A' --> removing 'a/A' (corr.coeff=0.85)
+### feature 'alpha' is highly correlating with 'beta' --> removing 'alpha' (corr.coeff=0.93)
 
 # possible fingerprints=[
 #     'Band_Gap/eV', 
@@ -20,8 +20,8 @@ import SiGe_model
 #     'Surface_microhardness',
 # ]
 
-features=['a/A', 'c/A', 'alpha', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
-not_useful=['formula', 'b/A', 'beta']
+features=['b/A', 'c/A', 'beta', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
+not_useful=['formula', 'a/A', 'alpha']
 ###************************** Function calculates number of Si and Ge elements ****
 def get_Si_Ge_numbers (df):
     

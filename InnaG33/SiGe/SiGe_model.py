@@ -13,7 +13,7 @@ from scipy.stats import randint
 ### feature 'a/A' is highly correlating with 'b/A' --> removing 'a/A' (corr.coeff=0.85)
 ### feature 'alpha' is highly correlating with 'beta' --> removing 'alpha' (corr.coeff=0.93)
 
-features=['a/A', 'c/A', 'alpha', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
+features=['b/A', 'c/A', 'beta', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
 
 ###****************************** Model Train (Pipleline)**********************************
 def train_model(df, target):
