@@ -1,54 +1,35 @@
-# ReWoTes
+# SiGe Properties Estimator (ML, Materials)
 
-REal WOrld TEstS
+>Based on SiGe lattice parameters (flask server)
 
 ## Overview
 
-This repository contains example test assignments used during our hiring process.
+The aim of this task is to create a python package that implements automatic prediction of various properties for a SiGe alloys, such as electronic band gaps, formation energy, bulk modulus, based on user's training data and test data. 
 
-We find that regular job interview questions can often be misleading and so use more engaged "real-world" examples instead.
+Target properties can vary and will be determined directly from a given training dataset by the estimator, i.e. per available data, avoiding not related features. 
 
-Each file represents an assignment similar to what one would get when hired.
+### Usage
 
-## Usage
+Minimum features required by the model are: lattice size in A, angles and lattice volume in A3, have to be present in the training dataset with following names:
 
-We suggest the following flow:
+- SiGe formula, as Si49Ge51 or Si, Ge alone
+- a, b, c
+- alpha, beta, gamma
+- Volume
 
-1. [Fork](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) this repository on GitHub
-2. Create a branch using your GitHub username as a branch name
-3. Create a subfolder with your GitHub username
-4. Copy one of the ReWoTe suggestions (`.md` files) to `README.md` in that subfolder and modify the content of the ReWoTe as necessary
-5. Introduce any changes under the subfolder
-6. Submit a [pull request](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) into the `dev` branch of this repository
+Estimator will allocate rest of the features as target fingerprints for modeling, then will train models based on each of them one after another. ML model is based on SVR, suitable for smaller datasets (assumed as the most common for such modeling type). The trained models results are shown under route /model_train. Below are few suggested properties for the estimation:
 
-See [dev branch](https://github.com/Exabyte-io/rewotes/tree/dev) also.
+- Band_Gap
+- Bulk_modulus
+- Thermal_expan_coeff
+- Melting_point
+- Thermal_conductivity
+- Dielectric_const
+- Optical_photon_energy
+- Density
+- Surface_microhardness
+- Formation energy
 
-## Notes
-
-Examples listed here are only meant as guidelines and do not necessarily reflect on the type of work to be performed at the company.
-
-Modifications to the individual assignments with an advance notice are encouraged. Candidates are free to share the results.
-
-We will screen for the ability to pick up new concepts quickly and implement a working solution. We value attention to details and modularity.
-
-## Hiring process
-
-Our hiring process in more details:
-
-| Stage             | Target Duration   | Topic                          |
-| ----------------- | ----------------- | ------------------------------ |
-| 0. Email screen   |                   | why exabyte.io                 |
-| 1. Phone screen   | 15-20 min         | career goals, basic skillset   |
-| 2. ReWoTe         | 1-2h x 1-5 days   | real-world work/thought process|
-| 3. On-site meet   | 2-4 x 30 min      | personality fit                |
-| 4. Discuss offer  | 30 min            | cash/equity/benefits           |
-| 5. Decision       |                   | when to start                  |
-
-TOTAL: ~2 weeks tentative
+Estimator have models tuning option under route /model_tune. Training datset size can be as low as 10 rows, up to 10,000 for reasonable wating times. Testing datset size can be as low as one row and can only include minimum required features. If no target fingerprints are provided in the test dataset, model will only predict the values, when the model score will be based on the split from the training dataset per target fingerprints found in the training dataset. 
 
 
-## Contact info
-
-With any questions about this repository or our hiring process please contact us at info@exabyte.io.
-
-© 2020 Exabyte Inc.
