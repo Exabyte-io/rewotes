@@ -6,18 +6,18 @@
 
 The aim of this task is to create a python package that implements automatic prediction of various properties for a SiGe alloys, such as electronic band gaps, formation energy, bulk modulus, based on user's training data and test data. 
 
-Target properties can vary and will be detrmined directly from a given training dataset by the estimator, i.e. per available data, avoiding not related features. 
+Target properties can vary and will be determined directly from a given training dataset by the estimator, i.e. per available data, avoiding not related features. 
 
 ### Usage
 
 Minimum features required by the model are: lattice size in A, angles and lattice volume in A3, have to be present in the training dataset with following names:
 
 - SiGe formula, as Si49Ge51 or Si, Ge alone
-- a/A, b/A, c/A
+- a, b, c
 - alpha, beta, gamma
-- Volume/A3
+- Volume
 
-Estimator will allocate rest of the features as target fingerprints for modeling, then will train models based on each of them one after another. ML model is based on SVR, suitable for smaller datsets (assumed as the most common for such modeling type). The trained models results are shown under route /model_train. Below are few suggested properties for the estimation:
+Estimator will allocate rest of the features as target fingerprints for modeling, then will train models based on each of them one after another. ML model is based on SVR, suitable for smaller datasets (assumed as the most common for such modeling type). The trained models results are shown under route /model_train. Below are few suggested properties for the estimation:
 
 - Band_Gap
 - Bulk_modulus

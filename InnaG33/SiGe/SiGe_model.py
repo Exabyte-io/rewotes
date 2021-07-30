@@ -13,17 +13,17 @@ from scipy.stats import randint
 ### feature 'a/A' is highly correlating with 'b/A' --> removing 'a/A' (corr.coeff=0.85)
 ### feature 'alpha' is highly correlating with 'beta' --> removing 'alpha' (corr.coeff=0.93)
 
-features=['b/A', 'c/A', 'beta', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
+features=['b', 'c', 'beta', 'gamma', 'volume', 'Si_Num', 'Ge_Num']
 
 ###****************************** Model Train (Pipleline)**********************************
 def train_model(df, target):
 
-    X=df.loc[:,features]
+    X=df[features]
     y=df[target]
 
-    X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=0.1, random_state=775)
+    X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=0.1, random_state=779)
 
-    pipe=Pipeline(steps=[('mmscaler', MinMaxScaler()), ('svr', SVR(C=2.2, epsilon=0.18))])
+    pipe=Pipeline(steps=[('mmscaler', MinMaxScaler()), ('svr', SVR(C=0.8, epsilon=0.05))])
     pipe.fit(X_train, y_train)  
     trained_model = pipe
     model_score=round(pipe.score(X_test, y_test),4)
@@ -33,7 +33,7 @@ def train_model(df, target):
 ###****************************** Model Tune (Randomized Search CV)**********************************
 def tune_model(df, test_df, target):
 
-    X=df.loc[:,features]
+    X=df[features]
     y=df[target]
 
     if target in list(test_df.columns):
@@ -44,8 +44,8 @@ def tune_model(df, test_df, target):
     else:
         X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=0.1, random_state=573)
 
-    C_list=[float(x) for x in np.linspace(1.5, 4.0, num=12)]
-    epsilon_list=[float(x) for x in np.linspace(0.15, 0.4, num=12)]
+    C_list=[float(x) for x in np.linspace(0.5, 4.0, num=20)]
+    epsilon_list=[float(x) for x in np.linspace(0.03, 0.3, num=30)]
 
     params={
         'svr__kernel':['rbf', 'linear', 'poly', 'sigmoid'],

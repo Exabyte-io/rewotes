@@ -20,8 +20,8 @@ import SiGe_model
 #     'Surface_microhardness',
 # ]
 
-features=['b/A', 'c/A', 'beta', 'gamma', 'volume/A3', 'Si_Num', 'Ge_Num']
-not_useful=['formula', 'a/A', 'alpha']
+features=['b', 'c', 'beta', 'gamma', 'volume', 'Si_Num', 'Ge_Num']
+not_useful=['formula', 'a', 'alpha']
 ###************************** Function calculates number of Si and Ge elements ****
 def get_Si_Ge_numbers (df):
     
@@ -57,19 +57,19 @@ def fprints_selection(train_df):
 
 ###****************************** Make Prediction **********************************    
 def estimator(train_df, test_df, fprints):
+    y_test_list=[]
+    predictions=[]
+    R2_list=[]
+    model_scores=[]
 
     for target in fprints:
 
-        y_test_list=[]
-        predictions=[]
-        R2_list=[]
-        model_scores=[]
-
         trained_model, model_score=SiGe_model.train_model(train_df, target)
 
-        x_test=test_df.loc[:,features]
+        x_test=test_df[features]
         pred = trained_model.predict(x_test)
         pred = [round(i,3) for i in pred]
+        
         predictions.append(pred)
 
         if (target in list(test_df.columns)) & (len(test_df)>2):
@@ -84,19 +84,20 @@ def estimator(train_df, test_df, fprints):
         model_scores.append(model_score)
 
     return y_test_list, predictions, R2_list, model_scores
+    
 
 ###****************************** Tune the model **********************************   
 def tune(train_df, test_df, fprints):
+    y_test_list=[]
+    predictions=[]
+    R2_list=[]
+    model_scores=[]
     
     for target in fprints:
-        y_test_list=[]
-        predictions=[]
-        R2_list=[]
-        model_scores=[]
-        
+
         tuned_model, tuned_model_score=SiGe_model.tune_model(train_df, test_df, target)
 
-        x_test=test_df.loc[:,features]
+        x_test=test_df[features]
         pred = tuned_model.predict(x_test)
         pred = [round(i,3) for i in pred]
         predictions.append(pred)

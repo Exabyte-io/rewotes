@@ -24,8 +24,8 @@ app = Flask(__name__)
 ###****************************** Data read ***************************************
 try:
     path='/Users/grinn/Desktop/rewotes/InnaG33/SiGe'
-    train_df=pd.read_csv(f'{path}/data/SiGe_lattice_params_train.csv', low_memory=False, encoding = 'utf8') 
-    test_df=pd.read_csv(f'{path}/data/SiGe_lattice_params_test.csv',low_memory=False, encoding = 'utf8')   #separate test data file (avoid data leakage on model train)
+    train_df=pd.read_csv(f'{path}/data/train_df.csv', low_memory=False, encoding = 'utf8') 
+    test_df=pd.read_csv(f'{path}/data/test_df.csv',low_memory=False, encoding = 'utf8')   #separate test data file (avoid data leakage on model train)
 except: 
     FileNotFoundError
     print('please add your dataset in the "data" folder and try again')
@@ -69,7 +69,7 @@ def model_train():
         results[f"Predicted {fprints[i]}"] = predictions[i]
         results[f"Test data score {fprints[i]}"] = R2_list[i]
 
-        return jsonify(results)
+    return jsonify(results)
 
 ###****************************** Model tune - optional per user's data & choice *************
 
