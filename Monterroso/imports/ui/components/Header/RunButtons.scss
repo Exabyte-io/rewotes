@@ -1,0 +1,32 @@
+@import "../../style/Colors.scss";
+
+.header {
+  text-align: center;
+}
+
+.run-button {
+  background-color: $default-blue;
+  text-align: center;
+  margin: 1rem;
+  padding: 2rem;
+  border-radius: 50px;
+  &:hover {
+    background-color: $highlight-blue
+  }
+  &:active {
+    background-color: $selected-blue;
+  }
+}
+
+.reset-button {
+  padding: 0.25rem 1rem;
+  display: inline-block;
+  border-radius: 25px;
+  background-color: $default-blue;
+  &:hover {
+    background-color: $highlight-blue;
+  }
+  &:active {
+    background-color: $selected-blue;
+  }
+}

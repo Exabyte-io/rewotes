@@ -1,0 +1,12 @@
+@import "../../style/Operations";
+
+.drag-container {
+  display: inline-block;
+  border: 1px solid black;
+  margin: 2rem;
+  flex: 1;
+}
+
+.dragged-item {
+  text-align: center;
+}
