@@ -9,7 +9,6 @@ import datetime
 import libcloud
 from libcloud.storage.types import Provider
 from libcloud.storage.providers import get_driver
-# print(libcloud.__file__)
 
 def getFiles(dir):
     listOfFiles = list()
@@ -73,7 +72,7 @@ class BaseUpload:
         return container
 
     def upload(self, src, dst, meta_data={}, filesize=0):
-        if (filesize/1024/1024 >= 50):
+        if (filesize/1024/1024 >= 500): # use multipart upload for +500MB files
             return self.uploadMultiPart(self.driver, src, dst, meta_data)
         else:
             return self.uploadSimple(self.driver, src, dst, meta_data)
@@ -104,7 +103,7 @@ class ParallelUpload(BaseUpload):
         try:
             driver = self.initDriver() # new driver for each thread because not thread-safe
             meta = {'dt': str(datetime.datetime.now(datetime.timezone.utc)) }
-            if (filesize/1024/1024 >= 50):
+            if (filesize/1024/1024 >= 500): # use multipart upload for +500MB files
                 obj = self.uploadMultiPart(driver, file, file, meta)
             else:
                 obj = self.uploadSimple(driver, file, file, meta)
@@ -149,7 +148,7 @@ class ParallelUpload(BaseUpload):
 
         for g in tasks:
             try:
-                out = g.get(timeout=5) # large files need large timeout (or none)
+                out = g.get(timeout=None) # large files need large timeout (or none)
                 if 'error' in out:
                     print('a.respawning', g.meta) # re-try mechanism
                     spawn(tasks, g.meta)
