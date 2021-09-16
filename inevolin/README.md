@@ -105,7 +105,7 @@ test_parallel_upload: 1149 ms
 
 **NOTES**
 - `findOptimalNoThreads(files)`: finds an optimal number of threads to use, with respect to the number of files to be uploaded, and the hard thread limit (default: 200)
-- the uploader has a custom built-in re-try mechanism, which keeps running until upload succeeds. This can be prone to infinite loops in case uploading fails due unforeseen reasons.
-- `ParallelUpload.uploadFiles` can have a thread timeout (seconds, default: None), in case it ever gets stuck. However large files may need a large timeout value -- it can be tricky to programmatically determine a good timeout value.
+- the uploader has a custom built-in re-try mechanism, which keeps running until upload succeeds. This can be prone to infinite loops in case uploading fails due unforeseen reasons. This can be improved by tracking & limiting retries per file.
+- `ParallelUpload.uploadFiles` can have a thread timeout (seconds, default: None), in case it ever gets stuck or creeps. However large files may need a large timeout value -- it can be tricky to programmatically determine a good timeout value.
 - libcloud's Driver is [not thread-safe](https://libcloud.readthedocs.io/en/stable/other/using-libcloud-in-multithreaded-and-async-environments.html), which is why `ParallelUpload.asyncUpload()` inits a new driver for each upload/thread.
 - libcloud's Driver provides two upload functions: `upload_object` and `upload_object_via_stream`, the latter uses the multipart strategy whenever possible. However this is a slower method for small files. Which is why our code defaults to the regular upload strategy for files under 500MB.
