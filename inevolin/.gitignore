@@ -5,3 +5,4 @@ __pycache__/
 tests.py
 meta.json
 *.txt
+Config.py
