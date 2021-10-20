@@ -45,10 +45,12 @@ class _env:
 
     @property
     def exabyte_username(self):
+        """Used to obtain header values below"""
         return os.getenv("EXABYTE_USERNAME")
 
     @property
     def exabyte_password(self):
+        """Used to obtain header values below"""
         return os.getenv("EXABYTE_PASSWORD")
 
     @property

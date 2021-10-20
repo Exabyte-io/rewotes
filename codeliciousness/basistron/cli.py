@@ -3,7 +3,7 @@ import os
 
 from argparse import ArgumentParser, Namespace
 
-from .model import Driver, Property
+from .model import Execution, Property
 
 
 def get_parser() -> ArgumentParser:
@@ -31,9 +31,9 @@ def get_parser() -> ArgumentParser:
     return parser
 
 
-def process_args(args: Namespace) -> Driver:
+def process_args(args: Namespace) -> Execution:
     if not os.path.isfile(args.xyz_path):
-        raise FileNotFoundError
+        raise FileNotFoundError(args.xyz_path)
     # load xyz data
     with open(args.xyz_path, "r") as f:
         xyz_data = [
@@ -44,7 +44,7 @@ def process_args(args: Namespace) -> Driver:
         raise Exception("unrecognized property")
     # optional tolerance (default defined in Driver)
     tol = getattr(args, "reference_tolerance", None)
-    return Driver(
+    return Execution(
         xyz_data=xyz_data,
         target_property=args.target_property,
         reference_value=args.reference_value,

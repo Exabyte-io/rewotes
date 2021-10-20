@@ -3,7 +3,7 @@
 import pytest
 
 from basistron import cli
-from basistron.model import Driver
+from basistron.model import Execution
 
 command = [
     "--target_property",
@@ -68,7 +68,7 @@ def test_process_args(tmppath, h2, h2dat):
     parser = cli.get_parser()
     args = parser.parse_args(command[:-1] + [path])
     ret = cli.process_args(args)
-    assert isinstance(ret, Driver)
+    assert isinstance(ret, Execution)
     assert ret.xyz_data == h2dat
 
 

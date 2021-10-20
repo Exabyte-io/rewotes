@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-from typing import List, Tuple, Optional, Union
+from typing import List, Tuple, Optional, Union, Dict, Any
 
 from pydantic import BaseModel
 
@@ -29,9 +29,21 @@ class RelaxationProperty(Property):
 
 
 
-class Driver(BaseModel):
-    """Abstraction layer allowing multiple modes of execution."""
-    xyz_data: List[Tuple[str, float, float, float]]
+class Execution(BaseModel):
+    """The state of a given execution."""
+    xyz_data: Tuple[Tuple[str, float, float, float], ...]
     target_property: str
     reference_value: Optional[Union[str, float]] = None
     reference_tolerance: Optional[float] = 0.01
+
+    def xyz_data_to_dict(self) -> Dict[str, List[Dict[str, Any]]]:
+        elements = []
+        coordinates = []
+        for i, (sym, *val) in enumerate(self.xyz_data):
+            i += 1
+            elements.append({"id": i, "value": sym})
+            coordinates.append({"id": i, "value": val})
+        return {
+            "elements": elements,
+            "coordinates": coordinates,
+        }
