@@ -6,8 +6,9 @@ authors = ["codeliciousness <exabytecandidate@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-fastapi = "^0.70.0"
-requests = "^2.26.0"
+fastapi = "0.68.2"
+requests = "2.20.1"
+exabyte-api-client = {git = "https://github.com/exabyte-io/api-client", rev = "2021.06.25"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
