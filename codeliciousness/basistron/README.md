@@ -1,6 +1,24 @@
 BasisTron
 =========
 
+TODO
+----
+
+* Basis
+  - how to update workflow model with basis set info
+
+* Cccbdb
+  - client
+  - provide reference data given simple chemical formula
+
+* Driver
+  - provide simple chemical formula to app
+
+* App
+  - sanity check reference data to input
+  - poll running jobs for results
+  - re-submission loop
+
 BasisTron is the automatic basis set selection tool you've
 always needed but have never had the time to write yourself.
 
