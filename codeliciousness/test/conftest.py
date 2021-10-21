@@ -20,7 +20,7 @@ H 0.0 0.0 0.7"""
 
 @pytest.fixture
 def h2dat():
-    return [
+    return (
         ("H", 0.0, 0.0, 0.0),
         ("H", 0.0, 0.0, 0.7),
-    ]
+    )
