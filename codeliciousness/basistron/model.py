@@ -37,12 +37,13 @@ class Execution(BaseModel):
     reference_tolerance: Optional[float] = 0.01
 
     def xyz_data_to_dict(self) -> Dict[str, List[Dict[str, Any]]]:
+        ang2au = 1.889723
         elements = []
         coordinates = []
         for i, (sym, *val) in enumerate(self.xyz_data):
             i += 1
             elements.append({"id": i, "value": sym})
-            coordinates.append({"id": i, "value": val})
+            coordinates.append({"id": i, "value": val * ang2au})
         return {
             "elements": elements,
             "coordinates": coordinates,
