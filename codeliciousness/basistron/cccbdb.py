@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
+"""
+A CCCBDB scraping client. Borrows much inspiration
+from https://github.com/marcelo-mason/cccbdb-calculation-parser
+but the repo is dormant and non-functional.
+"""
+import sys
 import requests
+from requests import HTTPError
 from functools import partialmethod
 from urllib.parse import urljoin
 
-from typing import Dict, Any, Optional
+import pandas as pd
+from typing import Dict, Any, Tuple
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
@@ -13,112 +21,153 @@ from basistron import parser
 
 log = utils.get_logger(__name__)
 
-def _borrowed_headers(referer):
-    return {
-        'Host': 'cccbdb.nist.gov',
+def _inspected_headers(referer: str) -> Dict[str, str]:
+    headers = {
+        'Accept': (
+            'text/html,application/xhtml+xml,application/xml;'
+            'q=0.9,image/avif,image/webp,image/apng,*/*;'
+            'q=0.8,application/signed-exchange;v=b3;q=0.9'
+        ),
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'max-age=0',
         'Connection': 'keep-alive',
         'Content-Length': '26',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
-        'Origin': 'http://cccbdb.nist.gov',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Referer': referer,
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'en-CA,en-GB;q=0.8,en-US;q=0.6,en;q=0.4',
+        'Host': 'cccbdb.nist.gov',
+        'Origin': 'https://cccbdb.nist.gov',
+        'sec-ch-ua': (
+            '"Chromium";v="94", "Google Chrome";'
+            'v="94", ";Not A Brand";v="99"'
+        ),
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': 'Windows',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': (
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/94.0.4606.81 Safari/537.36'
+        )
     }
+    if referer is not None:
+        headers['Referer'] = referer
+    return headers
 
 class Cccbdb:
     """Wrapper around interactivity with the CCCBDB and
     filesystem caching of CCCBDB data."""
 
-    TIMEOUT = 30000
-    EXT_FMT = "{}x.asp".format
-    BASE_URL = "http://cccbdb.nist.gov"
-    FORM_EXT = "getform"
-    DUMP_EXT = "carttabdump"
-    EXPT_EXT = "exp1"
+    TIMEOUT = 10
+    BASE_URL = "https://cccbdb.nist.gov"
+    FORM_EXT = "getformx.asp"
+    DUMP_EXT = "carttabdumpx.asp"
 
-    POL_CALC = "polcalc1"
+    # experimental properties
+    EXPT_EXT = "exp1x.asp"
 
-    def get_calculated_data(self, formula: str, property: str = POL_CALC):
-        soup = self.post(
-            self.FORM_EXT,
-            referer=property,
-            data={
-                "formula": formula,
-                "submit1": "Submit",
-            }
-        )
-        print(soup)
-        tables = soup.find_all("table")
-        print(len(tables), [len(table) for table in tables])
-        import pprint
-        # pprint.pprint(tables[0])
-        # pprint.pprint(tables[1])
-#        tables = soup.find_all("table")
-#        log.info(f"found {len(tables)} tables")
-#        parse = parser.TableParser()
-#        parse.feed(str(soup))
-#        for table in parse.tables:
-#            log.info(f"table({len(table)},{len(table[0])})")
-#            print(table)
+    # calculated properties
+    POL_CALC = "polcalc1x.asp"
+    GEOMETRY = "geom1x.asp"
+    ENERGY = "energy1x.asp"
+    VIBRATIONS = "vibs1x.asp"
+    MULLIKEN = "mulliken1x.asp"
 
-
-    def get_experimental_data(self, formula: str, path: str = EXPT_EXT):
-        [form] = self.get(path).find_all("form")
-        reduced = self.reduce_form(form)
-        data = {inp["name"]: inp["value"] for inp in reduced["inputs"]}
-        resp = self.post(reduced["action"], data=data)
-        tables = resp.find_all("table")
-        log.info(f"found {len(tables)} tables")
-        parse = parser.TableParser()
-        parse.feed(str(resp))
-        print(parse.tables)
-    
     @staticmethod
-    def reduce_form(form: Tag) -> Dict[str, Any]:
-        return {
+    def retry_loop(func, *args, **kwargs):
+        tries = 0
+        while True:
+            try:
+                tries += 1
+                if not tries or not tries % 5:
+                    log.info(f"calling {func.__name__} try #{tries}")
+                res = func(*args, **kwargs)
+                break
+            except HTTPError:
+                continue
+            except KeyboardInterrupt:
+                sys.exit()
+        return res
+
+    def get_data(self, formula: str, property: str = POL_CALC):
+        """Get all the data for a chemical formula and kind of property."""
+        res, form = self.get_form(property)
+        form_data = self.reduce_form(form, formula)
+        headers = _inspected_headers(res.url)
+        res = self.submit_form(form_data, headers)
+        return self.soup(res)
+
+    def get_form(self, property: str) -> Tuple[requests.Response, Dict[str, Any]]:
+        """Get the structure of the form directly from the website."""
+        res = self.retry_loop(self.get, property)
+        soup = self.soup(res)
+        # assert only a single form on the page
+        [form] = soup.find_all("form")
+        return res, form
+
+    def submit_form(self, form_data: Dict[str, Any], headers: Dict[str, Any]):
+        """Submit the form following redirect semantics of the CCCBDB website."""
+        log.info('submitting form %s', form_data["data"])
+        # post the form data without redirect
+        self.retry_loop(
+            getattr(self, form_data["method"]),
+            form_data["action"],
+            data=form_data["data"],
+            allow_redirects=False,
+            headers=headers,
+        )
+        # get the data from the redirected URL
+        url = headers["Referer"].replace("1", "2")
+        return self.retry_loop(self.get, url)
+
+    @staticmethod
+    def reduce_form(form: Tag, formula: str) -> Dict[str, Any]:
+        reduced = {
             "action": form.attrs.get("action").lower(),
             "method": form.attrs.get("method", "get").lower(),
-            "inputs": [
-                {
-                    "type": inp.attrs.get("type", "text"),
-                    "name": inp.attrs.get("name"),
-                    "value": inp.attrs.get("value"),
-                }
+            "data": {
+                inp.attrs.get("name"): inp.attrs.get("value")
                 for inp in form.find_all("input")
-            ]
+            }
         }
+        reduced["data"]["formula"] = formula
+        return reduced
+
+    @staticmethod
+    def soup(response: requests.Response) -> BeautifulSoup:
+        return BeautifulSoup(response.content, "html.parser")
 
     def __init__(self):
         self.session = requests.Session()
 
-    def _make_request(self, method: str, path: str, referer: Optional[str] = None, **kwargs):
-        url = urljoin(self.BASE_URL, self.EXT_FMT(path))
-        headers = kwargs.get("headers", {})
-        if referer is not None:
-            headers.update(_borrowed_headers(url))
-            kwargs["allow_redirects"] = False
-        kwargs["headers"] = headers
+    def _make_request(self, method: str, path: str, **kwargs):
+        url = urljoin(self.BASE_URL, path)
         log.info(f"calling {method} {url}")
-        res = self.session.request(method, url, timeout=self.TIMEOUT, **kwargs)
+        res = self.session.request(
+            method, url, timeout=self.TIMEOUT, **kwargs
+        )
         res.raise_for_status()
         log.info(f"status code {res.status_code}")
-        if referer is not None and res.status_code == 302:
-            url = urljoin(self.BASE_URL, self.EXT_FMT(referer.replace("1", "2")))
-            log.info(f"redirect url get {url}")
-            res = self.session.request("get", url, timeout=self.TIMEOUT)
-            res.raise_for_status()
-            log.info(f"status code {res.status_code}")
-        return BeautifulSoup(res.content, "html.parser")
+        return res
 
     get = partialmethod(_make_request, "get")
     post = partialmethod(_make_request, "post")
 
-        
+
 if __name__ == "__main__":
     c = Cccbdb()
-    c.get_calculated_data("CH4")
+    soup = c.get_data("CH4", c.POL_CALC)
+    tables = soup.find_all("table")[1:]
+
+    for table in tables:
+        parse = parser.TableParser()
+        parse.feed(str(table))
+        header, *rows = parse.pad_table(parse.table)
+        if not rows:
+            df = pd.DataFrame(header)
+        else:
+            df = pd.DataFrame(rows, columns=header)
+        print(df.head())
