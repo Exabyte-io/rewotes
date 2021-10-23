@@ -6,13 +6,12 @@ but the repo is dormant and non-functional.
 """
 import sys
 import requests
-from requests import HTTPError
+from requests import HTTPError, ReadTimeout
 from functools import partialmethod
 from urllib.parse import urljoin
 
 import pandas as pd
-from typing import Dict, Any, Tuple
-
+from typing import Dict, Any, Tuple, List
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
@@ -67,14 +66,19 @@ class Cccbdb:
     DUMP_EXT = "carttabdumpx.asp"
 
     # experimental properties
-    EXPT_EXT = "exp1x.asp"
+    EXPT_POL = "pollistx.asp"
+    EXPT_VIB = "expvibs1x.asp"
+    EXPT_IE = "xp1x.asp?prop=8"
+    # general purpose
+    # EXPT_EXT = "exp1x.asp"
 
     # calculated properties
     POL_CALC = "polcalc1x.asp"
-    GEOMETRY = "geom1x.asp"
-    ENERGY = "energy1x.asp"
-    VIBRATIONS = "vibs1x.asp"
-    MULLIKEN = "mulliken1x.asp"
+    VIB_FREQ = "vibs1x.asp"
+    HOMO_LUMO = "gap1x.asp"
+    # extend this for more properties
+    # ENERGY = "energy1x.asp"
+    # MULLIKEN = "mulliken1x.asp"
 
     @staticmethod
     def retry_loop(func, *args, **kwargs):
@@ -86,7 +90,7 @@ class Cccbdb:
                     log.info(f"calling {func.__name__} try #{tries}")
                 res = func(*args, **kwargs)
                 break
-            except HTTPError:
+            except (HTTPError, ReadTimeout):
                 continue
             except KeyboardInterrupt:
                 sys.exit()
@@ -120,7 +124,7 @@ class Cccbdb:
             headers=headers,
         )
         # get the data from the redirected URL
-        url = headers["Referer"].replace("1", "2")
+        url = headers["Referer"].split("?")[0].replace("1", "2")
         return self.retry_loop(self.get, url)
 
     @staticmethod
@@ -140,6 +144,22 @@ class Cccbdb:
     def soup(response: requests.Response) -> BeautifulSoup:
         return BeautifulSoup(response.content, "html.parser")
 
+    def get_dataframes(self, formula: str, property: str) -> List[pd.DataFrame]:
+        soup = self.get_data(formula, property)
+        tables = soup.find_all("table")
+        log.info(f"found {len(tables)} tables on page")
+        dfs = []
+        for html in tables:
+            parsed = parser.TableParser()
+            parsed.feed(str(html))
+            df = parsed.to_df()
+            if df is not None:
+                log.info(f"adding dataframe '{df.name}' of shape {df.shape}")
+                dfs.append(df)
+            else:
+                log.info("skipping table")
+        return dfs
+
     def __init__(self):
         self.session = requests.Session()
 
@@ -155,19 +175,3 @@ class Cccbdb:
 
     get = partialmethod(_make_request, "get")
     post = partialmethod(_make_request, "post")
-
-
-if __name__ == "__main__":
-    c = Cccbdb()
-    soup = c.get_data("CH4", c.POL_CALC)
-    tables = soup.find_all("table")[1:]
-
-    for table in tables:
-        parse = parser.TableParser()
-        parse.feed(str(table))
-        header, *rows = parse.pad_table(parse.table)
-        if not rows:
-            df = pd.DataFrame(header)
-        else:
-            df = pd.DataFrame(rows, columns=header)
-        print(df.head())

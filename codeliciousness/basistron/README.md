@@ -7,17 +7,13 @@ TODO
 * Basis
   - how to update workflow model with basis set info
 
-* Cccbdb
-  - client
-  - provide reference data given simple chemical formula
-
-* Driver
-  - provide simple chemical formula to app
-
 * App
-  - sanity check reference data to input
-  - poll running jobs for results
-  - re-submission loop
+  - default reference level of theory, basis set
+  - compute allowed basis sets from reference data
+  - return job id of submitted job
+  - extras
+    - match ranked basis sets to allowed basis sets
+    - pick most compact allowed set from ranked set
 
 BasisTron is the automatic basis set selection tool you've
 always needed but have never had the time to write yourself.

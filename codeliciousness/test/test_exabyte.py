@@ -1,5 +1,5 @@
 
-from basistron import client, utils
+from basistron import utils, exabyte
 
 
 def test_client(monkeypatch):
@@ -10,6 +10,6 @@ def test_client(monkeypatch):
     monkeypatch.setattr(
         "exabyte_api_client.endpoints.login.LoginEndpoint.login", login
     )
-    c = client.Client()
+    c = exabyte.Client()
     assert utils.env.exabyte_client_id == "test"
     assert utils.env.exabyte_client_secret == "test"

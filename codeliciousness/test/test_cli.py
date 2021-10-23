@@ -6,9 +6,9 @@ from basistron import cli
 from basistron.model import Execution
 
 command = [
-    "--target_property",
-    "energy_convergence",
-    "--reference_value",
+    "--property",
+    "vibrational_frequency",
+    "--value",
     "-100",
     "--xyz_path",
     "/path/to/file",
@@ -35,18 +35,21 @@ def mock_file(tmppath, h2):
             [
                 "--xyz_path",
                 "/path/to/file",
-                "--target_property",
-                "energy_convergence",
+                "--property",
+                "vibrational_frequency",
             ],
-            None,
-            True,
+            {
+                "xyz_path": "/path/to/file",
+                "property": "vibrational_frequency",
+            },
+            False,
         ),
         (
             command,
             {
                 "xyz_path": "/path/to/file",
-                "target_property": "energy_convergence",
-                "reference_value": -100.0,
+                "property": "vibrational_frequency",
+                "value": -100.0,
             },
             False,
         ),
@@ -76,7 +79,7 @@ def test_process_args_fail(tmppath, h2, h2dat):
     path = mock_file(tmppath, h2)
     parser = cli.get_parser()
     cmd = command.copy()
-    cmd[1] = "not_recognized"
     args = parser.parse_args(cmd[:-1] + [path])
+    args.property = "not_recognized"
     with pytest.raises(Exception):
         cli.process_args(args)

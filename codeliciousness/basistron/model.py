@@ -1,40 +1,69 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
+from collections import Counter
 
 from typing import List, Tuple, Optional, Union, Dict, Any
-
 from pydantic import BaseModel
 
+from basistron.cccbdb import Cccbdb
 
-class Property(Enum):
-    """Provide different scopes for properties."""
 
-    @classmethod
-    def is_valid_property(cls: Enum, prop: str) -> bool:
-        """Validate that provided target property is recognized."""
-        for sub in cls.__subclasses__():
-            if prop in sub.__members__:
-                return True
-        return False
+class ReferenceRegime(Enum):
+    experimental = "experimental"
+    calculated = "calculated"
 
-class SinglePointProperty(Property):
-    """Properties only requiring a total energy convergence."""
-    energy_convergence = 0
-    homo_lumo_gap = 1
+class ExperimentalReferenceProperty(Enum):
+    """Map command-line arguments to CCCBDB URIs."""
+    polarizability = Cccbdb.EXPT_POL
+    vibrational_frequency = Cccbdb.EXPT_VIB
+    homo_lumo_gap = Cccbdb.EXPT_IE
 
-class RelaxationProperty(Property):
-    """Properties requiring a full relaxation."""
-    vibrational_frequencies = 0
 
+class CalculatedReferenceProperty(Enum):
+    """Map command-line arguments to CCCBDB URIs."""
+    polarizability = Cccbdb.POL_CALC         # units angstrom^3
+    vibrational_frequency = Cccbdb.VIB_FREQ  # units cm-1
+    homo_lumo_gap = Cccbdb.HOMO_LUMO         # units eV
+
+
+def validate_property(regime: str, property: str):
+    typ = ExperimentalReferenceProperty if (
+        regime == ReferenceRegime.experimental.value
+    ) else CalculatedReferenceProperty
+    try:
+        return getattr(typ, property)
+    except AttributeError:
+        raise Exception(
+            f"property {property} not supported in regime {regime}"
+        )
 
 
 class Execution(BaseModel):
     """The state of a given execution."""
     xyz_data: Tuple[Tuple[str, float, float, float], ...]
-    target_property: str
-    reference_value: Optional[Union[str, float]] = None
-    reference_tolerance: Optional[float] = 0.01
+    property: Union[
+        ExperimentalReferenceProperty, CalculatedReferenceProperty,
+    ]
+    regime: ReferenceRegime
+    value: Optional[float] = None
+    tolerance: Optional[float] = 1.0
+
+    def acceptable_format(self) -> str:
+        if self.value is None:
+            return None
+        return "{self.value}±{self.tolerance:.2f}%"
+
+    def acceptable_range(self) -> Tuple[float, float]:
+        if self.value is None:
+            return None
+        lower = (1 - self.tolerance) * self.value
+        upper = (1 + self.tolerance) * self.value
+        return lower, upper
+
+    def simple_formula(self) -> str:
+        symbol_count = Counter([r[0] for r in self.xyz_data])
+        return ''.join([f"{k}{v}" for k, v in symbol_count.items()])
 
     def xyz_data_to_dict(self) -> Dict[str, List[Dict[str, Any]]]:
         ang2au = 1.889723
@@ -43,7 +72,9 @@ class Execution(BaseModel):
         for i, (sym, *val) in enumerate(self.xyz_data):
             i += 1
             elements.append({"id": i, "value": sym})
-            coordinates.append({"id": i, "value": val * ang2au})
+            coordinates.append(
+                {"id": i, "value": [v * ang2au for v in val]}
+            )
         return {
             "elements": elements,
             "coordinates": coordinates,

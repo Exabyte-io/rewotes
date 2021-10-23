@@ -3,7 +3,7 @@ import os
 
 from argparse import ArgumentParser, Namespace
 
-from .model import Execution, Property
+from basistron import model
 
 
 def get_parser() -> ArgumentParser:
@@ -17,38 +17,51 @@ def get_parser() -> ArgumentParser:
         help="path to an XYZ file available on the filesystem",
     )
     parser.add_argument(
-        "--target_property",
+        "--property",
         type=str,
+        choices=set(
+            model.CalculatedReferenceProperty.__members__.keys(),
+        ).union(
+            model.ExperimentalReferenceProperty.__members__.keys(),
+        ),
         required=True,
         help="property against which basis set selection is evaluated",
     )
     parser.add_argument(
-        "--reference_value",
+        "--value",
         type=float,
-        required=True,
-        help="reference property value (assumes atomic units)",
+        help="reference property value (optional)",
+    )
+    parser.add_argument(
+        "--tolerance",
+        type=float,
+        help="allowed tolerance as % deviation from input property value",
+    )
+    parser.add_argument(
+        "--regime",
+        type=str,
+        choices=list(model.ReferenceRegime.__members__.keys()),
+        default=model.ReferenceRegime.experimental.value,
+        help="use experimental or calculated data as benchmark"
     )
     return parser
 
 
-def process_args(args: Namespace) -> Execution:
+def process_args(args: Namespace) -> model.Execution:
+    """Perform initialization validation."""
+    property = model.validate_property(args.regime, args.property)
     if not os.path.isfile(args.xyz_path):
         raise FileNotFoundError(args.xyz_path)
-    # load xyz data
     with open(args.xyz_path, "r") as f:
         xyz_data = [
             ln.strip().split() for ln in f.readlines()[2:]
         ]
-    # validate target property
-    if not Property.is_valid_property(args.target_property):
-        raise Exception("unrecognized property")
-    # optional tolerance (default defined in Driver)
-    tol = getattr(args, "reference_tolerance", None)
-    return Execution(
+    return model.Execution(
         xyz_data=xyz_data,
-        target_property=args.target_property,
-        reference_value=args.reference_value,
-        reference_tolerance=tol,
+        property=property,
+        regime=args.regime,
+        value=getattr(args, "value", None),
+        tolerance=getattr(args, "tolerance", None),
     )
 
 
