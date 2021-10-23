@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-
 from argparse import ArgumentParser, Namespace
 
 from basistron import model

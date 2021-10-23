@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
 import bz2
 import glob
-import requests
-
+import os
 from collections import defaultdict
-from typing import Optional, List, Tuple, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
+
+import requests
 
 from basistron import utils
 

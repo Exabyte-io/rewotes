@@ -5,18 +5,17 @@ from https://github.com/marcelo-mason/cccbdb-calculation-parser
 but the repo is dormant and non-functional.
 """
 import sys
-import requests
-from requests import HTTPError, ReadTimeout
 from functools import partialmethod
+from typing import Any, Dict, List, Tuple
 from urllib.parse import urljoin
 
 import pandas as pd
-from typing import Dict, Any, Tuple, List
+import requests
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from requests import HTTPError, ReadTimeout
 
-from basistron import utils
-from basistron import parser
+from basistron import parser, utils
 
 log = utils.get_logger(__name__)
 

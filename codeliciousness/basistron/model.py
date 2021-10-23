@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from enum import Enum
 from collections import Counter
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from typing import List, Tuple, Optional, Union, Dict, Any
 from pydantic import BaseModel
 
 from basistron.cccbdb import Cccbdb

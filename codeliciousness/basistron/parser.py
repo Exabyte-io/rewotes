@@ -3,12 +3,12 @@
 A CCCBDB-specific table parser. Borrowed heavily
 from https://github.com/marcelo-mason/cccbdb-calculation-parser
 """
-from html.parser import HTMLParser
 from collections import defaultdict
-
+from html.parser import HTMLParser
 from typing import List, Optional
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 from basistron import utils
 
@@ -50,7 +50,8 @@ class TableParser(HTMLParser):
             self.table.append(self.current_row)
             self.current_row = []
 
-    def pad_table(self, table: List[List[Optional[str]]]) -> List[List[str]]:
+    @staticmethod
+    def pad_table(table: List[List[Optional[str]]]) -> List[List[str]]:
         padlen = max((len(row) for row in table))
         for i, row in enumerate(table):
             while len(row) < padlen:
@@ -64,15 +65,20 @@ class TableParser(HTMLParser):
             table[i] = flat
         return table
 
-    def to_df(self):
+    def to_df(self) -> Optional[pd.DataFrame]:
         """This is where it gets messy."""
+
         padded = self.pad_table(self.table)
         try:
             df = pd.DataFrame(padded[1:], columns=padded[0])
         except (ValueError, TypeError):
+            log.debug("failed creating dataframe")
+            for i, row in enumerate(padded[:2]):
+                log.debug(f"row[{i}]: {row}")
             return None
 
         def clean_values(df: pd.DataFrame) -> pd.DataFrame:
+            # TODO : pull out redirect links for nested data
             return df.replace(r'^\s*$', np.nan, regex=True)
 
         def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -89,6 +95,8 @@ class TableParser(HTMLParser):
                 else:
                     unique_columns.append(column)
             df.columns = unique_columns
+            if df.columns.duplicated().any():
+                log.warning("found duplicated column entries")
             return df, index
 
         def clean_index(df, index):
@@ -98,13 +106,14 @@ class TableParser(HTMLParser):
                 df.drop(("", ""), inplace=True)
             except Exception as e:
                 log.error(f"cleaning index failed: {repr(e)}")
-            return df.droplevel(0) if index else df
+            df = df.droplevel(0) if index else df
+            if df.index.duplicated().any():
+                log.warning("found duplicated index entries")
+            return df
 
         df = clean_values(df)
         df, index = clean_columns(df)
         df = clean_index(df, index)
-        if df.index.duplicated().sum():
-            log.warning("found duplicated index entries")
 
         warn_threshold = len(df.index) // 2
         for column in df.columns:

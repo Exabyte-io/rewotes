@@ -1,15 +1,11 @@
 
 # -*- coding: utf-8 -*-
 import sys
-
-import pandas as pd
 from typing import List
 
-from basistron import cli
-from basistron import basis
-from basistron import utils
-from basistron import exabyte
-from basistron import cccbdb
+import pandas as pd
+
+from basistron import basis, cccbdb, cli, exabyte, utils
 
 log = utils.get_logger("basistron.app")
 

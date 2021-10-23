@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 from types import ModuleType
-from typing import Dict, Any, Union, List
+from typing import Any, Dict, List, Union
 
-from requests import HTTPError
 from exabyte_api_client import endpoints
+from requests import HTTPError
 
 from basistron import utils
 
