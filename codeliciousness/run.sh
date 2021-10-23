@@ -2,5 +2,8 @@
 
 python -m basistron.app \
     --xyz_path h2.xyz \
-    --target_property homo_lumo_gap \
-    --reference_value 100.0
+    --property homo_lumo_gap \
+    --tolerance 20 \
+    --reference_theory 'CCSD(T)' \
+    --target_theory B3LYP \
+    --regime calculated

@@ -4,16 +4,13 @@ BasisTron
 TODO
 ----
 
-* Basis
-  - how to update workflow model with basis set info
+* Cccbdb
+  - hash and cache queries
 
 * App
-  - default reference level of theory, basis set
-  - compute allowed basis sets from reference data
-  - return job id of submitted job
-  - extras
-    - match ranked basis sets to allowed basis sets
-    - pick most compact allowed set from ranked set
+  - how update workflow model with basis set
+  - fix geometry specification
+  - NWChemInputDataManager pls
 
 BasisTron is the automatic basis set selection tool you've
 always needed but have never had the time to write yourself.
