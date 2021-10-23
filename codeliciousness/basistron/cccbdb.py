@@ -19,41 +19,42 @@ from basistron import parser, utils
 
 log = utils.get_logger(__name__)
 
+
 def _inspected_headers(referer: str) -> Dict[str, str]:
     headers = {
-        'Accept': (
-            'text/html,application/xhtml+xml,application/xml;'
-            'q=0.9,image/avif,image/webp,image/apng,*/*;'
-            'q=0.8,application/signed-exchange;v=b3;q=0.9'
+        "Accept": (
+            "text/html,application/xhtml+xml,application/xml;"
+            "q=0.9,image/avif,image/webp,image/apng,*/*;"
+            "q=0.8,application/signed-exchange;v=b3;q=0.9"
         ),
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Cache-Control': 'max-age=0',
-        'Connection': 'keep-alive',
-        'Content-Length': '26',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Host': 'cccbdb.nist.gov',
-        'Origin': 'https://cccbdb.nist.gov',
-        'sec-ch-ua': (
-            '"Chromium";v="94", "Google Chrome";'
-            'v="94", ";Not A Brand";v="99"'
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "max-age=0",
+        "Connection": "keep-alive",
+        "Content-Length": "26",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Host": "cccbdb.nist.gov",
+        "Origin": "https://cccbdb.nist.gov",
+        "sec-ch-ua": (
+            '"Chromium";v="94", "Google Chrome";' 'v="94", ";Not A Brand";v="99"'
         ),
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': 'Windows',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-User': '?1',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': (
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-            'AppleWebKit/537.36 (KHTML, like Gecko) '
-            'Chrome/94.0.4606.81 Safari/537.36'
-        )
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/94.0.4606.81 Safari/537.36"
+        ),
     }
     if referer is not None:
-        headers['Referer'] = referer
+        headers["Referer"] = referer
     return headers
+
 
 class Cccbdb:
     """Wrapper around interactivity with the CCCBDB and
@@ -85,8 +86,9 @@ class Cccbdb:
         while True:
             try:
                 tries += 1
-                if not tries or not tries % 5:
-                    log.info(f"calling {func.__name__} try #{tries}")
+                if tries > 1000:
+                    log.error("retried {tries} times, no luck..")
+                    sys.exit()
                 res = func(*args, **kwargs)
                 break
             except (HTTPError, ReadTimeout):
@@ -113,7 +115,7 @@ class Cccbdb:
 
     def submit_form(self, form_data: Dict[str, Any], headers: Dict[str, Any]):
         """Submit the form following redirect semantics of the CCCBDB website."""
-        log.info('submitting form %s', form_data["data"])
+        log.info("submitting form %s", form_data["data"])
         # post the form data without redirect
         self.retry_loop(
             getattr(self, form_data["method"]),
@@ -134,7 +136,7 @@ class Cccbdb:
             "data": {
                 inp.attrs.get("name"): inp.attrs.get("value")
                 for inp in form.find_all("input")
-            }
+            },
         }
         reduced["data"]["formula"] = formula
         return reduced
@@ -165,9 +167,7 @@ class Cccbdb:
     def _make_request(self, method: str, path: str, **kwargs):
         url = urljoin(self.BASE_URL, path)
         log.info(f"calling {method} {url}")
-        res = self.session.request(
-            method, url, timeout=self.TIMEOUT, **kwargs
-        )
+        res = self.session.request(method, url, timeout=self.TIMEOUT, **kwargs)
         res.raise_for_status()
         log.info(f"status code {res.status_code}")
         return res

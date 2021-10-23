@@ -21,15 +21,17 @@ def default_cache_dir():
 
 
 class Log:
-
     @property
     def log(self):
         return get_logger(
-            ".".join([
-                self.__module__,
-                self.__class__.__name__,
-            ])
+            ".".join(
+                [
+                    self.__module__,
+                    self.__class__.__name__,
+                ]
+            )
         )
+
 
 class _env:
     """Namespace collecting all environment variables
@@ -62,5 +64,6 @@ class _env:
     def exabyte_client_secret(self):
         """Used as X-Account-Id header"""
         return os.getenv("EXABYTE_CLIENT_SECRET")
+
 
 env = _env()

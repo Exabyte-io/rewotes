@@ -14,6 +14,7 @@ from basistron import utils
 
 log = utils.get_logger(__name__)
 
+
 class TableParser(HTMLParser):
     """Single table parser."""
 
@@ -32,7 +33,7 @@ class TableParser(HTMLParser):
         for t in ["td", "th", "tr", "caption"]:
             if tag == t:
                 setattr(self, tag, True)
-    
+
     def handle_data(self, data: str) -> None:
         if self.td or self.th:
             self.current_cell.append(data.strip())
@@ -79,13 +80,14 @@ class TableParser(HTMLParser):
 
         def clean_values(df: pd.DataFrame) -> pd.DataFrame:
             # TODO : pull out redirect links for nested data
-            return df.replace(r'^\s*$', np.nan, regex=True)
+            return df.replace(r"^\s*$", np.nan, regex=True)
 
         def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
             index = None
             if df.columns[:2].tolist() == ["", ""]:
                 index = ["theory", "implementation"]
                 df.columns = index + df.columns[2:].tolist()
+            df.columns = [col.lower() for col in df.columns]
             unique_columns = []
             seen = defaultdict(int)
             for column in df.columns:
@@ -103,13 +105,14 @@ class TableParser(HTMLParser):
             if index is not None:
                 df.set_index(index, inplace=True)
             try:
-                df.drop(("", ""), inplace=True)
+                if ("", "") in df.index:
+                    df.drop(("", ""), inplace=True)
             except Exception as e:
                 log.error(f"cleaning index failed: {repr(e)}")
             df = df.droplevel(0) if index else df
             if df.index.duplicated().any():
                 log.warning("found duplicated index entries")
-            return df
+            return df[df.index.notnull()]
 
         df = clean_values(df)
         df, index = clean_columns(df)

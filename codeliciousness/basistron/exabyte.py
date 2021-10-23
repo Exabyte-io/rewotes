@@ -37,6 +37,7 @@ def _collect_endpoints() -> Dict[str, ModuleType]:
                     apis[key] = cls
     return apis
 
+
 class Client(utils.Log):
     """Wrapper around endpoints API for simplicity."""
 
@@ -53,15 +54,19 @@ class Client(utils.Log):
             self.log.warning(f"name {name} not found in {self._endpoints.keys()}")
             return
         args = (
-            utils.env.exabyte_host,
-            utils.env.exabyte_port,
-            utils.env.exabyte_username,
-            utils.env.exabyte_password,
-        ) if name == "login" else (
-            utils.env.exabyte_host,
-            utils.env.exabyte_port,
-            utils.env.exabyte_client_id,
-            utils.env.exabyte_client_secret,
+            (
+                utils.env.exabyte_host,
+                utils.env.exabyte_port,
+                utils.env.exabyte_username,
+                utils.env.exabyte_password,
+            )
+            if name == "login"
+            else (
+                utils.env.exabyte_host,
+                utils.env.exabyte_port,
+                utils.env.exabyte_client_id,
+                utils.env.exabyte_client_secret,
+            )
         )
         self._endpoints[name] = endpoint(*args)
         return self._endpoints[name]
@@ -113,7 +118,7 @@ class Client(utils.Log):
                 "name": "basis",
                 **basis,
             },
-            "tags": ["basistron"]
+            "tags": ["basistron"],
         }
 
     def submit_job(self, config: Dict[str, str]):
