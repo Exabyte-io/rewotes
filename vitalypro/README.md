@@ -3,7 +3,8 @@
 **Overview**
 
 The idea of this task is to train an ML model to predict electronic band-structure of a SiGe superlattice with any kind of interfacial disorder, external strain, and composition*.   
-*please see the list of assumptions that will be used in this work 
+(**please see the list of assumptions that will be used in this work*)
+
 Superlattices are periodic structures that contain layers of different materials. The interfaces significantly impact the electronic and phonon transport and make superlattices ideal candidates as thermoelectric materials. The efficiency or figure of merit of thermoelectric material is calculated as:
 zT=S2ρkT,
 where zT is the dimensionless figure of merit, S, ,  k  are the Seebeck coefficient, electrical resistivity, and thermal conductivity. In order to improve the efficiency of thermoelectric material, we need to increase the Seebeck coefficient and electrical conductivity and at the same time decrease the thermal conductivity.  The former two parameters can be easily and quickly computed from the energy bands using Boltzmann equations (see https://arxiv.org/pdf/cond-mat/0602203.pdf eq. 12-16). The most time-consuming part in the computation of S is the bandstructure calculation that we will speed up with ML modeling. 
