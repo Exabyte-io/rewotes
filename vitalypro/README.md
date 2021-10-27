@@ -1,4 +1,4 @@
-**Prediction of Electronic Band-structure in SiGe Superlattices**
+**Prediction of Electronic Band-structure in Ultra-thin SiGe Superlattices with Tree-Based Machine Learning Models**
 
 **Overview**
 
@@ -16,18 +16,16 @@ where *zT* is the dimensionless figure of merit, S, ρ, k  are the Seebeck coeff
 
 This task is very interesting, but it’s also complicated, and it would take a significant amount of time to complete. For this reason, I will make some assumptions that would simplify this problem:
 1. I will only study superlattices that have a constant number of atoms to avoid band structure folding. As example, the electronic band structure unfolding can be done with GPAW (https://wiki.fysik.dtu.dk/gpaw/tutorialsexercises/electronic/unfold/unfold.html)
-2. I will use a smaller number of atoms in the cell to speed up calculations 
-3. For the transport we only care about the bands that are close to the Fermi level. Therefore, I will only predict those bands. 
-4. In this work, I will only consider superlattices with the ideal interfaces. It would be interesting to investigate disordered interfaces and introduce some defects far away from the interface as well in the future work. This would require studying larger cells and introduce Voronoi tessellations to correctly describe the neighboring atoms. In this work, however, I will study the effect of external strain that comes from growing a superlattice on different substrates.
+2. I will use a smaller number of atoms in the cell to speed up calculations (8 atom cells)
+3. For the transport we only care about the bands that are close to the Fermi level. Therefore, I will only predict 2 valence and 2 conduction bands. 
+4. In this work, I will only consider superlattices with the ideal interfaces. It would be interesting to investigate disordered interfaces and introduce some defects far away from the interface as well in the future work. This would require studying larger cells and introduce Voronoi tessellations to correctly describe the neighboring atoms. In this work, however, I will study the effect of composition and external strain. 
 5. I will predict bandstructure along a short path (e.g. Gamma -Z) 
 6. I will use the PBE exchange-correlation functional for the DFT calculations. The band gap will be underestimated but the bands shape should not be affected significantly. 
 
 **Project details**
 
 1. **Step 1: DFT calculations** 
-....
-Compute bandstructures for n SiGe SLs to build a training set for a supervised ML model. 
-....
+In the first step I perform DFT calculation of ultra-thin SixGe1-x superlattices at different external strain (x is the number of monolayers).   
 
 2. **Step 2: Develop a module for ML modeling**
  ...
