@@ -28,6 +28,7 @@ class read_data:
     """
     def __init__(self, file):
         self.file = file
+        
 
 
     def read_bands_ml(self, fermi=0, bands_num=2, npl=10):
@@ -83,6 +84,41 @@ class read_data:
         val_bands=val_bands.reshape(11,bands_num).swapaxes(0,1)
         bands=np.append(val_bands,cond_bands)
         return bands
+
+    def read_lattice_parameters(self):
+        #read lattice constants 
+        import xml.etree.ElementTree as ET
+        from collections import Counter
+        tree = ET.parse(self.file)
+        root = tree.getroot()
+        a = root[2][2][1][0].text
+        c = root[2][2][1][2].text
+        a = [float(value) for value in a.split(' ')]
+        c = [float(value) for value in c.split(' ')]
+        
+        #read  composition SixGe1-x
+        atom=[]
+        for i in range(8):
+            atom=np.append(atom,root[2][2][0][i].attrib['name'])    
+        composition = int(Counter(atom)['Si'])/8
+        
+        return a[0], c[2], composition
+    
+    def read_fermi_levle(self):
+        import xml.etree.ElementTree as ET
+        tree = ET.parse(self.file)
+        root = tree.getroot()
+        """
+        read fermi level
+        convert from Ry to eV and multiply by 2! 
+        I am using qe 6.4 which has a bug for fermi level:
+    
+        Fermi energy incorrectly written to xml file in 'bands' calculation
+        (did not affect results, just Fermi energy position in band plotting)
+        see https://gitlab.com/QEF/q-e/-/releases
+        """
+        fermi_level=round(float(root[3][9][7].text)*2*13.605,2)   
+        return fermi_level
 
 class data_preparation:
     
