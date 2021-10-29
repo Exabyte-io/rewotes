@@ -13,17 +13,17 @@ import numpy as np
    
     
 """
-1. Add class for data (energy bands, cell geometry etc) extraction from QE output files
-2. Add class for data preparation for ML modeling
-3. Add class for ML modeling with RF, XGB (more ML algorithms -?) 
-4. If time permitted, add class to solve reverse problems (e.g. for known bandstructure, find SL structure)
+1.  class for data (energy bands, cell geometry etc) extraction from QE output files
+2.  class for data preparation for ML modeling
+3.  class for ML modeling with RF and XGB 
+
 """ 
 class read_data:
     
     """ 
-    In this module we read data from QE output and build dataset for ML modeling 
+    In this module we read data from QE output and build a dataset for ML modeling 
     1. read energy band data from output produced by bands.x 
-    2. read structure parameters and fermi level from scf.out 
+    2. read structure parameters and fermi level from xlm file
     In future work this module can be improved to read data from VASP and other modeling software 
     """
     def __init__(self, file):
@@ -31,14 +31,17 @@ class read_data:
         
 
 
-    def read_bands_ml(self, fermi=0, bands_num=2, npl=10):
+    def read_bands_ml(self, mode='Fermi', fermi=0, bands_num=2, npl=10):
         """
         This function reads energy bands from QE output file produced by band.x. 
         I found this code here https://github.com/yyyu200/QEbandplot/blob/master/pw_band_plot.py
         Modifications I made to the code:
             - bands get adjusted with respect to the fermi level
-            - print only first n valence and n conduction bands near the fermi level 
-        :fermi - fermi level (eV)
+            - print only first n valence and n conduction bands above/below the fermi level 
+        :mode - 'Fermi': user provides fermi level and bands get adjusted with respect to this level     
+              - 'Auto' : the fermi level will be automatically placed at the top  of the conduction zone. 
+              this option can be useful is the fermi level is unknown or calculated on a large mesh (my case)
+        :fermi - fermi level (eV) (will be ignored if mode='Auto' is used.  
         :bands_num - number of valence/conduction bands near fermi level to print 
                 
         """
@@ -73,20 +76,42 @@ class read_data:
                 eig[quotient][a:b] = value
     
         f.close()
-        eig = eig -fermi
-        cond_bands=[]
-        val_bands=[]
-        for i in range(eig.shape[0]):
-            cond_bands=np.append(cond_bands, eig[i][eig[i]>0][:bands_num])    
-            val_bands =np.append(val_bands,eig[i][eig[i]<0][-bands_num-1:-1])
-    
-        cond_bands=cond_bands.reshape(11,bands_num).swapaxes(0,1)
-        val_bands=val_bands.reshape(11,bands_num).swapaxes(0,1)
-        bands=np.append(val_bands,cond_bands)
+        if mode=='Fermi':
+            eig = eig -fermi
+            cond_bands=[]
+            val_bands=[]
+            for i in range(eig.shape[0]):
+                cond_bands=np.append(cond_bands, eig[i][eig[i]>0][:bands_num])    
+                val_bands =np.append(val_bands,eig[i][eig[i]<0][-bands_num-1:-1])
+        
+            cond_bands=cond_bands.reshape(11,bands_num).swapaxes(0,1)
+            val_bands=val_bands.reshape(11,bands_num).swapaxes(0,1)
+            bands=np.append(val_bands,cond_bands)
+        elif mode=='Auto':
+            """
+            For a general case, i would need to read QE output file or pseudopotential file to find out
+            how many valence electrons each atoms has and how many atoms of each type I have to count the number 
+            of conduction bands. It can be done in the future work. In this work I only study SiGe systems. Both Si and Ge have 
+            4 val electrons. All my structures contain 8 atoms, so 4*8/2=16 conduction bands
+            number_cnb = 16
+            """
+            number_cnb = 16
+            cond_bands=[]
+            val_bands=[]
+            for i in range(eig.shape[0]):
+                cond_bands=np.append(cond_bands, eig[i][number_cnb-bands_num:number_cnb])    
+                val_bands =np.append(val_bands,eig[i][number_cnb: number_cnb+bands_num])
+            fermi= np.max(cond_bands)
+            cond_bands=cond_bands-fermi
+            val_bands=val_bands-fermi
+            cond_bands=cond_bands.reshape(11,bands_num).swapaxes(0,1)
+            val_bands=val_bands.reshape(11,bands_num).swapaxes(0,1)
+            bands=np.append(val_bands,cond_bands)
+            
         return bands
 
     def read_lattice_parameters(self):
-        #read lattice constants 
+        """read lattice constants from xlm file"""
         import xml.etree.ElementTree as ET
         from collections import Counter
         tree = ET.parse(self.file)
@@ -109,13 +134,14 @@ class read_data:
         tree = ET.parse(self.file)
         root = tree.getroot()
         """
-        read fermi level
-        convert from Ry to eV and multiply by 2! 
+        read fermi level from xlm file
+        convert from Ry to eV and multiply by 2!!! 
         I am using qe 6.4 which has a bug for fermi level:
     
         Fermi energy incorrectly written to xml file in 'bands' calculation
         (did not affect results, just Fermi energy position in band plotting)
-        see https://gitlab.com/QEF/q-e/-/releases
+        see for more info https://gitlab.com/QEF/q-e/-/releases
+        
         """
         fermi_level=round(float(root[3][9][7].text)*2*13.605,2)   
         return fermi_level
@@ -123,7 +149,8 @@ class read_data:
 class data_preparation:
     
     """ 
-    Here we prepare data collected from QE output files for modeling. The following functions split the data into training / testing sets.
+    In this module we prepare data collected from QE output files for modeling. 
+    The following functions split the data into training / testing sets.
     """
     def __init__(self, X, Y):
         self.X = X
@@ -273,7 +300,7 @@ class modeling:
         XGBoost does not support multi-output predictions. In this example I wanted to demonstrate one of the possible solutions 
         for energy bands prediction with ML methods like XGB. 
         For XGB model we wil use the same strategy as we used for Random forest model. In addtion we will apply sklearn  MultiOutputRegressor 
-        for multioutput predictions
+        for multioutput predictions. This method is VERY SLOW...
         
         """
         
