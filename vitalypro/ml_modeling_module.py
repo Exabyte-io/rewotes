@@ -204,7 +204,7 @@ class modeling:
 
         text=("\nTrain:\nR^2:"+str(round(model.score(self.X_train, self.Y_train),2))+
             ' RMSE:'+str(round(np.sqrt(mean_squared_error(self.Y_train, y_fit, multioutput='uniform_average')),2))+
-            '\nTest:\nR^2:'+str(round(r2_score(self.Y_test, y_predict, multioutput='uniform_average'),2)) + 
+            '\nTest:\nR^2:'+str(round(r2_score(self.Y_test.flatten(), y_predict.flatten(), multioutput='uniform_average'),2)) + 
             ' RMSE: '+str( round(np.sqrt(mean_squared_error(self.Y_test, y_predict)),2))  
             )
         return text
