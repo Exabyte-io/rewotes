@@ -21,7 +21,7 @@ This task is very interesting, but it’s also complicated, and it would take a 
 4. In this work, I will only consider superlattices with the ideal interfaces. It would be interesting to investigate disordered interfaces and introduce some defects far away from the interface as well in the future work. This would require studying larger cells and introduce Voronoi tessellations to correctly describe the neighboring atoms. In this work, however, I will study the effect of composition and external strain only. 
 5. I will predict bandstructure along a short path (e.g. Gamma -Z) with a small number of K-points
 6. I will use the PBE exchange-correlation functional for the DFT calculations. The band gap will be underestimated but the bands shape should not be affected significantly. 
-7. To build a good ML model we need to provide both global and local properties of the system. Global properties are lattice constants, compositions, number of atoms (if not a constant) etc. Local properties are such as local strain, nearest neighbor etc. In this work I will only use global properties to build an ML model  
+7. To build a good ML model we need to provide both global and local properties of the system. Global properties are lattice constants, compositions, number of atoms (if not a constant) etc. Local properties are such as local strain, nearest neighbor environment etc. In this work I will only use global properties to build an ML model  
 
 
 **Project details**
@@ -32,7 +32,7 @@ In the first step I performed DFT calculations of ultra-thin SixGe1-x superlatti
 
 2. **Step 2: Develop a module for ML modeling**
 
-This module consist of 3 classes: *read_data*, *data_preparation*, and *modeling*. The first class is written to get all necessary data for modeling from QE output files. This includes lattice constants, compositions, fermi level (read from xlm file) and band energies (read from bands.x output). *data_preparation* module can be used to split the data into training / testing sets. Options with manual or random selection are included. The final module consist of two tree-based ML models: Random forest and XGboost. Random forest suppots multioutput regression, however, for XGboost I had to use sklearn MultiOutputRegressor to make predictions (see https://github.com/dmlc/xgboost/issues/2087). The modeling is perfromed with automatic hyperparameter search using Bayesian optimization. To reduce possibility of overfitting, an option for n-fold cross validation is added. More details will be provided on Monday 
+This module consist of 3 classes: *read_data*, *data_preparation*, and *modeling*. The first class is written to get all necessary data for modeling from QE output files. This includes lattice constants, compositions, fermi level (read from xlm file) and band energies (read from bands.x output). The *data_preparation* module can be used to split the data into training / testing sets. Options with manual or random selection are included. The final module consist of two tree-based ML models: Random forest and XGboost. Random forest suppots multioutput regression, however, for XGboost I had to use sklearn MultiOutputRegressor to make predictions (see https://github.com/dmlc/xgboost/issues/2087). The modeling is perfromed with automatic hyperparameter search using Bayesian optimization. To reduce possibility of overfitting, an option for n-fold cross validation is added. More details will be provided on Monday 
  
 3. **Step 3: Predict a SL bandstructure with the ML model**
 
