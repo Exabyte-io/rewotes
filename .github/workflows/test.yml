@@ -1,0 +1,30 @@
+name: Test jevandezande
+
+on:
+  pull_request: {}
+  push:
+    branches: master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies with pipenv
+      run: |
+        pip install pipenv
+        pipenv install --deploy --dev
+
+    - run: pipenv run isort --diff .
+    - run: pipenv run black --check .
+    - run: pipenv run flake8
+    - run: pipenv run mypy
+    - run: pipenv run pytest --cov --cov-report=xml
+
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v2
