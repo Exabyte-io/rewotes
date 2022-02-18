@@ -10,7 +10,7 @@ def H2():
 
 def test_run():
     mf = run("H 0 0 0\nH 0 0 1")
-    assert mf.energy == approx(-1.12761841620146)
+    assert mf.e_tot == approx(-1.12761841620146)
 
 
 @mark.xfail
