@@ -2,8 +2,7 @@ name: Test jevandezande
 
 on:
   pull_request: {}
-  push:
-    branches: master
+  push: {}
 
 jobs:
   test:

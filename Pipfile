@@ -7,7 +7,7 @@ verify_ssl = true
 python_version = "3.9"
 
 [packages]
-
+pyscf = "*"
 
 [dev-packages]
 black = "==21.12b0"
