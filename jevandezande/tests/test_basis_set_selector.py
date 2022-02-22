@@ -18,15 +18,15 @@ def H2O():
 
 
 @mark.parametrize(
-    "mol, energy",
+    "mol, e_tot",
     [
         ["He", -2.89812055849662],
         [H2_geom, -1.150637241322931],
         [H2O_geom, -76.35496969473999],
     ],
 )
-def test_energy(mol, energy):
-    assert energy(mol).e_tot == approx(energy)
+def test_energy(mol, e_tot):
+    assert energy(mol).e_tot == approx(e_tot)
 
 
 def test_get_homo_lumo_gap(H2, H2O):
@@ -34,18 +34,18 @@ def test_get_homo_lumo_gap(H2, H2O):
     assert get_homo_lumo_gap(H2O) == approx(-0.2528650709452739)
 
 
-@mark.xfail
 @mark.parametrize(
-    "mol, target, tolerance, success",
+    "mol, target, tolerance, success, basis_set",
     [
-        ["He", 1, 0.1, False],
-        ["He", 1, 1, True],
-        [H2_geom, 1, 0.1, False],
-        [H2_geom, 1.2, 0.1, True],
-        [H2O_geom, 1, 0.01, False],
+        ["He", 1, 0.1, False, None],
+        ["He", -1.6416, 0.001, True, "def2-SVP"],
+        [H2_geom, 1, -0.1, False, None],
+        [H2_geom, -0.3280, 0.001, True, "def2-TZVP"],
+        [H2O_geom, 1, 0.000000001, False, None],
+        [H2O_geom, -0.2529, 0.001, False, "def2-SVP"],
     ],
 )
-def test_optimize_basis_set(mol, target, tolerance, success):
+def test_optimize_basis_set(mol, target, tolerance, success, basis_set):
     energy_kwargs = {
         "geom": mol,
         "functional": "BP86",
@@ -57,4 +57,7 @@ def test_optimize_basis_set(mol, target, tolerance, success):
         tolerance=tolerance,
         stop_early=True,
     )
-    assert best.success == success
+
+    print(best)
+    assert best["success"] == success
+    assert best.get("basis_set", None) == basis_set

@@ -2,7 +2,7 @@
 
 import argparse
 
-from .bss import get_homo_lumo_gap, run
+from .bss import energy, get_homo_lumo_gap
 
 
 def main():
@@ -38,7 +38,7 @@ def main():
         next(f)
         geom = f.read()
 
-    mf = run(geom, functional=args.functional, basis_set=args.basis_set)
+    mf = energy(geom, functional=args.functional, basis_set=args.basis_set)
 
     if prop == "homo_lumo_gap":
         homo_lumo_gap = get_homo_lumo_gap(mf)
