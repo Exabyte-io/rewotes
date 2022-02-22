@@ -2,16 +2,7 @@ from collections.abc import Collection
 
 import pyscf
 
-AHLRICHS_BASIS_SETS = (
-    "def2-SVP",
-    "def2-TZVP",
-    "def2-TZVPP",
-    "def2-TZVPD",
-    "def2-TZVPPD",
-    "def2-QZVP",
-    "def2-QZVPD",
-    "def2-QZVPPD",
-)
+from .basis_sets import AHLRICHS_BASIS_SETS
 
 
 def energy(
