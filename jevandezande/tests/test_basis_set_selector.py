@@ -2,23 +2,26 @@ from pytest import approx, fixture, mark
 
 from jevandezande.basis_set_selector import get_homo_lumo_gap, run
 
+H2_geom = "H\nH 1 1"
+H2O_geom = "H\nO 1 1\nH 2 1 1 105"
+
 
 @fixture
 def H2():
-    return run("H 0 0 0\nH 0 0 1")
+    return run(H2_geom)
 
 
 @fixture
 def H2O():
-    return run("H\nO 1 1\nH 2 1 1 105")
+    return run(H2O_geom)
 
 
 @mark.parametrize(
     "mol, energy",
     [
         ["He", -2.89812055849662],
-        ["H 0 0 0\nH 0 0 1", -1.150637241322931],
-        ["H 0 0 0\nO 0 0 1\nH 0 1 1", -76.35496969473999],
+        [H2_geom, -1.150637241322931],
+        [H2O_geom, -76.35496969473999],
     ],
 )
 def test_run(mol, energy):
