@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+# isort: skip_file
 import argparse
 
-from .bss import energy, get_homo_lumo_gap, optimize_basis_set
+from .bss import energy, get_homo_lumo_gap, optimize_basis_set, optimize_functional
 
 
 def main():
@@ -19,7 +20,7 @@ def main():
     if args.optimize:
         optimize(geom, prop, args)
     else:
-        run_property(geom, prop, args)
+        run_property(geom, args.functional, args.basis_set, prop, args.target)
 
 
 def read_geom(geom: str = "geom.xyz") -> str:
@@ -76,7 +77,8 @@ def parser_setup():
         "-o",
         "--optimize",
         help="Find the optimal basis_set [%(default)s]",
-        action="store_true",
+        nargs="?",
+        const="basis_set",
         default=False,
     )
     parser.add_argument(
@@ -89,12 +91,11 @@ def parser_setup():
     return parser
 
 
-def run_property(geom: str, prop: str, args):
+def run_property(geom: str, functional: str, basis_set: str, prop: str, target: float):
     """
     Run property on the given geometry
     """
-    target = args.target
-    mf = energy(geom, functional=args.functional, basis_set=args.basis_set)
+    mf = energy(geom, functional=functional, basis_set=basis_set)
     if prop == "homo_lumo_gap":
         homo_lumo_gap = get_homo_lumo_gap(mf)
         error = homo_lumo_gap - target
@@ -117,17 +118,33 @@ def optimize(geom: str, prop: str, args):
     else:
         raise NotImplementedError(f"Property {prop} is not yet implemented")
 
-    energy_kwargs = {
-        "geom": geom,
-        "functional": args.functional,
-    }
-    best = optimize_basis_set(
-        energy_kwargs,
-        property_function,
-        target=args.target,
-        tolerance=args.tolerance,
-        stop_early=False,
-    )
+    if args.optimize == "basis_set":
+        energy_kwargs = {
+            "geom": geom,
+            "functional": args.functional,
+        }
+        best = optimize_basis_set(
+            energy_kwargs,
+            property_function,
+            target=args.target,
+            tolerance=args.tolerance,
+            stop_early=False,
+        )
+    elif args.optimize == "functional":
+        energy_kwargs = {
+            "geom": geom,
+            "basis_set": args.basis_set,
+        }
+        best = optimize_functional(
+            energy_kwargs,
+            property_function,
+            target=args.target,
+            tolerance=args.tolerance,
+            stop_early=False,
+        )
+    else:
+        raise ValueError(f"Optimizing {args.optimize} is not yet implemented.")
+
     for key, value in best.items():
         print(f"{key}: {value}")
 

@@ -41,7 +41,7 @@ def optimize_basis_set(
     stop_early: bool = True,
 ) -> dict:
     """
-    Find a basis set within the targetted relative error.
+    Find a basis set within the targeted relative error.
 
     :param energy_kwargs: parameters for the energy function. `basis_set` will be modified for each run.
     :param property_function: 1D property function to run
@@ -82,6 +82,60 @@ def optimize_basis_set(
 
     if best.get("relative_error", math.inf) > target:
         logging.info("Unable to find an acceptable basis set in {basis_sets}")
+
+    return best
+
+
+def optimize_functional(
+    energy_kwargs: dict,
+    property_function,
+    target: float,
+    tolerance: float = 0.01,
+    functionals: Collection = ("BP86", "B3LYP", "M06-2X"),
+    stop_early: bool = True,
+) -> dict:
+    """
+    Find a functional within the targeted relative error.
+
+    :param energy_kwargs: parameters for the energy function. `functional` will be modified for each run.
+    :param property_function: 1D property function to run
+    :param target: value to optimize for
+    :param tolerance: maximum relative_error allowed
+    :param functionals: functionals to optimize with
+    :param stop_early: stop testing once a satisficing functional has been found
+    """
+    best = {"success": False}
+
+    if "functional" in energy_kwargs:
+        raise ValueError(
+            "`functional` cannot be adjusted as it is automatically set by optimize_functional()."
+        )
+
+    for functional in functionals:
+        logging.info(f"{functional=}")
+
+        mf = energy(**energy_kwargs, functional=functional)
+        prop = property_function(mf)
+
+        relative_error = (prop - target) / target
+        logging.info(f"{relative_error=}")
+
+        if abs(relative_error) < best.get("relative_error", math.inf):
+            best.update(
+                {
+                    "functional": functional,
+                    "property": prop,
+                    "relative_error": relative_error,
+                }
+            )
+            if abs(relative_error) < tolerance:
+                best["success"] = True
+                logging.info(f"Met {target=} with {relative_error=} and {functional=}")
+                if stop_early:
+                    return best
+
+    if best.get("relative_error", math.inf) > target:
+        logging.info("Unable to find an acceptable functional in {functionals}")
 
     return best
 
