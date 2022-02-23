@@ -22,7 +22,7 @@ def H2O():
     [
         ["He", -2.89812055849662],
         [H2_geom, -1.150637241322931],
-        [H2O_geom, -76.35496969473999],
+        [H2O_geom, -76.35782896158842],
     ],
 )
 def test_energy(mol, e_tot):
@@ -37,12 +37,12 @@ def test_get_homo_lumo_gap(H2, H2O):
 @mark.parametrize(
     "mol, target, tolerance, success, basis_set",
     [
-        ["He", 1, 0.1, False, None],
+        ["He", 1, 0.1, False, "def2-SVP"],
         ["He", -1.6416, 0.001, True, "def2-SVP"],
-        [H2_geom, 1, -0.1, False, None],
+        [H2_geom, 1, -0.1, False, "def2-SVP"],
         [H2_geom, -0.3280, 0.001, True, "def2-TZVP"],
-        [H2O_geom, 1, 0.000000001, False, None],
-        [H2O_geom, -0.2529, 0.001, False, "def2-SVP"],
+        [H2O_geom, -1, 0.000000001, False, "def2-SVP"],
+        [H2O_geom, -0.2529, 0.001, True, "def2-SVP"],
     ],
 )
 def test_optimize_basis_set(mol, target, tolerance, success, basis_set):

@@ -67,11 +67,13 @@ def optimize_basis_set(
         logging.info(f"{relative_error=}")
 
         if abs(relative_error) < best.get("relative_error", math.inf):
-            best |= {
-                "basis_set": basis_set,
-                "property": prop,
-                "relative_error": relative_error,
-            }
+            best.update(
+                {
+                    "basis_set": basis_set,
+                    "property": prop,
+                    "relative_error": relative_error,
+                }
+            )
             if abs(relative_error) < tolerance:
                 best["success"] = True
                 logging.info(f"Met {target=} with {relative_error=} and {basis_set=}")
