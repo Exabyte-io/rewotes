@@ -24,7 +24,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 setup(
     name='jkolyer',
     version='0.1.0',
-    description='Deploy static HTML sites to S3 with the simple 'alotofeffort' command.',
+    description="Deploy static HTML sites to S3 with the simple 'alotofeffort' command.",
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Jonathan Kolyer',
     author_email='jonathankolyer@gmail.com',
