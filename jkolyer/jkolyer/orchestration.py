@@ -1,5 +1,5 @@
 import sqlite3
-from jkolyer.models import FileModel, UploadJobModel, BatchJobModel
+from jkolyer.models import FileModel, BatchJobModel
 import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)

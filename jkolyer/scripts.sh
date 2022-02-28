@@ -1,6 +1,6 @@
 
 runtest() {
-    pytest -s  --log-cli-level=DEBUG test
+    pytest -s --log-cli-level=DEBUG --asyncio-mode=auto test
 }
 
 samplegen() {
