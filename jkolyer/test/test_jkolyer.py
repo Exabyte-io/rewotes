@@ -11,7 +11,6 @@ for name in logging.Logger.manager.loggerDict.keys():
         logging.getLogger(name).setLevel(logging.CRITICAL)
 logging.getLogger('s3transfer').setLevel(logging.CRITICAL)                    
 
-from jkolyer.orchestration import Orchestration
 from jkolyer.models import BaseModel, BatchJobModel, FileModel, UploadStatus
 
 class TestJkolyer(object):
@@ -100,6 +99,8 @@ class TestFileModel(TestJkolyer):
         
         file_contents = model.get_uploaded_file()
         assert file_contents is not None
+        metadata = model.get_uploaded_metadata()
+        assert metadata is not None
         
     def test_batch_uploads_sequential(self, s3):
         batch = BatchJobModel.query_latest()
@@ -113,9 +114,8 @@ class TestAsyncFileModel(TestJkolyer):
     
     @classmethod
     def setup_class(cls):
-        FileModel.bootstrap_table()
         batch = BatchJobModel.query_latest()
-        batch.generate_file_records()
+        batch.reset_file_status()
 
     @pytest.mark.asyncio            
     async def test_batch_uploads_parallel(self, s3):

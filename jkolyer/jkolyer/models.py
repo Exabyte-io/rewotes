@@ -1,14 +1,16 @@
+from abc import ABC
 import os
 import sqlite3
 import stat
 import asyncio
+import json
 from math import floor
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
 from cuid import cuid
 import logging
-from jkolyer.uploader import Uploader
+from jkolyer.uploader import S3Uploader
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -23,7 +25,7 @@ class UploadStatus(Enum):
     COMPLETED = 3
     FAILED = 4
 
-class BaseModel:
+class BaseModel(ABC):
     db_name = 'parallel-file-upload.db'
     db_conn = sqlite3.connect(db_name)
     bucket_name = 'rewotes-pfu-bucket'
@@ -127,6 +129,7 @@ class FileModel(BaseModel):
         self.permissions = tpl[4]
         self.file_path = tpl[5]
         self.status = tpl[6]
+        self.uploader = S3Uploader()
 
     def save(self, cursor):
         sql = """
@@ -146,6 +149,14 @@ class FileModel(BaseModel):
                 )
         cursor.execute(sql)
 
+    def metadata(self):
+        data = {
+            "file_size": self.file_size,
+            "last_modified": self.last_modified,
+            "permissions": self.permissions,
+        }
+        return json.dumps(data)
+
     def _update_status(self, cursor):
         sql = f"UPDATE {self.table_name()} SET status = {self.status} WHERE id = '{self.id}'"
         cursor.execute(sql)
@@ -155,8 +166,10 @@ class FileModel(BaseModel):
         self.status = UploadStatus.IN_PROGRESS.value
         self._update_status(cursor)
         
-        result = Uploader().upload_file(self.file_path, self.bucket_name)
-        self.upload_complete(cursor) if result else self.upload_failed(cursor) 
+        completed = self.uploader.upload_file(self.file_path, self.bucket_name, self.id)
+        if completed:
+            completed = self.uploader.upload_metadata(self.metadata(), self.bucket_name, f"metadata-{self.id}")
+        self.upload_complete(cursor) if completed  else self.upload_failed(cursor) 
 
     def upload_complete(self, cursor):
         self.status = UploadStatus.COMPLETED.value
@@ -167,10 +180,11 @@ class FileModel(BaseModel):
         self._update_status(cursor)
 
     def get_uploaded_file(self):
-        return Uploader().get_uploaded_file(
-            self.bucket_name,
-            os.path.basename(self.file_path)
-        )
+        return self.uploader.get_uploaded_data(self.bucket_name, self.id)
+
+    def get_uploaded_metadata(self):
+        metadata = self.uploader.get_uploaded_data(self.bucket_name, f"metadata-{self.id}")
+        return json.loads(metadata)
 
         
 class BatchJobModel(BaseModel):
@@ -241,7 +255,7 @@ class BatchJobModel(BaseModel):
                 # logger.debug(file_path)
                 file_size = fstat.st_size
                 last_modified = fstat.st_mtime
-                permissions = stat.S_IMODE(fmode)
+                permissions = oct(fstat.st_mode)[-3:]
                 status = UploadStatus.PENDING.value
 
                 file_obj = FileModel((
@@ -308,7 +322,7 @@ class BatchJobModel(BaseModel):
 
     async def async_upload_files(self):
         cursor = self.db_conn.cursor()
-        max_concur = 4
+        max_concur = 8
         sem = asyncio.Semaphore(max_concur)
 
         async def task_wrapper(model, cursor):
@@ -326,4 +340,17 @@ class BatchJobModel(BaseModel):
         for i in range(max_concur):
             await sem.acquire()
         cursor.close()
+
+    def reset_file_status(self):
+        cursor = self.db_conn.cursor()
+        try:
+            sql = f"UPDATE {FileModel.table_name()} SET status = {UploadStatus.PENDING.value}"
+            cursor.execute(sql)
+            self.db_conn.commit()
+        except sqlite3.Error as error:
+            logger.error(f"Error running sql: {error}; {sql}")
+        finally:
+            cursor.close
+        
+        
         
