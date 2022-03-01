@@ -7,11 +7,17 @@ from threading import Thread
 import logging
 
 for name in logging.Logger.manager.loggerDict.keys():
-    if ('boto' in name) or ('urllib3' in name) or ('s3transfer' in name) or ('boto3' in name) or ('botocore' in name) or ('nose' in name):
+    if ('boto' in name) or \
+       ('urllib3' in name) or \
+       ('boto3' in name) or \
+       ('botocore' in name) or \
+       ('nose' in name):
         logging.getLogger(name).setLevel(logging.CRITICAL)
 logging.getLogger('s3transfer').setLevel(logging.CRITICAL)                    
 
-from jkolyer.models import BaseModel, BatchJobModel, FileModel, UploadStatus
+from jkolyer.models.base_model import BaseModel, UploadStatus
+from jkolyer.models.batch_model import BatchJobModel, parallel_upload_files
+from jkolyer.models.file_model import FileModel
 
 class TestJkolyer(object):
 
@@ -42,12 +48,13 @@ def aws_credentials():
 def s3(aws_credentials):
     with mock_s3():
         s3 = boto3.client("s3", region_name='us-east-1')
-        s3.create_bucket(Bucket = FileModel.bucket_name)
+        s3.create_bucket(Bucket=FileModel.bucket_name)
         yield s3
     
 class TestTables(TestJkolyer):
     def test_create_tables(self):
-        BaseModel.create_tables()
+        FileModel.create_tables()
+        BatchJobModel.create_tables()
         sql = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{FileModel.table_name()}'"
         result = BaseModel.run_sql_query(sql)
         assert result[0][0] == FileModel.table_name()
@@ -115,18 +122,28 @@ class TestAsyncFileModel(TestJkolyer):
     @classmethod
     def setup_class(cls):
         batch = BatchJobModel.query_latest()
+        # reset the file records
         batch.reset_file_status()
 
     @pytest.mark.asyncio            
-    async def test_batch_uploads_parallel(self, s3):
-        # reset the file records
-        FileModel.bootstrap_table()
+    async def test_batch_uploads_async(self, s3):
         batch = BatchJobModel.query_latest()
-        batch.generate_file_records()
-        
         await batch.async_upload_files()
 
         for file_model, cursor in batch.file_iterator():
             assert file_model.status == UploadStatus.COMPLETED.value
 
+class TestParallelFileModel(TestJkolyer):
+    
+    @classmethod
+    def setup_class(cls):
+        batch = BatchJobModel.query_latest()
+        batch.reset_file_status()
+
+    def test_batch_uploads_parallel(self, s3):
+        batch = BatchJobModel.query_latest()
+        parallel_upload_files(batch, True)
+        
+        for file_model, cursor in batch.file_iterator():
+            assert file_model.status == UploadStatus.COMPLETED.value
         
