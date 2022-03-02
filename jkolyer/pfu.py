@@ -51,7 +51,7 @@ def parse_cmd_line_arguments():
     return parser.parse_args()
 
 def perform_file_upload(parallel, root_dir):
-    logger.info(f"initializing database, file root = {root_dir}")
+    logger.info(f"initializing database")
     
     FileModel.create_tables()
     BatchJobModel.create_tables()
@@ -60,10 +60,11 @@ def perform_file_upload(parallel, root_dir):
     batch.generate_file_records()
     batch.reset_file_status()
 
-    logger.info(f"performing upload")
     if parallel:
+        logger.info(f"performing upload: multiprocessing ")
         parallel_upload_files(batch)
     else:
+        logger.info(f"performing upload: async")
         loop = asyncio.get_event_loop()
         try:
             loop.run_until_complete(
@@ -79,17 +80,22 @@ if __name__ == '__main__':
     if not root_dir.is_dir():
         print("The specified root directory doesn't exist")
         sys.exit()
-        
+
     concurrent = args.concurrent
     parallel = args.parallel
+
     if concurrent and parallel:
-        parallel = False
+        concurrent = False
+    elif not concurrent and not parallel:
+        parallel = True
 
     endpoint_url = args.endpoint_url
     if endpoint_url:
         client = boto3.client("s3", endpoint_url=endpoint_url[0], region_name='us-east-1')
         S3Uploader.set_boto3_client(client)
         S3Uploader.set_endpoint_url(endpoint_url[0])
+
+    logger.info(f"pfu:  root_dir = {root_dir}; endpoint_url = {endpoint_url}")
         
     perform_file_upload(parallel, root_dir)
     

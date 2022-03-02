@@ -72,8 +72,11 @@ class S3Uploader(Uploader):
                     self.client = self.s3_mock()
             else:
                 self.client = boto3.client("s3")
-                
-        self.client.create_bucket(Bucket=Uploader.bucket_name)
+        try:
+            self.client.create_bucket(Bucket=Uploader.bucket_name)
+        except:
+            self.client = None
+            pass
                 
     
     def get_uploaded_data(self, bucket_name, key):
@@ -93,6 +96,9 @@ class S3Uploader(Uploader):
         :param key: lookup key for the uploaded data
         :return: bool: True if no errors, False otherwise
         """
+        if not self.client:
+            logger.warn(f"upload_metadadta:  no client for {key}")
+            return False
         try:
             self.client.put_object(Bucket=bucket_name, Key=key, Body=json.dumps(metadata))
         except ClientError as err:
@@ -107,8 +113,11 @@ class S3Uploader(Uploader):
         :param object_id: S3 object name
         :return: True if file was uploaded, else False
         """
+        if not self.client:
+            logger.warn(f"upload_file:  no client for {object_id}: {file_name}")
+            return False
         try:
-            logger.info(f"S3Uploader.upload_file: {file_name}; {file_size}")
+            logger.info(f"S3Uploader.upload_file: {file_name}; file_size={file_size}")
             self.client.upload_file(file_name, bucket, object_id)
         except ClientError as err:
             logging.error(err)
