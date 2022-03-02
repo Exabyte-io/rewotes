@@ -19,7 +19,7 @@ Create a python application that uploads a set of given files to a cloud object 
 - Clean and documented code
 - Tests
 
-## Implementation
+## PFU Implementation
 
 ### Overview
 This service ***pfu*** (parallel file upload) reads files from a root directory and loads a SQLite database with file metadata records.  Then a batch job initiates uploading files and metadata to a given object storage provider iteratively.
@@ -56,6 +56,18 @@ A companion file generator utility creates a tree of sample files, with user-spe
 ## Install & Run
 
 ### Installation
+Using shell with python 3.9
+
+* `git clone git@github.com:jkolyer/rewotes.git`
+* `cd rewotes/jkolyer`
+* `git switch jkolyer`
+* `python3 -m venv env`
+* `source env/bin/activate`
+* `pip install -r frozen-requirements.txt`
+	* if this fails re-run after this `pip uninstall plux` 
+
+The shell environment should be read to run the ***pfu*** service.
+
 ### Run the service
 Shell scripts are provided as a convenience.  The *file sample directory* is hardcoded as "samples".
 

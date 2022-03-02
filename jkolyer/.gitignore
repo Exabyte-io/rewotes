@@ -109,3 +109,7 @@ flycheck_*.el
 
 # sample files
 samples/
+
+# virtualenv
+env/
+

@@ -1,6 +1,6 @@
 
 activate() {
-    source bin/activate    
+    source env/bin/activate    
 }
 
 runtest() {
@@ -8,7 +8,9 @@ runtest() {
 }
 
 flush_db() {
-    rm -r parallel-file-upload.db
+    if test -f "parallel-file-upload.db"; then
+        rm -r parallel-file-upload.db
+    fi
 }
 
 samplegen() {
@@ -17,7 +19,8 @@ samplegen() {
         exit 1
     fi
     flush_db
-    rm -r samples && mkdir samples
+    rm -r samples &> 2
+    mkdir samples
     python jkolyer/directories.py --tree_depth $1 samples    
 }
 
