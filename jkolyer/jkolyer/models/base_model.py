@@ -96,6 +96,3 @@ class BaseModel(ABC):
             logger.error(f"Error running sql: {error}; ${sql}")
         finally:
             cursor.close()
-
-    def __init__(self):
-        pass

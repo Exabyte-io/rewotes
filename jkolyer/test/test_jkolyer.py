@@ -25,32 +25,7 @@ from jkolyer.uploader import S3Uploader, Uploader
 def batch_job():
     return BatchJobModel.new_instance('./samples')
     
-@pytest.fixture(scope='function')
-def aws_credentials():
-    """Mocked AWS Credentials for moto."""
-    os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-    os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-    os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-    os.environ['AWS_SESSION_TOKEN'] = 'testing'
-    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
-
-@pytest.fixture(scope='function')
-def s3(aws_credentials):
-    with mock_s3():
-        s3 = boto3.client("s3", region_name='us-east-1')
-        # s3.create_bucket(Bucket=Uploader.bucket_name)
-        yield s3
-
-# def s3_mock():
-#     mock = mock_s3()
-#     mock.start()
-#     s3 = boto3.client('s3', region_name='us-east-1')
-#     s3.create_bucket(Bucket=Uploader.bucket_name)
-#     return s3
-
-
 class TestJkolyer(object):
-
     @classmethod
     def setup_class(cls):
         S3Uploader.set_boto3_client(Uploader.s3_mock())

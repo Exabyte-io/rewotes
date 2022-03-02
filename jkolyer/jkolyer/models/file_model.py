@@ -191,8 +191,8 @@ class FileModel(BaseModel):
         """For parallel uploading with multiprocessing module,
            provides data transfer object needed for uploading
            in a separate process: `id`, `file_path`, `metadata`,
-           `bucket_name`, `status`.
-        :return: string: the JSON string of properties
+           `bucket_name`, `status`, `endpoint_url`.
+        :return: string: the JSON-formatted string of properties
         """
         dto = {
             "id": self.id,

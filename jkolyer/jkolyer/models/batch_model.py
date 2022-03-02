@@ -178,13 +178,11 @@ class BatchJobModel(BaseModel):
             offset = offset,
             page_size = page_size
         )
-        results = cursor.execute(sql).fetchall()
-        return results
-        
+        return cursor.execute(sql).fetchall()
 
     def file_iterator(self, cursor=None):
         """Generator method for iterating over a page of `FileModel` data.
-           Yields to caller with model instance and cursor. 
+           Yields to caller with model instance and cursor.  Page size is 10 records.
         :param cursor: for SQL execution; creates cursor if not provided
         :return: None
         """
@@ -199,9 +197,7 @@ class BatchJobModel(BaseModel):
 
                 page_num += 1
                 for result in results:
-                    model = FileModel(result)
-                    # logger.debug(f"id = {model.id}")
-                    yield model, _cursor
+                    yield FileModel(result), _cursor
                     
         except sqlite3.Error as error:
             logger.error(f"Error running sql: {error}")
@@ -241,6 +237,7 @@ class BatchJobModel(BaseModel):
                 sem.release()
                 
         for file_model, _cursor in self.file_iterator(cursor):
+            """ this blocks until concurrent jobs drops below max """
             await sem.acquire()
             asyncio.create_task(task_wrapper(file_model, _cursor))
 
@@ -290,16 +287,15 @@ def parallel_upload(file_dto_string, queue, sema):
 
     
 def parallel_upload_files(batch_model):
-    """Uploads files using multiprocessing.  To workaround limitations
-       in pytest, we passing in flag to override default `boto3` behavior.
+    """Uploads files using multiprocessing.  
        Limits concurrent process count to `multiprocessing.cpu_count`.
     :param batch_model: the BatchJobModel instance
     :return: None
     """
     concurrency = cpu_count()
-    total_task_num = 1000
+    """ used to limit the total number of processes spawned"""
     sema = Semaphore(concurrency)
-    all_processes = []
+    active_processes = {}
     queue = Queue()
     """temporary store of file_models in progress"""
     file_models_progress = {}
@@ -323,6 +319,7 @@ def parallel_upload_files(batch_model):
                         fmodel.upload_failed(cursor)
                         
                     del file_models_progress[fmodel.id]
+                    del active_processes[fmodel.id]
                     
                 except sqlite3.Error as error:
                     logger.error(f"Error running sql: {error}")
@@ -330,23 +327,24 @@ def parallel_upload_files(batch_model):
             cursor.close()
 
     for file_model, _cursor in batch_model.file_iterator():
-        """once 8 processes are running, the following `acquire` call
+        """once max processes are running, the following `acquire` call
            will block the main process since `sema` has been reduced to 0
         """
         sema.acquire()
 
+        """ cache of `FileModel` used when queue is processed """
         file_models_progress[file_model.id] = file_model
         
         dtoStr = file_model.parallel_dto_string()
         proc = Process(target=parallel_upload, args=(dtoStr, queue, sema))
-        all_processes.append(proc)
+        active_processes[file_model.id] = proc
         proc.start()
 
         _read_queue()
 
     # inside main process, wait for all processes to finish
-    for p in all_processes:
-        p.join()
+    for proc in active_processes.values():
+        proc.join()
         
     _read_queue()
 
