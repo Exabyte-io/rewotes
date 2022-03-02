@@ -15,7 +15,7 @@ import time
 
 from jkolyer.models.base_model import BaseModel, UploadStatus, dateSinceEpoch
 from jkolyer.models.file_model import FileModel
-from jkolyer.uploader import S3Uploader, Uploader
+from jkolyer.uploader import S3Uploader
 
 for name in logging.Logger.manager.loggerDict.keys():
     if ('boto' in name) or \
@@ -247,6 +247,8 @@ class BatchJobModel(BaseModel):
         cursor.close()
 
         
+MAX_NICENESS = 19
+
 def parallel_upload(file_dto_string, queue, sema):
     """Perform upload command in multiprocessing mode.  This runs 
        seperate from the main process.
@@ -255,13 +257,13 @@ def parallel_upload(file_dto_string, queue, sema):
     :param sema: semaphora to limit number of active processes
     :return: None
     """
+    os.nice(MAX_NICENESS)
     file_dto = json.loads(file_dto_string)
 
     # logger.debug(f"parallel_upload:  file_dto_string = {file_dto_string}")
     S3Uploader.set_endpoint_url(file_dto["endpoint_url"])
     
     uploader = S3Uploader()
-    # uploader.client.create_bucket(Bucket=Uploader.bucket_name)
     
     metadata = file_dto["metadata"]
     
@@ -288,11 +290,11 @@ def parallel_upload(file_dto_string, queue, sema):
     
 def parallel_upload_files(batch_model):
     """Uploads files using multiprocessing.  
-       Limits concurrent process count to `multiprocessing.cpu_count`.
+       Limits concurrent process count to half `multiprocessing.cpu_count`.
     :param batch_model: the BatchJobModel instance
     :return: None
     """
-    concurrency = cpu_count()
+    concurrency = cpu_count() // 2
     """ used to limit the total number of processes spawned"""
     sema = Semaphore(concurrency)
     active_processes = {}
@@ -339,7 +341,7 @@ def parallel_upload_files(batch_model):
         proc = Process(target=parallel_upload, args=(dtoStr, queue, sema))
         active_processes[file_model.id] = proc
         proc.start()
-
+        """ check if queue has any data (also clears active_processes and file_models_progress) """
         _read_queue()
 
     # inside main process, wait for all processes to finish

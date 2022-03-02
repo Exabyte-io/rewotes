@@ -18,7 +18,7 @@ logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
 from jkolyer.models.base_model import BaseModel, UploadStatus
 from jkolyer.models.batch_model import BatchJobModel, parallel_upload_files
 from jkolyer.models.file_model import FileModel
-from jkolyer.uploader import S3Uploader, Uploader
+from jkolyer.uploader import S3Uploader
 
     
 @pytest.fixture
@@ -28,7 +28,7 @@ def batch_job():
 class TestJkolyer(object):
     @classmethod
     def setup_class(cls):
-        S3Uploader.set_boto3_client(Uploader.s3_mock())
+        S3Uploader.set_boto3_client(S3Uploader.s3_mock())
 
     @classmethod
     def teardown_class(cls):

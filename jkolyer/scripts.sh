@@ -12,18 +12,30 @@ flush_db() {
 }
 
 samplegen() {
+    if [ $# -eq 0 ]; then
+        echo "Enter directory tree depth:  ex. samplegen 3"
+        exit 1
+    fi
     flush_db
     rm -r samples && mkdir samples
     python jkolyer/directories.py --tree_depth $1 samples    
 }
 
 localstack_p() {
-    # run uploads with multiprocessing against localstack
-    python pfu.py --root_dir ./samples --endpoint_url "http://localhost:$1" 
+    if [ $# -eq 0 ]; then
+        echo "Enter endpoint port:  ex. localstack_p 4566"
+    else
+        # run uploads with multiprocessing against localstack
+        nice python pfu.py --root_dir ./samples --endpoint_url "http://localhost:$1" 
+    fi
 }
 
 localstack_c() {
-    # run uploads with concurrency against localstack
-    python pfu.py --root_dir ./samples --endpoint_url "http://localhost:$1" --concurrent
+    if [ $# -eq 0 ]; then
+        echo "Enter endpoint port:  ex. localstack_c 4566"
+    else
+        # run uploads with concurrency against localstack
+        nice python pfu.py --root_dir ./samples --endpoint_url "http://localhost:$1" --concurrent
+    fi
 }
 

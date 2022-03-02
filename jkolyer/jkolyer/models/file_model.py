@@ -146,14 +146,14 @@ class FileModel(BaseModel):
         
         completed = self.uploader.upload_file(
             self.file_path,
-            Uploader.bucket_name,
+            S3Uploader.bucket_name,
             self.id,
             self.file_size,
         )
         if completed:
             completed = self.uploader.upload_metadata(
                 self.metadata(),
-                Uploader.bucket_name,
+                S3Uploader.bucket_name,
                 f"metadata-{self.id}"
             )
         self.upload_complete(cursor) if completed  else self.upload_failed(cursor) 
@@ -198,7 +198,7 @@ class FileModel(BaseModel):
             "id": self.id,
             "file_path": self.file_path,
             "metadata": self.metadata(),
-            "bucket_name": Uploader.bucket_name,
+            "bucket_name": S3Uploader.bucket_name,
             "status": self.status,
             "endpoint_url": S3Uploader.endpoint_url
         }
