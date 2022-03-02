@@ -66,8 +66,7 @@ class S3Uploader(Uploader):
         """Initializes a mock wrapper for boto3 for use in testing purposes.
            To support tests with multiprocessing, we need to define the mock
            within this class (instead of keeping it with the tests).
-           Preferable to keep test-specific code external, this is a candidate
-           for refactoring
+           This may be candidate for refactoring.
         :return: mocked boto3 client
         """
         mock = mock_s3()
@@ -95,28 +94,35 @@ class S3Uploader(Uploader):
         """Instance constructor.  Sets `client` property.  
         """
         if self.boto3_client:
+            ''' here the client was instantiated elsewhere '''
             self.client = self.boto3_client
         else:
+            ''' we instantiate client here, based on endpoint_url '''
             if self.endpoint_url:
+                ''' if we have endpoint that's not our mock value, use it in client '''
                 if self.endpoint_url != self.MOCK_ENDPOINT_KEY:
                     self.client = boto3.client("s3", endpoint_url=self.endpoint_url)
                 else:
+                    ''' in this case we're running in test '''
                     self.client = self.s3_mock()
             else:
+                ''' boto3 must be configured using environment variables '''
                 self.client = boto3.client("s3")
         try:
+            ''' make sure we have the expected bucket '''
             self.client.create_bucket(Bucket=self.bucket_name)
         except:
             logger.warn(f"Could not create bucket named {self.bucket_name}")
             self.client = None
-                
     
     def get_uploaded_data(self, bucket_name, key):
+        ''' see superclass '''
         response = self.client.get_object(Bucket=bucket_name, Key=key)
         contents = response["Body"].read()
         return contents
 
     def upload_metadata(self, metadata, bucket_name, key):
+        ''' see superclass '''
         if not self.client:
             logger.warn(f"upload_metadadta:  no client for {key}")
             return False
@@ -128,6 +134,7 @@ class S3Uploader(Uploader):
         return True
                 
     def upload_file(self, file_name, bucket, key, file_size):
+        ''' see superclass '''
         if not self.client:
             logger.warn(f"upload_file:  no client for {key}: {file_name}")
             return False

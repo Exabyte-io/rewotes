@@ -15,10 +15,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
         
 def parse_cmd_line_arguments():
-    """Describe
-    :param name: describe
-    :param name: describe
-    :return: type describe
+    """Parses command line arguments
+       --root_dir: root file directory
+       --endpoint_url: upload destination url
+       --parallel: if present use parallel mode (default, optional)
+       --concurrent: if present use concurrent mode (optional)
+    :return: parsed arguments dictionary
     """
     parser = argparse.ArgumentParser(
         description="PFU: Parallel File Upload",
@@ -51,6 +53,13 @@ def parse_cmd_line_arguments():
     return parser.parse_args()
 
 def perform_file_upload(parallel, root_dir):
+    """Initializes database tables, creates new batch instance,
+       populates files database.  Initiates upload in either
+       parallel or concurrent mode.
+    :param parallel: if true, uses parallel mode, otherwise concurrent
+    :param root_dir: file root directory
+    :return: None
+    """
     logger.info(f"initializing database")
     
     FileModel.create_tables()

@@ -251,7 +251,8 @@ MAX_NICENESS = 19
 
 def parallel_upload(file_dto_string, queue, sema):
     """Perform upload command in multiprocessing mode.  This runs 
-       seperate from the main process.
+       seperate from the main process.  Sets process nice level to 19.
+       Sets the uploader endpoint based on dto.
     :param file_dto_string:  JSON-formatted string as FileModel dto
     :param queue: inter-process queue to share upload results
     :param sema: semaphora to limit number of active processes
