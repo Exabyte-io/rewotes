@@ -18,22 +18,12 @@ logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
 from jkolyer.models.base_model import BaseModel, UploadStatus
 from jkolyer.models.batch_model import BatchJobModel, parallel_upload_files
 from jkolyer.models.file_model import FileModel
-
-class TestJkolyer(object):
-
-    @classmethod
-    def setup_class(cls):
-        pass
-
-    @classmethod
-    def teardown_class(cls):
-        pass
+from jkolyer.uploader import S3Uploader, Uploader
 
     
 @pytest.fixture
 def batch_job():
-    sql = BatchJobModel.new_record_sql('./samples')
-    BaseModel.run_sql_command(sql)
+    return BatchJobModel.new_instance('./samples')
     
 @pytest.fixture(scope='function')
 def aws_credentials():
@@ -48,9 +38,27 @@ def aws_credentials():
 def s3(aws_credentials):
     with mock_s3():
         s3 = boto3.client("s3", region_name='us-east-1')
-        s3.create_bucket(Bucket=FileModel.bucket_name)
+        # s3.create_bucket(Bucket=Uploader.bucket_name)
         yield s3
-    
+
+# def s3_mock():
+#     mock = mock_s3()
+#     mock.start()
+#     s3 = boto3.client('s3', region_name='us-east-1')
+#     s3.create_bucket(Bucket=Uploader.bucket_name)
+#     return s3
+
+
+class TestJkolyer(object):
+
+    @classmethod
+    def setup_class(cls):
+        S3Uploader.set_boto3_client(Uploader.s3_mock())
+
+    @classmethod
+    def teardown_class(cls):
+        pass
+
 class TestTables(TestJkolyer):
     def test_create_tables(self):
         FileModel.create_tables()
@@ -58,8 +66,7 @@ class TestTables(TestJkolyer):
         sql = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{FileModel.table_name()}'"
         result = BaseModel.run_sql_query(sql)
         assert result[0][0] == FileModel.table_name()
-        
-        
+
 class TestBatchJob(TestJkolyer):
     
     def test_create_table(self):
@@ -71,11 +78,11 @@ class TestBatchJob(TestJkolyer):
         result = BatchJobModel.query_latest()
         assert result is not None
 
-        
 class TestFileModel(TestJkolyer):
     
     @classmethod
     def setup_class(cls):
+        TestJkolyer.setup_class()
         FileModel.bootstrap_table()
 
     def test_create_file_records(self):
@@ -93,7 +100,7 @@ class TestFileModel(TestJkolyer):
         
         cursor.close()
 
-    def test_file_upload(self, s3):
+    def test_file_upload(self):
         model = FileModel.fetch_record(UploadStatus.PENDING.value)
         assert model is not None
         cursor = FileModel.db_conn.cursor()
@@ -109,7 +116,7 @@ class TestFileModel(TestJkolyer):
         metadata = model.get_uploaded_metadata()
         assert metadata is not None
         
-    def test_batch_uploads_sequential(self, s3):
+    def test_batch_uploads_sequential(self):
         batch = BatchJobModel.query_latest()
         
         for file_model, cursor in batch.file_iterator():
@@ -126,7 +133,7 @@ class TestAsyncFileModel(TestJkolyer):
         batch.reset_file_status()
 
     @pytest.mark.asyncio            
-    async def test_batch_uploads_async(self, s3):
+    async def test_batch_uploads_async(self):
         batch = BatchJobModel.query_latest()
         await batch.async_upload_files()
 
@@ -140,9 +147,9 @@ class TestParallelFileModel(TestJkolyer):
         batch = BatchJobModel.query_latest()
         batch.reset_file_status()
 
-    def test_batch_uploads_parallel(self, s3):
+    def test_batch_uploads_parallel(self): 
         batch = BatchJobModel.query_latest()
-        parallel_upload_files(batch, True)
+        parallel_upload_files(batch)
         
         for file_model, cursor in batch.file_iterator():
             assert file_model.status == UploadStatus.COMPLETED.value

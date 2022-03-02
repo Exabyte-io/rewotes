@@ -2,6 +2,7 @@
 """
 import os
 from abc import ABC, abstractmethod
+import json
 import boto3
 from botocore.exceptions import ClientError
 import logging
@@ -10,8 +11,31 @@ from moto import mock_s3  # workaround for multiprocessing / pytest limits
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
+MOCK_ENDPOINT_KEY = 's3_mock'
+
 class Uploader(ABC):
-    
+    bucket_name = 'rewotes-pfu-bucket'
+    boto3_client = None
+    endpoint_url = None
+
+    @classmethod
+    def s3_mock(cls):
+        mock = mock_s3()
+        mock.start()
+        s3 = boto3.client('s3', region_name='us-east-1')
+        s3.create_bucket(Bucket=cls.bucket_name)
+        cls.endpoint_url = MOCK_ENDPOINT_KEY
+        return s3
+
+    @classmethod
+    def set_boto3_client(cls, client):
+        cls.boto3_client = client
+        client.create_bucket(Bucket=cls.bucket_name)
+   
+    @classmethod
+    def set_endpoint_url(cls, url):
+        cls.endpoint_url = url
+   
     def __init__(self):
         pass
 
@@ -35,16 +59,22 @@ class S3Uploader(Uploader):
     : client: instance provided by `boto3` for S3
     """
 
-    def __init__(self, in_test=False):
-        """Instance constructor.  Sets `client` property
-        :param in_test: workaround for overriding default `boto3`
-           in multiprocessing test scenarios
+    def __init__(self):
+        """Instance constructor.  Sets `client` property.  
         """
-        if in_test:
-            s3_mock = mock_s3()
-            s3_mock.start()
+        if self.boto3_client:
+            self.client = self.boto3_client
+        else:
+            if self.endpoint_url:
+                if self.endpoint_url != MOCK_ENDPOINT_KEY:
+                    self.client = boto3.client("s3", endpoint_url=self.endpoint_url)
+                else:
+                    self.client = self.s3_mock()
+            else:
+                self.client = boto3.client("s3")
                 
-        self.client = boto3.client("s3")
+        self.client.create_bucket(Bucket=Uploader.bucket_name)
+                
     
     def get_uploaded_data(self, bucket_name, key):
         """Retrieves stored data (either file or metadata) for given key.
@@ -64,13 +94,13 @@ class S3Uploader(Uploader):
         :return: bool: True if no errors, False otherwise
         """
         try:
-            self.client.put_object(Bucket=bucket_name, Key=key, Body=metadata)
+            self.client.put_object(Bucket=bucket_name, Key=key, Body=json.dumps(metadata))
         except ClientError as err:
             logging.error(err)
             return False
         return True
                 
-    def upload_file(self, file_name, bucket, object_id):
+    def upload_file(self, file_name, bucket, object_id, file_size):
         """Upload a file to an S3 bucket
         :param file_name: File path to upload
         :param bucket: Bucket to upload to
@@ -78,6 +108,7 @@ class S3Uploader(Uploader):
         :return: True if file was uploaded, else False
         """
         try:
+            logger.info(f"S3Uploader.upload_file: {file_name}; {file_size}")
             self.client.upload_file(file_name, bucket, object_id)
         except ClientError as err:
             logging.error(err)

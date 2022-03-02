@@ -5,7 +5,7 @@ Provides SQL wrapper around file metadata and upload status.
 import sqlite3
 import json
 import logging
-from jkolyer.uploader import S3Uploader
+from jkolyer.uploader import S3Uploader, Uploader
 from jkolyer.models.base_model import BaseModel, UploadStatus
 
 logger = logging.getLogger(__name__)
@@ -95,35 +95,34 @@ class FileModel(BaseModel):
         :param cursor: active cursor to execute SQL
         :return: None
         """
-        sql = """
-            INSERT OR IGNORE INTO {table_name}
-                  ( id, created_at, file_size, last_modified, permissions, file_path, status )
-                  VALUES 
-                  ( '{id}', {created_at}, {file_size}, {last_modified}, '{permissions}', '{file_path}', {status} )
-                """.format(
-                    table_name=self.__class__.table_name(),
-                    id=self.id,
-                    created_at=self.created_at,
-                    file_size=self.file_size,
-                    last_modified=self.last_modified,
-                    permissions=self.permissions,
-                    file_path=self.file_path,
-                    status=self.status
-                )
+        sql = """INSERT OR IGNORE INTO {table_name}
+            ( id, created_at, file_size, last_modified, permissions, file_path, status )
+            VALUES 
+            ( '{id}', {created_at}, {file_size}, {last_modified}, '{permissions}', '{file_path}', {status} )
+        """.format(
+            table_name=self.__class__.table_name(),
+            id=self.id,
+            created_at=self.created_at,
+            file_size=self.file_size,
+            last_modified=self.last_modified,
+            permissions=self.permissions,
+            file_path=self.file_path,
+            status=self.status
+        )
         cursor.execute(sql)
 
     def metadata(self):
         """Data structure used to store file metadata in storage provider.
            Properties include `file_size`, `last_modified`, and `permissions`.
            Rendered as string for storage purposes.
-        :return: string JSON-formatted using `json.dumps`
+        :return: dict JSON-formatted
         """
         data = {
             "file_size": self.file_size,
             "last_modified": self.last_modified,
             "permissions": self.permissions,
         }
-        return json.dumps(data)
+        return data
 
     def _update_status(self, cursor):
         """Convenience method for SQL UPDATE of the `status` property.
@@ -145,9 +144,18 @@ class FileModel(BaseModel):
         self.status = UploadStatus.IN_PROGRESS.value
         self._update_status(cursor)
         
-        completed = self.uploader.upload_file(self.file_path, self.bucket_name, self.id)
+        completed = self.uploader.upload_file(
+            self.file_path,
+            Uploader.bucket_name,
+            self.id,
+            self.file_size,
+        )
         if completed:
-            completed = self.uploader.upload_metadata(self.metadata(), self.bucket_name, f"metadata-{self.id}")
+            completed = self.uploader.upload_metadata(
+                self.metadata(),
+                Uploader.bucket_name,
+                f"metadata-{self.id}"
+            )
         self.upload_complete(cursor) if completed  else self.upload_failed(cursor) 
 
     def upload_complete(self, cursor):
@@ -170,13 +178,13 @@ class FileModel(BaseModel):
         """For testing purposes, fetches the uploaded file from object storage
         :return: binary string: the uploaded file bytes or None
         """
-        return self.uploader.get_uploaded_data(self.bucket_name, self.id)
+        return self.uploader.get_uploaded_data(Uploader.bucket_name, self.id)
 
     def get_uploaded_metadata(self):
         """For testing purposes, fetches the uploaded metadata from object storage
         :return: dict: the uploaded metadata or None
         """
-        metadata = self.uploader.get_uploaded_data(self.bucket_name, f"metadata-{self.id}")
+        metadata = self.uploader.get_uploaded_data(Uploader.bucket_name, f"metadata-{self.id}")
         return json.loads(metadata)
 
     def parallel_dto_string(self):
@@ -190,8 +198,9 @@ class FileModel(BaseModel):
             "id": self.id,
             "file_path": self.file_path,
             "metadata": self.metadata(),
-            "bucket_name": self.bucket_name,
+            "bucket_name": Uploader.bucket_name,
             "status": self.status,
+            "endpoint_url": S3Uploader.endpoint_url
         }
         return json.dumps(dto)
 
