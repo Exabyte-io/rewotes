@@ -1,0 +1,48 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout {
+  display: flex;
+  flex-direction: row;
+}
+
+.json-container {
+  padding: 0 1rem 1rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.editor-container {
+  position: relative;
+}
+
+.input-container {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+
+.num-input {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.top-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 13px;
+}
+
+.reset-button {
+  margin-right: 16px;
+}
