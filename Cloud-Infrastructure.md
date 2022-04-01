@@ -8,7 +8,7 @@ The aim of this task is to create a CI/CD pipeline (github workflow) that includ
 
 # Requirements
 
-1. A working CI/CD pipeline - e.g. GitHub workflow - able to deploy and configure an HPC cluster
+1. A working CI/CD pipeline - e.g. GitHub action - able to deploy and configure an HPC cluster
 2. An automated workflow (using a configurable Github action) to benchmark one or more HPC application on one or more cloud instance type
 
 # Expectations
