@@ -10,16 +10,16 @@ We find that regular job interview questions can often be misleading and so use 
 
 Each file represents an assignment similar to what one would get when hired.
 
-| Focus          | ReWote                    | Notes                          |
-| ---------------| --------------------------| ------------------------------ |
-| Comp. Science  | [Convergence Tracker](Basis-Set-Selector.md) |                                |
-| Comp. Science  | [Basis Set Selector](Convergence-Tracker.md)  |                                |
-| Data. Science  | [ML Property Predict](ML-Band-Gaps.md) |                                |
-| Front-End / UX | [Materials Designer](Materials-Designer.md)  |                                |
-| Front-End / UX | [Flowchart Designer](Flowchart-Designer.md)  |                                |
-| Back-End / Ops | [Parallel Uploader](Flowchart-Designer.md)   |                                |
-| CI/CD, DevOps  | [End-to-End Tests](Flowchart-Designer.md)    |                                |
-| HPC, Cloud Inf | [Cloud HPC Bench.](Flowchart-Designer.md)    |                                |
+| Focus          | ReWote                    | Keywords                        |
+| ---------------| --------------------------| ------------------------------- |
+| Comp. Science  | [Convergence Tracker](Basis-Set-Selector.md) | Python, OOD, DFT, Planewaves    |
+| Comp. Science  | [Basis Set Selector](Convergence-Tracker.md)  | Python, OOD, DFT, Local-orbital |
+| Data. Science  | [ML Property Predict](ML-Band-Gaps.md) | Python, ML Models, Scikit, Featurization |
+| Front-End / UX | [Materials Designer](Materials-Designer.md)  | ReactJS / UX Design, ThreeJS   |
+| Front-End / UX | [Flowchart Designer](Flowchart-Designer.md)  | ReactJS / UX Design, DAG       |
+| Back-End / Ops | [Parallel Uploader](Parallel-File-Uploader.md)   | Python, OOD, Threading, Objectstore |
+| CI/CD, DevOps  | [End-to-End Tests](End-To-End-Tests.md)    | BDD tests, CI/CD workflows, Cypress |
+| HPC, Cloud Inf | [Cloud HPC Bench.](Cloud-Infrastructure.md)    | HPC Cluster, Linpack, Benchmarks |
 
 ## Usage
 
