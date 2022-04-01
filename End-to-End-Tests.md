@@ -1,4 +1,4 @@
-# Application Infrastructure (DevOps)
+# End-to-end Tests (DevOps)
 
 > Ideal candidate: skilled software engineer versed in application infrastructure and DevOps
 
