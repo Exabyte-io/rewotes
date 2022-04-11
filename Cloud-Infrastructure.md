@@ -13,8 +13,7 @@ The aim of this task is to create a CI/CD pipeline (github workflow) that includ
 
 # Expectations
 
-- The application may be relatively simple - e.g. Linpack, this is focused more on application infrastructure and DevOps, but the tests must actually verify functionality
-- Correctly passes the tests in automation and displays coverage metrics
+- The application may be relatively simple - e.g. Linpack, this is focused more on infrastructure
 - Clean workflow logic
 
 # Timeline
@@ -23,7 +22,7 @@ We leave exact timing to the candidate. Should fit Within 5 days total.
 
 # User story
 
-As a user of this CI/CD pipelin I can:
+As a user of this CI/CD pipeline I can:
 
 - initiate tests for a specific number of scenarios: e.g. 2 nodes, 16 core per node
 - select the instance type to be used 
