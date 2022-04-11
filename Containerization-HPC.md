@@ -41,4 +41,4 @@ We suggest:
 - using AWS as the cloud provider
 - using Exabench as the source of benchmarks: https://github.com/Exabyte-io/exabyte-benchmarks-suite
 - using CentOS or similar as operating system
-- using Terraform for infrastructure management
+- using Salstack, or Terraform, for infrastructure management
