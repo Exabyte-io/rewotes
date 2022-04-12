@@ -20,7 +20,7 @@ Each file represents an assignment similar to what one would get when hired.
 | Back-End / Ops | [Parallel Uploader](Parallel-File-Uploader.md)   | Python, OOD, Threading, Objectstore |
 | CI/CD, DevOps  | [End-to-End Tests](End-To-End-Tests.md)    | BDD tests, CI/CD workflows, Cypress |
 | HPC, Cloud Inf | [Cloud HPC Bench.](Cloud-Infrastructure.md)    | HPC Cluster, Linpack, Benchmarks |
-| HPC, Containers| [Conteinerized HPC](Conteinerization-HPC.md)    | HPC Cluster, Containers, Benchmarks |
+| HPC, Containers| [Containerized HPC](Containerization-HPC.md)    | HPC Cluster, Containers, Benchmarks |
 
 ## Usage
 
