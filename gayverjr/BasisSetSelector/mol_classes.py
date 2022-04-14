@@ -1,5 +1,4 @@
 from .data.elements import ELEMENTS
-import numpy as np
 
 class Atom(object):
     def __init__(self, name, x, y, z):
@@ -9,7 +8,7 @@ class Atom(object):
         self.x = float(x)
         self.y = float(y)
         self.z = float(z)
-        self.xyz = np.array([self.x, self.y, self.z])
+        self.xyz = [self.x, self.y, self.z]
 
     def __str__(self):
         return '  {:}\t{:.8f}\t{:.8f}\t{:.8f}\n'.format(self.name[0], self.xyz[0], self.xyz[1], self.xyz[2])

@@ -25,10 +25,8 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from pandas import DataFrame
 from .data.bsl import pre_defined_libraries, nwchem_supported
 from .qc import run_qc
-import numpy as np
 from sklearn.metrics import mean_absolute_percentage_error
 from io import StringIO
 import os

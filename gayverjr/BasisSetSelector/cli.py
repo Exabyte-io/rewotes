@@ -2,7 +2,6 @@ import argparse
 import json
 from .mol_classes import Atom,Molecule
 from .Optimizer import BasisSetOptimizer
-from pandas import DataFrame
 parser = argparse.ArgumentParser(description='Parse a JSON file.')
 parser.add_argument('json_file', metavar='JSON File', type=str,help='JSON file specifying job information.')
 
