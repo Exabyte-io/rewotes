@@ -23,9 +23,11 @@
 
 {
     "title": "reference",
-    "property": "homo-lumo gap",
-    "data": [21.200, 18.425],
-    "tolerance": 0.001
+    "property": "homo lumo gap",
+    "data": [[21.200], [18.425]],
+    "unit": "au",
+    "tolerance": 0.9,
+    "functional": "b3lyp"
 }
 
 
