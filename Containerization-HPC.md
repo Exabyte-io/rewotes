@@ -114,3 +114,16 @@ WR10L2L2       12128   512     9     8               7.09             1.6776e+02
 ## Terraform approach notes
 
 Here is my attempts to set up the cluster. See my terraform config [...](...). Please, note, that amazon efa tools should me installen on each node! Salt config should be added.
+
+## Attached files
+
+- [hpl1.def](hpl1.def) - sigularity reciepe to build an image
+- [HPL.dat](HPL.dat) - Linpack input sample data
+- [Make.t1](Make.t1) - makefile for Linpack (note path to atlas, in case of ubuntu it will be different)
+- [raw-hpl.out](raw-hpl.out) - output of native HPL run
+- [singularity-hpl.out](singularity-hpl.out) - output of singularity HPL run
+- [results.txt](results.txt) - short results for comparation (native and singularity HPL)
+- [xhpl.sh](xhpl.sh) - batch script for SLURM to run singilarity xhpl
+- [zhpl.sh](zhpl.sh) - batch script for SLURM to run native xhpl
+- [sing-run.sh](sing-run.sh) - batch script for SLURM to run any singularity container (just add singularity options, needed after `exec`).
+
