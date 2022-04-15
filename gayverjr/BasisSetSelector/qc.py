@@ -7,10 +7,36 @@ import traceback
 # https://physics.nist.gov/cgi-bin/cuu/Value?hrev
 AU2EV= 27.211386245988
 
-# TODO: custom basis sets (specified by path to formatted file)
-# TODO: other properties (e.q. vibrational frequenices)
 # TODO: handling when NWChem is not installed
+# TODO: support for mixed basis?
+# TODO: logging?
 
+def get_nwchem_frequencies(natom,output:str)->dict:
+    ''' Parses frequencies from NWChem output.
+    '''
+    # Nwchem prints trivial modes, need to discard them
+    output_stream = StringIO(output)
+    lines = output_stream.readlines()
+    idx = 0
+    while idx<len(lines) and 'Normal Eigenvalue' not in lines[idx]:
+        idx+=1
+    if idx>=len(lines):
+        return {'success':False}
+    idx+=3
+    nmodes = 3*natom
+    freqs = []
+    for i in range(0,nmodes):
+        freqs.append(float(lines[idx].split()[1]))
+        idx+=1
+    freq_start = 6
+    # NWChem kindly prints whether it is a linear molecule
+    while idx<len(lines):
+        if 'Linear Molecule' in lines[idx]:
+            freq_start = 5
+            break
+        idx+=1
+    return {'success':True,'result':freqs[freq_start:]}
+    
 def get_nwchem_homo_lumo_gap(output:str)->dict:
     ''' Parses homo lumo gap from NWChem output.
     '''
@@ -43,7 +69,10 @@ def run_nwchem(basis,mol,functional,prop_type):
         f.write('geometry units ang\n')
         f.write(str(mol)+'\n')
         f.write('end\n\n')
-        f.write('basis\n')
+        if any(pattern in basis.name for pattern in ['6-31','3-21','4-21','4-31']):
+            f.write('basis cartesian\n')
+        else:
+            f.write('basis\n')
         f.write('* library {}\n'.format(basis.name))
         f.write('end\n\n')
         f.write('dft\n')
@@ -51,15 +80,20 @@ def run_nwchem(basis,mol,functional,prop_type):
         f.write('end\n\n')
         if prop_type=='homo lumo gap':
             pass
-        #elif prop_type=="frequencies":
-        #    tasks.append('frequencies')
-        #    f.write('freq\nend\n\n')
+        elif prop_type=="frequencies":
+            tasks.append('frequencies')
+            f.write('freq\nend\n\n')
         for task in tasks:
             f.write('{} '.format(task))
     try:
         output = subprocess.run(['nwchem'], shell=True, capture_output=True,encoding='UTF-8',cwd=work_dir.name)
         work_dir.cleanup()
-        return get_nwchem_homo_lumo_gap(output.stdout)
+        if prop_type == 'homo lumo gap':
+            return get_nwchem_homo_lumo_gap(output.stdout)
+        elif prop_type == 'frequencies':
+            return get_nwchem_frequencies(mol.natoms,output.stdout)
+        else:
+            raise NotImplementedError("Only homo lumo gap and frequencies are implemented.")
     except Exception as e:
         work_dir.cleanup()
         return {'success':False}

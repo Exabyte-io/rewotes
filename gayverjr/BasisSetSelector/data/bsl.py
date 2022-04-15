@@ -893,7 +893,7 @@ nwchem_supported = {
     'Z3Pol': ['H', 'C', 'N', 'O', 'F', 'Si', 'P', 'S', 'Cl']
 }
 
-pre_defined_libraries = { 'double-zeta' : ['6-31G','6-31+G','6-31+G*','6-31++G**','cc-pvdz','aug-cc-pvdz',
+pre_defined_libraries = { 'double-zeta' : ['6-31G','6-31+G*','6-31++G**','cc-pVDZ','aug-cc-pVDZ',
                                            'Def2-SVP','Def2-SVPD','pc-2','aug-pc-2'],
-                          'triple-zeta' : ['6-311G','6-311+G','6-311+G*','6-311++G**','cc-pvtz','aug-cc-pvtz',
+                          'triple-zeta' : ['6-311G','6-311+G*','6-311++G**','cc-pVTZ','aug-cc-pVTZ',
                                            'Def2-TZVPD','Def2-TZVPPD','pc-3','aug-pc-3']}

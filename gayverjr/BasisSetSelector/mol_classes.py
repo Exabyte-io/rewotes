@@ -21,6 +21,11 @@ class Molecule(object):
     def add_atom(self,atom):
         self.atoms.append(atom) 
 
+    def get_natoms(self):
+        return len(self.atoms)
+
+    natoms = property(get_natoms)
+
     def __str__(self):
         string_output = ''
         for atom in self.atoms:

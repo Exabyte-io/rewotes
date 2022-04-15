@@ -67,12 +67,6 @@ class BasisSetData():
 
     def __init__(self, name: str):
         self.name = name
-        if self.name in nwchem_supported:
-            self.supported_atom_types = nwchem_supported[name]
-            self.builtin = True
-        else:
-            self.supported_atom_types = None
-            self.builtin = False
         self.results = {}
         self.error = None
 
@@ -100,6 +94,7 @@ class BasisSetData():
 
         pred = []
         ref = []
+
         for key in self.results:
             pred += self.results[key]
             ref += ref_data[key]
@@ -114,8 +109,7 @@ class BasisSetOptimizer:
     Parameters
     -----------
     basis_library: str or list of str
-        One of the pre-curated lists: `double zeta`, `triple zeta`, or a list of basis sets to consider. Basis sets can be listed by their 
-        names or by a relative path to a properly formatted nwchem basis set file.
+        One of the pre-curated lists: `double zeta`, `triple zeta`, or a list of basis sets to consider.
     prop_type: str
         Property to optimize basis set for. Options: `homo lumo gap`.
     '''
@@ -126,43 +120,27 @@ class BasisSetOptimizer:
         self._ref_df = {}
         self._molecules = {}
         self._basis_library = self._setup_basis_library(basis_library)
-        assert prop_type in ['homo lumo gap']
+        assert prop_type in ['homo lumo gap', 'frequencies']
         self._prop_type = prop_type
 
-    def _setup_basis_library(self, basis_library):
+    def _setup_basis_library(self, basis_library:Union[str, list]):
         ''' Sets up basis set database.
 
         Parameters
         -----------
         basis_library: str or list of str
-            One of the pre-curated lists: `double zeta`, `triple zeta`, or a list of basis sets to consider. Basis sets can be listed by their 
-            names or by a relative path to a properly formatted nwchem basis set file.
+            One of the pre-curated lists: `double zeta`, `triple zeta`, or a list of basis sets to consider.
 
         '''
         _basis_library = {}
-        if basis_library in pre_defined_libraries.keys():
-            for basis in pre_defined_libraries[basis_library]:
-                _basis_library[basis] = BasisSetData(basis)
-            return _basis_library
-        else:
-            try:
-                iter(basis_library)
-            except TypeError:
-                raise RuntimeError(
-                    "Basis library should be one of the pre-defined libraries, or a list of basis sets."
-                )
-            for basis in basis_library:
-                if basis in nwchem_supported:
+        if type(basis_library)==str:
+            if basis_library in pre_defined_libraries.keys():
+                for basis in pre_defined_libraries[basis_library]:
                     _basis_library[basis] = BasisSetData(basis)
-                else:
-                    try:
-                        with open(basis) as f:
-                            f.next()
-                        _basis_library[basis] = BasisSetData(basis)
-                    except FileNotFoundError:
-                        raise RuntimeError(
-                            "{} is neither a supported basis set nor a path to a file."
-                            .format(basis))
+                return _basis_library
+        else:
+            for basis in basis_library:
+                _basis_library[basis] = BasisSetData(basis)
             return _basis_library
 
     def _add_molecule(self, mol: Molecule, ref_data: list) -> None:
@@ -180,6 +158,7 @@ class BasisSetOptimizer:
         mol.id = mol_id
         self._molecules[mol_id] = mol
         self._ref_df[mol_id] = ref_data
+
 
     def add_molecule(self, xyz_file: str,
                               ref_data: Union[float, list]) -> None:
@@ -230,10 +209,10 @@ class BasisSetOptimizer:
                              engine)
                 if res['success']:
                     basis.add_result(mol.id, res['result'])
+                    success.append(basis)
                 else:
                     failed[name] = mol
                     break
-            success.append(basis)
         for basis in success:
             basis.calc_error(self._ref_df)
         success = [x for x in success if x.error < self._tolerance]
