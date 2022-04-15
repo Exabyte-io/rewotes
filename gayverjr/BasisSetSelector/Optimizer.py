@@ -32,7 +32,8 @@ from io import StringIO
 import os
 from .mol_classes import Atom, Molecule
 from typing import Union
-
+import logging
+log = logging.getLogger(__name__)
 
 def mol_from_xyz(xyz_lines: str) -> Molecule:
     ''' Reads molecule from xyz formatted string.
@@ -94,7 +95,6 @@ class BasisSetData():
 
         pred = []
         ref = []
-
         for key in self.results:
             pred += self.results[key]
             ref += ref_data[key]
@@ -182,7 +182,8 @@ class BasisSetOptimizer:
     def optimize(self,
                  functional: str,
                  tolerance: float,
-                 engine: str = 'nwchem') -> dict:
+                 engine: str = 'nwchem',
+                 verbose:bool = False) -> dict:
         ''' Find basis sets which satisfy the target tolerance for the chosen functional.
 
         Parameters
@@ -193,6 +194,8 @@ class BasisSetOptimizer:
             DFT functional name. Must be supported NWChem DFT functional
         engine: str
             Only NWChem supported for now.
+        verbose: bool, optional
+            Set to True to activate logging
 
         Returns
         --------
@@ -201,20 +204,25 @@ class BasisSetOptimizer:
         '''
         self._tolerance = tolerance
         self._functional = functional
+        if verbose:
+            logging.basicConfig(level=logging.INFO,format='%(message)s')
         failed = {}
         success = []
         for name, basis in self._basis_library.items():
+            log.info('Running jobs for basis: {}'.format(name))
             for id, mol in self._molecules.items():
+                log.info('Running molecule: {}'.format(mol.name))
                 res = run_qc(basis, mol, self._functional, self._prop_type,
                              engine)
                 if res['success']:
                     basis.add_result(mol.id, res['result'])
-                    success.append(basis)
                 else:
+                    log.info("Job failed.")
                     failed[name] = mol
                     break
-        for basis in success:
-            basis.calc_error(self._ref_df)
+            if name not in failed:
+                basis.calc_error(self._ref_df)
+                success.append(basis)
         success = [x for x in success if x.error < self._tolerance]
         return {
             basis.name: basis.error

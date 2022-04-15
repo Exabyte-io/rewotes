@@ -2,14 +2,14 @@ import os
 import tempfile
 import subprocess
 from io import StringIO
-import traceback
-
+import logging 
+log = logging.getLogger(__name__)
 # https://physics.nist.gov/cgi-bin/cuu/Value?hrev
 AU2EV= 27.211386245988
 
 # TODO: handling when NWChem is not installed
+# TODO: support for non-built in functionals?
 # TODO: support for mixed basis?
-# TODO: logging?
 
 def get_nwchem_frequencies(natom,output:str)->dict:
     ''' Parses frequencies from NWChem output.
@@ -43,8 +43,10 @@ def get_nwchem_homo_lumo_gap(output:str)->dict:
     output_stream = StringIO(output)
     lines = output_stream.readlines()
     idx = 0
-    while 'DFT Final Molecular Orbital Analysis' not in lines[idx]:
+    while idx<len(lines) and 'DFT Final Molecular Orbital Analysis' not in lines[idx]:
         idx+=1
+    if idx>=len(lines):
+        return {'success':False}
     prev_E = None
     while idx<len(lines):
         if 'Occ=' in lines[idx]:
@@ -95,6 +97,7 @@ def run_nwchem(basis,mol,functional,prop_type):
         else:
             raise NotImplementedError("Only homo lumo gap and frequencies are implemented.")
     except Exception as e:
+        logging.info("Job failed.")
         work_dir.cleanup()
         return {'success':False}
     

@@ -3,8 +3,15 @@ import json
 from .mol_classes import Atom,Molecule
 from .Optimizer import BasisSetOptimizer
 from typing import Tuple
-parser = argparse.ArgumentParser(description='Parse a JSON file.')
+import logging
+parser = argparse.ArgumentParser(description='Optimize basis set for a set a of molecules+reference data for a given property.')
 parser.add_argument('json_file', metavar='JSON File', type=str,help='JSON file specifying job information.')
+parser.add_argument(
+    '-v', '--verbose',
+    help="Verbose output.",
+    action="store_const", dest="loglevel", const=logging.INFO,
+    default=logging.WARNING,
+)
 
 def read_json(json_file:str)->Tuple[BasisSetOptimizer,str,float]:
     ''' Parses JSON file to set up basis set optimization.
@@ -52,11 +59,15 @@ def read_json(json_file:str)->Tuple[BasisSetOptimizer,str,float]:
             raise RuntimeError("Not a valid section.")
     opt = BasisSetOptimizer(basis_library,prop_type)
     for i,mol in enumerate(molecules):
-        opt._add_molecule(mol,ref_data[i])
+        if type(ref_data[i]) == float:
+            opt._add_molecule(mol, [ref_data[i]])
+        else:
+            opt._add_molecule(mol, ref_data[i])
     return opt, functional, tolerance
 
 def main():
     args = parser.parse_args()
+    logging.basicConfig(level=args.loglevel,format='%(message)s')
     opt, tolerance, functional = read_json(args.json_file)
     result = opt.optimize(tolerance,functional)
     if result == {}:

@@ -24,7 +24,12 @@ class Molecule(object):
     def get_natoms(self):
         return len(self.atoms)
 
+    def get_name(self):
+        return ''.join(x.name for x in self.atoms)
+
     natoms = property(get_natoms)
+
+    name = property(get_name)
 
     def __str__(self):
         string_output = ''
