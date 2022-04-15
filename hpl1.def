@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: amazonlinux
+
+%files
+  hpl-2.3.tar.gz
+  HPL.dat
+  Make.t1
+  /opt/amazon/openmpi
+
+%environment
+  export LC_ALL=C
+  export PATH=$PATH:/opt/amazon/openmpi/bin
+#/usr/lib64/openmpi/bin:/usr/lib/openmpi/bin
+
+%post
+  export PATH=$PATH:/opt/amazon/openmpi/bin
+  yum groupinstall 'Development Tools' -y
+  yum install -y altas atlas-devel make tar wget curl sudo
+  #apt install -y altas make tar openmpi-aws
+  curl -O https://efa-installer.amazonaws.com/aws-efa-installer-1.15.1.tar.gz
+  tar -xf aws-efa-installer-1.15.1.tar.gz && pushd aws-efa-installer
+  sudo ./efa_installer.sh -y
+  popd
+  mkdir /hpl
+  tar xfz hpl-2.3.tar.gz -C /hpl
+  rm hpl-2.3.tar.gz
+  cp Make.t1 /hpl/hpl-2.3
+  cd /hpl/hpl-2.3
+  make arch=t1
+  mv bin/t1/xhpl /bin
+  cd ..
+  rm -rf /hpl
+

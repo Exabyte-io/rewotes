@@ -1,0 +1,12 @@
+ubuntu@compute-st-c59xlarge-1:~$ grep -A2 Gflops raw-hpl.out | grep -Ev Gflop\|--
+
+The following parameter values will be used:
+WR10L2L2        5000   512     9     8               1.73             4.8320e+01
+WR10L2L2       20000   512     9     8              22.08             2.4160e+02
+WR10L2L2       12128   512     9     8               7.07             1.6818e+02
+ubuntu@compute-st-c59xlarge-1:~$ grep -A2 Gflops singularity-hpl.out | grep -Ev Gflop\|--
+
+The following parameter values will be used:
+WR10L2L2        5000   512     9     8               1.79             4.6495e+01
+WR10L2L2       20000   512     9     8              22.52             2.3682e+02
+WR10L2L2       12128   512     9     8               7.09             1.6776e+02
