@@ -2,10 +2,27 @@ import argparse
 import json
 from .mol_classes import Atom,Molecule
 from .Optimizer import BasisSetOptimizer
+from typing import Tuple
 parser = argparse.ArgumentParser(description='Parse a JSON file.')
 parser.add_argument('json_file', metavar='JSON File', type=str,help='JSON file specifying job information.')
 
-def read_json(json_file):
+def read_json(json_file:str)->Tuple[BasisSetOptimizer,str,float]:
+    ''' Parses JSON file to set up basis set optimization.
+
+    Parameters
+    -----------
+    json_file: str
+        JSON file 
+
+    Returns
+    --------
+    opt: `~BasisSetSelector.BasisSetOptimizer`
+        Optimizer for basis set
+    functional: str
+        Chosen DFT functional
+    tolerance: float
+        Chosen % error threshold
+    '''
     with open(json_file, "r") as f:
         data = json.load(f)
     sections = data['Basis Set Selector']
@@ -33,15 +50,15 @@ def read_json(json_file):
             functional = section['functional']
         else:
             raise RuntimeError("Not a valid section.")
-    opt = BasisSetOptimizer(basis_library,prop_type,tolerance,functional)
+    opt = BasisSetOptimizer(basis_library,prop_type)
     for i,mol in enumerate(molecules):
         opt._add_molecule(mol,ref_data[i])
-    return opt
+    return opt, functional, tolerance
 
 def main():
     args = parser.parse_args()
-    opt = read_json(args.json_file)
-    result = opt.optimize()
+    opt, tolerance, functional = read_json(args.json_file)
+    result = opt.optimize(tolerance,functional)
     if result == {}:
         print("None of the selected basis sets satisfy the chosen tolerance.")
     else:

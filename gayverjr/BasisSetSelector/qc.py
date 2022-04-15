@@ -11,7 +11,9 @@ AU2EV= 27.211386245988
 # TODO: other properties (e.q. vibrational frequenices)
 # TODO: handling when NWChem is not installed
 
-def get_nwchem_homo_lumo_gap(output):
+def get_nwchem_homo_lumo_gap(output:str)->dict:
+    ''' Parses homo lumo gap from NWChem output.
+    '''
     output_stream = StringIO(output)
     lines = output_stream.readlines()
     idx = 0
@@ -31,6 +33,8 @@ def get_nwchem_homo_lumo_gap(output):
     return {'success':False}
 
 def run_nwchem(basis,mol,functional,prop_type):
+    ''' Constructs NWChem input and executes job as a subprocess.
+    '''
     work_dir = tempfile.TemporaryDirectory()
     with open(os.path.join(work_dir.name,'nwchem.nw'),'w') as f:
         tasks = ['task','dft']
@@ -47,6 +51,9 @@ def run_nwchem(basis,mol,functional,prop_type):
         f.write('end\n\n')
         if prop_type=='homo lumo gap':
             pass
+        #elif prop_type=="frequencies":
+        #    tasks.append('frequencies')
+        #    f.write('freq\nend\n\n')
         for task in tasks:
             f.write('{} '.format(task))
     try:
@@ -59,6 +66,8 @@ def run_nwchem(basis,mol,functional,prop_type):
     
 
 def run_qc(basis,mol,functional,prop_type,engine):
+    ''' Executes quantum chemistry calculation.
+    '''
     if engine=='nwchem':
         return run_nwchem(basis,mol,functional,prop_type)
     else:

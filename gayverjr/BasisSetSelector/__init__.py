@@ -28,5 +28,5 @@
 
 '''Basis Set Selector POC'''
 
-from .Optimizer import BasisSetOptimizer, mol_from_xyz
+from .Optimizer import BasisSetOptimizer
 from .cli import read_json
