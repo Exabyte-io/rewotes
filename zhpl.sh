@@ -1,4 +1,4 @@
 #!/bin/sh
 
-mpirun -n $SLURM_NNODES ./xhpl
+mpirun -n $SLURM_NPROCS ./xhpl
 
