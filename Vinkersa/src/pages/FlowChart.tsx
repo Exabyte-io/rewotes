@@ -1,29 +1,27 @@
-import React, {useState, useCallback} from "react";
-import ReactFlow, {Node, Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges, addEdge, Connection, MiniMap, Background, Handle, Position, NodeTypes } from 'react-flow-renderer';
+import React from "react";
+import ReactFlow, {Node, Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges, addEdge, Connection, Background } from 'react-flow-renderer';
+import { useDispatch, useSelector } from "react-redux";
 import nodeTypes from "../components/customNodes/CustomNodeTypes";
+import {ReducersType} from "../redux/store";
+import {setEdgesData, setNodesData} from "../redux/actions";
 
-type Props = {
-    initialNodes: Node[],
-    initialEdges: Edge[]
-}
 
-const FlowChart: React.FC<Props> = (props: Props) => {
-    const {initialNodes, initialEdges} = props
-    const [nodes, setNodes] = useState<Node[]>(initialNodes);
-    const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
-    const onNodesChange = useCallback(
-        (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
-        [setNodes]
-    );
-    const onEdgesChange = useCallback(
-        (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-        [setEdges]
-    );
-    const onConnect = useCallback(
-        (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
-        [setEdges]
-    );
+const FlowChart: React.FC = () => {
+    const dispatch = useDispatch()
+    const nodes: Node[] = useSelector((state: ReducersType) => state.nodes)
+    const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
+
+    const onNodesChange = (changes: NodeChange[]) => {
+        dispatch(setNodesData(applyNodeChanges(changes, nodes)))
+    }
+
+    const onEdgesChange = (changes: EdgeChange[]) => {
+        dispatch(setEdgesData(applyEdgeChanges(changes, edges)))
+    }
+    const onConnect = (connection: Connection) => {
+        dispatch(setEdgesData(addEdge(connection, edges)))
+    }
 
     return <ReactFlow
         nodeTypes={nodeTypes}

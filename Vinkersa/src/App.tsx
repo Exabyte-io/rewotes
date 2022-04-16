@@ -1,8 +1,11 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, {useEffect} from "react";
 import FlowChart from "./pages/FlowChart";
 import {Node, Edge} from 'react-flow-renderer'
 import SideBar from "./components/SideBar";
+import { useDispatch, useSelector } from "react-redux";
+import {ReducersType} from "./redux/store";
+import {setEdgesData, setNodesData} from "./redux/actions";
 
 const initialNodes: Node[] = [
     {
@@ -39,15 +42,23 @@ const initialEdges: Edge[] = [
 ];
 
 const App: React.FC = () => {
+    const dispatch = useDispatch()
+    const nodes: Node[] = useSelector((state: ReducersType) => state.nodes)
+    const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
+
+    useEffect(() => {
+        dispatch(setNodesData(initialNodes))
+        dispatch(setEdgesData(initialEdges))
+    }, [])
 
 
   return (
       <Box sx={{width: '100%', height: '100%', display: 'flex'}}>
           <Box sx={{width: '80%', height: '100%'}}>
-              <FlowChart initialNodes={initialNodes} initialEdges={initialEdges}/>
+              <FlowChart/>
           </Box>
           <Box sx={{width: '20%', height: '100%'}}>
-              <SideBar nodes={initialNodes} edges={initialEdges}/>
+              <SideBar/>
           </Box>
       </Box>
   )

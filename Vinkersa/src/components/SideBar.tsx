@@ -1,14 +1,13 @@
 import { Box } from "@mui/material";
 import React from "react";
 import {Node, Edge} from 'react-flow-renderer'
+import { useSelector } from "react-redux";
+import {ReducersType} from "../redux/store";
 
-type Props = {
-    nodes: Node[],
-    edges: Edge[]
-}
 
-const SideBar: React.FC<Props> = (props: Props) => {
-    const {nodes, edges} = props
+const SideBar: React.FC = () => {
+    const nodes: Node[] = useSelector((state: ReducersType) => state.nodes)
+    const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
 
     function getStringData(arr: Node[] | Edge[]): JSX.Element[] {
         return arr.reduce((res: JSX.Element[], item: Node | Edge) => {
