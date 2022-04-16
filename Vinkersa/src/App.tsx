@@ -9,47 +9,16 @@ import {NodeNameTypes} from "./components/customNodes/CustomNodeTypes";
 import {store} from "./redux/store";
 import {nanoid} from 'nanoid'
 
-const initialNodes: Node[] = [
-    {
-        id: '1',
-        type: 'terminal',
-        data: null,
-        position: { x: 250, y: 25 },
-    },
-
-    {
-        id: '2',
-        type: 'io',
-        data: null,
-        position: { x: 100, y: 125 },
-    },
-    {
-        id: '3',
-        type: 'process',
-        data: null,
-        position: { x: 250, y: 250 },
-    },
-    {
-        id: '4',
-        type: 'decision',
-        data: null,
-        position: { x: 250, y: 350 },
-    }
-];
-
-const initialEdges: Edge[] = [
-    { id: 'e1-2', source: '1', target: '2'},
-    { id: 'e2-3', source: '2', target: '3'},
-    { id: 'e3-4', source: '3', target: '4'},
-];
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const [nameOfNode, setNameOfNode] = useState<NodeNameTypes | ''>('')
 
     useEffect(() => {
-        dispatch(setNodesData(initialNodes))
-        dispatch(setEdgesData(initialEdges))
+        const nodes: Node[] = localStorage.getItem('nodes') ? JSON.parse(localStorage.getItem('nodes')) : []
+        const edges: Edge[] = localStorage.getItem('edges') ? JSON.parse(localStorage.getItem('edges')) : []
+        dispatch(setNodesData(nodes))
+        dispatch(setEdgesData(edges))
     }, [])
 
     function clickHandler(nameOfNode: NodeNameTypes) {

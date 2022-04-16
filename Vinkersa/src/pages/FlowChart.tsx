@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ReactFlow, {Node, Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges, addEdge, Connection, Background } from 'react-flow-renderer';
 import { useDispatch, useSelector } from "react-redux";
 import nodeTypes from "../components/customNodes/CustomNodeTypes";
@@ -11,6 +11,11 @@ const FlowChart: React.FC = () => {
     const dispatch = useDispatch()
     const nodes: Node[] = useSelector((state: ReducersType) => state.nodes)
     const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
+
+    useEffect(() => {
+        if (nodes.length > 0) localStorage.setItem('nodes', JSON.stringify(nodes))
+        if (edges.length > 0) localStorage.setItem('edges', JSON.stringify(edges))
+    }, [nodes, edges])
 
     const onNodesChange = (changes: NodeChange[]) => {
         dispatch(setNodesData(applyNodeChanges(changes, nodes)))
