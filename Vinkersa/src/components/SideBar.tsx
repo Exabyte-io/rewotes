@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import {Box} from "@mui/material";
 import React from "react";
 import {Node, Edge} from 'react-flow-renderer'
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import {ReducersType} from "../redux/store";
 
 
@@ -9,10 +9,11 @@ const SideBar: React.FC = () => {
     const nodes: Node[] = useSelector((state: ReducersType) => state.nodes)
     const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
 
+
     function getStringData(arr: Node[] | Edge[]): JSX.Element[] {
         return arr.reduce((res: JSX.Element[], item: Node | Edge) => {
             res.push(
-                <li key={item.id}>
+                <li key={item.id} style={{wordBreak: 'break-all'}}>
                     {JSON.stringify(item)}
                 </li>
             )
@@ -22,18 +23,22 @@ const SideBar: React.FC = () => {
 
     return (
         <Box>
-            <Box sx={{width: '100%', textAlign: 'center'}}>
-                <span>Nodes</span>
+            <Box sx={{width: '100%', textAlign: 'start'}}>
+                <Box sx={{textAlign: 'center', fontSize: '20px', fontWeight: 'bold'}}>
+                    <span>Nodes</span>
+                </Box>
+                <ol>
+                    {getStringData(nodes)}
+                </ol>
             </Box>
-            <ol>
-                {getStringData(nodes)}
-            </ol>
-            <Box sx={{width: '100%', textAlign: 'center'}}>
-                <span>Edges</span>
+            <Box sx={{width: '100%', textAlign: 'start'}}>
+                <Box sx={{textAlign: 'center', fontSize: '20px', fontWeight: 'bold'}}>
+                    <span>Edges</span>
+                </Box>
+                <ol>
+                    {getStringData(edges)}
+                </ol>
             </Box>
-            <ol>
-                {getStringData(edges)}
-            </ol>
         </Box>
     )
 }
