@@ -7,6 +7,7 @@ const IO: React.FC = () => {
     return (
         <>
             <Handle type="target" position={Position.Top}/>
+            <Handle type="source" position={Position.Bottom} id="a"/>
             <Box sx={{
                 width: '150px',
                 height: '50px',
@@ -25,7 +26,6 @@ const IO: React.FC = () => {
                     <TextArea/>
                 </Box>
             </Box>
-            <Handle type="source" position={Position.Bottom} id="a"/>
         </>
     );
 }
