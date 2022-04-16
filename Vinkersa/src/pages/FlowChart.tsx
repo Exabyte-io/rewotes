@@ -12,6 +12,7 @@ const initialNodes: Node[] = [
 
     {
         id: '2',
+        type: 'io',
         data: { label: <div>Default Node</div> },
         position: { x: 100, y: 125 },
     },
