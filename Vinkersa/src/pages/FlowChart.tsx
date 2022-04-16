@@ -63,7 +63,6 @@ const FlowChart: React.FC = () => {
         onConnect={onConnect}
         fitView >
         <Background />
-        <MiniMap />
     </ReactFlow>
 }
 
