@@ -24,9 +24,7 @@
 {
     "title": "reference",
     "property": "frequencies",
-    "data": [[4401], [1664,3875,3981]],
-    "tolerance": 0.5,
-    "functional": "b3lyp"
+    "data": [[4401], [1664,3875,3981]]
 }
 
 

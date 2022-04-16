@@ -109,7 +109,7 @@ class BasisSetOptimizer:
     Parameters
     -----------
     basis_library: str or list of str
-        One of the pre-curated lists: `double zeta`, `triple zeta`, or a list of basis sets to consider.
+        One of the pre-curated lists: `double-zeta`, `triple-zeta`, or a list of basis sets to consider.
     prop_type: str
         Property to optimize basis set for. Options: `homo lumo gap`.
     '''
@@ -159,6 +159,23 @@ class BasisSetOptimizer:
         self._molecules[mol_id] = mol
         self._ref_df[mol_id] = ref_data
 
+    def add_basis_set(self,basis_set:str)->None:
+        ''' Adds basis set to the basis library.
+        Parameters
+        -----------
+        basis_set: str
+            Name of basis set to add
+        '''
+        self._basis_library[basis_set] = BasisSetData(basis_set)
+
+    def remove_basis_set(self,basis_set:str)->None:
+        ''' Removes basis set from the basis library.
+        Parameters
+        -----------
+        basis_set: str
+            Name of basis set to remove
+        '''
+        self._basis_library.pop(basis_set, None)
 
     def add_molecule(self, xyz_file: str,
                               ref_data: Union[float, list]) -> None:
@@ -181,14 +198,14 @@ class BasisSetOptimizer:
 
     def optimize(self,
                  functional: str,
-                 tolerance: float,
+                 precision: float,
                  engine: str = 'nwchem',
                  verbose:bool = False) -> dict:
-        ''' Find basis sets which satisfy the target tolerance for the chosen functional.
+        ''' Find basis sets which satisfy the target precision for the chosen functional.
 
         Parameters
         -----------
-        tolerance: float
+        precision: float
             Desired % error of computed data relative to reference data
         functional: str
             DFT functional name. Must be supported NWChem DFT functional
@@ -200,9 +217,9 @@ class BasisSetOptimizer:
         Returns
         --------
         result: dict of str:float
-            Sorted dictionary of basis sets which satisfy the specified tolerance. 
+            Sorted dictionary of basis sets which satisfy the specified precision. 
         '''
-        self._tolerance = tolerance
+        self._precision = precision
         self._functional = functional
         if verbose:
             logging.basicConfig(level=logging.INFO,format='%(message)s')
@@ -223,7 +240,7 @@ class BasisSetOptimizer:
             if name not in failed:
                 basis.calc_error(self._ref_df)
                 success.append(basis)
-        success = [x for x in success if x.error < self._tolerance]
+        success = [x for x in success if x.error < self._precision]
         return {
             basis.name: basis.error
             for basis in sorted(success, key=lambda x: x.error)
