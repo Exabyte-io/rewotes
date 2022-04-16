@@ -71,10 +71,11 @@ def run_nwchem(basis,mol,functional,prop_type):
         f.write('geometry units ang\n')
         f.write(str(mol)+'\n')
         f.write('end\n\n')
+        # Pople basis sets should use cartesians
         if any(pattern in basis.name for pattern in ['6-31','3-21','4-21','4-31']):
             f.write('basis cartesian\n')
         else:
-            f.write('basis\n')
+            f.write('basis spherical\n')
         f.write('* library {}\n'.format(basis.name))
         f.write('end\n\n')
         f.write('dft\n')
