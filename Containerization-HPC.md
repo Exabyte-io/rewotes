@@ -113,7 +113,19 @@ WR10L2L2       12128   512     9     8               7.09             1.6776e+02
 
 ## Terraform approach notes
 
-Here is my attempts to set up the cluster. See my terraform config [...](...). Please, note, that amazon efa tools should me installen on each node! Salt config should be added.
+Here is my attempts to set up the cluster. TODO: Salt config should be added.
+
+Yes, after installing efa toolkit terrafom-based cluster works too. In the [terraform.tgz](terraform.tgz) file are terraform configs used. I've got them from https://github.com/bugbiteme/demo-tform-aws-vpc and slightly modified for this task.
+
+Tasks below should be executed via saltstack (or ansible, or...), but I did them manually. I need some time to remember how to use salt :)
+
+After terraform installations we need to get all our nodes ip addresses from internal network (I don't know how to do this automatically yet), then create the slurm configuration file (here I attach the final [slurm.conf](slurm.conf)). Then we need to install slurm packages on head and compute nodes, copy `slurm.conf` into `/etc/slurm-llnl/` (on all nodes), enable and start slurmctld service on head node, and slurmd service on compute nodes.
+
+Then we need to share `/home` on head node via nfs (put `/home 10.0.0.0/8(rw,no_root_squash)` into `/etc/exportfs` and exec `exportfs -r`). After that mount it on the nodes (put `head-node-ip:/home /home nfs rw,defaults,_netdev 0 0` into `/etc/fstab`, then exec `mount /home`).
+
+Install efa tools on all nodes if we need to run native (not conteinerised) apps.
+
+Ok! Our cluster is ready.
 
 ## Attached files
 
@@ -126,4 +138,6 @@ Here is my attempts to set up the cluster. See my terraform config [...](...). P
 - [xhpl.sh](xhpl.sh) - batch script for SLURM to run singilarity xhpl
 - [zhpl.sh](zhpl.sh) - batch script for SLURM to run native xhpl
 - [sing-run.sh](sing-run.sh) - batch script for SLURM to run any singularity container (just add singularity options, needed after `exec`).
+- [terraform.tgz](terraform.tgz) - terraform configs
+- [slurm.conf](slurm.conf) - sample slurm config file. IP addresses should be replaced by appropriate ones
 
