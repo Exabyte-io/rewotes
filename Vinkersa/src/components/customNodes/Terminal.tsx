@@ -3,7 +3,9 @@ import React from "react";
 import {Handle, Position} from 'react-flow-renderer'
 import TextArea from "./TextArea";
 
+
 const Terminal: React.FC = () => {
+
     return (
         <>
             <Handle type="target" position={Position.Top}/>
