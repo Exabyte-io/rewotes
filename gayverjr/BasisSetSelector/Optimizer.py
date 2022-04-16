@@ -53,7 +53,8 @@ def mol_from_xyz(xyz_lines: str) -> Molecule:
     for i in range(2, len(xyz_lines)):
         l = xyz_lines[i]
         if len(l.strip()) > 0:
-            mol.add_atom(Atom(l.split()))
+            name, x, y, z = l.split()
+            mol.add_atom(Atom(name, x, y, z))
     return mol
 
 
@@ -109,9 +110,9 @@ class BasisSetOptimizer:
     Parameters
     -----------
     basis_library: str or list of str
-        One of the pre-curated lists: `double-zeta`, `triple-zeta`, or a list of basis sets to consider.
+        One of the pre-curated lists: 'double-zeta', 'triple-zeta', or a list of basis sets to consider.
     prop_type: str
-        Property to optimize basis set for. Options: `homo lumo gap`.
+        Property to optimize basis set for. Options: 'homo lumo gap', 'frequencies'.
     '''
 
     def __init__(self,
