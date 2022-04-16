@@ -1,9 +1,9 @@
-import { Box, Button, MenuItem, TextField } from "@mui/material";
+import {Box, Button, MenuItem, TextField} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import FlowChart from "./pages/FlowChart";
 import {Node, Edge} from 'react-flow-renderer'
 import SideBar from "./components/SideBar";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import {setEdgesData, setNodesData} from "./redux/actions";
 import {NodeNameTypes} from "./components/customNodes/CustomNodeTypes";
 import {store} from "./redux/store";
@@ -32,13 +32,20 @@ const App: React.FC = () => {
     }
 
 
-  return (
-      <Box sx={{width: '100%', height: '100%', display: 'flex'}}>
-          <Box sx={{width: '80%', height: '100%'}}>
-              <FlowChart/>
-          </Box>
-          <Box sx={{width: '20%', height: '100%'}}>
-                <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', paddingTop: '20px', paddingBottom: '20px'}}>
+    return (
+        <Box sx={{width: '100%', height: '100%', display: 'flex'}}>
+            <Box sx={{width: '80%', height: '100%'}}>
+                <FlowChart/>
+            </Box>
+            <Box sx={{width: '20%', height: '100%'}}>
+                <Box sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    paddingTop: '20px',
+                    paddingBottom: '20px'
+                }}>
                     <TextField
                         sx={{width: '50%'}}
                         select
@@ -51,12 +58,13 @@ const App: React.FC = () => {
                         <MenuItem value={'process'}>Process</MenuItem>
                         <MenuItem value={'decision'}>Decision</MenuItem>
                     </TextField>
-                    <Button variant='contained' disabled={nameOfNode === ''} onClick={() => clickHandler(nameOfNode as NodeNameTypes)}>Add block</Button>
+                    <Button variant='contained' disabled={nameOfNode === ''}
+                            onClick={() => clickHandler(nameOfNode as NodeNameTypes)}>Add block</Button>
                 </Box>
-              <SideBar/>
-          </Box>
-      </Box>
-  )
+                <SideBar/>
+            </Box>
+        </Box>
+    )
 }
 
 export default App

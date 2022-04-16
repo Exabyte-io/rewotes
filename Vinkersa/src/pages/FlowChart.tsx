@@ -1,10 +1,19 @@
 import React, {useEffect} from "react";
-import ReactFlow, {Node, Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges, addEdge, Connection, Background } from 'react-flow-renderer';
-import { useDispatch, useSelector } from "react-redux";
+import ReactFlow, {
+    Node,
+    Edge,
+    NodeChange,
+    EdgeChange,
+    applyNodeChanges,
+    applyEdgeChanges,
+    addEdge,
+    Connection,
+    Background
+} from 'react-flow-renderer';
+import {useDispatch, useSelector} from "react-redux";
 import nodeTypes from "../components/customNodes/CustomNodeTypes";
 import {ReducersType} from "../redux/store";
 import {setEdgesData, setNodesData} from "../redux/actions";
-
 
 
 const FlowChart: React.FC = () => {
@@ -35,8 +44,8 @@ const FlowChart: React.FC = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        fitView >
-        <Background />
+        fitView>
+        <Background/>
     </ReactFlow>
 }
 
