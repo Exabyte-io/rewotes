@@ -18,15 +18,22 @@ const initialNodes: Node[] = [
     },
     {
         id: '3',
-        type: 'output',
+        type: 'process',
         data: { label: 'Output Node' },
         position: { x: 250, y: 250 },
+    },
+    {
+        id: '4',
+        type: 'decision',
+        data: { label: 'Output Node' },
+        position: { x: 250, y: 350 },
     }
 ];
 
 const initialEdges: Edge[] = [
     { id: 'e1-2', source: '1', target: '2' },
     { id: 'e2-3', source: '2', target: '3', animated: true },
+    { id: 'e3-4', source: '3', target: '4', animated: true },
 ];
 
 
