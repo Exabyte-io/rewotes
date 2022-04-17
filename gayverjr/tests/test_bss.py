@@ -47,6 +47,11 @@ def test_constructors():
     opt = read_json(json_file)
     assert all(x in opt._basis_library for x in ["3-21G","STO-3G"])
 
+def test_add_basis():
+    opt = BasisSetOptimizer(["3-21G","STO-3G"],'homo lumo gap')
+    opt.add_basis_set('cc-pvdz')
+    assert all(x in opt._basis_library for x in ["3-21G","STO-3G",'cc-pvdz'])
+
 def test_optimize_frequencies():
     opt = read_json(json_file)
     result = opt.optimize('b3lyp',0.1)

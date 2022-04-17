@@ -37,3 +37,12 @@ as parameters and get the basis set that satisfies the tolerance criterion.
 
 - create an account at exabyte.io and use it for the calculation purposes
 - suggested modeling engine: NWCHEM or SIESTA
+
+
+# Discussion
+
+- I decided to implement the package as both a command line script (optimize_basis) and a python package (see examples directory).
+- JSON files seemed like a straightforward way to address the challenge of specifying geometries/data for a set of 10-100 molecules 
+- In addition to allowing users to specify a list of basis sets, the package also allows users to choose pre-curated lists of basis sets (double-zeta and triple-zeta).
+- I chose to assume that the user has NWChem installed on their machine and used temporary directories to manage the scratch files. The `run_qc.py` file can in principle be modified to work with other engines.
+- The reference data and geometries were obtained from the CCCBDB, and was CCSD/aug-cc-pVQZ unless otherwise specified.
