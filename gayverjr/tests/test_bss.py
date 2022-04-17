@@ -25,41 +25,38 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from .data.elements import ELEMENTS
 
-class Atom(object):
-    def __init__(self, name, x, y, z):
-        assert name in ELEMENTS
-        self.name = name
-        self.charge = ELEMENTS[self.name]
-        self.x = float(x)
-        self.y = float(y)
-        self.z = float(z)
-        self.xyz = [self.x, self.y, self.z]
+import subprocess
+import os
+from BasisSetSelector import BasisSetOptimizer
+from BasisSetSelector import read_json
+import numpy as np
 
-    def __str__(self):
-        return '  {:}\t{:.8f}\t{:.8f}\t{:.8f}\n'.format(self.name[0], self.xyz[0], self.xyz[1], self.xyz[2])
+dirname = os.path.dirname(__file__)
+json_file = os.path.join(dirname,'data.json')
+xyz_file = os.path.join(dirname,'h2.xyz')
 
-class Molecule(object):
-    def __init__(self):
-        self.atoms = []
-        self.id = None
+def test_cli():
+    output = subprocess.run(['optimize_basis', json_file,'b3lyp','0.1'], capture_output=True,encoding='UTF-8')
+    assert '3-21G: 0.0212' in output.stdout
 
-    def add_atom(self,atom):
-        self.atoms.append(atom) 
+def test_constructors():
+    opt = BasisSetOptimizer('triple-zeta','homo lumo gap')
+    assert all(x in opt._basis_library for x in ['6-311G','6-311+G*','6-311++G**','cc-pVTZ','aug-cc-pVTZ',
+                                           'Def2-TZVPD','Def2-TZVPPD','pc-3','aug-pc-3'])
+    opt = read_json(json_file)
+    assert all(x in opt._basis_library for x in ["3-21G","STO-3G"])
 
-    def get_natoms(self):
-        return len(self.atoms)
+def test_optimize_frequencies():
+    opt = read_json(json_file)
+    result = opt.optimize('b3lyp',0.1)
+    assert np.round(result['3-21G'],decimals=3) == 0.021
+    result2 = opt.optimize('pbe0',0.1) 
+    assert np.round(result2['3-21G'],decimals=3) == 0.022
 
-    def get_name(self):
-        return ''.join(x.name for x in self.atoms)
-
-    natoms = property(get_natoms)
-
-    name = property(get_name)
-
-    def __str__(self):
-        string_output = ''
-        for atom in self.atoms:
-            string_output += atom.__str__()
-        return string_output.rstrip()
+def test_optimize_homo_lumo():
+    opt = BasisSetOptimizer(["3-21G","STO-3G"],'homo lumo gap')
+    opt.add_molecule(xyz_file,17.4479)
+    result = opt.optimize('b3lyp',0.2)
+    assert np.round(result['3-21G'],decimals=3) == 0.145
+    assert 'STO-3G' not in result

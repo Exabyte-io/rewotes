@@ -25,11 +25,9 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from .data.bsl import pre_defined_libraries, nwchem_supported
+from .data.bsl import pre_defined_libraries
 from .qc import run_qc
 from sklearn.metrics import mean_absolute_percentage_error
-from io import StringIO
-import os
 from .mol_classes import Atom, Molecule
 from typing import Union
 import logging
@@ -84,6 +82,11 @@ class BasisSetData():
 
         '''
         self.results[mol_id] = res
+
+    def clean(self):
+        '''Clears any data.'''
+        self.results = {}
+        self.error = None
 
     def calc_error(self, ref_data: dict):
         ''' Computes mean absolute percent error of computed data relative to reference data.
@@ -197,6 +200,11 @@ class BasisSetOptimizer:
         else:
             self._add_molecule(mol, ref_data)
 
+    def _clean(self):
+        '''Cleans data from any previous run.'''
+        for basis in self._basis_library.values():
+            basis.clean()
+
     def optimize(self,
                  functional: str,
                  precision: float,
@@ -222,6 +230,7 @@ class BasisSetOptimizer:
         '''
         self._precision = precision
         self._functional = functional
+        self._clean()
         if verbose:
             logging.basicConfig(level=logging.INFO,format='%(message)s')
         failed = {}

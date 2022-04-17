@@ -1,6 +1,13 @@
 # Instructions
 
-BasisSetSelector can be used as python module, or as command line script `optimize_basis`. In either case, setting up the calculation is primarily done using properly formatted .json files. These examples assume NWChem is installed on your machine.
+BasisSetSelector can be used as python module, or as command line script `optimize_basis`. To install, run 
+
+```
+pip install . 
+```
+in the root directory (i.e. the same directory as pyproject.toml).
+
+Setting up the calculation can be done using a properly formatted .json. These examples assume NWChem is installed on your machine.
 
 Working examples:
 
