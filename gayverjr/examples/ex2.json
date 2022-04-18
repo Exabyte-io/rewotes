@@ -1,0 +1,32 @@
+{ "Basis Set Selector" : [
+
+{
+    "title": "molecule",
+    "angstrom": true,
+    "geometry":[
+        [
+            {"atom" :"H", "xyz" : [    0.00000000000,     0.00000000000,     0.7414]},
+            {"atom" :"H", "xyz" : [    0.00000000000,     0.00000000000,     0.0000]}
+        ],
+        [
+            {"atom" :"O", "xyz" : [    0.0000, 	0.0000, 	0.1173]},
+            {"atom" :"H", "xyz" : [    0.0000, 	0.7572, 	-0.4692]},
+            {"atom" :"H", "xyz" : [    0.0000, 	-0.7572, 	-0.4692]}
+        ]
+    ]   
+},
+
+{
+    "title": "basis",
+    "basis_library": "double-zeta"
+},
+
+{
+    "title": "reference",
+    "property": "frequencies",
+    "data": [[4401], [1664,3875,3981]]
+
+}
+
+
+]}
