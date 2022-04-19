@@ -13,7 +13,8 @@ const Terminal: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <Handle type="target" position={Position.Top}/>
+            <Handle type="source" position={Position.Top} id={'a'}/>
+            <Handle type="source" position={Position.Bottom} id={'b'}/>
             <Box sx={{
                 width: '150px',
                 height: '50px',
@@ -28,7 +29,6 @@ const Terminal: React.FC<Props> = (props: Props) => {
             }}>
                 <TextArea id={id} data={data}/>
             </Box>
-            <Handle type="source" position={Position.Bottom} id="a"/>
         </>
     );
 }

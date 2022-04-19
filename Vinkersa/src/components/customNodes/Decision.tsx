@@ -13,10 +13,10 @@ const Decision: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <Handle type="target" position={Position.Top}/>
-            <Handle type="source" position={Position.Left} id="a"/>
-            <Handle type="source" position={Position.Right} id="b"/>
-            <Handle type="source" position={Position.Bottom} id="c"/>
+            <Handle type="source" position={Position.Top} id={'a'}/>
+            <Handle type="source" position={Position.Left} id={'b'}/>
+            <Handle type="source" position={Position.Right} id={'c'}/>
+            <Handle type="source" position={Position.Bottom} id={'d'}/>
             <Box sx={{
                 width: '142px',
                 height: '142px',

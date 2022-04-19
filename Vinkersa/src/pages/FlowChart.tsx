@@ -1,14 +1,15 @@
 import React, {useEffect} from "react";
 import ReactFlow, {
-    Node,
-    Edge,
-    NodeChange,
-    EdgeChange,
-    applyNodeChanges,
-    applyEdgeChanges,
     addEdge,
+    applyEdgeChanges,
+    applyNodeChanges,
+    Background,
     Connection,
-    Background
+    ConnectionMode,
+    Edge,
+    EdgeChange,
+    Node,
+    NodeChange
 } from 'react-flow-renderer';
 import {useDispatch, useSelector} from "react-redux";
 import nodeTypes from "../components/customNodes/CustomNodeTypes";
@@ -44,6 +45,7 @@ const FlowChart: React.FC = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        connectionMode={ConnectionMode.Loose}
         fitView>
         <Background/>
     </ReactFlow>
