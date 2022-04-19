@@ -3,8 +3,12 @@ import React from "react";
 import {Handle, Position} from 'react-flow-renderer'
 import TextArea from "./TextArea";
 
+type Props = {
+    id: string
+}
 
-const Terminal: React.FC = () => {
+const Terminal: React.FC<Props> = (props: Props) => {
+    const {id} = props
 
     return (
         <>
@@ -21,7 +25,7 @@ const Terminal: React.FC = () => {
                 alignItems: 'center',
                 backgroundColor: 'white'
             }}>
-                <TextArea/>
+                <TextArea id={id}/>
             </Box>
             <Handle type="source" position={Position.Bottom} id="a"/>
         </>

@@ -26,7 +26,7 @@ const App: React.FC = () => {
         dispatch(setNodesData([...store.getState().nodes, {
             id: nanoid(8),
             type: nameOfNode,
-            data: null,
+            data: '',
             position: {x: 300, y: 300}
         }]))
     }

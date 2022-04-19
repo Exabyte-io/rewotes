@@ -3,7 +3,14 @@ import React from "react";
 import {Handle, Position} from 'react-flow-renderer'
 import TextArea from "./TextArea";
 
-const Process: React.FC = () => {
+type Props = {
+    id: string
+}
+
+const Process: React.FC<Props> = (props: Props) => {
+    const {id} = props
+
+
     return (
         <>
             <Handle type="target" position={Position.Top}/>
@@ -16,7 +23,7 @@ const Process: React.FC = () => {
                 alignItems: 'center',
                 backgroundColor: 'white'
             }}>
-                <TextArea/>
+                <TextArea id={id}/>
             </Box>
             <Handle type="source" position={Position.Bottom} id="a"/>
         </>
