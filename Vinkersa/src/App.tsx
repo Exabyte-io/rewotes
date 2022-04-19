@@ -17,8 +17,13 @@ const App: React.FC = () => {
     useEffect(() => {
         const nodes: Node[] = localStorage.getItem('nodes') ? JSON.parse(localStorage.getItem('nodes')) : []
         const edges: Edge[] = localStorage.getItem('edges') ? JSON.parse(localStorage.getItem('edges')) : []
-        dispatch(setNodesData(nodes))
-        dispatch(setEdgesData(edges))
+        if (nodes.length === 0) {
+            localStorage.setItem('nodes', '')
+            localStorage.setItem('edges', '')
+        } else if (nodes.length !== 0) {
+            dispatch(setNodesData(nodes))
+            dispatch(setEdgesData(edges))
+        }
     }, [])
 
     function clickHandler(nameOfNode: NodeNameTypes) {

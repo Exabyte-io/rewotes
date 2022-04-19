@@ -10,7 +10,7 @@ type Props = {
 const TextArea: React.FC<Props> = (props: Props) => {
     const {id, data} = props
     const dispatch = useDispatch()
-    
+
     return (
         <textarea style={{resize: 'none', outline: 'none', border: 'none', width: '100%'}} value={data}
                   onChange={(e) => dispatch(updateDataById({id, data: e.target.value}))}/>
