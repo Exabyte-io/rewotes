@@ -4,11 +4,12 @@ import {Handle, Position} from 'react-flow-renderer'
 import TextArea from "./TextArea";
 
 type Props = {
-    id: string
+    id: string,
+    data: string
 }
 
 const Decision: React.FC<Props> = (props: Props) => {
-    const {id} = props
+    const {id, data} = props
 
     return (
         <>
@@ -37,7 +38,7 @@ const Decision: React.FC<Props> = (props: Props) => {
                         transform: 'rotate(-45deg)',
                         width: '90px'
                     }}>
-                        <TextArea id={id}/>
+                        <TextArea id={id} data={data}/>
                     </Box>
                 </Box>
             </Box>

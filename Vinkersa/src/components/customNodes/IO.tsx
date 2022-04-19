@@ -4,11 +4,12 @@ import {Handle, Position} from 'react-flow-renderer'
 import TextArea from "./TextArea";
 
 type Props = {
-    id: string
+    id: string,
+    data: string
 }
 
 const IO: React.FC<Props> = (props: Props) => {
-    const {id} = props
+    const {id, data} = props
 
 
     return (
@@ -30,7 +31,7 @@ const IO: React.FC<Props> = (props: Props) => {
                     paddingLeft: 2,
                     paddingRight: 2,
                 }}>
-                    <TextArea id={id}/>
+                    <TextArea id={id} data={data}/>
                 </Box>
             </Box>
         </>
