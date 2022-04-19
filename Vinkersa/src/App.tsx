@@ -42,7 +42,7 @@ const App: React.FC = () => {
             <Box sx={{width: '80%', height: '100%'}}>
                 <FlowChart/>
             </Box>
-            <Box sx={{width: '20%', height: '100%'}}>
+            <Box sx={{width: '20%', height: '100%', overflow: 'auto'}}>
                 <Box sx={{
                     width: '100%',
                     display: 'flex',
