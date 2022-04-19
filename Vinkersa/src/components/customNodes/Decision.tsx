@@ -7,6 +7,9 @@ const Decision: React.FC = () => {
     return (
         <>
             <Handle type="target" position={Position.Top}/>
+            <Handle type="source" position={Position.Left} id="a"/>
+            <Handle type="source" position={Position.Right} id="b"/>
+            <Handle type="source" position={Position.Bottom} id="c"/>
             <Box sx={{
                 width: '142px',
                 height: '142px',
@@ -32,8 +35,6 @@ const Decision: React.FC = () => {
                     </Box>
                 </Box>
             </Box>
-            <Handle type="source" position={Position.Left} id="a"/>
-            <Handle type="source" position={Position.Right} id="b"/>
         </>
     );
 }
