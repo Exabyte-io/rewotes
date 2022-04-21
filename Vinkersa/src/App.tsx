@@ -8,6 +8,7 @@ import {setEdgesData, setNodesData} from "./redux/actions";
 import {NodeNameTypes} from "./components/customNodes/CustomNodeTypes";
 import {store} from "./redux/store";
 import {nanoid} from 'nanoid'
+import RPN from "./components/RPN";
 
 
 const App: React.FC = () => {
@@ -71,6 +72,7 @@ const App: React.FC = () => {
                             onClick={() => clickHandler(nameOfNode as NodeNameTypes)}>Add block</Button>
                 </Box>
                 <SideBar/>
+                <RPN/>
             </Box>
         </Box>
     )
