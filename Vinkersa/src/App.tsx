@@ -62,6 +62,10 @@ const App: React.FC = () => {
                         <MenuItem value={'io'}>I/O</MenuItem>
                         <MenuItem value={'process'}>Process</MenuItem>
                         <MenuItem value={'decision'}>Decision</MenuItem>
+                        <MenuItem value={'plus'}>Plus</MenuItem>
+                        <MenuItem value={'minus'}>Minus</MenuItem>
+                        <MenuItem value={'divide'}>Divide</MenuItem>
+                        <MenuItem value={'multiply'}>Multiply</MenuItem>
                     </TextField>
                     <Button variant='contained' disabled={nameOfNode === ''}
                             onClick={() => clickHandler(nameOfNode as NodeNameTypes)}>Add block</Button>
