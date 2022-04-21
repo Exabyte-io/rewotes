@@ -4,15 +4,16 @@ import {updateDataById} from "../../redux/actions";
 
 type Props = {
     id: string,
-    data: string
+    data: string,
+    isReadOnly?: boolean
 }
 
 const TextArea: React.FC<Props> = (props: Props) => {
-    const {id, data} = props
+    const {id, data, isReadOnly} = props
     const dispatch = useDispatch()
 
     return (
-        <textarea style={{resize: 'none', outline: 'none', border: 'none', width: '100%'}} value={data}
+        <textarea style={{resize: 'none', outline: 'none', border: 'none', width: '100%'}} readOnly={isReadOnly} value={data}
                   onChange={(e) => dispatch(updateDataById({id, data: e.target.value}))}/>
     )
 }
