@@ -23,8 +23,8 @@ const FlowChart: React.FC = () => {
     const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
 
     useEffect(() => {
-        if (nodes.length > 0) localStorage.setItem('nodes', JSON.stringify(nodes))
-        if (edges.length > 0) localStorage.setItem('edges', JSON.stringify(edges))
+        localStorage.setItem('nodes', JSON.stringify(nodes))
+        localStorage.setItem('edges', JSON.stringify(edges))
     }, [nodes, edges])
 
     const onNodesChange = (changes: NodeChange[]) => {

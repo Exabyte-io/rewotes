@@ -14,6 +14,7 @@ import RPN from "./components/RPN";
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const [nameOfNode, setNameOfNode] = useState<NodeNameTypes | ''>('')
+    const [isLoad, setIsLoad] = useState<boolean>(false)
 
     useEffect(() => {
         const nodes: Node[] = localStorage.getItem('nodes') ? JSON.parse(localStorage.getItem('nodes')) : []
@@ -25,6 +26,7 @@ const App: React.FC = () => {
             dispatch(setNodesData(nodes))
             dispatch(setEdgesData(edges))
         }
+        setIsLoad(true)
     }, [])
 
     function clickHandler(nameOfNode: NodeNameTypes) {
@@ -41,7 +43,8 @@ const App: React.FC = () => {
     return (
         <Box sx={{width: '100%', height: '100%', display: 'flex'}}>
             <Box sx={{width: '80%', height: '100%'}}>
-                <FlowChart/>
+                {isLoad &&
+                <FlowChart/>}
             </Box>
             <Box sx={{width: '20%', height: '100%', overflow: 'auto'}}>
                 <Box sx={{
