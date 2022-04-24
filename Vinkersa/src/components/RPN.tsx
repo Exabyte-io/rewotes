@@ -17,7 +17,7 @@ const RPN: React.FC = () => {
     const [prev, setPrev] = useState<{state: string, isChanged: boolean}>({state: '', isChanged: false})
 
     useEffect(() => {
-        setOperators(getOperators(nodes, edges))
+        setOperators(getOperators(nodes))
         setIONodes(getIONodes(nodes, edges))
     }, [nodes, edges])
 
@@ -39,14 +39,8 @@ const RPN: React.FC = () => {
         }
     }, [prev])
 
-    function getOperators(nodes: Node[], edges: Edge[]): Node[] {
-        return nodes.reduce((res: Node[], item: Node) => {
-            if (item && item.type && operatorNodes.includes(item.type)) {
-                const operatorEdges: Edge[] = edges.filter(edge => edge.source === item.id)
-                if (operatorEdges.length > 0) res.push(item)
-            }
-            return res
-        }, [])
+    function getOperators(nodes: Node[]): Node[] {
+        return nodes.filter((item: Node) => operatorNodes.includes(item.type as string))
     }
 
     function getIONodes(nodes: Node[], edges: Edge[]): Node[] {
@@ -73,6 +67,7 @@ const RPN: React.FC = () => {
             res.push([node, ...children])
             return res
         }, [])
+
         return [...calculateNodes(arrayOfRelations)]
     }
 
