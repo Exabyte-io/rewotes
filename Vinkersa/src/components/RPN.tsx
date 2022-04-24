@@ -1,58 +1,57 @@
 import React, {useEffect, useState} from "react";
 import {Edge, Node} from "react-flow-renderer";
-import {store} from "../redux/store";
-import {useDispatch} from "react-redux";
+import {ReducersType, store} from "../redux/store";
+import {useDispatch, useSelector} from "react-redux";
 import {updateDataById} from "../redux/actions";
 import {operatorNodes} from "./customNodes/CustomNodeTypes";
 
 const RPN: React.FC = () => {
     const dispatch = useDispatch()
 
-    const [nodes, setNodes] = useState<Node[]>([])
-    const [edges, setEdges] = useState<Edge[]>([])
+    const nodes: Node[] = useSelector((state: ReducersType) => state.nodes)
+    const edges: Edge[] = useSelector((state: ReducersType) => state.edges)
 
     const [operators, setOperators] = useState<Node[]>([])
     const [IONodes, setIONodes] = useState<Node[]>([])
-    const [connectionsOfOperators, setConnectionsOfOperators] = useState<Edge[]>([])
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setNodes(store.getState().nodes)
-            setEdges(store.getState().edges)
-        }, 1000)
-
-        return () => clearInterval(interval)
-    }, [])
+    const [prev, setPrev] = useState<{state: string, isChanged: boolean}>({state: '', isChanged: false})
 
     useEffect(() => {
         setOperators(getAllOperators(nodes))
-        setIONodes(getIONodes(nodes))
-    }, [nodes])
+        setIONodes(getIONodes(nodes, edges))
+    }, [nodes, edges])
 
     useEffect(() => {
-        setConnectionsOfOperators(getConnectionsOfOperators(operators, edges))
-    }, [operators, edges])
+        const data: string = JSON.stringify([operators.map(item => item.data), IONodes.map(item => item.data)])
+        if (data !== prev.state) {
+            setPrev({state: data, isChanged: true})
+        }
+    }, [operators, IONodes])
 
     useEffect(() => {
-        getCalculatedArrayOfNodes(operators, IONodes, connectionsOfOperators).forEach((item: Node) => {
-            dispatch(updateDataById({id: item.id, data: item.data}))
-        })
-    }, [operators, IONodes, connectionsOfOperators])
+        if (prev.isChanged) {
+            getCalculatedArrayOfNodes(operators, IONodes, edges).forEach((item: Node) => {
+                dispatch(updateDataById({id: item.id, data: item.data}))
+            })
+            setPrev({...prev, isChanged: false})
+        }
+    }, [prev])
 
     function getAllOperators(nodes: Node[]): Node[] {
-        return nodes.filter(item => operatorNodes.includes(item.type as string))
+        return nodes.filter((item: Node) => item.type && operatorNodes.includes(item.type))
     }
 
-    function getIONodes(nodes: Node[]): Node[] {
-        return nodes.filter(item => item.type === 'io')
-    }
-
-    function getConnectionsOfOperators(nodes: Node[], edges: Edge[]): Edge[] {
-        const ids: string[] = nodes.reduce((res: string[], item) => {
-            res.push(item.id)
+    function getIONodes(nodes: Node[], edges: Edge[]): Node[] {
+        return nodes.reduce((res: Node[], item: Node) => {
+            if (item.type === 'io') {
+                const edge: Edge | undefined = edges.find(edge => edge.target === item.id)
+                if (edge) {
+                    const node: Node | undefined = nodes.find(item => item.id === edge.source)
+                    if (node && node.type && operatorNodes.includes(node.type)) res.push(item)
+                }
+            }
             return res
         }, [])
-        return edges.filter(item => ids.includes(item.source))
     }
 
     function getCalculatedArrayOfNodes(operators: Node[], IONodes: Node[], connectionsOfOperators: Edge[]): Node[] {
@@ -66,7 +65,6 @@ const RPN: React.FC = () => {
             res.push([node, ...children])
             return res
         }, [])
-        console.log(arrayOfRelations)
         return [...calculateNodes(arrayOfRelations)]
     }
 
