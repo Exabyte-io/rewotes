@@ -38,7 +38,8 @@ const Process: React.FC<Props> = (props: Props) => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                transform: 'translateZ(0)'
             }}>
                 <TextArea id={id} data={data} isReadOnly={isOperator} prefix={operator}/>
             </Box>
