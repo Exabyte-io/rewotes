@@ -5,7 +5,7 @@ import {Node, Edge} from 'react-flow-renderer'
 import SideBar from "./components/SideBar";
 import {useDispatch} from "react-redux";
 import {setEdgesData, setNodesData} from "./redux/actions";
-import {NodeNameTypes} from "./components/customNodes/CustomNodeTypes";
+import {baseNodes, NodeNameTypes, operatorNodes} from "./components/customNodes/CustomNodeTypes";
 import {store} from "./redux/store";
 import {nanoid} from 'nanoid'
 import RPN from "./components/RPN";
@@ -59,14 +59,9 @@ const App: React.FC = () => {
                         value={nameOfNode}
                         onChange={(e) => setNameOfNode(e.target.value as NodeNameTypes)}
                     >
-                        <MenuItem value={'terminal'}>Terminal</MenuItem>
-                        <MenuItem value={'io'}>I/O</MenuItem>
-                        <MenuItem value={'process'}>Process</MenuItem>
-                        <MenuItem value={'decision'}>Decision</MenuItem>
-                        <MenuItem value={'plus'}>Plus</MenuItem>
-                        <MenuItem value={'minus'}>Minus</MenuItem>
-                        <MenuItem value={'divide'}>Divide</MenuItem>
-                        <MenuItem value={'multiply'}>Multiply</MenuItem>
+                        {[...baseNodes, ...operatorNodes].map((item, index) =>
+                            <MenuItem key={index} value={item}><span style={{textTransform: 'capitalize'}}>{item}</span></MenuItem>
+                        )}
                     </TextField>
                     <Button variant='contained' disabled={nameOfNode === ''}
                             onClick={() => clickHandler(nameOfNode as NodeNameTypes)}>Add block</Button>

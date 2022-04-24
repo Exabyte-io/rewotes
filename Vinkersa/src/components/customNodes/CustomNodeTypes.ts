@@ -8,6 +8,9 @@ import Minus from "./Minus";
 import Divide from "./Divide";
 import Multiply from "./Multiply";
 
+export const operatorNodes: string[] = ['plus', 'minus', 'divide', 'multiply']
+export const baseNodes: string[] = ['terminal', 'io', 'process', 'decision']
+
 export type NodeNameTypes = 'terminal' | 'io' | 'process' | 'decision' | 'plus' | 'minus' | 'divide' | 'multiply'
 
 const nodeTypes: NodeTypes = {

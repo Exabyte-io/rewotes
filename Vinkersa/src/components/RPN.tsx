@@ -3,6 +3,7 @@ import {Edge, Node} from "react-flow-renderer";
 import {store} from "../redux/store";
 import {useDispatch} from "react-redux";
 import {updateDataById} from "../redux/actions";
+import {operatorNodes} from "./customNodes/CustomNodeTypes";
 
 const RPN: React.FC = () => {
     const dispatch = useDispatch()
@@ -39,7 +40,7 @@ const RPN: React.FC = () => {
     }, [operators, IONodes, connectionsOfOperators])
 
     function getAllOperators(nodes: Node[]): Node[] {
-        return nodes.filter(item => ['plus', 'minus', 'divide', 'multiply'].includes(item.type as string))
+        return nodes.filter(item => operatorNodes.includes(item.type as string))
     }
 
     function getIONodes(nodes: Node[]): Node[] {
@@ -56,19 +57,16 @@ const RPN: React.FC = () => {
 
     function getCalculatedArrayOfNodes(operators: Node[], IONodes: Node[], connectionsOfOperators: Edge[]): Node[] {
         const arrayOfRelations: Node[][] = operators.reduce((res: Node[][], node) => {
-            const targetNodes: string[] = connectionsOfOperators.filter(item => item.source === node.id).map(item => item.target)
-            const targetIOs = IONodes.filter(item => targetNodes.includes(item.id))
-            const targetOperators = operators.filter(item => targetNodes.includes(item.id))
             const sortedTargetsIds: string[] = connectionsOfOperators.filter(item => item.source === node.id).sort((a, b) => `${a.sourceHandle}` > `${b.sourceHandle}` ? 1 : -1).map(item => item.target)
             const children: Node[] = sortedTargetsIds.reduce((res: Node[], id) => {
-                const node: Node = [...operators, ...IONodes].find(item => item.id === id) as Node
+                const node: Node | undefined = [...operators, ...IONodes].find(item => item.id === id)
                 if (node) res.push(node)
                 return res
             }, [])
             res.push([node, ...children])
             return res
         }, [])
-
+        console.log(arrayOfRelations)
         return [...calculateNodes(arrayOfRelations)]
     }
 
@@ -77,7 +75,7 @@ const RPN: React.FC = () => {
         arr.forEach((nodes: Node[]) => {
             let isCalculated: boolean = true
             nodes.forEach((node: Node, index: number) => {
-                if (index !== 0 && ['plus', 'minus', 'divide', 'multiply'].includes(node.type as string) && typeof node.data !== "number") {
+                if (index !== 0 && operatorNodes.includes(node.type as string) && typeof node.data !== "number") {
                     const isChildOperatorHasAChildren = arr.reduce((res: boolean, item) => {
                         if (item[0].id === node.id && item.length > 1) res = true
                         return res
@@ -123,8 +121,6 @@ const RPN: React.FC = () => {
             return res
         }, 0)
     }
-
-
 
     return <></>
 }
