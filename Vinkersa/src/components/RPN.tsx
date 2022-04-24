@@ -38,8 +38,8 @@ const RPN: React.FC = () => {
     function getOperators(nodes: Node[], edges: Edge[]): Node[] {
         return nodes.reduce((res: Node[], item: Node) => {
             if (item && item.type && operatorNodes.includes(item.type)) {
-                const edge: Edge[] = edges.filter(edge => edge.source === item.id)
-                if (edge.length > 0) res.push(item)
+                const operatorEdges: Edge[] = edges.filter(edge => edge.source === item.id)
+                if (operatorEdges.length > 0) res.push(item)
             }
             return res
         }, [])

@@ -12,7 +12,7 @@ import ReactFlow, {
     NodeChange
 } from 'react-flow-renderer';
 import {useDispatch, useSelector} from "react-redux";
-import nodeTypes from "../components/customNodes/CustomNodeTypes";
+import nodeTypes, {operatorNodes} from "../components/customNodes/CustomNodeTypes";
 import {ReducersType} from "../redux/store";
 import {setEdgesData, setNodesData} from "../redux/actions";
 
@@ -35,7 +35,15 @@ const FlowChart: React.FC = () => {
         dispatch(setEdgesData(applyEdgeChanges(changes, edges)))
     }
     const onConnect = (connection: Connection) => {
-        dispatch(setEdgesData(addEdge(connection, edges)))
+        const source: Node | undefined = nodes.find((item: Node) => item.id === connection.source)
+        if (source && source.type && operatorNodes.includes(source.type)) {
+            const edgesOfSource: Edge[] = edges.filter((item: Edge) => item.source === source.id)
+            if (!edgesOfSource.find(item => item.sourceHandle === connection.sourceHandle)) {
+                dispatch(setEdgesData(addEdge(connection, edges)))
+            }
+        } else {
+            dispatch(setEdgesData(addEdge(connection, edges)))
+        }
     }
 
     return <ReactFlow

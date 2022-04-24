@@ -4,8 +4,7 @@
     <list default="true" id="55c54597-c7fb-49fe-8715-b41e7ccd3d25" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vinkersa/src/components/RPN.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Vinkersa/src/components/RPN.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vinkersa/src/redux/actions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Vinkersa/src/redux/actions.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vinkersa/src/redux/reducers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Vinkersa/src/redux/reducers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vinkersa/src/pages/FlowChart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Vinkersa/src/pages/FlowChart.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +43,7 @@
       <option name="presentableId" value="Default" />
       <updated>1650785605597</updated>
       <workItem from="1650785609527" duration="40000" />
-      <workItem from="1650786683545" duration="10522000" />
+      <workItem from="1650786683545" duration="14095000" />
     </task>
     <servers />
   </component>
