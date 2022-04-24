@@ -22,6 +22,10 @@ const RPN: React.FC = () => {
     }, [nodes, edges])
 
     useEffect(() => {
+        setPrev({...prev, isChanged: true})
+    }, [edges])
+
+    useEffect(() => {
         const data: string = JSON.stringify([operators.map(item => item.data), IONodes.map(item => item.data)])
         if (data !== prev.state) {
             setPrev({state: data, isChanged: true})
