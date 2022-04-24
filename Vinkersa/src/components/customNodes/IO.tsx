@@ -14,7 +14,7 @@ const IO: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <Handle type="source" position={Position.Top} id={'a'}/>
+            <Handle type="target" position={Position.Top} id={'a'}/>
             <Box sx={{
                 width: '150px',
                 height: '50px',

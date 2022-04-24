@@ -59,7 +59,13 @@ const RPN: React.FC = () => {
             const targetNodes: string[] = connectionsOfOperators.filter(item => item.source === node.id).map(item => item.target)
             const targetIOs = IONodes.filter(item => targetNodes.includes(item.id))
             const targetOperators = operators.filter(item => targetNodes.includes(item.id))
-            res.push([node, ...targetIOs, ...targetOperators])
+            const sortedTargetsIds: string[] = connectionsOfOperators.filter(item => item.source === node.id).sort((a, b) => `${a.sourceHandle}` > `${b.sourceHandle}` ? 1 : -1).map(item => item.target)
+            const children: Node[] = sortedTargetsIds.reduce((res: Node[], id) => {
+                const node: Node = [...operators, ...IONodes].find(item => item.id === id) as Node
+                if (node) res.push(node)
+                return res
+            }, [])
+            res.push([node, ...children])
             return res
         }, [])
 
@@ -106,9 +112,9 @@ const RPN: React.FC = () => {
                 switch (typeOfOperator) {
                     case 'plus': res += data
                         return res
-                    case 'minus': res = data - res
+                    case 'minus': res = res - data
                         return res
-                    case 'divide': res = data / res
+                    case 'divide': res = res / data
                         return res
                     case 'multiply': res *= data
                         return res
