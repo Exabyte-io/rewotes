@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Edge, Node} from "react-flow-renderer";
 import {ReducersType} from "../redux/store";
 import {useDispatch, useSelector} from "react-redux";
-import {updateDataById} from "../redux/actions";
+import {updateNodes} from "../redux/actions";
 import {operatorNodes} from "./customNodes/CustomNodeTypes";
 
 const RPN: React.FC = () => {
@@ -30,10 +30,7 @@ const RPN: React.FC = () => {
 
     useEffect(() => {
         if (prev.isChanged) {
-            getCalculatedArrayOfNodes(operators, IONodes, edges).forEach((item: Node) => {
-                //TODO add action for update all data
-                dispatch(updateDataById({id: item.id, data: item.data}))
-            })
+            dispatch(updateNodes(getCalculatedArrayOfNodes(operators, IONodes, edges)))
             setPrev({...prev, isChanged: false})
         }
     }, [prev])
