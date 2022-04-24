@@ -24,15 +24,11 @@ const IO: React.FC<Props> = (props: Props) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: 'white'
-            }}>
-                <Box sx={{
-                    transform: 'skew(25deg)',
-                    paddingLeft: 2,
-                    paddingRight: 2,
-                }}>
-                    <TextArea id={id} data={data}/>
-                </Box>
+            }}/>
+            <Box style={{position: 'absolute', top: '8px', left: '10px', width: '80%'}}>
+                <TextArea id={id} data={data}/>
             </Box>
+
         </>
     );
 }

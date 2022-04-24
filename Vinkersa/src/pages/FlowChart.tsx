@@ -5,7 +5,6 @@ import ReactFlow, {
     applyNodeChanges,
     Background,
     Connection,
-    ConnectionMode,
     Edge,
     EdgeChange,
     Node,
@@ -53,7 +52,6 @@ const FlowChart: React.FC = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        connectionMode={ConnectionMode.Loose}
         fitView>
         <Background/>
     </ReactFlow>

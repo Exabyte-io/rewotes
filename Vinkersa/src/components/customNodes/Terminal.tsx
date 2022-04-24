@@ -13,7 +13,7 @@ const Terminal: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <Handle type="source" position={Position.Top} id={'a'}/>
+            <Handle type="target" position={Position.Top} id={'a'}/>
             <Handle type="source" position={Position.Bottom} id={'b'}/>
             <Box sx={{
                 width: '150px',
