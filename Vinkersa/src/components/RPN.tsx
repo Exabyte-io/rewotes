@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Edge, Node} from "react-flow-renderer";
-import {ReducersType, store} from "../redux/store";
+import {ReducersType} from "../redux/store";
 import {useDispatch, useSelector} from "react-redux";
 import {updateDataById} from "../redux/actions";
 import {operatorNodes} from "./customNodes/CustomNodeTypes";
@@ -17,7 +17,7 @@ const RPN: React.FC = () => {
     const [prev, setPrev] = useState<{state: string, isChanged: boolean}>({state: '', isChanged: false})
 
     useEffect(() => {
-        setOperators(getAllOperators(nodes))
+        setOperators(getOperators(nodes, edges))
         setIONodes(getIONodes(nodes, edges))
     }, [nodes, edges])
 
@@ -31,14 +31,21 @@ const RPN: React.FC = () => {
     useEffect(() => {
         if (prev.isChanged) {
             getCalculatedArrayOfNodes(operators, IONodes, edges).forEach((item: Node) => {
+                //TODO add action for update all data
                 dispatch(updateDataById({id: item.id, data: item.data}))
             })
             setPrev({...prev, isChanged: false})
         }
     }, [prev])
 
-    function getAllOperators(nodes: Node[]): Node[] {
-        return nodes.filter((item: Node) => item.type && operatorNodes.includes(item.type))
+    function getOperators(nodes: Node[], edges: Edge[]): Node[] {
+        return nodes.reduce((res: Node[], item: Node) => {
+            if (item && item.type && operatorNodes.includes(item.type)) {
+                const edge: Edge[] = edges.filter(edge => edge.source === item.id)
+                if (edge.length > 0) res.push(item)
+            }
+            return res
+        }, [])
     }
 
     function getIONodes(nodes: Node[], edges: Edge[]): Node[] {
@@ -74,7 +81,7 @@ const RPN: React.FC = () => {
             let isCalculated: boolean = true
             nodes.forEach((node: Node, index: number) => {
                 if (index !== 0 && operatorNodes.includes(node.type as string) && typeof node.data !== "number") {
-                    const isChildOperatorHasAChildren = arr.reduce((res: boolean, item) => {
+                    const isChildOperatorHasAChildren = arr.reduce((res: boolean, item: Node[]) => {
                         if (item[0].id === node.id && item.length > 1) res = true
                         return res
                     }, false)
@@ -84,42 +91,30 @@ const RPN: React.FC = () => {
                     }
                 }
             })
-            if (isCalculated) {
-                nodes[0].data = calculateValues(nodes)
-            }
+            if (isCalculated) nodes[0].data = calculateValues(nodes)
         })
-        if (recall) {
-            calculateNodes(arr)
-        } else {
-            return arr.reduce((res: Node[], item) => {
-                res.push(...item)
-                return res
-            }, [])
-        }
-        return []
+
+        return recall ? calculateNodes(arr) : arr.map(item => item[0])
     }
 
     function calculateValues(nodes: Node[]): number {
         const typeOfOperator = nodes[0].type
-        return  nodes.reduce((res: number, item: Node, index: number) => {
+        return nodes.reduce((res: number, item: Node, index: number) => {
             const data = item.data === '' ? 0 : + item.data
             if (index === 1) res = data
             if (index !== 0 && index !== 1) {
                 switch (typeOfOperator) {
-                    case 'plus': res += data
-                        return res
-                    case 'minus': res = res - data
-                        return res
-                    case 'divide': res = res / data
-                        return res
-                    case 'multiply': res *= data
-                        return res
+                    case 'plus': return res += data
+                    case 'minus': return res -= data
+                    case 'divide': return res /= data
+                    case 'multiply': return res *= data
                 }
             }
             return res
         }, 0)
     }
 
+    //TODO add view for rpn
     return <></>
 }
 
