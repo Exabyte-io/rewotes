@@ -1,9 +1,12 @@
 import re
 import urllib.request
+from utils.generic import wait_for_jobs_to_finish
 
 
 class ConvTracker:
     """
+    Class used to create, submit, and manage jobs for generating a converged KPoint mesh.
+
     Args:
         config (dict): Exabyte API config.
         job_endpoints (JobEndpoints): Exabyte API endpoint.
@@ -77,3 +80,27 @@ class ConvTracker:
         else:
             return abs(self.energy[-1] - self.energy[-2]) <= self.cutoff
 
+    def run(self, kp_initial=1, max_iter=20, job_set_name=None, job_name_prefix="kpoint"):
+        """
+        Manages job submission and checks for convergence.
+
+        kwargs:
+         kp_initial (int): Sets initial kpoint values.
+         max_iter (int): Number of times to iterate before exiting.
+         job_set_name (str): Name given to set of jobs.
+         job_name_prefix (str):  Name of job prepended to kpoint value.
+        """
+        if job_set_name is not None:
+            jobs_set = self.job_endpoints.create_set({"name": job_set_name, "projectId": self.config["_project"]["_id"], "owner": {"_id": self.config["owner"]["_id"]}})
+        else:
+            job_set = None
+
+        for kp in range(kp_initial, max_iter+kp_initial):
+            print(f"KPoints = {kp}")
+            job_id = self.create_submit_job(kp, jobs_set=jobs_set, job_name_prefix=job_name_prefix)
+            wait_for_jobs_to_finish(self.job_endpoints, [job_id], poll_interval=10)
+            total_energy = self.parse_output(job_id)
+            self.energy.extend([total_energy])
+
+            if self.check_convergence():
+                break
