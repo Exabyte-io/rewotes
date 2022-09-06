@@ -12,8 +12,8 @@ Each file represents an assignment similar to what one would get when hired.
 
 | Focus          | ReWote                    | Keywords                        |
 | ---------------| --------------------------| ------------------------------- |
-| Comp. Science  | [Convergence Tracker](Basis-Set-Selector.md) | Python, OOD, DFT, Planewaves    |
-| Comp. Science  | [Basis Set Selector](Convergence-Tracker.md)  | Python, OOD, DFT, Local-orbital |
+| Comp. Science  | [Convergence Tracker](Convergence-Tracker.md) | Python, OOD, DFT, Planewaves    |
+| Comp. Science  | [Basis Set Selector](Basis-Set-Selector.md)  | Python, OOD, DFT, Local-orbital |
 | Data. Science  | [ML Property Predict](ML-Band-Gaps.md) | Python, ML Models, Scikit, Featurization |
 | Front-End / UX | [Materials Designer](Materials-Designer.md)  | ReactJS / UX Design, ThreeJS   |
 | Front-End / UX | [Flowchart Designer](Flowchart-Designer.md)  | ReactJS / UX Design, DAG       |
