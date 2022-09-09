@@ -9,7 +9,7 @@ class Executable(ABC):
     """
     
     @abstractmethod
-    def get_resources():
+    def get_resources(self):
         """
         Returns the required resources for this
         computational task.
@@ -17,7 +17,7 @@ class Executable(ABC):
         pass
         
     @abstractmethod
-    def exec(envr):
+    def exec(self, envr):
         """
         Given a Resource object representing the
         available computational resources, runs

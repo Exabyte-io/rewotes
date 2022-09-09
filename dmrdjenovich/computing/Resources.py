@@ -5,4 +5,12 @@ class Resources:
     work: has time and node / cpu requirements.
     """
     
-    pass
+    def __init__(self, nodes, time):
+        self.nodes = nodes
+        self.time = time
+        
+    def get_nodes(self)
+        return self.nodes
+    
+    def get_time(self)
+        return self.time
