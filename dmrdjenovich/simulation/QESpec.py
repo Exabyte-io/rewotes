@@ -233,10 +233,56 @@ class QESpec:
         pass
         
     def get_positions(self):
-        pass
+        """
+        Returns the atomic motif in relative coordinates
+        of the crystal [[species],[positions]].
+        Positions are arranged as column vectors of a
+        matrix.
+        """
+        SRC = self.dict["ATOMIC_POSITIONS"]
+        if SRC[0] == "alat":
+            raise Exception("Not yet implemented.")
+        if SRC[0] == "crystal_sg":
+            raise Exception("Not yet implemented.")
         
-    def set_positions(self, basis)
-        pass
+        species = []
+        loc = []
+        for i in range(1, len(SRC)):
+            tokens = SRC[i].strip().split(" ")
+            species.append(tokens[0])
+            loc.append([float(x) for x in tokens[1:]])
+        loc = list(np.transpose(loc))
+        for i in range(0, len(loc)):
+            loc[i] = list(loc[i])
+        if SRC[0] == "crystal":
+            return [species, loc]
+        
+        mult = np.linalg.inv(self.get_lattice())
+        loc = np.matmul(mult, loc)
+        loc = list(loc)
+        for i in range(0, len(loc)):
+            loc[i] = list(loc[i])
+        if SRC[0] == "angstrom":
+            return [species, loc]
+        BOHR_CONVERSION = 0.529177
+        if SRC[0] == "bohr":
+            for i in range(0, len(loc)):
+                for j in range(0, len(loc[i])):
+                    loc[i][j] *= BOHR_CONVERSION
+            return [species, loc]
+        
+    def set_positions(self, species, positions)
+        """
+        Sets the atomic motif in relative coordinates
+        of the crystal, positions are specified as
+        column vectors.
+        """
+        SRC = []
+        self.dict["ATOMIC_POSITIONS"] = SRC
+        SRC[0] = "crystal"
+        transp = np.transpose(positions)
+        for i in range(0, len(species)):
+            SRC[i+1] = species[i] + " " + " ".join((str(transp[i][x]) for x in range(0, len(transp[i]))))
         
     def get_encut(self):
         """

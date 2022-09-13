@@ -51,6 +51,8 @@ class QEProcess(Executable):
         if self.stop_flag:
             return self.return_flag
             
+        # Maybe some future code for checking for errors in stdout ...
+        
         QEAnalysis analysis = QEAnalysis(f_target)
         get_results(analysis)
         
@@ -61,7 +63,7 @@ class QEProcess(Executable):
         """
         Method stub meant to be overridden for custom analysis steps.
         """
-        return
+        return None
         
     def handle_error(self, error):
         self.error_state = error

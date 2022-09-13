@@ -26,7 +26,7 @@ class QERun(BExecutable):
         return "bash"
         
     def get_shell_string(self):
-        pass
+        return "echo \"Hello world.\""#"pw.x -in pw.in"
         
     def get_std_out(self):
         return os.join(self.dir, "stdout.txt")

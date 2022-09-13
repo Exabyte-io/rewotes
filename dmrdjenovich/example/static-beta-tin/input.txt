@@ -1,0 +1,31 @@
+&control
+calculation='scf'
+outdir='.'
+prefix='beta_relax'
+pseudo_dir='.'
+tprnfor=.true.,
+tstress=.true.
+/
+&system
+ibrav=7,
+celldm(1)=8.851118,
+celldm(3)=0.450000,
+nat=2,
+ntyp=1,
+ecutwfc=11.024792647423613,
+occupations='smearing'
+smearing='gaussian'
+degauss=1.0E-4,
+nbnd=12
+/
+&electrons
+conv_thr=1.0E-6,
+mixing_beta=0.4
+/
+ATOMIC_SPECIES
+Si 28.085000 Si.pbe-rrkj.UPF.txt
+ATOMIC_POSITIONS crystal
+Si 0.000000 0.000000 0.000000
+Si 0.500000 0.250000 -0.250000
+K_POINTS automatic
+2 2 2 0 0 0

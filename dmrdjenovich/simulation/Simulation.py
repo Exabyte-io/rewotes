@@ -28,7 +28,7 @@ class Simulation(Executable):
             return None
     
     @staticmethod
-    def construct_override(dir, spec, setup, run, process):
+    def construct_override(dir, spec, rsx, setup, run, process):
         """
         Creates a simulation with custom setup, run,
         and / or process with the given specification
@@ -38,7 +38,7 @@ class Simulation(Executable):
             if setup is None:
                 setup = QESetup(dir, spec)
             if run is None:
-                run = QERun(dir, spec)
+                run = QERun(dir, rsx)
             if process is None:
                 process = QEProcess(dir, spec)
             return Simulation(setup, run, process)
