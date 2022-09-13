@@ -23,6 +23,7 @@ class Convergence(Executable):
         a metadata string for logging purposes.
         """
         self.dir = dir
+        self.input_name = input_name
         self.spec = QESpec.parse_file(os.path.join(dir, input_name))
         self.spec.set_encut(encut)
         self.thresh = thresh
@@ -90,8 +91,9 @@ class Convergence(Executable):
         
     def next_executable(self):
         self.spec.set_k_points(self.k)
+        run = Convergence.CustomRun(self.dir, self.rsx, self.input_file)
         process = Convergence.CustomProcess(self.dir, self.spec, self)
-        sim = Simulation.construct_override(self.dir, self.spec, self.rsx, None, None, process)
+        sim = Simulation.construct_override(self.dir, self.spec, self.rsx, None, run, process)
         return sim
     
     def next_k(self):
@@ -104,6 +106,10 @@ class Convergence(Executable):
             self.k = [x for x in last_k]
             self.k[choice] += 1
         
+    class CustomRun(QERun):
+        def __init__(self, dir, spec, input_file):
+            super(QERun, self).__init__(dir, spec, input_file=input_file)
+            
     class CustomProcess(QEProcess):
         def __init__(self, dir, spec, parent):
             super(Convergence.CustomProcess, self).__init__(dir, spec)
