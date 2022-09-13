@@ -1,13 +1,16 @@
+from computing.resources import Resources
 from convergence import Convergence
+
+def converge_energy(dir, encut, thresh):
+    conv = EnergyConvergence(dir, encut, thresh, Resources(1, -1), homogeneous_k=True)
+    
 
 class EnergyConvergence(Convergence):
     """
     Class responsible for running a series of
-    Simulations to do a energy convergence test
+    Simulations to do an energy convergence test
     for a given material system.
     """
-    
-    INPUT_NAME = "input.txt"
     
     def __init__(self, dir, encut, thresh, rsx, input_name="input.txt", meta=None, obtusify=True, homogeneous_k=False):
         """
