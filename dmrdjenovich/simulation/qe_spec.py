@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-class QESpec:
+class QESpec(object):
     """
     Class giving complete info to specify a QuantumEspresso +
     Exabyte + post-analysis run, alongside some helper methods.
@@ -113,7 +113,7 @@ class QESpec:
             c = cell_dim_4
             tx = sqrt((1-c)/2)
             ty = sqrt((1-c)/6)
-            tz = sqrt((1+2c)/3)
+            tz = sqrt((1+2*c)/3)
             return [[a*tx, 0, -a*tx],[-a*ty, 2*a*ty, -a*ty],[a*tz, a*tz, a*tz]]
         if cell_type == -5:
             # RHOMBOHEDRAL-TRIGONAL
@@ -121,7 +121,7 @@ class QESpec:
             c = cell_dim_4
             tx = sqrt((1-c)/2)
             ty = sqrt((1-c)/6)
-            tz = sqrt((1+2c)/3)
+            tz = sqrt((1+2*c)/3)
             u = tz - 2*sqrt(2)*ty
             v = tz + sqrt(2)*ty
             return [[a*u, a*v, a*v], [a*v, a*u, a*v], [a*v, a*v, a*u]]
@@ -271,7 +271,7 @@ class QESpec:
                     loc[i][j] *= BOHR_CONVERSION
             return [species, loc]
         
-    def set_positions(self, species, positions)
+    def set_positions(self, species, positions):
         """
         Sets the atomic motif in relative coordinates
         of the crystal, positions are specified as
@@ -353,7 +353,7 @@ class QESpec:
                             if len(args) > 1:
                                 active.append(args[1])
                         token_line = True
-                if token_line
+                if token_line:
                     continue
                 
                 if "=" in line:

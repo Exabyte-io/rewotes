@@ -1,6 +1,5 @@
-from abc import ABC, abstractmethod
 
-class Executable(ABC):
+class Executable(object):
     """
     Class representing a chunk of computational work.
     
@@ -8,7 +7,6 @@ class Executable(ABC):
     by a Resources object.
     """
     
-    @abstractmethod
     def get_resources(self):
         """
         Returns the required resources for this
@@ -16,7 +14,6 @@ class Executable(ABC):
         """
         pass
         
-    @abstractmethod
     def run(self, envr):
         """
         Given a Resource object representing the

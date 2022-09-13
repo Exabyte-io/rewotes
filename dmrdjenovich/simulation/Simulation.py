@@ -1,4 +1,5 @@
-from computing import Executable
+from computing.executable import Executable
+from simulation.qe_spec import QESpec
 
 class Simulation(Executable):
     """

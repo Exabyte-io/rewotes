@@ -1,8 +1,9 @@
-from computing import executable
+from computing.executable import Executable
 from crystal import reciprocal
-from crystal import voronoi
+from crystal.voronoi import Voronoi
+from simulation.qe_spec import QESpec
+from simulation.qe_process import QEProcess
 
-from abc import ABC, abstractmethod
 import math
 import os
 import numpy as np
@@ -21,7 +22,7 @@ class Convergence(Executable):
         a metadata string for logging purposes.
         """
         self.dir = dir
-        self.spec = QESpec.parse_file(os.join("/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/simulation", input_name))
+        self.spec = QESpec.parse_file(os.path.join("/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/simulation", input_name))
         self.spec.set_encut(encut)
         self.thresh = thresh
         if obtusify:
@@ -57,7 +58,6 @@ class Convergence(Executable):
         except Exception, e:
             return
     
-    @abstractmethod
     def get_results(self, analysis):
         pass
     
@@ -66,18 +66,18 @@ class Convergence(Executable):
         
     def run(self, envr):
         sim_start = self.next_executable()
-        if not sim_start.exec(envr):
+        if not sim_start.run(envr):
             print("Error encountered in starting simulation.")
             return False
         self.next_k()
         sim_next = self.next_executable()
-        if not sim_next.exec(envr):
+        if not sim_next.run(envr):
             print("Error encountered in simulation.")
             return False
         while math.abs(self.vals[len(self.vals) - 1] - self.vals[len(self.vals) - 2]) > self.thresh:
             self.next_k()
             sim_next = self.next_executable()
-            if not sim_next.exec(envr):
+            if not sim_next.run(envr):
                 print("Error encountered in simulation.")
                 return False
         

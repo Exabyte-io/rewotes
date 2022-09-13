@@ -1,4 +1,6 @@
-from computing import Executable, Resources
+from computing.executable import Executable
+from computing.resources import Resources
+from qe_analysis import QEAnalysis
 import xml.etree.ElementTree as ET
 import os
 
@@ -45,7 +47,7 @@ class QEProcess(Executable):
             return self.return_flag
         
         f_target = os.join(self.dir,
-                        self.spec.dict["&CONTROL"].get("prefix", "pwscf") + .xml)
+                        self.spec.dict["&CONTROL"].get("prefix", "pwscf") + ".xml")
         if not os.path.exists(f_target):
             self.handle_error(QEError.UNABLE_TO_READ_OUTPUT)
         if self.stop_flag:
@@ -53,7 +55,7 @@ class QEProcess(Executable):
             
         # Maybe some future code for checking for errors in stdout ...
         
-        QEAnalysis analysis = QEAnalysis(f_target)
+        analysis = QEAnalysis(f_target)
         get_results(analysis)
         
         self.error_state = QEError.NO_ERROR

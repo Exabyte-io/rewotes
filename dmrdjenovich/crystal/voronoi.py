@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 
-class Voronoi:
+class Voronoi(object):
     """
     Class to enable the construction of an obtuse superbasis
     and a wigner seitz cell for any given 3D lattice.

@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-class QEAnalysis:
+class QEAnalysis(object):
     """
     Class containing standard methods for processing the output
     of a Quantum Espresso simulation.
