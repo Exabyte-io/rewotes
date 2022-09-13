@@ -1,9 +1,9 @@
 from computing.resources import Resources
 from convergence import Convergence
+import sys
 
 def converge_energy(dir, encut, thresh):
     conv = EnergyConvergence(dir, encut, thresh, Resources(1, -1), homogeneous_k=True)
-    
 
 class EnergyConvergence(Convergence):
     """
@@ -23,3 +23,8 @@ class EnergyConvergence(Convergence):
     def get_results(self, analysis):
         energies = analysis.get_energy()
         return energies[len(energies) - 1]
+
+def cmd_line():
+    converge_energy(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]))
+
+cmd_line()
