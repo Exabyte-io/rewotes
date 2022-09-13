@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#PBS -N Auto-Convergence-Tests
+#PBS -j oe
+#PBS -l nodes=1
+#PBS -l ppn=1
+#PBS -l walltime=00:00:15:00
+#PBS -q D
+
+module add espresso/540-i-174-impi-044
+
+cd /home/dmrdjenovich/example_1
+
+python /home/dmrdjenovich/rewotes/rewotes/dmrdjenovich/energy_convergence.py . 11.1 0.001
