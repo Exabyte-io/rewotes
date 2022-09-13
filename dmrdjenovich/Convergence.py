@@ -22,22 +22,22 @@ class Convergence(Executable):
         a metadata string for logging purposes.
         """
         self.dir = dir
-        self.spec = QESpec.parse_file(os.path.join("/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/simulation", input_name))
+        self.spec = QESpec.parse_file(os.path.join(dir, input_name))
         self.spec.set_encut(encut)
         self.thresh = thresh
         if obtusify:
-            Convergence._set_obtuse_reciprocal_lattice(spec)
-        lattice = spec.get_lattice()
-        r_lattice = np.transpose(reciprocal.get_reciprocal(self.lattice))
-        self.r_lengths = r_lattice[0]*r_lattice[0]
+            Convergence._set_obtuse_reciprocal_lattice(self.spec)
+        lattice = self.spec.get_lattice()
+        r_lattice = np.transpose(reciprocal.get_reciprocal(lattice))
+        r_lengths = r_lattice[0]*r_lattice[0]
         for i in range(1, len(r_lattice)):
-            self.r_lengths += self.r_lattice[i]*self.r_lattice[i]
-        self.r_lengths = list(self.r_lengths)
+            r_lengths += r_lattice[i]*r_lattice[i]
+        self.r_lengths = list(r_lengths)
         for i in range(0, len(self.r_lengths)):
             self.r_lengths[i] = self.r_lengths[i]**0.5
         self.meta = meta
         self.rsx = rsx
-        self.k = spec.get_k_points()
+        self.k = self.spec.get_k_points()
         self.ks = []
         self.values = []
       

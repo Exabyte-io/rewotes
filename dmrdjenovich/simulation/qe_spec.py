@@ -334,25 +334,30 @@ class QESpec(object):
         with open(file, "r") as f:
             lines = f.readlines()
             for line in lines:
-            
+                
+                line = line.strip()
                 if len(line) == 0:
                     continue
                 if line == "/":
                     continue
+                if "!" in line:
+                    continue
                     
                 token_line = False
-                for t in QESpec.tokens:
-                    if t in line:
-                        if "&" in t:
-                            active = {}
-                            qe_dict[t] = active
-                        else:
-                            active = []
-                            qe_dict[t] = active
-                            args = line.split(" ")
-                            if len(args) > 1:
-                                active.append(args[1])
-                        token_line = True
+                if not "=" in line:
+                    for t in QESpec.tokens:
+                        if t in line.upper():
+                            if "&" in t:
+                                active = {}
+                                qe_dict[t] = active
+                            else:
+                                active = []
+                                qe_dict[t] = active
+                                args = line.split(" ")
+                                if len(args) > 1:
+                                    active.append(args[1])
+                            token_line = True
+                        
                 if token_line:
                     continue
                 
