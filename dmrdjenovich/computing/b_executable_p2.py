@@ -1,21 +1,20 @@
-from abc import ABC, abstractmethod
+from executable import Executable
+
 import os
 import subprocess
 
-class BExecutable(Executable):
+class BExecutableP2(Executable):
     """
     Class automatically handling the details of scheduling a
-    SHELL task.
+    SHELL task using python 2.
     """
     
-    @abstractmethod
     def get_shell_string(self):
         """
         Returns the command that will be interpreted by the SHELL.
         """
         pass
         
-    @abstractmethod
     def get_shell_name(self):
         """
         Returns the name of the SHELL that will be invoked to run
@@ -23,7 +22,6 @@ class BExecutable(Executable):
         """
         pass
         
-    @abstractmethod
     def get_std_out(self):
         """
         Returns the absolute canonical filepath for the redirected
@@ -31,7 +29,6 @@ class BExecutable(Executable):
         """
         pass
         
-    @abstractmethod
     def get_std_err(self):
         """
         Returns the absolute canonical filepath for the redirected
@@ -39,7 +36,6 @@ class BExecutable(Executable):
         """
         pass
         
-    @abstractmethod
     def get_working_dir(self):
         """
         Returns the absolute canonical filepath for the working
@@ -72,10 +68,10 @@ class BExecutable(Executable):
             std_err_call = self.get_std_err()
             if not std_err_call is None:
                 std_err = open(std_err_call, "w")
-            result = subprocess.run([self.get_shell_name(), "-c", cmd],
+            result = subprocess.call([self.get_shell_name(), "-c", cmd],
                                     stdout=std_out, stderr=std_err,
                                     cwd=wd_str)
-            return True
+            return result == 0
             
         except IOError as e:
             print(e)

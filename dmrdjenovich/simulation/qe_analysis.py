@@ -15,6 +15,6 @@ class QEAnalysis(object):
         ionic relaxation step in order of initial to final
         geometry.
         """
-        raw = self.root.findAll("step/total_energy/etot")
+        raw = self.root.findall("output/total_energy/etot")
         return [float(x.text) for x in raw]
 

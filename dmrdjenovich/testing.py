@@ -7,4 +7,4 @@ thresh = 0.001
 rsx = resources.Resources(1, -1)
 
 conv = EnergyConvergence(dir, encut, thresh, rsx)
-
+conv.run(rsx)

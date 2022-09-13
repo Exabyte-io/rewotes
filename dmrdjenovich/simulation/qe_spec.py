@@ -298,7 +298,7 @@ class QESpec(object):
         energy cutoff.
         """
         chunk = self.dict["&SYSTEM"]
-        chunk["ecutwfc"] = encut
+        chunk["ecutwfc"] = str(encut)
         
     def get_k_points(self):
         """
@@ -317,11 +317,11 @@ class QESpec(object):
         """
         build = []
         self.dict["K_POINTS"] = build
-        build[0] = "automatic"
-        build[1] = ""
+        build.append("automatic")
+        build.append("")
         for kpt in kpts:
             build[1] += str(kpt) + " "
-        build[1].trim()
+        build[1].strip()
         
     @staticmethod
     def parse_file(file):
@@ -342,6 +342,9 @@ class QESpec(object):
                     continue
                 if "!" in line:
                     continue
+                line = line.replace(",", "")
+                line = line.replace("'", "")
+                line = line.replace("\"", "")
                     
                 token_line = False
                 if not "=" in line:
@@ -381,7 +384,7 @@ class QESpec(object):
                 vals = self.dict[token]
                 if "&" in token:
                     f.write(token + "\n")
-                    f.writelines(map(lambda val : val[0] + "=" + val[1] + "\n", vals.items))
+                    f.writelines(map(lambda val : val[0] + "=" + val[1] + "\n", vals.items()))
                     f.write("/\n")
                 else:
                     if " " not in vals[0]:

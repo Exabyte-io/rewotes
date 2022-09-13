@@ -1,7 +1,9 @@
-from computing import Executable
+from computing.executable import Executable
+from computing.b_executable_p2 import BExecutableP2
+from qe_error import QEError
 import os
 
-class QERun(BExecutable):
+class QERun(BExecutableP2):
     """
     Class responsible for actually calling the
     QuantumEspresso executable from within a prepared
@@ -17,7 +19,9 @@ class QERun(BExecutable):
     def __init__(self, dir, spec):
         self.dir = dir
         self.spec = spec
-        self.error_state = QE.NO_ERROR
+        self.error_state = QEError.NO_ERROR
+        self.stop_flag = False
+        self.return_flag = False
 
     def get_resources(self):
         return self.spec
@@ -29,10 +33,10 @@ class QERun(BExecutable):
         return "echo \"Hello world.\""#"pw.x -in pw.in"
         
     def get_std_out(self):
-        return os.join(self.dir, "stdout.txt")
+        return os.path.join(self.dir, "stdout.txt")
         
     def get_std_err(self):
-        return os.join(self.dir, "stderr.txt")
+        return os.path.join(self.dir, "stderr.txt")
         
     def get_working_dir(self):
         return self.dir
@@ -42,13 +46,13 @@ class QERun(BExecutable):
             self.handle_error(QEError.SIM_DIR_DOES_NOT_EXIST)
         if self.stop_flag:
             return self.return_flag
-        if envr.get_nodes() < self.spec.get_nodes() or
-           envr.get_time() != -1 and spec.get_time() != -1 and
+        if envr.get_nodes() < self.spec.get_nodes() or \
+           envr.get_time() != -1 and spec.get_time() != -1 and \
            envr.get_time() < spec.get_time():
             self.handle_error(QEError.INSUFFICIENT_RESOURCES)
         if self.stop_flag:
             return self.return_flag
-        result = super().exec(envr)
+        result = super(QERun, self).run(envr)
         if not result:
             self.handle_error(QEError.NONZERO_PROCESS_EXIT)
         if self.stop_flag:

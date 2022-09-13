@@ -3,6 +3,7 @@ from crystal import reciprocal
 from crystal.voronoi import Voronoi
 from simulation.qe_spec import QESpec
 from simulation.qe_process import QEProcess
+from simulation.simulation import Simulation
 
 import math
 import os
@@ -36,6 +37,7 @@ class Convergence(Executable):
         for i in range(0, len(self.r_lengths)):
             self.r_lengths[i] = self.r_lengths[i]**0.5
         self.meta = meta
+        self.homogeneous_k = homogeneous_k
         self.rsx = rsx
         self.k = self.spec.get_k_points()
         self.ks = []
@@ -59,6 +61,10 @@ class Convergence(Executable):
             return
     
     def get_results(self, analysis):
+        """
+        Extract the value used to test convergence using the
+        provided QEAnalysis object.
+        """
         pass
     
     def get_resources(self):
@@ -74,7 +80,8 @@ class Convergence(Executable):
         if not sim_next.run(envr):
             print("Error encountered in simulation.")
             return False
-        while math.abs(self.vals[len(self.vals) - 1] - self.vals[len(self.vals) - 2]) > self.thresh:
+        while abs(self.values[len(self.values) - 1] -
+                  self.values[len(self.values) - 2]) > self.thresh:
             self.next_k()
             sim_next = self.next_executable()
             if not sim_next.run(envr):
@@ -88,21 +95,21 @@ class Convergence(Executable):
         return sim
     
     def next_k(self):
-        last_k = self.ks[len(self.ks) - 1]
+        last_k = self.k
         if self.homogeneous_k:
             self.k = [x + 1 for x in last_k]
         else:
-            lin_density = [last_k[i]/self.r_lengths[i] for i in range(0, len(last_k))]
+            lin_density = [last_k[i]/self.r_lengths[i] for i in range(0, len(self.r_lengths))]
             choice = lin_density.index(min(lin_density))
             self.k = [x for x in last_k]
             self.k[choice] += 1
         
     class CustomProcess(QEProcess):
         def __init__(self, dir, spec, parent):
-            super(QEProcess, self).__init__(dir, spec)
+            super(Convergence.CustomProcess, self).__init__(dir, spec)
             self.parent = parent
         def get_results(self, analysis):
-            outcome = parent.get_results(analysis)
-            parent.ks.append(parent.k)
-            parent.values.append(outcome)
+            outcome = self.parent.get_results(analysis)
+            self.parent.ks.append(self.parent.k)
+            self.parent.values.append(outcome)
             return outcome

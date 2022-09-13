@@ -1,4 +1,7 @@
-from computing import Executable, Resources
+from computing.executable import Executable
+from computing.resources import Resources
+from qe_error import QEError
+
 import os
 
 class QESetup(Executable):
@@ -45,14 +48,14 @@ class QESetup(Executable):
             if self.stop_flag:
                 return self.return_flag
         
-        spec_path = os.join(self.dir, "input.txt")
+        spec_path = os.path.join(self.dir, "input.txt")
         try:
             self.spec.write_to_file(spec_path)
         except IOError:
             self.handle_error(QEError.CANT_WRITE_INPUT_FILES)
         if self.stop_flag:
             return self.return_flag
-        self.error_state = QE.NO_ERROR
+        self.error_state = QEError.NO_ERROR
         return True
         
     def handle_error(self, error):
@@ -65,7 +68,7 @@ class QESetup(Executable):
             self.stop_flag = True
             self.return_flag = True
             return
-        if error = QEError.CANT_WRITE_INPUT_FILES:
+        if error == QEError.CANT_WRITE_INPUT_FILES:
             print("Fatal Error: Can't write the input files.")
             print(self.dir)
             self.stop_flag = True

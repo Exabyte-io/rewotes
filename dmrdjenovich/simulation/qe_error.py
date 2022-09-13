@@ -16,5 +16,7 @@ class QEError(Enum):
     INSUFFICIENT_RESOURCES = 6
     NONZERO_PROCESS_EXIT = 7
     
+    UNABLE_TO_READ_OUTPUT = 8
+    
     
     
