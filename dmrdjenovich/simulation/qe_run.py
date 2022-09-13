@@ -16,9 +16,12 @@ class QERun(BExecutableP2):
     error handling.
     """
 
-    def __init__(self, dir, spec):
+    PROCESSES_PER_NODE = 1
+
+    def __init__(self, dir, spec, input_file="input.txt"):
         self.dir = dir
         self.spec = spec
+        self.input_file = input_file
         self.error_state = QEError.NO_ERROR
         self.stop_flag = False
         self.return_flag = False
@@ -30,7 +33,10 @@ class QERun(BExecutableP2):
         return "bash"
         
     def get_shell_string(self):
-        return "echo \"Hello world.\""#"pw.x -in pw.in"
+        return "mpirun -np " +
+                str(self.spec.get_nodes()*PROCESSES_PER_NODE) +
+                " pw.x -in " +
+                self.input_file
         
     def get_std_out(self):
         return os.path.join(self.dir, "stdout.txt")
