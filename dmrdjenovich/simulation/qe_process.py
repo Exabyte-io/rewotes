@@ -38,7 +38,7 @@ class QEProcess(Executable):
     def get_resources(self):
         return QEProcess.req_resources
         
-    def exec(envr):
+    def run(envr):
         if not os.path.isdir(self.dir):
             self.handle_error(QEError.SIM_DIR_DOES_NOT_EXIST)
         if self.stop_flag:

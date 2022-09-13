@@ -37,7 +37,7 @@ class QERun(BExecutable):
     def get_working_dir(self):
         return self.dir
         
-    def exec(self, envr):
+    def run(self, envr):
         if not os.path.isdir(self.dir):
             self.handle_error(QEError.SIM_DIR_DOES_NOT_EXIST)
         if self.stop_flag:

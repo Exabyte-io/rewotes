@@ -31,7 +31,7 @@ class QESetup(Executable):
     def get_resources(self):
         return QESetup.req_resources
         
-    def exec(self, envr):
+    def run(self, envr):
         if os.path.isdir(self.dir):
             self.handle_error(QEError.DIR_EXISTS)
         if self.stop_flag:

@@ -9,8 +9,8 @@ class Resources:
         self.nodes = nodes
         self.time = time
         
-    def get_nodes(self)
+    def get_nodes(self):
         return self.nodes
     
-    def get_time(self)
+    def get_time(self):
         return self.time

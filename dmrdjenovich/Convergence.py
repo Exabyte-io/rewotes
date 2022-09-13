@@ -1,4 +1,4 @@
-from computing import Executable
+from computing import executable
 from crystal import reciprocal
 from crystal import voronoi
 
@@ -14,16 +14,14 @@ class Convergence(Executable):
     a given material system.
     """
     
-    INPUT_NAME = "input.txt"
-    
-    def __init__(self, dir, encut, thresh, rsx, meta=None, obtusify=True, homogeneous_k=False):
+    def __init__(self, dir, encut, thresh, rsx, input_name="input.txt", meta=None, obtusify=True, homogeneous_k=False):
         """
         Sets up a convergence test in the specified
         directory, using the provided QESpec, and
         a metadata string for logging purposes.
         """
         self.dir = dir
-        self.spec = QESpec.parse_file(os.join("/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/simulation", Convergence.INPUT_NAME))
+        self.spec = QESpec.parse_file(os.join("/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/simulation", input_name))
         self.spec.set_encut(encut)
         self.thresh = thresh
         if obtusify:
@@ -66,7 +64,7 @@ class Convergence(Executable):
     def get_resources(self):
         return self.rsx
         
-    def exec(self, envr):
+    def run(self, envr):
         sim_start = self.next_executable()
         if not sim_start.exec(envr):
             print("Error encountered in starting simulation.")

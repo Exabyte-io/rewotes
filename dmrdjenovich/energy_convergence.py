@@ -1,3 +1,4 @@
+import convergence
 
 class EnergyConvergence(Convergence):
     """

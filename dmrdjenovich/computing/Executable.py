@@ -17,7 +17,7 @@ class Executable(ABC):
         pass
         
     @abstractmethod
-    def exec(self, envr):
+    def run(self, envr):
         """
         Given a Resource object representing the
         available computational resources, runs

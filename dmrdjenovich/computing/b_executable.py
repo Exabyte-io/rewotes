@@ -54,7 +54,7 @@ class BExecutable(Executable):
         """
         pass
         
-    def exec(self, envr):
+    def run(self, envr):
         """
         Runs the specified shell string computational task.
         """
