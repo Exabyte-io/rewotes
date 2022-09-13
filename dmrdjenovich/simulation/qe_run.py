@@ -33,9 +33,9 @@ class QERun(BExecutableP2):
         return "bash"
         
     def get_shell_string(self):
-        return "mpirun -np " +
-                str(self.spec.get_nodes()*PROCESSES_PER_NODE) +
-                " pw.x -in " +
+        return "mpirun -np " + \
+                str(self.spec.get_nodes()*QERun.PROCESSES_PER_NODE) + \
+                " pw.x -in " + \
                 self.input_file
         
     def get_std_out(self):

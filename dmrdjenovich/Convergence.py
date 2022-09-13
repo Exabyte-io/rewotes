@@ -2,6 +2,7 @@ from computing.executable import Executable
 from crystal import reciprocal
 from crystal.voronoi import Voronoi
 from simulation.qe_spec import QESpec
+from simulation.qe_run import QERun
 from simulation.qe_process import QEProcess
 from simulation.simulation import Simulation
 
@@ -91,7 +92,7 @@ class Convergence(Executable):
         
     def next_executable(self):
         self.spec.set_k_points(self.k)
-        run = Convergence.CustomRun(self.dir, self.rsx, self.input_file)
+        run = Convergence.CustomRun(self.dir, self.rsx, self.input_name)
         process = Convergence.CustomProcess(self.dir, self.spec, self)
         sim = Simulation.construct_override(self.dir, self.spec, self.rsx, None, run, process)
         return sim
@@ -108,7 +109,7 @@ class Convergence(Executable):
         
     class CustomRun(QERun):
         def __init__(self, dir, spec, input_file):
-            super(QERun, self).__init__(dir, spec, input_file=input_file)
+            super(Convergence.CustomRun, self).__init__(dir, spec, input_file=input_file)
             
     class CustomProcess(QEProcess):
         def __init__(self, dir, spec, parent):
