@@ -4,6 +4,9 @@ import sys
 
 def converge_energy(dir, encut, thresh):
     conv = EnergyConvergence(dir, encut, thresh, Resources(1, -1), homogeneous_k=True)
+    if not conv.run(Resources(1, -1)):
+        print("Failed")
+    return conv.ks[len(conv.ks) - 1]
 
 class EnergyConvergence(Convergence):
     """
@@ -25,6 +28,6 @@ class EnergyConvergence(Convergence):
         return energies[len(energies) - 1]
 
 def cmd_line():
-    converge_energy(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]))
+    print(converge_energy(sys.argv[1], float(sys.argv[2]), float(sys.argv[3])))
 
 cmd_line()

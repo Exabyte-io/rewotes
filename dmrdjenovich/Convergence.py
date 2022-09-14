@@ -89,6 +89,7 @@ class Convergence(Executable):
             if not sim_next.run(envr):
                 print("Error encountered in simulation.")
                 return False
+        return True
         
     def next_executable(self):
         self.spec.set_k_points(self.k)
@@ -100,7 +101,10 @@ class Convergence(Executable):
     def next_k(self):
         last_k = self.k
         if self.homogeneous_k:
-            self.k = [x + 1 for x in last_k]
+            self.k = list(last_k)
+            self.k[0] += 1
+            self.k[1] += 1
+            self.k[2] += 1
         else:
             lin_density = [last_k[i]/self.r_lengths[i] for i in range(0, len(self.r_lengths))]
             choice = lin_density.index(min(lin_density))

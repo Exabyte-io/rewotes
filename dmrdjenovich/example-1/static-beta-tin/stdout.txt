@@ -1,0 +1,6 @@
+/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/example-1/static-beta-tin
+/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/example-1/static-beta-tin/input.txt
+/Users/david/Documents/Berkeley/Courses/Year 6/MSE 215/DFT/convergeBeta/(5,200)/output.txt
+/Users/david/Documents/Berkeley/Courses/Year 6/MSE 215/DFT/convergeBeta/(5,200)/beta_relax.xml
+/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/example-1/static-beta-tin/output.txt
+/Users/david/Documents/Internship/Mat3ra/rewotes/dmrdjenovich/example-1/static-beta-tin/beta_relax.xml

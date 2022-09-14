@@ -12,3 +12,4 @@ module add espresso/540-i-174-impi-044
 cd /home/dmrdjenovich/example_1/static-beta-tin
 
 python /home/dmrdjenovich/rewotes/rewotes/dmrdjenovich/energy_convergence.py . 11.1 0.001
+
