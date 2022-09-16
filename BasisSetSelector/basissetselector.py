@@ -1,15 +1,19 @@
 import pandas as pd  
 from rdkit.Chem import AllChem as Chem
+# from rdkit.Chem.rdmolfiles import MolFromPDB
 
 
 def find_precision(theoretical, experimental):
 	return abs((theoretical-experimental)/experimental)
 
-def find_optimal_basis_sets_SMILES(smile, precisionInPercent):
+def find_optimal_basis_sets(smile, precisionInPercent,):
 	bestBasisSets = []
 	precisionDecimal = precisionInPercent / 100
 	groundStateDF = pd.read_csv("groundstateenergies.csv",index_col=0)
-	mol = Chem.MolFromSmiles(smile)
+	if(".pdb" in smile):
+		mol = Chem.MolFromPDBFile(smile)
+	else:	
+		mol = Chem.MolFromSmiles(smile)
 	arrayOfAtomsInSmile = [atom.GetSymbol() for atom in mol.GetAtoms()]
 	groundStateSum = 0
 	ccpVTZb3lypSum = 0
@@ -32,4 +36,4 @@ def find_optimal_basis_sets_SMILES(smile, precisionInPercent):
 
 	return bestBasisSets
 
-print(find_optimal_basis_sets_SMILES("CC", 0.01))
+print(find_optimal_basis_sets("proline.pdb", 0.01))
