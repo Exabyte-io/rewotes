@@ -59,6 +59,6 @@ def find_optimal_basis_sets(smile, precisionInPercent, homoLumoConvergance):
 
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
-		print("Syntax: python basissetselector.py [.pdb file name location or smiles string in quotes] [percetage of precision wihtout %] [homoLumoConverganceif you want check for the HOMO-LUMO convergance]")
+		print("Syntax: python basissetselector.py [.pdb file name location or smiles string] [percetage of precision wihtout %] [homoLumoConverganceif you want check for the HOMO-LUMO convergance]")
 	else:
 		print(find_optimal_basis_sets(sys.argv[1], literal_eval(sys.argv[2]), sys.argv[3]))
