@@ -1,13 +1,13 @@
 import pandas as pd  
 from rdkit.Chem import AllChem as Chem
-# from rdkit.Chem.rdmolfiles import MolFromPDB
 
 
 def find_precision(theoretical, experimental):
 	return abs((theoretical-experimental)/experimental)
 
-def find_optimal_basis_sets(smile, precisionInPercent,):
+def find_optimal_basis_sets(smile, precisionInPercent=0.01, homoLumoConvergance=False):
 	bestBasisSets = []
+	bestHomoLumo = []
 	precisionDecimal = precisionInPercent / 100
 	groundStateDF = pd.read_csv("groundstateenergies.csv",index_col=0)
 	if(".pdb" in smile):
@@ -24,7 +24,7 @@ def find_optimal_basis_sets(smile, precisionInPercent,):
 		ccpVTZb3lypSum += groundStateDF["cc-pVTZ + B3LYP"][atom]
 		sixthreeoneb3lypsum += groundStateDF["6-31G + B3LYP"][atom]
 		augccpDZb3lypSum += groundStateDF["aug-cc-pVDZ + B3LYP"][atom]
-	print(sixthreeoneb3lypsum)
+
 	if(find_precision(ccpVTZb3lypSum,groundStateSum) <= precisionDecimal):
 		bestBasisSets.append("cc-pVTZ + B3LYP")
 	if(find_precision(sixthreeoneb3lypsum,groundStateSum) <= precisionDecimal):
@@ -34,6 +34,26 @@ def find_optimal_basis_sets(smile, precisionInPercent,):
 	if((find_precision(ccpVTZb3lypSum,groundStateSum) > precisionDecimal) and (find_precision(sixthreeoneb3lypsum,groundStateSum) > precisionDecimal) and (find_precision(augccpDZb3lypSum,groundStateSum) > precisionDecimal)):
 		bestBasisSets.append("cc-pVTZ + B3LYP,6-31G + B3LYP, and aug-cc-pVDZ + B3LYP are too imprecise. Please try another basis set")
 
-	return bestBasisSets
+	if homoLumoConvergance == True:
+		g3HomoLumoSum= 0
+		ccpVTZb3lypHomoLumoSum = 0
+		augccpDZb3lypHomoLumoSum = 0
+		sixthreeoneb3lypHomoLumosum = 0 
+		for atom in arrayOfAtomsInSmile:
+			g3HomoLumoSum += groundStateDF["Gaussian3 (G3) HOMO-LUMO gap"][atom]	
+			ccpVTZb3lypHomoLumoSum += groundStateDF["cc-pVTZ + B3LYP HOMO-LUMO gap"][atom]
+			sixthreeoneb3lypHomoLumosum += groundStateDF["6-31G + B3LYP HOMO-LUMO gap"][atom]
+			augccpDZb3lypHomoLumoSum += groundStateDF["aug-cc-pVDZ + B3LYP HOMO-LUMO gap"][atom]
+		minConvergance = min([g3HomoLumoSum,ccpVTZb3lypHomoLumoSum,augccpDZb3lypHomoLumoSum,sixthreeoneb3lypHomoLumosum])
+		if g3HomoLumoSum == minConvergance:
+			bestHomoLumo.append("Gaussian3 (G3)")
+		if ccpVTZb3lypHomoLumoSum == minConvergance:
+			bestHomoLumo.append("cc-pVTZ + B3LYP")
+		if sixthreeoneb3lypHomoLumosum == minConvergance:
+			bestHomoLumo.append("6-31G + B3LYP")
+		if augccpDZb3lypHomoLumoSum == minConvergance:
+			bestHomoLumo.append("aug-cc-pVDZ + B3LYP")
+	outputJSON = {"Best Basis Sets Based on Ground State Precision": bestBasisSets, "Best Basis Sets Based on HOMO-LUMO Gap Convergance": bestHomoLumo}
+	return outputJSON
 
-print(find_optimal_basis_sets("proline.pdb", 0.01))
+print(find_optimal_basis_sets("CC", 0.01, homoLumoConvergance=True))
