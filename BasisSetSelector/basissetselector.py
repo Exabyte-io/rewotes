@@ -1,11 +1,12 @@
 import pandas as pd  
 from rdkit.Chem import AllChem as Chem
-
+import sys
+from ast import literal_eval
 
 def find_precision(theoretical, experimental):
 	return abs((theoretical-experimental)/experimental)
 
-def find_optimal_basis_sets(smile, precisionInPercent=0.01, homoLumoConvergance=False):
+def find_optimal_basis_sets(smile, precisionInPercent, homoLumoConvergance):
 	bestBasisSets = []
 	bestHomoLumo = []
 	precisionDecimal = precisionInPercent / 100
@@ -34,7 +35,7 @@ def find_optimal_basis_sets(smile, precisionInPercent=0.01, homoLumoConvergance=
 	if((find_precision(ccpVTZb3lypSum,groundStateSum) > precisionDecimal) and (find_precision(sixthreeoneb3lypsum,groundStateSum) > precisionDecimal) and (find_precision(augccpDZb3lypSum,groundStateSum) > precisionDecimal)):
 		bestBasisSets.append("cc-pVTZ + B3LYP,6-31G + B3LYP, and aug-cc-pVDZ + B3LYP are too imprecise. Please try another basis set")
 
-	if homoLumoConvergance == True:
+	if homoLumoConvergance == "homoLumoConvergance":
 		g3HomoLumoSum= 0
 		ccpVTZb3lypHomoLumoSum = 0
 		augccpDZb3lypHomoLumoSum = 0
@@ -56,4 +57,8 @@ def find_optimal_basis_sets(smile, precisionInPercent=0.01, homoLumoConvergance=
 	outputJSON = {"Best Basis Sets Based on Ground State Precision": bestBasisSets, "Best Basis Sets Based on HOMO-LUMO Gap Convergance": bestHomoLumo}
 	return outputJSON
 
-print(find_optimal_basis_sets("CC", 0.01, homoLumoConvergance=True))
+if __name__ == '__main__':
+	if len(sys.argv) < 2:
+		print("Syntax: python basissetselector.py [.pdb file name location or smiles string in quotes] [percetage of precision wihtout %] [homoLumoConverganceif you want check for the HOMO-LUMO convergance]")
+	else:
+		print(find_optimal_basis_sets(sys.argv[1], literal_eval(sys.argv[2]), sys.argv[3]))
