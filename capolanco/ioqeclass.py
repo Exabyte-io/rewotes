@@ -88,3 +88,45 @@ class qepwinput:
 
 
 
+class qepwoutput:
+    """This class handle the Quantum Espresso output for a pw.x calculation"""
+
+    ################### 
+    ## Initialization function for the class
+    ###################
+    def __init__(self):
+        
+        ## energy (eV)
+        self.energy=np.array([0.0e0],dtype='double')
+
+    ################### 
+    ## Reads Total Energy from pw.x output file
+    ## This function read the total energy from the output of a
+    ## pw.x calculation
+    ###################
+    def getenergy(self,filename):
+        # Inputs
+        # filename is the path to pw.x output file
+        # Output
+        # the energy is returned in self.energy in eV
+
+        print('')
+        print(f'#########################')
+        print(f'## Reading total energy from pw.x output from file {filename}')
+
+        # Open file
+        f=open(filename,'r')
+
+        ## Retrieve energy
+        # Loop over pw.x output file up to the total energy
+        for line in f:
+            x=line.split() 
+            # if line is not empty
+            if x:
+                if (x[0]=='!'): 
+                    self.energy=np.double(x[4]) # (Ry)
+                    break
+
+        # Convert to eV
+        self.energy=self.energy*13.605693122 # (eV)
+        f.close()
