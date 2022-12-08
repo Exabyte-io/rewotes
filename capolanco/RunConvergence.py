@@ -1,7 +1,8 @@
 # This code will run a k-point convergence up to a desire delta energy
 
-
+import subprocess
 import ioqeclass as qe
+import ioclusterclass as cluster
 
 ###########################
 ##### USER INPUTS
@@ -21,10 +22,23 @@ dEthreshold=1.0 # (eV)
 ##### DEVELOPERS INPUTS
 ###########################
 
+## Convergence
 # maximum of iterations
 Nitermax=20
 # increasing step of kgrid
 kstep=2
+
+## Cluster
+# number of nodes to be used
+Nnodes=1
+# number of processors per node
+ppn=8
+# queue
+queue='OR'
+# walltime
+walltimehours=5
+walltimeminutes=3
+
 
 ###########################
 ##### PROGRAM
@@ -40,8 +54,23 @@ qeinput.load(filein)
 testin='test.scf.in'
 testout='test.scf.out'
 qeinput.save(filein,testin)
+# Create the job to send to the cluster
+# Initialize job class
+job=cluster.jobclass()
+# set up job class
+job.name='test'
+job.nodes=Nnodes
+job.ppn=ppn
+job.queue=queue
+job.walltimehours=walltimehours
+job.walltimeminutes=walltimeminutes
+# create the job file
+jobname=f'job.test.sh'
+job.createjobQEpw(jobname,testin,testout)
 # Run initial test
-##### pw.x test.scf.in test.scf.out
+subprocess.run(['echo',f'runing {jobname}'])
+##subprocess.run(['qsub',f'{jobname}'])
+
 # Initialize pw.x output class
 qeoutput=qe.qepwoutput()
 # Read the Total energy from the output
@@ -66,8 +95,12 @@ while ((dE>dEthreshold) and (counter<Nitermax)):
     testout=f'test.scf{counter}.out'
     qeinput.save(filein,testin)
 
-    # Run initial test
-    ##### pw.x test.scf{counter}.in test.scf{counter}.out
+    # create the job file
+    jobname=f'job.test{counter}.sh'
+    job.createjobQEpw(jobname,testin,testout)
+    # Run QE calculation
+    subprocess.run(['echo',f'runing {jobname}'])
+    ##subprocess.run(['qsub',f'{jobname}'])
 
     # Read the Total energy from the output
     qeoutput.getenergy(testout)
