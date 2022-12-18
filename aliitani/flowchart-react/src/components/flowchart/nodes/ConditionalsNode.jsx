@@ -1,6 +1,69 @@
+import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
+import {
+	getNode,
+	updateConditionByNode,
+	updateTruthStateConditionByNode,
+	addNewOperation,
+} from '../../../state/AppState';
 
-const ConditionalsNode = ({ data }) => {
+const ConditionalsNode = ({ id, data }) => {
+	const [isConnected, setIsConnected] = useState({
+		truthState: false,
+		falseState: false,
+	});
+
+	const onChangeSelectOptionHandler = (e) => {
+		const targetNode = getNode(id);
+		const valueToChange = e.target.value;
+
+		targetNode.data.condition = valueToChange;
+		updateConditionByNode(targetNode, 'condition');
+	};
+
+	const onChangeValueHandler = (e) => {
+		const targetNode = getNode(id);
+		const valueToChange = Number(e.target.value);
+
+		targetNode.data.value = valueToChange;
+		updateConditionByNode(targetNode, 'value');
+	};
+
+	const onConnectHandler = (params) => {
+		if (isConnected[params.sourceHandle]) {
+			return;
+		}
+
+		const sourceNode = getNode(params.source);
+		const targetNode = getNode(params.target);
+
+		if (
+			sourceNode.type === 'conditionals' &&
+			targetNode.type === 'conditionals'
+		) {
+			return;
+		}
+
+		console.log(params, targetNode);
+
+		if (targetNode.type === 'operations') {
+			addNewOperation(
+				params.source,
+				targetNode.id,
+				targetNode.data.operationType,
+				targetNode.data.value
+			);
+		}
+
+		updateTruthStateConditionByNode(
+			params.source,
+			params.sourceHandle,
+			targetNode.id
+		);
+
+		setIsConnected((c) => ({ ...c, [params.sourceHandle]: true }));
+	};
+
 	return (
 		<div className='border-2 border-slate-600'>
 			<div className='text-slate-700 bg-orange-400  p-2'>
@@ -10,8 +73,12 @@ const ConditionalsNode = ({ data }) => {
 					<p>is</p>
 					<select
 						className='bg-slate-500 text-white'
-						onChange={data.updateConditionalValue}
+						onChange={onChangeSelectOptionHandler}
+						defaultValue='<'
 					>
+						<option value='<' disabled>
+							Select Value
+						</option>
 						<option value='<'>{'< - Less than'}</option>
 						<option value='>'>{'> - Greater than'}</option>
 						<option value='<='>{'<= - Less than/Equal to'}</option>
@@ -26,7 +93,7 @@ const ConditionalsNode = ({ data }) => {
 						type='number'
 						id='expectedValue'
 						defaultValue='0'
-						onChange={data.updateExpectedValue}
+						onChange={onChangeValueHandler}
 					/>
 				</div>
 			</div>
@@ -37,14 +104,16 @@ const ConditionalsNode = ({ data }) => {
 			<Handle
 				type='source'
 				position={Position.Bottom}
-				id='true'
+				id='truthState'
 				style={{ left: 10, background: '#555' }}
+				onConnect={onConnectHandler}
 			/>
 			<Handle
 				type='source'
 				position={Position.Bottom}
-				id='false'
+				id='falseState'
 				style={{ right: 10, left: 'auto', background: '#555' }}
+				onConnect={onConnectHandler}
 			/>
 		</div>
 	);
