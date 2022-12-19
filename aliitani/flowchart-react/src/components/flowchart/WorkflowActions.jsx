@@ -1,5 +1,10 @@
 import { clearWorkflow } from '../../state/AppState';
 
+/***
+ * This component holds the workflow actions that gets triggered against the flowchart.
+ * - ExecuteWorkflow - executed the workflow based on the nodes(elements) rendered into the flowchart.
+ * - ResetWorkflow - resets the workflow and clears out any state.
+ */
 const WorkflowActions = () => {
 	const onExecuteWorkflow = () => {
 		console.log('executing workflow...');

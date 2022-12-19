@@ -21,6 +21,7 @@ For the tech stack I have went with React, Vite, Tailwind CSS, and Reactflow as 
 
 - I used Reactflow to get the flowchart integrated with React.
 - I used Tailwind CSS to get a more styled UI.
+- I ended up not using meteor as suggested, since this app is solely a ui application without any backend logic required. Based on that, I ended up going with React+Vite for the frontend app.
 
 ## TO RUN THE Application
 

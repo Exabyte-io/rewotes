@@ -7,6 +7,11 @@ import {
 	addNewCondition,
 } from '../../../state/AppState';
 
+/***
+ * This component is the Operations Component that is added onto the flowchart,
+ * it contains the arithmetic operations that get computed against the workflow value.
+ * The operations are, increment, decrement, multiply, and divide.
+ */
 const OperationsNode = ({ id, data }) => {
 	const [operation, setOperation] = useState({ operation: '', value: 0 });
 	const [isConnected, setIsConnected] = useState(false);
@@ -27,7 +32,6 @@ const OperationsNode = ({ id, data }) => {
 
 		console.log(targetNode.type);
 		if (targetNode.type === 'operations') {
-			// add into operations
 			addNewOperation(
 				id,
 				targetNode.id,

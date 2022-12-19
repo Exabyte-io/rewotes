@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { JsonDataState } from '../state/AppState';
 
+/***
+ * This component holds the test case evaluation, that you can run against the workflow executed result.
+ * Once the workflow is executed and output value is generated based on the result, then the assertion is evaluated.
+ */
 const TestExecution = () => {
 	const [expectedValue, setExpectedValue] = useState(0);
 	const json = useSnapshot(JsonDataState);

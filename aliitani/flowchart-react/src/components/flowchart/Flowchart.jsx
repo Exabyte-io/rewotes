@@ -40,6 +40,9 @@ const nodeTypes = {
 	endNode: WorkflowEndNode,
 };
 
+/***
+ * This component holds the entire flowchart ui. It handles events triggered against the flowchart.
+ */
 const Flowchart = () => {
 	/** The connections state is added to only allow one connection going out of a node from source -> target. */
 	const [connections, setConnections] = useState({});

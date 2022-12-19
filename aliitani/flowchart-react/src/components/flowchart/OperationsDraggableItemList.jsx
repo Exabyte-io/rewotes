@@ -7,6 +7,10 @@ const OPERATIONS = {
 	DIVIDE: 'divide',
 	CONDITIONALS: 'conditionals',
 };
+
+/***
+ * This component holds the draggable elements that get rendered into the flowchart.
+ */
 const DragOperation = ({ label }) => {
 	const onDragStart = (event) => {
 		const type = label === 'conditionals' ? 'conditionals' : 'operations';

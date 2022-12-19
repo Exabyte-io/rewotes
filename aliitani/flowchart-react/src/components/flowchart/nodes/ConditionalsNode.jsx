@@ -7,6 +7,11 @@ import {
 	addNewOperation,
 } from '../../../state/AppState';
 
+/***
+ * This component is the Conditional Component that is added onto the flowchart, it contains the conditional operators
+ * that run conditional checks on the workflow value. The conditional operators are the basic conditional checks.
+ * It contains two output connections, one for the truthState and the other is for the falseState.
+ */
 const ConditionalsNode = ({ id, data }) => {
 	const [isConnected, setIsConnected] = useState({
 		truthState: false,

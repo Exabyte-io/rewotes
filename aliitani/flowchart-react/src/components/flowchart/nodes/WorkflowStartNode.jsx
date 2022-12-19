@@ -7,6 +7,11 @@ import {
 	updateObjectValueInJsonViewer,
 } from '../../../state/AppState';
 
+/***
+ * This component is the Start Node component, it is the start of the
+ * workflow and it contains the executed value. If the workflow is
+ * executed, this would be the first component the workflow starts at.
+ */
 const WorkflowStartNode = ({ id, data }) => {
 	const [startValue, setStartValue] = useState(data.startValue);
 	const [isConnected, setIsConnected] = useState(false);
