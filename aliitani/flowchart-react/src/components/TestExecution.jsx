@@ -23,7 +23,12 @@ const TestExecution = () => {
 			</p>
 			<hr />
 			<p>Test the workflow outputValue against an expectedValue</p>
-			<p>The outputValue is, {json.outputValue}</p>
+			<p>
+				The outputValue is currently,{' '}
+				<span className='bg-green-400 px-2 py-1 text-cyan-900'>
+					{json.outputValue}
+				</span>
+			</p>
 			<label htmlFor='test-case'>
 				Expected Value:
 				<input

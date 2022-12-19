@@ -56,8 +56,8 @@ const initialJsonData = {
 	startValue: 0,
 	outputValue: 0,
 	workflow: [],
-	workflowValid: false,
-	startNodeConnected: false,
+	isStartNodeConnected: false,
+	isWorkflowValid: false,
 	isExecutionDone: false,
 };
 
@@ -102,7 +102,69 @@ export const updateTruthStateConditionByNode = (
 	});
 };
 
+export const updateConnectionStateForConditionalNodes = (p, e) => {
+	const nodeExists = JsonDataState.workflow.find((w) => p.source === w.target);
+	if (nodeExists) {
+		JsonDataState.workflow = JsonDataState.workflow.map((w) => {
+			if (nodeExists.target === w.target) {
+				return {
+					...w,
+					falseState: nodeExists.falseState
+						? nodeExists.falseState
+						: 'node_result_value',
+					truthState: nodeExists.truthState
+						? nodeExists.truthState
+						: 'node_result_value',
+				};
+			}
+			return w;
+		});
+	} else {
+		const target = p.source;
+		const valueToGoInTruthFalseState = p.target;
+		const location = p.sourceHandle;
+
+		JsonDataState.workflow.push({
+			target: target,
+			condition: '<',
+			value: 0,
+			operation: 'conditionals',
+			[location]: valueToGoInTruthFalseState,
+		});
+	}
+};
+
 export const addNewCondition = (source, target, condition, value, type) => {
-	console.log('adding...');
-	JsonDataState.workflow.push({ source, target, condition, value, type });
+	const nodeExists = JsonDataState.workflow.find((w) => w.target === target);
+
+	if (nodeExists) {
+		JsonDataState.workflow = JsonDataState.workflow.map((w) => {
+			if (nodeExists.target === w.target) {
+				return {
+					...w,
+					source: source,
+					condition: condition,
+					type: type,
+					value: value,
+					falseState: nodeExists.falseState
+						? nodeExists.falseState
+						: 'node_result_value',
+					truthState: nodeExists.truthState
+						? nodeExists.truthState
+						: 'node_result_value',
+				};
+			}
+			return w;
+		});
+	} else {
+		JsonDataState.workflow.push({
+			source,
+			target,
+			condition: condition ? condition : '<',
+			value: value ? value : 0,
+			operation: type,
+			truthState: 'node_result_value',
+			falseState: 'node_result_value',
+		});
+	}
 };

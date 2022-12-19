@@ -9,10 +9,9 @@ import ReactFlow, {
 	addEdge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import './flowchart.css';
+import '../../assets/flowchart.css';
 
 import Notes from '../Notes';
-import WorkflowActions from './WorkflowActions';
 import ConditionalsNode from './nodes/ConditionalsNode';
 import WorkflowStartNode from './nodes/WorkflowStartNode';
 import WorkflowEndNode from './nodes/WorkflowEndNode';
@@ -23,6 +22,7 @@ import {
 	Nodes,
 	addNewNode,
 	getNode,
+	updateConnectionStateForConditionalNodes,
 	updateNodePosition,
 	updateObjectValueInJsonViewer,
 } from '../../state/AppState';
@@ -74,7 +74,6 @@ const Flowchart = () => {
 			connections[params.source] &&
 			connections[params.source][params.sourceHandle]
 		) {
-			console.log('inside');
 			return;
 		}
 
@@ -83,11 +82,11 @@ const Flowchart = () => {
 		}
 
 		if (params.source === 'node_start_value') {
-			updateObjectValueInJsonViewer(true, 'startNodeConnected');
+			updateObjectValueInJsonViewer(true, 'isStartNodeConnected');
 		}
 
 		if (params.target === 'node_result_value') {
-			updateObjectValueInJsonViewer(true, 'workflowValid');
+			updateObjectValueInJsonViewer(true, 'isWorkflowValid');
 		}
 
 		const sourceNode = getNode(params.source);
@@ -106,6 +105,7 @@ const Flowchart = () => {
 					[params.source]: { ...c[params.source], [params.sourceHandle]: true },
 				})
 			);
+			updateConnectionStateForConditionalNodes(params, edges);
 		} else {
 			setConnections((c) => Object.assign(c, { [params.source]: true }));
 		}
@@ -171,7 +171,6 @@ const Flowchart = () => {
 				<div className='flex flex-col flex-nowrap gap-2'>
 					<Notes />
 					<OperationsDraggableItemList />
-					<WorkflowActions />
 				</div>
 			</ReactFlowProvider>
 		</div>

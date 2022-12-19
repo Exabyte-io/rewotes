@@ -12,14 +12,14 @@ import {
  * that run conditional checks on the workflow value. The conditional operators are the basic conditional checks.
  * It contains two output connections, one for the truthState and the other is for the falseState.
  */
-const ConditionalsNode = ({ id, data }) => {
+const ConditionalsNode = (props) => {
 	const [isConnected, setIsConnected] = useState({
 		truthState: false,
 		falseState: false,
 	});
 
 	const onChangeSelectOptionHandler = (e) => {
-		const targetNode = getNode(id);
+		const targetNode = getNode(props.id);
 		const valueToChange = e.target.value;
 
 		targetNode.data.condition = valueToChange;
@@ -27,7 +27,7 @@ const ConditionalsNode = ({ id, data }) => {
 	};
 
 	const onChangeValueHandler = (e) => {
-		const targetNode = getNode(id);
+		const targetNode = getNode(props.id);
 		const valueToChange = Number(e.target.value);
 
 		targetNode.data.value = valueToChange;
@@ -49,13 +49,18 @@ const ConditionalsNode = ({ id, data }) => {
 			return;
 		}
 
-		console.log(params, targetNode);
-
 		if (targetNode.type === 'operations') {
 			addNewOperation(
 				params.source,
 				targetNode.id,
 				targetNode.data.operationType,
+				targetNode.data.value
+			);
+		} else if (targetNode.type === 'endNode') {
+			addNewOperation(
+				props.id,
+				targetNode.id,
+				'end_workflow',
 				targetNode.data.value
 			);
 		}

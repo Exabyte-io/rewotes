@@ -12,14 +12,14 @@ import {
  * it contains the arithmetic operations that get computed against the workflow value.
  * The operations are, increment, decrement, multiply, and divide.
  */
-const OperationsNode = ({ id, data }) => {
+const OperationsNode = (props) => {
 	const [operation, setOperation] = useState({ operation: '', value: 0 });
 	const [isConnected, setIsConnected] = useState(false);
 
 	const onChangeHandler = (e) => {
 		const value = Number(e.target.value);
-		setOperation({ operation: data.label, value: value });
-		const targetNode = getNode(id);
+		setOperation({ operation: props.data.label, value: value });
+		const targetNode = getNode(props.id);
 		targetNode.data.value = value;
 		updateOperationByNode(targetNode);
 	};
@@ -30,23 +30,28 @@ const OperationsNode = ({ id, data }) => {
 			return;
 		}
 
-		console.log(targetNode.type);
 		if (targetNode.type === 'operations') {
 			addNewOperation(
-				id,
+				props.id,
 				targetNode.id,
 				targetNode.data.operationType,
 				targetNode.data.value
 			);
 		} else if (targetNode.type === 'conditionals') {
 			addNewCondition(
-				id,
+				props.id,
 				targetNode.id,
 				targetNode.data.condition,
-				targetNode.data.value
+				targetNode.data.value,
+				targetNode.type
 			);
 		} else if (targetNode.type === 'endNode') {
-			addNewOperation(id, targetNode.id, 'end_workflow', targetNode.data.value);
+			addNewOperation(
+				props.id,
+				targetNode.id,
+				'end_workflow',
+				targetNode.data.value
+			);
 		}
 		setIsConnected(true);
 	};
@@ -55,7 +60,7 @@ const OperationsNode = ({ id, data }) => {
 		<>
 			<Handle isConnectable position='top' type='target' />
 			<div className='bg-slate-500 border-slate-600 p-1 border-solid border-2 capitalize text-slate-400'>
-				{data.operationType}{' '}
+				{props.data.operationType}{' '}
 				<input
 					type='number'
 					placeholder='by this amount'

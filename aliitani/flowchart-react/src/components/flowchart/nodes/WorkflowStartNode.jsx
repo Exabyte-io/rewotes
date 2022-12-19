@@ -46,6 +46,8 @@ const WorkflowStartNode = ({ id, data }) => {
 				targetNode.data.value,
 				targetNode.type
 			);
+		} else if (targetNode.type === 'endNode') {
+			addNewOperation(id, targetNode.id, 'end_workflow', targetNode.data.value);
 		}
 		setIsConnected(true);
 	};

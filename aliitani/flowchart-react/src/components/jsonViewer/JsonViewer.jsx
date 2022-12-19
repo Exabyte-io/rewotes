@@ -1,5 +1,5 @@
 import { JsonDataState } from '../../state/AppState';
-import './jsonViewer.css';
+import '../../assets/jsonViewer.css';
 import { useSnapshot } from 'valtio';
 
 /***
