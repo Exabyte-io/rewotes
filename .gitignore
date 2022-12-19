@@ -1,0 +1,10 @@
+#PyCharm stuff
+.idea
+
+# VASP files that can't or shouldn't be uploaded
+POTCAR*
+WAVECAR*
+CHGCAR*
+/AcylSilane/convtrack.egg-info/
+/AcylSilane/build/
+/AcylSilane/docs/_build/
