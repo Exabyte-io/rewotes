@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package material;
+
+message Material {
+    string material_id = 1;
+}
