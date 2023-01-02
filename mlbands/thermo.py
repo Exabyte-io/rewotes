@@ -1,7 +1,7 @@
 from mp_api.client import MPRester
+import secret
 
-
-with MPRester(api_key='<enter your api key>') as mpr:
+with MPRester(api_key=secret.API_KEY) as mpr:
 
     # for a single material
     thermo_doc = mpr.thermo.get_data_by_id('mp-1103503')
