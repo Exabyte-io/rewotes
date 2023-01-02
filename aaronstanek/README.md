@@ -10,7 +10,7 @@ The aim of this task is to create a python package that implements automatic pre
 
 - As a user of this software, I can download sample training data from Materials Project, using my API key.
 - As a user of this software, I can easily input the structural information of a target material.
-- As a user of this software, I can predict the value of an electronic band gap after passing training data and structural information about the target material.
+- As a user of this software, I can predict the value of an electronic band gap with known accuracy after passing training data and structural information about the target material.
 
 # Requirements
 
