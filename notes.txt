@@ -1,0 +1,4 @@
+https://medium.com/dsckiit/managing-dependencies-in-python-a580ded4f67
+
+To start environment, run:
+pipenv shell 
