@@ -12,12 +12,26 @@ with MPRester(api_key=secret.API_KEY) as mpr:
 sga = SpacegroupAnalyzer(structure)
 conventional_structure = sga.get_conventional_standard_structure()
 
-print('\nstructure:\n{}\n\nsga:\n{}\n\nconventional structure:\n{}'.\
-    format(structure,sga,conventional_structure))
-
 # this example shows how to obtain an XRD diffraction pattern
 # these patterns are calculated on-the-fly from the structure
 calculator = XRDCalculator(wavelength='CuKa')
 pattern = calculator.get_pattern(conventional_structure)
 
-print('\npattern:\n',pattern)
+# print('\nstructure:\n{}\n\nsga:\n{}\n\nconventional structure:\n{}'.\
+#     format(structure,sga,conventional_structure))
+
+# print('\npattern:\n',pattern)
+
+
+# print(conventional_structure)
+
+print(conventional_structure.lattice)
+print(conventional_structure.sites)  #https://pymatgen.org/pymatgen.core.sites.html?highlight=periodicsite#pymatgen.core.sites.PeriodicSite
+
+Nsites = len(conventional_structure.sites)
+for i in range(Nsites):
+    print('\n\n')
+    # print(conventional_structure.sites[i])
+    print(conventional_structure.sites[i].species)
+    print(conventional_structure.sites[i].coords)
+    print(conventional_structure.sites[i].frac_coords)
