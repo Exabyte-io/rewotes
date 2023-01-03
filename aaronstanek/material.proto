@@ -2,6 +2,12 @@ syntax = "proto3";
 
 package material;
 
+message OptionalDouble {
+    bool is_defined = 1;
+    double value = 2;
+}
+
 message Material {
     string material_id = 1;
+    OptionalDouble band_gap = 2;
 }
