@@ -1,0 +1,88 @@
+Retrieving SummaryDoc documents: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 37786.52it/s]
+MPDataDoc<SummaryDoc>
+builder_meta=EmmetMeta(emmet_version='0.38.6', pymatgen_version='2022.10.22', pull_request=825, database_version='2022.10.28', build_date=datetime.datetime(2022, 10, 28, 0, 54, 31, 531000)),
+nsites=2,
+elements=[Element Si],
+nelements=1,
+composition=Comp: Si2,
+composition_reduced=Comp: Si1,
+formula_pretty='Si',
+formula_anonymous='A',
+chemsys='Si',
+volume=40.32952684741405,
+density=2.312800253345134,
+density_atomic=20.164763423707026,
+symmetry=SymmetryData(crystal_system=<CrystalSystem.cubic: 'Cubic'>, symbol='Fd-3m', number=227, point_group='m-3m', symprec=0.1, version='1.16.2'),
+property_name='summary',
+material_id=MPID(mp-149),
+deprecated=False,
+deprecation_reasons=None,
+last_updated=datetime.datetime(2022, 10, 28, 0, 54, 31, 531000),
+origins=[],
+warnings=[],
+structure=Structure Summary
+Lattice
+    abc : 3.8492784033699095 3.8492794116013456 3.849278
+ angles : 60.00001213094421 60.00000346645984 60.00001097545789
+ volume : 40.32952684741405
+      A : 3.333573 0.0 1.924639
+      B : 1.111191 3.142924 1.924639
+      C : 0.0 0.0 3.849278
+    pbc : True True True
+PeriodicSite: Si (3.8892, 2.7501, 6.7362) [0.8750, 0.8750, 0.8750]
+PeriodicSite: Si (0.5556, 0.3929, 0.9623) [0.1250, 0.1250, 0.1250],
+task_ids=[MPID(mp-1248038), MPID(mp-1059585), MPID(mp-655936), MPID(mp-1059604), MPID(mp-1057380), MPID(mp-149), MPID(mp-1141021), MPID(mp-1249516), MPID(mp-1057373), MPID(mp-1592727), MPID(mp-1950734), MPID(mp-1594776), MPID(mp-2299819), MPID(mp-1947498), MPID(mp-1057384), MPID(mp-1686587), MPID(mp-2683378), MPID(mp-1267607), MPID(mp-1440634), MPID(mp-1057366), MPID(mp-656511), MPID(mp-1120259), MPID(mp-1059603), MPID(mp-655585), MPID(mp-1791788), MPID(mp-2291052), MPID(mp-1059589), MPID(mp-1120258), MPID(mp-11721), MPID(mp-2250750), MPID(mp-1536661)],
+uncorrected_energy_per_atom=-5.42531803,
+energy_per_atom=-5.42531803,
+formation_energy_per_atom=0.0,
+energy_above_hull=0.0,
+is_stable=True,
+equilibrium_reaction_energy_per_atom=0.0,
+decomposes_to=None,
+xas=[XASSearchData(edge=<Edge.K: 'K'>, absorbing_element=Element Si, spectrum_type=<Type.XAFS: 'XAFS'>), XASSearchData(edge=<Edge.K: 'K'>, absorbing_element=Element Si, spectrum_type=<Type.XANES: 'XANES'>), XASSearchData(edge=<Edge.K: 'K'>, absorbing_element=Element Si, spectrum_type=<Type.EXAFS: 'EXAFS'>)],
+grain_boundaries=None,
+band_gap=0.6105,
+cbm=6.227,
+vbm=5.6165,
+efermi=5.63019776,
+is_gap_direct=False,
+is_metal=False,
+es_source_calc_id=MPID(mp-1057384),
+bandstructure=BandstructureData(setyawan_curtarolo=BandStructureSummaryData(task_id=MPID(mp-1057384), band_gap=0.6105, cbm={'band_index': {'1': [4]}, 'kpoint_index': ['19'], 'kpoint': <pymatgen.electronic_structure.bandstructure.Kpoint object at 0x7f401d6ff580>, 'energy': 6.227, 'projections': {'1': [[0.0524, 0.0524], [0.0454, 0.0454], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]}}, vbm={'band_index': {'1': [1, 2, 3]}, 'kpoint_index': [0, 72, 73], 'kpoint': <pymatgen.electronic_structure.bandstructure.Kpoint object at 0x7f401d6ff790>, 'energy': 5.6165, 'projections': {'1': [[0.0, 0.0], [0.0066, 0.0066], [0.1974, 0.1974], [0.0098, 0.0098], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]}}, efermi=5.63019776, is_gap_direct=False, is_metal=False, magnetic_ordering='NM', nbands=12.0, equivalent_labels={'setyawan_curtarolo': {'latimer_munro': {'\\Gamma': 'Γ', 'K': 'q_{1}', 'L': 'a', 'U': 'q', 'W': 'r', 'X': 'd'}, 'hinuma': {'\\Gamma': 'GAMMA', 'K': 'K', 'L': 'L', 'U': 'U', 'W': 'W', 'X': 'X'}}, 'latimer_munro': {'setyawan_curtarolo': {'q': 'U', 'd': 'X', 'a': 'L', 'Γ': '\\Gamma', 'q_{1}': 'K', 'r': 'W'}, 'hinuma': {'q': 'U', 'd': 'X', 'a': 'L', 'Γ': 'GAMMA', 'q_{1}': 'K', 'r': 'W'}}, 'hinuma': {'setyawan_curtarolo': {'GAMMA': '\\Gamma', 'X': 'X', 'L': 'L', 'W': 'W', 'K': 'K', 'U': 'U', 'W_2': 'W^{*}'}, 'latimer_munro': {'GAMMA': 'Γ', 'X': 'd', 'L': 'a', 'W': 'r', 'K': 'q_{1}', 'U': 'q', 'W_2': 'r^{*}'}}}, direct_gap=2.5563000000000002), hinuma=None, latimer_munro=None),
+dos=DosData(total={'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=0.6517, cbm=6.2537, vbm=5.602, efermi=5.60204155, spin_polarization=None)}, elemental={Element Si: {'total': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=0.6517, cbm=6.2537, vbm=5.602, efermi=5.60204155, spin_polarization=None)}, 's': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=0.6665000000000001, cbm=6.2537, vbm=5.5872, efermi=5.60204155, spin_polarization=None)}, 'p': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=0.6517, cbm=6.2537, vbm=5.602, efermi=5.60204155, spin_polarization=None)}, 'd': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=29.6227, cbm=22.0871, vbm=-7.5356, efermi=5.60204155, spin_polarization=None)}}}, orbital={'s': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=0.6665000000000001, cbm=6.2537, vbm=5.5872, efermi=5.60204155, spin_polarization=None)}, 'p': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=0.6517, cbm=6.2537, vbm=5.602, efermi=5.60204155, spin_polarization=None)}, 'd': {'1': DosSummaryData(task_id=MPID(mp-2250750), band_gap=29.6227, cbm=22.0871, vbm=-7.5356, efermi=5.60204155, spin_polarization=None)}}, magnetic_ordering='NM'),
+dos_energy_up=None,
+dos_energy_down=None,
+is_magnetic=False,
+ordering='NM',
+total_magnetization=0.0,
+total_magnetization_normalized_vol=0.0,
+total_magnetization_normalized_formula_units=0.0,
+num_magnetic_sites=0,
+num_unique_magnetic_sites=0,
+types_of_magnetic_species=[],
+k_voigt=83.0112836733574,
+k_reuss=83.01128367335741,
+k_vrh=83.01128367335741,
+g_voigt=62.950671302967415,
+g_reuss=59.371391875923024,
+g_vrh=61.161031589445216,
+universal_anisotropy=0.301431321883487,
+homogeneous_poisson=0.20424545172250694,
+e_total=13.003383160000036,
+e_ionic=0.0,
+e_electronic=13.003383160000036,
+n=3.606020404823028,
+e_ij_max=None,
+weighted_surface_energy_EV_PER_ANG2=0.08284816797681305,
+weighted_surface_energy=1.3273739277139247,
+weighted_work_function=4.727598156108368,
+surface_anisotropy=0.046483676566591,
+shape_factor=5.080957776573802,
+has_reconstructed=True,
+possible_species=[],
+has_props=[<HasProps.eos: 'eos'>, <HasProps.xas: 'xas'>, <HasProps.charge_density: 'charge_density'>, <HasProps.oxi_states: 'oxi_states'>, <HasProps.phonon: 'phonon'>, <HasProps.electronic_structure: 'electronic_structure'>, <HasProps.provenance: 'provenance'>, <HasProps.dos: 'dos'>, <HasProps.thermo: 'thermo'>, <HasProps.bandstructure: 'bandstructure'>, <HasProps.dielectric: 'dielectric'>, <HasProps.surface_properties: 'surface_properties'>, <HasProps.elasticity: 'elasticity'>, <HasProps.substrates: 'substrates'>, <HasProps.magnetism: 'magnetism'>, <HasProps.materials: 'materials'>],
+theoretical=False,
+database_IDs={<Database.ICSD: 'icsd'>: ['icsd-181356', 'icsd-150530', 'icsd-60388', 'icsd-53782', 'icsd-652257', 'icsd-191759', 'icsd-52266', 'icsd-181907', 'icsd-426975', 'icsd-60389', 'icsd-60386', 'icsd-43610', 'icsd-652265', 'icsd-53783', 'icsd-43403', 'icsd-181355', 'icsd-67788', 'icsd-76268', 'icsd-94261', 'icsd-29287', 'icsd-60387', 'icsd-182730', 'icsd-652255', 'icsd-41979', 'icsd-652258', 'icsd-52457', 'icsd-659044', 'icsd-51688', 'icsd-60385', 'icsd-29288']}
+
+Fields not requested:
+[]
