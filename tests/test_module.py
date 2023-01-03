@@ -10,10 +10,12 @@ def test_general():
 
 
 def test_bands():
-    material = mlbands.Material()
-    material.API_KEY = mlbands.SECRET_KEY
 
-    material.bands()
+    for i in range(1,50):
+        material = mlbands.Material()
+        material.API_KEY = mlbands.SECRET_KEY
+        material.structure_ID = 'mp-'+str(i)
+        material.bands()
 
 test_general()
 test_bands()

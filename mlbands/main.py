@@ -10,14 +10,20 @@ class Material:
 
     def bands(self):
         with MPRester(api_key=self.API_KEY) as mpr:
-            bandstructure = mpr.get_bandstructure_by_material_id(self.structure_ID)
+            #adapted from https://matsci.org/t/obtain-large-numbers-of-band-structures/3780
+            bandstructure = None 
+            try:
+                bandstructure = mpr.get_bandstructure_by_material_id(self.structure_ID,line_mode=False)
+            except:
+                pass
+            if bandstructure:
+                band_gap = bandstructure.get_band_gap()
+                
+                print('Band Gap: {} eV\nDirect Gap: {}\nMetallic: {}'.\
+                    format(band_gap['energy'],\
+                        'Yes' if band_gap['direct'] else 'No',\
+                        'No' if band_gap['transition'] else 'Yes'))
 
-        band_gap = bandstructure.get_band_gap()
-        
-        print('Band Gap: {} eV\nDirect Gap: {}\nMetallic: {}'.\
-            format(band_gap['energy'],\
-                  'Yes' if band_gap['direct'] else 'No',\
-                  'No' if band_gap['transition'] else 'Yes'))
 
     def load_structure(self, api_key, conventional=True):
         with MPRester(api_key) as mpr:
