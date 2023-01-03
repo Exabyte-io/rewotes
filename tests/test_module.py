@@ -9,5 +9,11 @@ def test_general():
     material.thermo()
 
 
+def test_bands():
+    material = mlbands.Material()
+    material.API_KEY = mlbands.SECRET_KEY
+
+    material.bands()
 
 test_general()
+test_bands()
