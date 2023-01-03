@@ -12,9 +12,12 @@ with MPRester(api_key=secret.API_KEY) as mpr:
 sga = SpacegroupAnalyzer(structure)
 conventional_structure = sga.get_conventional_standard_structure()
 
+print('\nstructure:\n{}\n\nsga:\n{}\n\nconventional structure:\n{}'.\
+    format(structure,sga,conventional_structure))
+
 # this example shows how to obtain an XRD diffraction pattern
 # these patterns are calculated on-the-fly from the structure
 calculator = XRDCalculator(wavelength='CuKa')
 pattern = calculator.get_pattern(conventional_structure)
 
-print(pattern)
+print('\npattern:\n',pattern)
