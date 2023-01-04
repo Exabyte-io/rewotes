@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 mp-api = "*"
 mpcontribs-client = "*"
+mendeleev = "*"
+numpy = "*"
 
 [dev-packages]
 

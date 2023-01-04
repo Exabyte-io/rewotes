@@ -2,6 +2,12 @@ from mp_api.client import MPRester
 from pymatgen.analysis.diffraction.xrd import XRDCalculator
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
+from mendeleev import element
+
+from mlbands.misc import *
+
+import numpy as np
+import matplotlib.pyplot as plt
 
 class Material:
     def __init__(self):
@@ -43,37 +49,90 @@ class Material:
        
     def structural(self):
 
-        # with MPRester(api_key=self.API_KEY) as mpr:
-        #     # first retrieve the relevant structure
-        #     structure = mpr.get_structure_by_material_id(self.structure_ID)
-
-        conventional_structure = Material().load_structure(self.API_KEY)
+        structure = Material().load_structure(self.API_KEY)
 
 
-        # print('\nstructure:\n{}\n\nsga:\n{}\n\nconventional structure:\n{}'.\
-        #     format(structure,sga,conventional_structure))
+        print(structure.lattice)
+        print(structure.sites)  #https://pymatgen.org/pymatgen.core.sites.html?highlight=periodicsite#pymatgen.core.sites.PeriodicSite
 
-        # print(conventional_structure)
-
-        print(conventional_structure.lattice)
-        print(conventional_structure.sites)  #https://pymatgen.org/pymatgen.core.sites.html?highlight=periodicsite#pymatgen.core.sites.PeriodicSite
-
-        Nsites = len(conventional_structure.sites)
+        Nsites = len(structure.sites)
         for i in range(Nsites):
             print('\n\n')
-            # print(conventional_structure.sites[i])
-            print(conventional_structure.sites[i].species)
-            print(conventional_structure.sites[i].coords)
-            print(conventional_structure.sites[i].frac_coords)     
+            # print(structure.sites[i])
+            print(structure.sites[i].species)
+            print(structure.sites[i].coords)
+            print(structure.sites[i].frac_coords)     
+    
+    def load_xyz(self, api_key, fractional=False):
+        structure = Material().load_structure(api_key, conventional=True)
+        Nsites = len(structure.sites)
+
+        xyz_array = np.zeros((Nsites,4))
+
+        if not fractional:
+            for i in range(Nsites):
+                atom_num = element(str(structure.sites[i].specie)).atomic_number # specie is not a typo
+                xyz_array[i] = [atom_num,*structure.sites[i].coords]
+        else:
+            for i in range(Nsites):
+                atom_num = element(str(structure.sites[i].specie)).atomic_number 
+                xyz_array[i] = [atom_num,*structure.sites[i].frac_coords]
+
+        return xyz_array
+
+    def to_xyz(self,fractional=False):
+
+        return Material().load_xyz(self.API_KEY, fractional)
+
+    def to_box(self, fractional=False):
+
+        xyz_array = Material().load_xyz(self.API_KEY, fractional)
+
+        coords = xyz_array[:,1:]            
+        MAX = np.ceil(np.max(coords)).astype('int')
+        MIN = np.floor(np.min(coords)).astype('int')
+        
+        xyz_array[:,1:] -= MIN
+
+        L = (MAX-MIN+1)
+
+        box = np.zeros((L,L,L))
+        for i in xyz_array:
+            print(i)
+
+            atom,x,y,z = i.astype('int')
+            box[z,y,x] = atom
+
+        return box
+            
+    def visual(self, spacing = 1, fractional=False):
+
+        xyz_array = Material().load_xyz(self.API_KEY, fractional)
+
+        xyz_array[:,1:]*=spacing
+
+        ax = plt.axes(projection='3d')
+
+        colors = np.linspace(0,2**24,118,dtype='int') #divide color range into 118 colors (for the 118 chemical elements)
+
+        for i in xyz_array:
+            atom,*xyz = i.astype('int')
+            ax.scatter3D(*xyz, s=100, color="#"+hex(colors[atom])[2:])
+
+        set_axes_equal(ax)           
+
+        plt.axis('off')
+        plt.show()
+
 
     def XRD(self):
 
-        conventional_structure = Material().load_structure(self.API_KEY)
+        structure = Material().load_structure(self.API_KEY)
         
         # this example shows how to obtain an XRD diffraction pattern
         # these patterns are calculated on-the-fly from the structure
         calculator = XRDCalculator(wavelength='CuKa')
-        pattern = calculator.get_pattern(conventional_structure)
+        pattern = calculator.get_pattern(structure)
 
         print('\npattern:\n',pattern)
         
