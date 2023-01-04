@@ -10,16 +10,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Material:
-    def __init__(self):
+    def __init__( self, material_ID = 'mp-1103503'):
+
         self.API_KEY = ''
-        self.structure_ID = 'mp-1103503'
+        self.material_ID = material_ID
 
     def bands(self):
         with MPRester(api_key=self.API_KEY) as mpr:
             #adapted from https://matsci.org/t/obtain-large-numbers-of-band-structures/3780
             bandstructure = None 
             try:
-                bandstructure = mpr.get_bandstructure_by_material_id(self.structure_ID,line_mode=False)
+                bandstructure = mpr.get_bandstructure_by_material_id(self.material_ID,line_mode=False)
             except:
                 pass
             if bandstructure:
@@ -29,12 +30,15 @@ class Material:
                     format(band_gap['energy'],\
                         'Yes' if band_gap['direct'] else 'No',\
                         'No' if band_gap['transition'] else 'Yes'))
+                return band_gap
+            else:
+                return 0
 
 
     def load_structure(self, api_key, conventional=True):
         with MPRester(api_key) as mpr:
             # first retrieve the relevant structure
-            structure = mpr.get_structure_by_material_id(self.structure_ID)
+            structure = mpr.get_structure_by_material_id(self.material_ID)
         
         # important to use the conventional structure to ensure
         # that peaks are labelled with the conventional Miller indices
@@ -49,7 +53,7 @@ class Material:
        
     def structural(self):
 
-        structure = Material().load_structure(self.API_KEY)
+        structure = Material(self.material_ID).load_structure(self.API_KEY)
 
 
         print(structure.lattice)
@@ -64,7 +68,7 @@ class Material:
             print(structure.sites[i].frac_coords)     
     
     def load_xyz(self, api_key, fractional=False):
-        structure = Material().load_structure(api_key, conventional=True)
+        structure = Material(self.material_ID).load_structure(api_key, conventional=True)
         Nsites = len(structure.sites)
 
         xyz_array = np.zeros((Nsites,4))
@@ -82,11 +86,11 @@ class Material:
 
     def to_xyz(self,fractional=False):
 
-        return Material().load_xyz(self.API_KEY, fractional)
+        return Material(self.material_ID).load_xyz(self.API_KEY, fractional)
 
     def to_box(self, fractional=False):
 
-        xyz_array = Material().load_xyz(self.API_KEY, fractional)
+        xyz_array = Material(self.material_ID).load_xyz(self.API_KEY, fractional)
 
         coords = xyz_array[:,1:]            
         MAX = np.ceil(np.max(coords)).astype('int')
@@ -107,17 +111,17 @@ class Material:
             
     def visual(self, spacing = 1, fractional=False):
 
-        xyz_array = Material().load_xyz(self.API_KEY, fractional)
+        xyz_array = Material(self.material_ID).load_xyz(self.API_KEY, fractional)
 
         xyz_array[:,1:]*=spacing
 
         ax = plt.axes(projection='3d')
 
-        colors = np.linspace(0,2**24,118,dtype='int') #divide color range into 118 colors (for the 118 chemical elements)
+        colors = np.linspace(2**20,2**24,118,dtype='int') #divide color range into 118 colors (for the 118 chemical elements)
 
         for i in xyz_array:
             atom,*xyz = i.astype('int')
-            ax.scatter3D(*xyz, s=100, color="#"+hex(colors[atom])[2:])
+            ax.scatter3D(*xyz, s=100, c="#"+hex(colors[atom])[2:])
 
         set_axes_equal(ax)           
 
@@ -127,7 +131,7 @@ class Material:
 
     def XRD(self):
 
-        structure = Material().load_structure(self.API_KEY)
+        structure = Material(self.material_ID).load_structure(self.API_KEY)
         
         # this example shows how to obtain an XRD diffraction pattern
         # these patterns are calculated on-the-fly from the structure
@@ -147,6 +151,12 @@ class Material:
             # for many materials, it's much faster to use
             # the `search` method, where additional material_ids can 
             # be added to this list
-            thermo_docs = mpr.thermo.search(material_ids=[self.structure_ID])
+            thermo_docs = mpr.thermo.search(material_ids=[self.material_ID])
             
         print(thermo_docs)
+
+
+class Group:
+    def __init__(self):
+        self.list = []
+    

@@ -1,32 +1,28 @@
 import mlbands
 
 def test_general():
-    material = mlbands.Material()
+    material = mlbands.Material('mp-1103503')
     material.API_KEY = mlbands.SECRET_KEY
 
     material.structural()
-    # material.XRD()
-    # material.thermo()
+    material.XRD()
+    material.thermo()
 
 
 def test_bands():
 
-    for i in range(1,50):
-        material = mlbands.Material()
+    for i in range(1,10):
+        material = mlbands.Material('mp-1103503')
         material.API_KEY = mlbands.SECRET_KEY
-        material.structure_ID = 'mp-'+str(i)
+        material.material_ID = 'mp-'+str(i)
         material.bands()
 
 def test_xyz():
-    material = mlbands.Material()
+    material = mlbands.Material('mp-1103502')
     material.API_KEY = mlbands.SECRET_KEY
-    # a=material.to_xyz()
-    # b=material.to_xyz(True)
-    # print(a,b)
 
     box = material.to_box(True)
     material.visual(10,True)
-
 
     box = material.to_box()
     material.visual()
