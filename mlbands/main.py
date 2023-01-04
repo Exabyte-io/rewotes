@@ -10,9 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Material:
-    def __init__( self, material_ID = 'mp-1103503'):
+    def __init__( self, api_key, material_ID = 'mp-1103503'):
 
-        self.API_KEY = ''
+        self.API_KEY = api_key
         self.material_ID = material_ID
 
     def bands(self):
@@ -30,13 +30,15 @@ class Material:
                     format(band_gap['energy'],\
                         'Yes' if band_gap['direct'] else 'No',\
                         'No' if band_gap['transition'] else 'Yes'))
+
                 return band_gap
             else:
                 return 0
 
+    def load_structure(self, conventional=True):
 
-    def load_structure(self, api_key, conventional=True):
-        with MPRester(api_key) as mpr:
+        with MPRester(self.API_KEY) as mpr:
+
             # first retrieve the relevant structure
             structure = mpr.get_structure_by_material_id(self.material_ID)
         
@@ -53,8 +55,7 @@ class Material:
        
     def structural(self):
 
-        structure = Material(self.material_ID).load_structure(self.API_KEY)
-
+        structure = Material(self.API_KEY, self.material_ID).load_structure()
 
         print(structure.lattice)
         print(structure.sites)  #https://pymatgen.org/pymatgen.core.sites.html?highlight=periodicsite#pymatgen.core.sites.PeriodicSite
@@ -67,8 +68,11 @@ class Material:
             print(structure.sites[i].coords)
             print(structure.sites[i].frac_coords)     
     
-    def load_xyz(self, api_key, fractional=False):
-        structure = Material(self.material_ID).load_structure(api_key, conventional=True)
+
+    def to_xyz(self, fractional=False):
+
+        structure = Material(self.API_KEY, self.material_ID).load_structure(conventional=True)
+
         Nsites = len(structure.sites)
 
         xyz_array = np.zeros((Nsites,4))
@@ -84,13 +88,10 @@ class Material:
 
         return xyz_array
 
-    def to_xyz(self,fractional=False):
-
-        return Material(self.material_ID).load_xyz(self.API_KEY, fractional)
 
     def to_box(self, fractional=False):
 
-        xyz_array = Material(self.material_ID).load_xyz(self.API_KEY, fractional)
+        xyz_array = Material(self.API_KEY, self.material_ID).to_xyz(fractional)
 
         coords = xyz_array[:,1:]            
         MAX = np.ceil(np.max(coords)).astype('int')
@@ -111,7 +112,7 @@ class Material:
             
     def visual(self, spacing = 1, fractional=False):
 
-        xyz_array = Material(self.material_ID).load_xyz(self.API_KEY, fractional)
+        xyz_array = Material(self.API_KEY, self.material_ID).to_xyz(fractional)
 
         xyz_array[:,1:]*=spacing
 
@@ -131,7 +132,7 @@ class Material:
 
     def XRD(self):
 
-        structure = Material(self.material_ID).load_structure(self.API_KEY)
+        structure = Material(self.API_KEY, self.material_ID).load_structure(self.API_KEY)
         
         # this example shows how to obtain an XRD diffraction pattern
         # these patterns are calculated on-the-fly from the structure
@@ -157,6 +158,18 @@ class Material:
 
 
 class Group:
-    def __init__(self):
-        self.list = []
+    def __init__(self,api_key):
+        self.API_KEY = api_key
+
+    def make_data(self):    
+
+        X,Y = [],[]
+        for i in range(1,10):
+            material = Material(self.API_KEY, 'mp-'+str(i))
+            BG = material.bands()
+            if BG:
+                Y.append(BG['energy'])
+                X.append(material.to_box())
+
+        return X,Y
     
