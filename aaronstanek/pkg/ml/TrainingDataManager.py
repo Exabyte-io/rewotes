@@ -15,7 +15,7 @@ def separate_y_x(data):
     x = torch.from_numpy(data[:,1:])
     return y, x
 
-class Dataset(object):
+class TrainingDataManager(object):
     def __init__(self, archive):
         if not isinstance(archive, MaterialArchive):
             raise TypeError("Expected instance of MaterialArchive. Found: " + str(type(archive)))
@@ -32,4 +32,4 @@ class Dataset(object):
         self.testing_y, self.testing_x = separate_y_x(numpy.array(testing_data))
     @staticmethod
     def load_from_archive_file(filename):
-        return Dataset(MaterialArchive.load_from_file(filename))
+        return TrainingDataManager(MaterialArchive.load_from_file(filename))
