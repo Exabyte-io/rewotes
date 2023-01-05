@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlbands"
-version = "1.0.0"
+version = "1.0.1"
 description = "A Python package that implements automatic prediction of electronic band gaps for a set of materials based on training data"
 authors = ["Andrew R. Garcia"]
 readme = "README.md"

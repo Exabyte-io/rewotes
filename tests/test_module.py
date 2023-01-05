@@ -1,7 +1,10 @@
 import mlbands
 
+# replace below line with API key [ in string form ] from Materials Project site (https://materialsproject.org/api#api-key)
+SECRET_KEY = ''    
+
 def test_materialprops():
-    material = mlbands.Material(mlbands.SECRET_KEY, 'mp-1103503')
+    material = mlbands.Material(SECRET_KEY, 'mp-1103503')
 
     material.structural()
     material.XRD()
@@ -10,13 +13,13 @@ def test_materialprops():
     print(totalmag)
 
 def test_visuals():
-    material = mlbands.Material(mlbands.SECRET_KEY, 'mp-1103502')
+    material = mlbands.Material(SECRET_KEY, 'mp-1103502')
     box = material.to_box(True)
     material.visual(10,True)
     box = material.to_box()
     material.visual()
 
-    material = mlbands.Material(mlbands.SECRET_KEY, 'mp-1103506')
+    material = mlbands.Material(SECRET_KEY, 'mp-1103506')
     box = material.to_box(True)
     material.visual(10,True)
 
@@ -24,18 +27,18 @@ def test_loadvisual():
     xdata = mlbands.load('materials.data')
     print(xdata)
 
-    mlbands.Material(mlbands.SECRET_KEY, box_array = xdata[3]).visual()
-    mlbands.Material(mlbands.SECRET_KEY).visual()
+    mlbands.Material(SECRET_KEY, box_array = xdata[3]).visual()
+    mlbands.Material(SECRET_KEY).visual()
 
 
 def test_bands():
 
-    training = mlbands.Group(mlbands.SECRET_KEY)
+    training = mlbands.Group(SECRET_KEY)
     training.data_make(range(1,100))
     # training.data_make(range(1,30),True)
     training.resize_boxes()
 
-    testing = mlbands.Group(mlbands.SECRET_KEY)
+    testing = mlbands.Group(SECRET_KEY)
     testing.data_make(range(300,350))
     # testing.data_make(range(300,314),True)
     testing.resize_boxes()
@@ -58,7 +61,7 @@ def test_bands_load():
 
 def test_dataexpand():
 
-    training = mlbands.Group(mlbands.SECRET_KEY)
+    training = mlbands.Group(SECRET_KEY)
     traindata = mlbands.load('train.data')
     training.transfer(traindata)
 
@@ -75,5 +78,5 @@ test_materialprops()
 test_visuals()
 test_loadvisual()
 test_dataexpand()
-test_bands()
+# test_bands()
 test_bands_load()

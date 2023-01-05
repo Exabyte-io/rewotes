@@ -1,3 +1,21 @@
+# mlbands
+
+A python package that implements automatic prediction of electronic band gaps for a set of materials based on training data.
+
+
+## Installation
+
+```ruby
+pip install --upgrade mlbands
+```
+
+## Documentation and Usage on Google Colab (click below)
+
+<a href="https://colab.research.google.com/drive/14GS_jUo_B6ojDip-Ak2VsGdrZL1Fgx5a?usp=sharing">
+<img src="https://github.com/andrewrgarcia/powerxrd/blob/main/img/colab.png?raw=true" width="300" ></a>
+
+
+
 # ML Band Gaps (Materials)
 
 > Ideal candidate: skilled ML data scientist with solid knowledge of materials science.
