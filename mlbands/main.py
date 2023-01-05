@@ -11,12 +11,29 @@ import matplotlib.pyplot as plt
 
 class Material:
     def __init__( self, api_key, material_ID = 'mp-1103503', box_array = None):
+        '''Material class. To store and process material data
 
+        Parameters
+        ----------
+        API_KEY : str
+            secret API KEY used to run MPRester data requests
+        material_ID : int
+            ID of selected material (without "mp-" prefix)
+        box_array : (float, float, float)
+            3-D Tensor representing material chemical env. 
+        '''
         self.API_KEY = api_key
         self.material_ID = material_ID
         self.box_array = box_array          # material already transformed to box data form (optional)
 
     def bands(self,nonzero_gap=False):
+        '''obtain band gap information for requested Material 
+
+        Parameters
+        ----------
+        nonzero_gap: bool
+            if True, only returns nonzero band gaps 
+        '''
         with MPRester(api_key=self.API_KEY) as mpr:
             #adapted from https://matsci.org/t/obtain-large-numbers-of-band-structures/3780
             bandstructure = None 
@@ -39,7 +56,13 @@ class Material:
                 return 0
 
     def load_structure(self, conventional=True):
+        '''helper function to load structural information of Material
 
+        Parameters
+        ----------
+        conventional: bool
+            if True, returns conventional standard structure else returns primitive
+        '''
         with MPRester(self.API_KEY) as mpr:
 
             # first retrieve the relevant structure
@@ -57,7 +80,8 @@ class Material:
 
        
     def structural(self):
-
+        '''prints structural information
+        '''
         structure = Material(self.API_KEY, self.material_ID).load_structure()
 
         print(structure.lattice)
@@ -73,7 +97,14 @@ class Material:
     
 
     def to_xyz(self, fractional=False):
+        '''processes the material structure as an array with an xyz coordinate format 
+        i.e. [atom_numbers, x_coord, y_coord, z_coord]
 
+        Parameters
+        ----------
+        fractional: bool
+            if False, returns xyz coordinates else returns fractional (a,b,c) coordinates
+        '''
         structure = Material(self.API_KEY, self.material_ID).load_structure(conventional=True)
 
         Nsites = len(structure.sites)
@@ -93,7 +124,15 @@ class Material:
 
 
     def to_box(self, fractional=False):
+        '''processes the material structure as a sparse, 3-D Tensor "Box" with atom_numbers as the 
+        non-zero entries
+        i.e. box = Tensor((z_coord, y_coord, x_coord))
 
+        Parameters
+        ----------
+        fractional: bool
+            if False, returns tensor space from xyz coordinates else from fractional (a,b,c) coordinates
+        '''
         xyz_array = Material(self.API_KEY, self.material_ID).to_xyz(fractional)
 
         coords = xyz_array[:,1:]            
@@ -114,7 +153,15 @@ class Material:
         return box
             
     def visual(self, spacing = 1, fractional=False):
+        '''simple visualization tool for Material (plot)
 
+        Parameters
+        ----------
+        spacing: float
+            increases spacing by multiplying coordinate distance
+        fractional: bool
+            if False, returns tensor space from xyz coordinates else from fractional (a,b,c) coordinates
+        '''
         ax = plt.axes(projection='3d')
         colors = np.linspace(2**20,2**24,118,dtype='int') #divide color range into 118 colors (for the 118 chemical elements)
 
@@ -142,7 +189,8 @@ class Material:
 
 
     def XRD(self):
-
+        '''XRD pattern data for Material
+        '''
         structure = Material(self.API_KEY, self.material_ID).load_structure(self.API_KEY)
         
         # this example shows how to obtain an XRD diffraction pattern
@@ -154,32 +202,56 @@ class Material:
         
 
     def thermo(self):   
-
+        '''thermodynamic data for Material
+        '''
         with MPRester(api_key=self.API_KEY) as mpr:
 
             # for a single material
-            # thermo_doc = mpr.thermo.get_data_by_id('mp-1103503')      #   DOES NOT WORK (WHY?)
-
+            # thermo_docs = mpr.thermo.get_data_by_id(self.material_ID)      #   DOES NOT WORK msg(Item with thermo_id = mp-1103503 not found)
+            
             # for many materials, it's much faster to use
             # the `search` method, where additional material_ids can 
             # be added to this list
             thermo_docs = mpr.thermo.search(material_ids=[self.material_ID])
-            
-        print(thermo_docs)
 
+        # print(thermo_docs[0].energy_per_atom)
+        return thermo_docs
+
+    def magnetism(self):      
+        '''magnetic properties data for Material
+        '''
+        with MPRester(api_key=self.API_KEY) as mpr:
+            magnetism_doc = mpr.magnetism.get_data_by_id('mp-1103503')
+
+        # print(magnetism_doc.total_magnetization)
+        return magnetism_doc
 
 class Group:
     def __init__(self,api_key):
+        '''Group class for bulk calculations
+
+        Parameters
+        ----------
+        API_KEY : str
+            secret API KEY used to run MPRester data requests
+        materials : int
+            IDs of selected material (with "mp-" prefix)
+
+        '''
         self.API_KEY = api_key
         self.X = []                 # quantitative predictors ("X-value")
         self.Y = []                 # quantitative response ("Y-value","label")
-        self.materials = []         # material IDs (materials found in ID_list; see make_data inputs)
+        self.materials = []         # material IDs (materials found in ID_list; see data_make inputs)
         self.box_lengths = []       # length scale of boxes (3-D Tensors of material chemical env.)
         self.max_length = 0
 
+    def transfer(self, loaded_data):
+        self.X = loaded_data.X
+        self.Y = loaded_data.Y
+        self.materials = loaded_data.materials
 
-    # def make_data(self, ID_list = range(1,10), nonzero_gap=False, *extra_properties ):    
-    def make_data(self, ID_list = range(1,10), nonzero_gap=False ):    
+    # def data_make(self, ID_list = range(1,10), nonzero_gap=False, *extra_properties ):    
+    def data_make(self, ID_list = range(1,10), nonzero_gap=False ):    
 
         # X,Y, box_lengths = [],[], []
 
@@ -201,7 +273,7 @@ class Group:
 
         self.Y = np.array(self.Y)
 
-    def expand_data(self,boxes=True,*property_funcs):
+    def data_expand(self,boxes=True,*property_funcs):
         
         boxes = self.X
         self.X = [] 
@@ -213,14 +285,13 @@ class Group:
             material_props = []
             material_props.append(boxes[k]) if boxes else None
             for func in property_funcs:
-                material_props.append(func(material))
+                material_props.append(material.func)
             
             self.X.append(material_props)
             k+=1
 
        
-
-    def resize(self, L=32):
+    def resize_boxes(self, L=32):
 
         max_length = np.max(self.box_lengths)
 
