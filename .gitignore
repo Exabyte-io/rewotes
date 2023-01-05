@@ -1,0 +1,12 @@
+__pycache__
+*.egg-info/
+*.eggs/
+*.data
+
+#neuralnetwork-generated
+data
+
+old
+deploy-notes 
+venv
+secret.py

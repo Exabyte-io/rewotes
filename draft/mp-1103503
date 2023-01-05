@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="generator" content="Crystal Toolkit 2022.11.29 (Materials Project)">
+            <meta property="og:title" content="mp-1103503: GdSnPd (Orthorhombic, Pnma, 62)" />
+            <meta property="og:description" content="GdPdSn crystallizes in the orthorhombic Pnma space group. Gd is bonded in a 12-coordinate geometry to six equivalent Pd and six equivalent Sn atoms. There are a spread of Gd–Pd bond distances ranging from 3.11–3.40 Å. There are a spread of Gd–Sn bond distances ranging from 3.21–3.32 Å. Pd is bonded in a 10-coordinate geometry to six equivalent Gd and four equivalent Sn atoms. There are a spread of Pd–Sn bond distances ranging from 2.70–2.88 Å. Sn is bonded in a 10-coordinate geometry to six equivalent Gd and four equivalent Pd atoms." />
+            <meta property="og:image" content="/static/structures/mp-1103503.png" />
+            <meta property="og:site_name" content="Materials Project">
+        <title>mp-1103503: GdSnPd (Orthorhombic, Pnma, 62)</title>
+        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico?m=1671740965.0">
+        <link rel="stylesheet" href="/assets/main.8f83a0b033497ae0def3.css?m=1671741020.0">
+    </head>
+    <body>
+        
+<div id="react-entry-point">
+    <div class="_dash-loading">
+        Loading...
+    </div>
+</div>
+
+        <footer>
+            <script id="_dash-config" type="application/json">{"url_base_pathname":null,"requests_pathname_prefix":"/","ui":false,"props_check":false,"show_undo_redo":false,"suppress_callback_exceptions":true,"update_title":false,"children_props":{"dash_core_components":{"Checklist":["options[].label"],"Clipboard":[],"ConfirmDialog":[],"ConfirmDialogProvider":[],"DatePickerRange":[],"DatePickerSingle":[],"Download":[],"Dropdown":["options[].label"],"Graph":[],"Input":[],"Interval":[],"Link":[],"Loading":[],"Location":[],"LogoutButton":[],"Markdown":[],"RadioItems":["options[].label"],"RangeSlider":[],"Slider":[],"Store":[],"Tab":[],"Tabs":[],"Textarea":[],"Tooltip":[],"Upload":[]},"dash_html_components":{"A":[],"Abbr":[],"Acronym":[],"Address":[],"Area":[],"Article":[],"Aside":[],"Audio":[],"B":[],"Base":[],"Basefont":[],"Bdi":[],"Bdo":[],"Big":[],"Blink":[],"Blockquote":[],"Br":[],"Button":[],"Canvas":[],"Caption":[],"Center":[],"Cite":[],"Code":[],"Col":[],"Colgroup":[],"Content":[],"Data":[],"Datalist":[],"Dd":[],"Del":[],"Details":[],"Dfn":[],"Dialog":[],"Div":[],"Dl":[],"Dt":[],"Em":[],"Embed":[],"Fieldset":[],"Figcaption":[],"Figure":[],"Font":[],"Footer":[],"Form":[],"Frame":[],"Frameset":[],"H1":[],"H2":[],"H3":[],"H4":[],"H5":[],"H6":[],"Header":[],"Hgroup":[],"Hr":[],"I":[],"Iframe":[],"Img":[],"Ins":[],"Kbd":[],"Keygen":[],"Label":[],"Legend":[],"Li":[],"Link":[],"Main":[],"MapEl":[],"Mark":[],"Marquee":[],"Meta":[],"Meter":[],"Nav":[],"Nobr":[],"Noscript":[],"ObjectEl":[],"Ol":[],"Optgroup":[],"Option":[],"Output":[],"P":[],"Param":[],"Picture":[],"Plaintext":[],"Pre":[],"Progress":[],"Q":[],"Rb":[],"Rp":[],"Rt":[],"Rtc":[],"Ruby":[],"S":[],"Samp":[],"Script":[],"Section":[],"Select":[],"Shadow":[],"Slot":[],"Small":[],"Source":[],"Spacer":[],"Span":[],"Strike":[],"Strong":[],"Sub":[],"Summary":[],"Sup":[],"Table":[],"Tbody":[],"Td":[],"Template":[],"Textarea":[],"Tfoot":[],"Th":[],"Thead":[],"Time":[],"Title":[],"Tr":[],"Track":[],"U":[],"Ul":[],"Var":[],"Video":[],"Wbr":[],"Xmp":[]},"dash_table":{"DataTable":[]},"dash_mp_components":{"JsonView":null,"MatSidebar":null,"CameraContextProvider":null,"CrystalToolkitScene":null,"Download":null,"GraphComponent":null,"DataBlock":null,"DataTable":null,"DownloadButton":null,"DownloadDropdown":null,"Drawer":null,"DrawerContextProvider":null,"DrawerTrigger":null,"Enlargeable":null,"Formula":null,"Markdown":null,"Modal":null,"ModalContextProvider":null,"ModalTrigger":null,"SearchUIContainer":null,"SearchUIDataHeader":null,"SearchUIDataView":null,"SearchUIFilters":null,"SearchUIGrid":null,"SearchUISearchBar":null,"SynthesisRecipeCard":null,"Tooltip":null,"DualRangeSlider":null,"FilterField":null,"GlobalSearchBar":null,"MaterialsInput":null,"RangeSlider":null,"Select":null,"Switch":null,"Dropdown":null,"Link":null,"Navbar":null,"NavbarDropdown":null,"Scrollspy":null,"Tabs":null,"PeriodicContext":null,"PeriodicContextTable":null,"PeriodicElement":null,"PeriodicFilter":null,"PeriodicTableInput":null,"BibCard":null,"BibFilter":null,"BibjsonCard":null,"BibtexButton":null,"CrossrefCard":null,"OpenAccessButton":null,"PublicationButton":null,"SearchUI":null},"crystal_toolkit":{"Section":null,"Container":null,"Block":null,"Columns":null,"Column":null,"Button":null,"Error":null,"MessageContainer":null,"MessageHeader":null,"MessageBody":null,"Icon":null,"Footer":null,"Spinner":null,"Box":null,"H1":null,"H2":null,"H3":null,"H4":null,"H5":null,"H6":null,"Tag":null,"TagContainer":null,"Textarea":null,"Reveal":null,"Label":null,"Modal":null,"Field":null,"Control":null,"Loading":null}}}</script>
+            <script src="https://unpkg.com/@babel/polyfill@7.12.1/dist/polyfill.min.js"></script>
+<script src="https://unpkg.com/react@16.14.0/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="https://kit.fontawesome.com/eb70cee2b0.js"></script>
+<script src="https://unpkg.com/dash-daq@0.5.0/dash_daq/dash_daq.min.js"></script>
+<script src="https://unpkg.com/@materialsproject/dash-mp-components@0.4.29/dash_mp_components/dash_mp_components.min.js"></script>
+<script src="https://unpkg.com/dash-dangerously-set-inner-html@0.0.2/dash_dangerously_set_inner_html/bundle.js"></script>
+<script src="https://unpkg.com/dash-renderer@1.13.0/build/dash_renderer.min.js"></script>
+<script src="https://unpkg.com/dash-core-components@2.5.0/dash_core_components/dash_core_components.js"></script>
+<script src="https://unpkg.com/dash-core-components@2.5.0/dash_core_components/dash_core_components-shared.js"></script>
+<script src="https://unpkg.com/dash-html-components@2.0.3/dash_html_components/dash_html_components.min.js"></script>
+<script src="https://unpkg.com/dash-table@5.1.3/dash_table/bundle.js"></script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_dummy-content"] = clientside["_dashprivate_dummy-content"] || {};
+ns["children"] = 
+        function(data) {
+            if (data && data.title && data.meta) {
+                document.title = data.title;
+                document.meta = data.meta;
+            }
+        }
+        ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMaterialsApp_viewer_graph_generation_options"] = clientside["_dashprivate_CTMaterialsApp_viewer_graph_generation_options"] || {};
+ns["data"] = 
+            function (bonding_strategy, custom_cutoffs_rows, unit_cell_choice) {
+
+                const bonding_strategy_kwargs = {}
+                if (bonding_strategy === 'CutOffDictNN') {
+                    const cut_off_dict = []
+                    custom_cutoffs_rows.forEach(function(row) {
+                        cut_off_dict.push([row['A'], row['B'], parseFloat(row['A—B'])])
+                    })
+                    bonding_strategy_kwargs.cut_off_dict = cut_off_dict
+                }
+
+                return {
+                    bonding_strategy: bonding_strategy,
+                    bonding_strategy_kwargs: bonding_strategy_kwargs,
+                    unit_cell_choice: unit_cell_choice
+                }
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMaterialsApp_viewer_scene"] = clientside["_dashprivate_CTMaterialsApp_viewer_scene"] || {};
+ns["toggleVisibility"] = 
+            function (values, options) {
+                const visibility = {}
+                options.forEach(function (opt) {
+                    visibility[opt.value] = Boolean(values.includes(opt.value))
+                })
+                return visibility
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMaterialsApp_viewer_display_options"] = clientside["_dashprivate_CTMaterialsApp_viewer_display_options"] || {};
+ns["data"] = 
+            function (colorScheme, radiusStrategy, drawOptions, displayOptions) {
+
+                const newDisplayOptions = {...displayOptions}
+                newDisplayOptions.color_scheme = colorScheme
+                newDisplayOptions.radius_strategy = radiusStrategy
+                newDisplayOptions.draw_image_atoms = drawOptions.includes('draw_image_atoms')
+                newDisplayOptions.bonded_sites_outside_unit_cell = drawOptions.includes(
+                    'bonded_sites_outside_unit_cell'
+                )
+                newDisplayOptions.hide_incomplete_bonds = drawOptions.includes('hide_incomplete_bonds')
+
+                return newDisplayOptions
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMaterialsApp"] = clientside["_dashprivate_CTMaterialsApp"] || {};
+ns["data"] = 
+            function setMpid(pathName) {
+                var pathParts = pathName.split( '/' ).filter(Boolean)
+                var mpid = pathParts.pop();
+                var app = pathParts.pop();
+                return mpid && app === "materials" ? mpid : null;
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMOFApp_structure_viz_graph_generation_options"] = clientside["_dashprivate_CTMOFApp_structure_viz_graph_generation_options"] || {};
+ns["data"] = 
+            function (bonding_strategy, custom_cutoffs_rows, unit_cell_choice) {
+
+                const bonding_strategy_kwargs = {}
+                if (bonding_strategy === 'CutOffDictNN') {
+                    const cut_off_dict = []
+                    custom_cutoffs_rows.forEach(function(row) {
+                        cut_off_dict.push([row['A'], row['B'], parseFloat(row['A—B'])])
+                    })
+                    bonding_strategy_kwargs.cut_off_dict = cut_off_dict
+                }
+
+                return {
+                    bonding_strategy: bonding_strategy,
+                    bonding_strategy_kwargs: bonding_strategy_kwargs,
+                    unit_cell_choice: unit_cell_choice
+                }
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMOFApp_structure_viz_scene"] = clientside["_dashprivate_CTMOFApp_structure_viz_scene"] || {};
+ns["toggleVisibility"] = 
+            function (values, options) {
+                const visibility = {}
+                options.forEach(function (opt) {
+                    visibility[opt.value] = Boolean(values.includes(opt.value))
+                })
+                return visibility
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTMOFApp_structure_viz_display_options"] = clientside["_dashprivate_CTMOFApp_structure_viz_display_options"] || {};
+ns["data"] = 
+            function (colorScheme, radiusStrategy, drawOptions, displayOptions) {
+
+                const newDisplayOptions = {...displayOptions}
+                newDisplayOptions.color_scheme = colorScheme
+                newDisplayOptions.radius_strategy = radiusStrategy
+                newDisplayOptions.draw_image_atoms = drawOptions.includes('draw_image_atoms')
+                newDisplayOptions.bonded_sites_outside_unit_cell = drawOptions.includes(
+                    'bonded_sites_outside_unit_cell'
+                )
+                newDisplayOptions.hide_incomplete_bonds = drawOptions.includes('hide_incomplete_bonds')
+
+                return newDisplayOptions
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTtoolkit_structure_graph_generation_options"] = clientside["_dashprivate_CTtoolkit_structure_graph_generation_options"] || {};
+ns["data"] = 
+            function (bonding_strategy, custom_cutoffs_rows, unit_cell_choice) {
+
+                const bonding_strategy_kwargs = {}
+                if (bonding_strategy === 'CutOffDictNN') {
+                    const cut_off_dict = []
+                    custom_cutoffs_rows.forEach(function(row) {
+                        cut_off_dict.push([row['A'], row['B'], parseFloat(row['A—B'])])
+                    })
+                    bonding_strategy_kwargs.cut_off_dict = cut_off_dict
+                }
+
+                return {
+                    bonding_strategy: bonding_strategy,
+                    bonding_strategy_kwargs: bonding_strategy_kwargs,
+                    unit_cell_choice: unit_cell_choice
+                }
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTtoolkit_structure_scene"] = clientside["_dashprivate_CTtoolkit_structure_scene"] || {};
+ns["toggleVisibility"] = 
+            function (values, options) {
+                const visibility = {}
+                options.forEach(function (opt) {
+                    visibility[opt.value] = Boolean(values.includes(opt.value))
+                })
+                return visibility
+            }
+            ;
+</script>
+<script>
+var clientside = window.dash_clientside = window.dash_clientside || {};
+var ns = clientside["_dashprivate_CTtoolkit_structure_display_options"] = clientside["_dashprivate_CTtoolkit_structure_display_options"] || {};
+ns["data"] = 
+            function (colorScheme, radiusStrategy, drawOptions, displayOptions) {
+
+                const newDisplayOptions = {...displayOptions}
+                newDisplayOptions.color_scheme = colorScheme
+                newDisplayOptions.radius_strategy = radiusStrategy
+                newDisplayOptions.draw_image_atoms = drawOptions.includes('draw_image_atoms')
+                newDisplayOptions.bonded_sites_outside_unit_cell = drawOptions.includes(
+                    'bonded_sites_outside_unit_cell'
+                )
+                newDisplayOptions.hide_incomplete_bonds = drawOptions.includes('hide_incomplete_bonds')
+
+                return newDisplayOptions
+            }
+            ;
+</script>
+            <script id="_dash-renderer" type="application/javascript">var renderer = new DashRenderer();</script>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-26097776-1"></script>
+            <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'UA-26097776-1');
+            </script>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "mlbands"
+version = "1.0.1"
+description = "A Python package that implements automatic prediction of electronic band gaps for a set of materials based on training data"
+authors = ["Andrew R. Garcia"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+mp-api = "^0.30.5"
+torch = "^1.13.1"
+torchvision = "^0.14.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
