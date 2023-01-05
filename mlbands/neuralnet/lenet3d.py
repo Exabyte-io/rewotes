@@ -36,13 +36,13 @@ class LeNet3D(nn.Module):
         return x
 
 
-model = LeNet3D()
+# model = LeNet3D()
 
-# Test the model:
-x = Variable(torch.randn(10, 1, L, L, L)) # (N_samples,C_channels,D=L,H=L,W=L)
-print(x)
-y = model(x)
-print(y)
+# # Test the model:
+# x = Variable(torch.randn(10, 1, L, L, L)) # (N_samples,C_channels,D=L,H=L,W=L)
+# print(x)
+# y = model(x)
+# print(y)
 
 
 

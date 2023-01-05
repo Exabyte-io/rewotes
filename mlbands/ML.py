@@ -4,7 +4,7 @@ import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
 
-from mlbands.nn import LeNet5
+from mlbands.neuralnet import LeNet5
 
 
 def ML_run():
@@ -133,4 +133,4 @@ def ML_run():
         print('Accuracy of the network on the 10000 test images: {} %'.format(100 * correct / total))
     
 
-ML_run()
+# ML_run()
