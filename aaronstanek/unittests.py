@@ -1,4 +1,5 @@
 import unittest
+import numpy
 from pkg import Material, MaterialArchive
 
 class TestMaterial(unittest.TestCase):
@@ -18,6 +19,11 @@ class TestMaterial(unittest.TestCase):
         a.material_id = "HelloWorld"
         b = Material(a.serialize())
         self.assertEqual(b.material_id, "HelloWorld")
+    
+    def test_to_numpy_double_array_returns_numpy_double_array(self):
+        a = Material()
+        b = a.to_numpy_double_array()
+        self.assertEqual(type(b), numpy.ndarray)
         
     def test_material_id_is_string(self):
         a = Material()
@@ -57,6 +63,14 @@ class TestMaterialArchive(unittest.TestCase):
         c = MaterialArchive(a.serialize())
         self.assertEqual(len(c), 1)
         self.assertEqual(c[0].material_id, "B")
+    
+    def test_to_numpy_double_array_returns_2d_numpy_double_array(self):
+        a = MaterialArchive()
+        b = Material()
+        a.append(b)
+        c = a.to_numpy_double_array()
+        self.assertEqual(type(c), numpy.ndarray)
+        self.assertEqual(len(c.shape), 2)
 
     def test_appending_material_increments_length(self):
         a = MaterialArchive()

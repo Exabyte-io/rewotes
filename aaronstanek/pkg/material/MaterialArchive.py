@@ -1,3 +1,4 @@
+import numpy
 from .material_pb2 import MaterialArchive as protobuf_material_archive
 from .Material import Material
 
@@ -53,3 +54,8 @@ class MaterialArchive(object):
         else:
             with open(filename, "rb") as file:
                 return MaterialArchive(file.read())
+    def to_numpy_double_array(self):
+        rows = []
+        for material in self:
+            rows.append(material.to_numpy_double_array())
+        return numpy.array(rows)

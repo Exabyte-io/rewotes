@@ -1,3 +1,4 @@
+import numpy
 from .material_pb2 import Material as protobuf_material
 
 class Material(object):
@@ -30,3 +31,11 @@ class Material(object):
         else:
             with open(filename, "rb") as file:
                 return Material(file.read())
+    def to_numpy_double_array(self):
+        values = []
+        values.append(self.band_gap)
+        for atomic_number in range(1,119):
+            values.append(self.composition[atomic_number])
+        for atomic_number in range(1,119):
+            values.append(self.composition_reduced[atomic_number])
+        return numpy.array(values, dtype=numpy.double)
