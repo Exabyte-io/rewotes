@@ -31,30 +31,15 @@ class TestMaterial(unittest.TestCase):
         a = Material()
         self.assertEqual(type(a.band_gap.value), float)
     
-    def test_composition_is_dict(self):
+    def test_composition_is_dict_like(self):
         a = Material()
-        self.assertEqual(type(a.composition), dict)
+        a.composition[8] = 2
+        self.assertEqual(a.composition[8], 2)
     
-    def test_composition_can_be_assigned_to_formatted_dict(self):
+    def test_composition_reduced_is_dict_like(self):
         a = Material()
-        a.composition = {1: 2, 8: 1}
-    
-    def test_composition_retains_value_after_assignment(self):
-        a = Material()
-        a.composition = {1: 2, 8: 1}
-        self.assertEqual(type(a.composition), dict)
-        self.assertEqual(a.composition, {1: 2, 8: 1})
-    
-    def test_composition_assignment_increases_serialized_size(self):
-        a = Material()
-        initial_size = len(a.serialize())
-        a.composition = {1: 2, 8: 1}
-        final_size = len(a.serialize())
-        self.assertGreater(final_size, initial_size)
-    
-    def test_composition_reduced_is_dict(self):
-        a = Material()
-        self.assertEqual(type(a.composition_reduced), dict)
+        a.composition_reduced[8] = 2
+        self.assertEqual(a.composition_reduced[8], 2)
 
 class TestMaterialArchive(unittest.TestCase):
 

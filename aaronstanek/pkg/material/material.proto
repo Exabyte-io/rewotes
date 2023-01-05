@@ -13,8 +13,8 @@ message Material {
     OptionalDouble band_gap = 2;
     // stored as pairs of bytes
     // atomic_number, count
-    bytes composition = 3;
-    bytes composition_reduced = 4;
+    map<uint32, uint32> composition = 3;
+    map<uint32, uint32> composition_reduced = 4;
 }
 
 message MaterialArchive {
