@@ -31,12 +31,12 @@ def test_loadvisual():
 def test_bands():
 
     training = mlbands.Group(mlbands.SECRET_KEY)
-    training.data_make(range(1,30))
+    training.data_make(range(1,100))
     # training.data_make(range(1,30),True)
     training.resize_boxes()
 
     testing = mlbands.Group(mlbands.SECRET_KEY)
-    testing.data_make(range(300,314))
+    testing.data_make(range(300,350))
     # testing.data_make(range(300,314),True)
     testing.resize_boxes()
     
@@ -74,8 +74,8 @@ def test_dataexpand():
 
     
 test_materialprops()
-# test_visuals()
-# test_loadvisual()
+test_visuals()
+test_loadvisual()
 # test_bands()
-# test_bands_load()
-# test_dataexpand()
+test_bands_load()
+test_dataexpand()

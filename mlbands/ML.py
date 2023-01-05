@@ -40,6 +40,25 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class Machine:
     def __init__(self, batch_size=1, num_classes=1, learning_rate=0.001, num_epochs=10 ):
+        '''Machine [ learning ] class for bulk calculations
+
+        Parameters
+        ----------
+        batch_size  : int
+            batch size
+        num_classes : int
+            number of output ("Y") classes
+        learning_rate : float
+            learning rate for optimizer
+        num_epochs : int
+            number of training epochs
+        neuralnet: < neuralnets.neural_network Class>
+            neural network model (default: LeNet3D)
+        cost : <torch.nn Object>
+            cost / loss function for training default: MSELoss
+        input_channels : int
+            number of input channels to neural network for (3-D structure, band_gap) (X,Y) combination, it is =1
+        '''
         self.batch_size = batch_size 
         self.num_classes = num_classes 
         self.learning_rate = learning_rate
@@ -52,69 +71,77 @@ class Machine:
 
 
     def learn(self, trainset, testset):
+        '''neural network training and testing (validation)
 
-            # Train the model
-            trainset = reshapeXY(trainset,channels=self.input_channels)
-            train_dataset=Data(*trainset)
+        Parameters
+        ----------
+        trainset : < Group.X, Group.y >
+            training set of x and y values
+        testset : < Group.X, Group.y >
+            testing set of x and y values
+        '''
+        # Train the model
+        trainset = reshapeXY(trainset,channels=self.input_channels)
+        train_dataset=Data(*trainset)
 
-            train_loader = torch.utils.data.DataLoader(dataset = train_dataset,
-                                                    batch_size = self.batch_size,
-                                                    shuffle = True)
+        train_loader = torch.utils.data.DataLoader(dataset = train_dataset,
+                                                batch_size = self.batch_size,
+                                                shuffle = True)
 
-            model = self.neuralnet(self.num_classes).to(device)
-
-
-            #Setting the optimizer with the model parameters and learning rate
-            optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
-
-            #this is defined to print how many steps are remaining when training
-            total_step = len(train_loader)
+        model = self.neuralnet(self.num_classes).to(device)
 
 
-            # Training the model
-            for epoch in range(self.num_epochs):
-                for i, (images, labels) in enumerate(train_loader):  
-                    images = images.to(device)
-                    labels = labels.to(device)
+        #Setting the optimizer with the model parameters and learning rate
+        optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
+
+        #this is defined to print how many steps are remaining when training
+        total_step = len(train_loader)
+
+
+        # Training the model
+        for epoch in range(self.num_epochs):
+            for i, (images, labels) in enumerate(train_loader):  
+                images = images.to(device)
+                labels = labels.to(device)
+                
+                #Forward pass
+                outputs = model(images)
+                loss = self.cost(outputs, labels)
                     
-                    #Forward pass
-                    outputs = model(images)
-                    loss = self.cost(outputs, labels)
+                # Backward and optimize
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
                         
-                    # Backward and optimize
-                    optimizer.zero_grad()
-                    loss.backward()
-                    optimizer.step()
-                            
-                    if (i+1) % 400 == 0:
-                        print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
-                                    .format(epoch+1, self.num_epochs, i+1, total_step, loss.item()))
+                if (i+1) % 400 == 0:
+                    print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
+                                .format(epoch+1, self.num_epochs, i+1, total_step, loss.item()))
 
 
-            # Test the model
-            # In test phase, we don't need to compute gradients (for memory efficiency)
+        # Test the model
+        # In test phase, we don't need to compute gradients (for memory efficiency)
 
-            testset = reshapeXY(testset,channels=self.input_channels)
+        testset = reshapeXY(testset,channels=self.input_channels)
 
-            test_dataset=Data(*testset)
+        test_dataset=Data(*testset)
 
-            test_loader = torch.utils.data.DataLoader(dataset = test_dataset,
-                                            batch_size = self.batch_size,
-                                            shuffle = True)
+        test_loader = torch.utils.data.DataLoader(dataset = test_dataset,
+                                        batch_size = self.batch_size,
+                                        shuffle = True)
 
 
-            with torch.no_grad():
-                correct = 0
-                total = 0
-                for images, labels in test_loader:
-                    images = images.to(device)
-                    labels = labels.to(device)
-                    outputs = model(images)
-                    _, predicted = torch.max(outputs.data, 1)
-                    total += labels.size(0)
-                    correct += (predicted == labels).sum().item()
+        with torch.no_grad():
+            correct = 0
+            total = 0
+            for images, labels in test_loader:
+                images = images.to(device)
+                labels = labels.to(device)
+                outputs = model(images)
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
 
-                    print('predicted: {} ground-truth: {}'.format(predicted,labels ))
+                print('predicted: {} ground-truth: {}'.format(predicted,labels ))
 
-                print('Accuracy of the network on the test data: {} %'.format(100 * correct / total))
+            print('Accuracy of the network on the test data: {} %'.format(100 * correct / total))
 

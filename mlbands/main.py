@@ -236,25 +236,41 @@ class Group:
             secret API KEY used to run MPRester data requests
         materials : int
             IDs of selected material (with "mp-" prefix)
-
+        X : [varies] (float,float,float); ((float,float,float), *float); (*float)
+            quantitative predictors ("X-value")
+        Y : float
+            band gap (eV) quantitative response ("Y-value","label")
         '''
         self.API_KEY = api_key
+        self.materials = []         # material IDs (materials found in ID_list; see data_make inputs)
         self.X = []                 # quantitative predictors ("X-value")
         self.Y = []                 # quantitative response ("Y-value","label")
-        self.materials = []         # material IDs (materials found in ID_list; see data_make inputs)
+        
         self.box_lengths = []       # length scale of boxes (3-D Tensors of material chemical env.)
         self.max_length = 0
 
     def transfer(self, loaded_data):
+        '''transfer constructor variable information to Group class from loaded data
+
+        Parameters
+        ----------
+        loaded data : <"Group" class object>
+            file containing processed Materials in a Group container
+        '''
         self.X = loaded_data.X
         self.Y = loaded_data.Y
         self.materials = loaded_data.materials
 
-    # def data_make(self, ID_list = range(1,10), nonzero_gap=False, *extra_properties ):    
     def data_make(self, ID_list = range(1,10), nonzero_gap=False ):    
+        '''generate Group data for selected ID_list numbers [ for materials which exist with such IDs ]
 
-        # X,Y, box_lengths = [],[], []
-
+        Parameters
+        ----------
+        ID_list : list[int]
+            list of material_ID numbers (i.e. without "mp-" prefix)
+        nonzero_gap: bool
+            if True, only returns nonzero band gaps 
+        '''
         for i in ID_list:
             material = Material(self.API_KEY, 'mp-'+str(i))
             BG = material.bands(nonzero_gap)
@@ -274,7 +290,18 @@ class Group:
         self.Y = np.array(self.Y)
 
     def data_expand(self,boxes=True,*property_funcs):
-        
+        '''expand "X-values" data to other chemical characteristics 
+
+        e.g. data_expand(True, thermo, magnetic) appends "thermo" and "magnetic" characteristics to X in addition to 3-D Tensors
+        e.g. data_expand(False, thermo, magnetic) creates a new X-value object and appends "thermo" and "magnetic" characteristics alone
+
+        Parameters
+        ----------
+        boxes : bool
+            removes 3-D tensors to X variable if False, 
+        *property_funcs: <function_1>, ..., <function_N>
+            operates functions on Materials which extract additional properties and appends them to X
+        '''
         boxes = self.X
         self.X = [] 
         # load a property for all materials
@@ -292,7 +319,13 @@ class Group:
 
        
     def resize_boxes(self, L=32):
+        '''resize 3-D tensor boxes to fit neural network architecture (32x32x32)
 
+        Parameters
+        ----------
+        L: int
+            length-scale of boxes (3-D Tensors representing material chemical env.)
+        '''
         max_length = np.max(self.box_lengths)
 
         if L >= max_length:
