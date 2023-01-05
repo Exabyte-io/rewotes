@@ -23,14 +23,10 @@ class TestMaterial(unittest.TestCase):
         a = Material()
         self.assertEqual(type(a.material_id), str)
     
-    def test_band_gap_has_bool_member_is_defined(self):
+    def test_band_gap_is_flaot(self):
         a = Material()
-        self.assertEqual(type(a.band_gap.is_defined), bool)
-    
-    def test_band_gap_has_float_member_value(self):
-        a = Material()
-        self.assertEqual(type(a.band_gap.value), float)
-    
+        self.assertEqual(type(a.band_gap), float)
+
     def test_composition_is_dict_like(self):
         a = Material()
         a.composition[8] = 2
