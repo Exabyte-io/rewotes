@@ -1,6 +1,6 @@
 import unittest
 import numpy
-from pkg import Material, MaterialArchive
+from pkg import DataRangeEncoder, DataRangeEncoderArray, Material, MaterialArchive
 
 class TestMaterial(unittest.TestCase):
 
@@ -89,6 +89,44 @@ class TestMaterialArchive(unittest.TestCase):
             loop_count += 1
             self.assertEqual(material.material_id, "B")
         self.assertEqual(loop_count, 1)
+
+class TestDataRangeEncoder(unittest.TestCase):
+
+    def test_can_instantiate_data_range_encoder(self):
+        a = DataRangeEncoder(5,8)
+    
+    def test_encoded_value_is_between_zero_and_one(self):
+        a = DataRangeEncoder(5,8)
+        b = a.encode(6)
+        self.assertGreaterEqual(b, 0)
+        self.assertLessEqual(b, 1)
+    
+    def test_encoded_value_roundtrips_to_same_value(self):
+        a = DataRangeEncoder(5,8)
+        b = a.encode(6)
+        c = a.decode(b)
+        self.assertLess(abs(c-6), 10**-6)
+
+class TestDataRangeEncoderArray(unittest.TestCase):
+
+    def test_can_instantiate_data_range_encoder_array(self):
+        a = DataRangeEncoderArray(numpy.array([[1,2],[3,4],[5,6]],dtype=numpy.double))
+    
+    def test_can_encode_array_of_same_length(self):
+        a = DataRangeEncoderArray(numpy.array([[1,2],[3,4],[5,6]],dtype=numpy.double))
+        b = a.encode(numpy.array([2, 5], dtype=numpy.double))
+        self.assertEqual(type(b), numpy.ndarray)
+        self.assertEqual(b.shape, (2,))
+        self.assertEqual(b[0], 0.25)
+        self.assertEqual(b[1], 0.75)
+    
+    def test_can_decode_array_of_same_length(self):
+        a = DataRangeEncoderArray(numpy.array([[1,2],[3,4],[5,6]],dtype=numpy.double))
+        b = a.decode(numpy.array([0, 1], dtype=numpy.double))
+        self.assertEqual(type(b), numpy.ndarray)
+        self.assertEqual(b.shape, (2,))
+        self.assertEqual(b[0], 1)
+        self.assertEqual(b[1], 6)
 
 if __name__ == '__main__':
     unittest.main()
