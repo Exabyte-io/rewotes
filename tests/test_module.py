@@ -69,13 +69,11 @@ def test_dataexpand():
     print(training.X)
     print(testing.materials)
 
-    # formation_energy_per_atom
-
 
     
 test_materialprops()
 test_visuals()
 test_loadvisual()
-# test_bands()
-test_bands_load()
 test_dataexpand()
+test_bands()
+test_bands_load()
