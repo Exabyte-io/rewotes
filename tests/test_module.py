@@ -24,16 +24,24 @@ def test_visuals():
 def test_bands():
 
     group = mlbands.Group(mlbands.SECRET_KEY)
-    data = group.make_data()
+    group.make_data(range(1,6))
+    group.resize()
+    mlbands.save(group.X, 'materials.file')
 
-    print(data)
+def test_loadvisual():
+    xdata = mlbands.load('materials.file')
+    print(xdata)
+
+    mlbands.Material(mlbands.SECRET_KEY, box_array = xdata[3]).visual()
+    mlbands.Material(mlbands.SECRET_KEY).visual()
 
 
-def test_mlrun():
 
-    mlbands.ML_run()
+# def test_mlrun():
+
+#     mlbands.ML_run()
     
 # test_material()
 # test_visuals()
-# test_bands()
-test_mlrun()
+test_bands()
+# test_mlrun()

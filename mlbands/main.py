@@ -10,10 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Material:
-    def __init__( self, api_key, material_ID = 'mp-1103503'):
+    def __init__( self, api_key, material_ID = 'mp-1103503', box_array = None):
 
         self.API_KEY = api_key
         self.material_ID = material_ID
+        self.box_array = box_array          # material already transformed to box data form (optional)
 
     def bands(self):
         with MPRester(api_key=self.API_KEY) as mpr:
@@ -112,17 +113,25 @@ class Material:
             
     def visual(self, spacing = 1, fractional=False):
 
-        xyz_array = Material(self.API_KEY, self.material_ID).to_xyz(fractional)
-
-        xyz_array[:,1:]*=spacing
-
         ax = plt.axes(projection='3d')
-
         colors = np.linspace(2**20,2**24,118,dtype='int') #divide color range into 118 colors (for the 118 chemical elements)
 
-        for i in xyz_array:
-            atom,*xyz = i.astype('int')
-            ax.scatter3D(*xyz, s=100, c="#"+hex(colors[atom])[2:])
+
+        if self.box_array is not None:
+            #presence of box_array supplants material_ID
+            for i in np.argwhere(self.box_array):
+                x,y,z = i
+                atom = int(self.box_array[tuple(i)])
+                ax.scatter3D(x,y,z, s=100, c="#"+hex(colors[atom])[2:])
+
+        else:
+            xyz_array = Material(self.API_KEY, self.material_ID).to_xyz(fractional)
+            xyz_array[:,1:]*=spacing
+
+            for i in xyz_array:
+                atom,*xyz = i.astype('int')
+                ax.scatter3D(*xyz, s=100, c="#"+hex(colors[atom])[2:])
+
 
         set_axes_equal(ax)           
 
@@ -160,16 +169,39 @@ class Material:
 class Group:
     def __init__(self,api_key):
         self.API_KEY = api_key
+        self.max_length = 0
+        self.X = []
+        self.Y = []
+        self.X_lengths = []
 
-    def make_data(self):    
+    def make_data(self, ID_list = range(1,10) ):    
 
-        X,Y = [],[]
-        for i in range(1,10):
+        # X,Y, box_lengths = [],[], []
+
+        for i in ID_list:
             material = Material(self.API_KEY, 'mp-'+str(i))
             BG = material.bands()
             if BG:
-                Y.append(BG['energy'])
-                X.append(material.to_box())
+                self.Y.append(BG['energy'])
+                box = material.to_box()
+                self.X.append(box)
+                self.X_lengths.append(box.shape[0])
+            
 
-        return X,Y
+        # return X,Y
+
+    def resize(self, L=32):
+
+        max_length = np.max(self.X_lengths)
+
+        if L >= max_length:
+
+
+            self.X = np.array([  np.pad(self.X[i],\
+                        ( (0,L-self.X_lengths[i]),(0,L-self.X_lengths[i]),(0,L-self.X_lengths[i]) ) 
+                        ) for i in range(len(self.X)) ])
+
+
+        print(self.X.shape)
+
     

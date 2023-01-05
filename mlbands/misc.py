@@ -23,3 +23,13 @@ def set_axes_equal(ax):
     origin = np.mean(limits, axis=1)
     radius = 0.5 * np.max(np.abs(limits[:, 1] - limits[:, 0]))
     set_axes_radius(ax, origin, radius)
+
+
+# adapted from https://stackoverflow.com/a/47381855/14460178
+import pickle
+
+def save(data, filename = 'file.mat3r'): 
+    with open(filename, 'wb') as handle: pickle.dump(data, handle)
+
+def load(filename = 'file.mat3r'): 
+    with open(filename, 'rb') as handle: return pickle.load(handle)
