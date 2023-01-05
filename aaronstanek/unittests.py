@@ -1,6 +1,6 @@
 import unittest
 import numpy
-from pkg import DataRangeEncoder, DataRangeEncoderArray, Material, MaterialArchive
+from pkg import DataRangeEncoder, DataRangeEncoderArray, Dataset, Material, MaterialArchive
 
 class TestMaterial(unittest.TestCase):
 
@@ -127,6 +127,22 @@ class TestDataRangeEncoderArray(unittest.TestCase):
         self.assertEqual(b.shape, (2,))
         self.assertEqual(b[0], 1)
         self.assertEqual(b[1], 6)
+
+class TestDataset(unittest.TestCase):
+
+    def test_dataset_can_be_instantiated(self):
+        a = MaterialArchive()
+        a.append(Material())
+        a.append(Material())
+        a.append(Material())
+        b = Dataset(a)
+        self.assertEqual(len(b.training_x.shape), 2)
+        self.assertEqual(len(b.training_y.shape), 1)
+        self.assertEqual(len(b.testing_x.shape), 2)
+        self.assertEqual(len(b.testing_y.shape), 1)
+        self.assertEqual(len(b.training_x), len(b.training_y))
+        self.assertEqual(len(b.testing_x), len(b.testing_y))
+        self.assertEqual(len(b.training_x) + len(b.testing_x), 3)
 
 if __name__ == '__main__':
     unittest.main()

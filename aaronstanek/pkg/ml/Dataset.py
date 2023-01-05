@@ -19,6 +19,8 @@ class Dataset(object):
     def __init__(self, archive):
         if not isinstance(archive, MaterialArchive):
             raise TypeError("Expected instance of MaterialArchive. Found: " + str(type(archive)))
+        if len(archive) < 3:
+            raise ValueError("Must provide at least three entries for meaningful machine learning. Found: " + str(len(archive)))
         numpy_double_array = archive.to_numpy_double_array()
         self.data_range_encoder_array = DataRangeEncoderArray(numpy_double_array)
         training_data = []
