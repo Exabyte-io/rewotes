@@ -27,7 +27,13 @@ def test_bands():
     data = group.make_data()
 
     print(data)
+
+
+def test_mlrun():
+
+    mlbands.ML_run()
     
-test_material()
-test_visuals()
-test_bands()
+# test_material()
+# test_visuals()
+# test_bands()
+test_mlrun()

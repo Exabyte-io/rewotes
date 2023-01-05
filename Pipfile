@@ -8,6 +8,8 @@ mp-api = "*"
 mpcontribs-client = "*"
 mendeleev = "*"
 numpy = "*"
+torch = "*"
+torchvision = "*"
 
 [dev-packages]
 
