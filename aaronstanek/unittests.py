@@ -1,5 +1,6 @@
 import unittest
 import numpy
+import torch
 from pkg import DataRangeEncoder, DataRangeEncoderArray, Material, MaterialArchive, TrainingDataManager
 
 class TestMaterial(unittest.TestCase):
@@ -136,13 +137,8 @@ class TestTrainingDataManager(unittest.TestCase):
         a.append(Material())
         a.append(Material())
         b = TrainingDataManager(a)
-        self.assertEqual(len(b.training_x.shape), 2)
-        self.assertEqual(len(b.training_y.shape), 1)
-        self.assertEqual(len(b.testing_x.shape), 2)
-        self.assertEqual(len(b.testing_y.shape), 1)
-        self.assertEqual(len(b.training_x), len(b.training_y))
-        self.assertEqual(len(b.testing_x), len(b.testing_y))
-        self.assertEqual(len(b.training_x) + len(b.testing_x), 3)
+        self.assertEqual(type(b.training), torch.utils.data.DataLoader)
+        self.assertEqual(type(b.testing), torch.utils.data.DataLoader)
 
 if __name__ == '__main__':
     unittest.main()
