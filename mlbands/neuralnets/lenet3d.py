@@ -4,12 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-# input: (N = batch_size, C = 1, L = 32, L = 32, L = 32)
-# output: (N, num_classes)
-L =32
-num_classes = 5
-
+L=32    # length scale of cubes (default: 32 x 32 x 32)
 
 class LeNet3D(nn.Module):
     def __init__(self, num_classes):
@@ -35,6 +30,18 @@ class LeNet3D(nn.Module):
         return x
 
 
+# # input: (N = batch_size, C = 1, L = 32, L = 32, L = 32)
+# # output: (N, num_classes)
+
+# # Test the model:
+# num_classes = 1
+
+# model = LeNet3D(num_classes)
+
+# x = Variable(torch.randn(10, 1, L, L, L)) # (N_samples,C_channels,D=L,H=L,W=L)
+# print(x)
+# y = model(x)
+# print(y)
 
 
 

@@ -171,11 +171,14 @@ class Material:
 class Group:
     def __init__(self,api_key):
         self.API_KEY = api_key
+        self.X = []                 # quantitative predictors ("X-value")
+        self.Y = []                 # quantitative response ("Y-value","label")
+        self.materials = []         # material IDs (materials found in ID_list; see make_data inputs)
+        self.box_lengths = []       # length scale of boxes (3-D Tensors of material chemical env.)
         self.max_length = 0
-        self.X = []
-        self.Y = []
-        self.X_lengths = []
 
+
+    # def make_data(self, ID_list = range(1,10), nonzero_gap=False, *extra_properties ):    
     def make_data(self, ID_list = range(1,10), nonzero_gap=False ):    
 
         # X,Y, box_lengths = [],[], []
@@ -183,24 +186,49 @@ class Group:
         for i in ID_list:
             material = Material(self.API_KEY, 'mp-'+str(i))
             BG = material.bands(nonzero_gap)
-            if BG:
-                self.Y.append(BG['energy'])
+            if BG:                              # if material with material_ID exists
+                self.materials.append('mp-'+str(i))
+
+                # quantitative response ("Y-value","label")
+                self.Y.append(BG['energy'])     # append band gap energy ( eV ) 
+
                 box = material.to_box()
-                self.X.append(box)
-                self.X_lengths.append(box.shape[0])
-        
+                self.box_lengths.append(box.shape[0])
+                # quantitative predictors ("X-value")
+                self.X.append(box)              # append 3-D Tensor representing material chemical env. 
+                # for extra_x in features:
+                #     self.X.append(extra_x)
+
         self.Y = np.array(self.Y)
 
+    def expand_data(self,boxes=True,*property_funcs):
+        
+        boxes = self.X
+        self.X = [] 
+        # load a property for all materials
+        for i in self.materials:
+            material = Material(self.API_KEY, 'mp-'+str(i))
+
+            k=0
+            material_props = []
+            material_props.append(boxes[k]) if boxes else None
+            for func in property_funcs:
+                material_props.append(func(material))
+            
+            self.X.append(material_props)
+            k+=1
+
+       
 
     def resize(self, L=32):
 
-        max_length = np.max(self.X_lengths)
+        max_length = np.max(self.box_lengths)
 
         if L >= max_length:
 
 
             self.X = np.array([  np.pad(self.X[i],\
-                        ( (0,L-self.X_lengths[i]),(0,L-self.X_lengths[i]),(0,L-self.X_lengths[i]) ) 
+                        ( (0,L-self.box_lengths[i]),(0,L-self.box_lengths[i]),(0,L-self.box_lengths[i]) ) 
                         ) for i in range(len(self.X)) ])
 
         # print(self.X.shape)

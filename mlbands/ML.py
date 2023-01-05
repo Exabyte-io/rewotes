@@ -4,9 +4,6 @@ import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
 
-from mlbands.neuralnet import LeNet3D
-import numpy as np
-
 from torch.utils.data import Dataset, DataLoader
 class Data(Dataset):
     def __init__(self,X_train,Y_train):
@@ -17,6 +14,8 @@ class Data(Dataset):
         return self.X[index], self.Y[index]
     def __len__(self):
         return self.len
+
+from mlbands.neuralnets import LeNet3D, LeNet5
 
 
 def reshapeX(array,channels=1):
@@ -33,11 +32,10 @@ def reshapeXY(data,channels=1):
     X,Y = data
     # return [reshapeX(X,channels=1),Y]
     return [reshapeX(X,channels=1),reshapeY(Y)]
-    
+
 
 # Device will determine whether to run the training on GPU or CPU.
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 
 
 class Machine:
@@ -48,7 +46,8 @@ class Machine:
         self.num_epochs = num_epochs
 
         self.neuralnet = LeNet3D
-        self.cost = nn.MSELoss()
+        self.cost = nn.MSELoss()            # the loss function
+        # self.cost = nn.CrossEntropyLoss()
         self.input_channels = 1
 
 
@@ -64,9 +63,6 @@ class Machine:
 
             model = self.neuralnet(self.num_classes).to(device)
 
-            #Setting the loss function
-            # cost = nn.CrossEntropyLoss()
-            # cost = nn.MSELoss()
 
             #Setting the optimizer with the model parameters and learning rate
             optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
@@ -120,5 +116,5 @@ class Machine:
 
                     print('predicted: {} ground-truth: {}'.format(predicted,labels ))
 
-                print('Accuracy of the network on the 10000 test images: {} %'.format(100 * correct / total))
+                print('Accuracy of the network on the test data: {} %'.format(100 * correct / total))
 
