@@ -1,3 +1,4 @@
+# LeNet5 from Paperspace blog https://blog.paperspace.com/writing-lenet5-from-scratch-in-python/
 import torch.nn as nn
 
 #Defining the convolutional neural network

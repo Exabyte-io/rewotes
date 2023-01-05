@@ -12,7 +12,7 @@ num_classes = 5
 
 
 class LeNet3D(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes):
         super(LeNet3D, self).__init__()
 
         self.conv1 = nn.Conv3d(1, 6, kernel_size=(5, 5, 5))
@@ -24,25 +24,17 @@ class LeNet3D(nn.Module):
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
-        print(x.size())
+        # print(x.size())
         x = self.pool(F.relu(self.conv2(x)))
-        print(x.size())
+        # print(x.size())
         x = x.view(-1, (L//2) * 5 * 5 * 5)
-        # x = x.view(x.size(0), -1) 
-        print(x.size())
+        # print(x.size())
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
 
 
-# model = LeNet3D()
-
-# # Test the model:
-# x = Variable(torch.randn(10, 1, L, L, L)) # (N_samples,C_channels,D=L,H=L,W=L)
-# print(x)
-# y = model(x)
-# print(y)
 
 
 

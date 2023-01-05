@@ -19,29 +19,42 @@ def test_visuals():
     box = material.to_box(True)
     material.visual(10,True)
 
-
-
-def test_bands():
-
-    group = mlbands.Group(mlbands.SECRET_KEY)
-    group.make_data(range(1,6))
-    group.resize()
-    mlbands.save(group.X, 'materials.file')
-
 def test_loadvisual():
-    xdata = mlbands.load('materials.file')
+    xdata = mlbands.load('materials.data')
     print(xdata)
 
     mlbands.Material(mlbands.SECRET_KEY, box_array = xdata[3]).visual()
     mlbands.Material(mlbands.SECRET_KEY).visual()
 
 
+def test_bands():
 
-# def test_mlrun():
+    training = mlbands.Group(mlbands.SECRET_KEY)
+    training.make_data(range(1,30),True)
+    training.resize()
 
-#     mlbands.ML_run()
+    testing = mlbands.Group(mlbands.SECRET_KEY)
+    testing.make_data(range(300,314),True)
+    testing.resize()
+    
+    machine = mlbands.Machine()
+    machine.learn([training.X,training.Y],[testing.X,testing.Y])
+
+    # mlbands.save([training.X,training.Y], 'train.data')
+    # mlbands.save([testing.X,testing.Y], 'test.data')
+
+def test_bands_load():
+
+    train = mlbands.load('train.data')
+    test = mlbands.load('test.data')
+    machine = mlbands.Machine()
+    machine.learn(train,test)
+
+
+
     
 # test_material()
 # test_visuals()
+# test_loadvisual()
 test_bands()
-# test_mlrun()
+# test_bands_load()

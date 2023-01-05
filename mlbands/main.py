@@ -16,7 +16,7 @@ class Material:
         self.material_ID = material_ID
         self.box_array = box_array          # material already transformed to box data form (optional)
 
-    def bands(self):
+    def bands(self,nonzero_gap=False):
         with MPRester(api_key=self.API_KEY) as mpr:
             #adapted from https://matsci.org/t/obtain-large-numbers-of-band-structures/3780
             bandstructure = None 
@@ -26,13 +26,15 @@ class Material:
                 pass
             if bandstructure:
                 band_gap = bandstructure.get_band_gap()
-                
                 print('Band Gap: {} eV\nDirect Gap: {}\nMetallic: {}'.\
                     format(band_gap['energy'],\
                         'Yes' if band_gap['direct'] else 'No',\
                         'No' if band_gap['transition'] else 'Yes'))
-
-                return band_gap
+                        
+                if nonzero_gap:
+                    if band_gap['energy']: return band_gap
+                    else: return 0
+                else: return band_gap
             else:
                 return 0
 
@@ -174,21 +176,21 @@ class Group:
         self.Y = []
         self.X_lengths = []
 
-    def make_data(self, ID_list = range(1,10) ):    
+    def make_data(self, ID_list = range(1,10), nonzero_gap=False ):    
 
         # X,Y, box_lengths = [],[], []
 
         for i in ID_list:
             material = Material(self.API_KEY, 'mp-'+str(i))
-            BG = material.bands()
+            BG = material.bands(nonzero_gap)
             if BG:
                 self.Y.append(BG['energy'])
                 box = material.to_box()
                 self.X.append(box)
                 self.X_lengths.append(box.shape[0])
-            
+        
+        self.Y = np.array(self.Y)
 
-        # return X,Y
 
     def resize(self, L=32):
 
@@ -201,7 +203,8 @@ class Group:
                         ( (0,L-self.X_lengths[i]),(0,L-self.X_lengths[i]),(0,L-self.X_lengths[i]) ) 
                         ) for i in range(len(self.X)) ])
 
-
-        print(self.X.shape)
+        # print(self.X.shape)
 
     
+
+

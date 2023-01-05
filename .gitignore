@@ -1,6 +1,6 @@
 __pycache__
 *.egg-info/
-materials.file
+*.data
 
 #neuralnetwork-generated
 data
