@@ -7,7 +7,7 @@ class Material(object):
         if initializer is None:
             pass
         elif type(initializer) == bytes:
-            self.__dict__["_values"] .ParseFromString(initializer)
+            self.__dict__["_values"].ParseFromString(initializer)
         else:
             raise TypeError("Expected bytes. Found: " + str(type(initializer)))
     def __getattr__(self, property_name):

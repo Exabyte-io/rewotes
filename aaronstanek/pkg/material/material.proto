@@ -16,3 +16,7 @@ message Material {
     bytes composition = 3;
     bytes composition_reduced = 4;
 }
+
+message MaterialArchive {
+    repeated bytes serialized_materials = 1;
+}
