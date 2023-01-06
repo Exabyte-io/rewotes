@@ -12,16 +12,23 @@ def assign_as_testing(index):
     return result[0] < 241 and result[1] < 119 and result[2] < 117
 
 class TrainingDataManager(object):
-    def __init__(self, archive, batch_size = 64):
-        if not isinstance(archive, MaterialArchive):
-            raise TypeError("Expected instance of MaterialArchive. Found: " + str(type(archive)))
+    def __init__(self, initializer, batch_size = 64):
         try:
             batch_size = int(batch_size)
         except:
             raise TypeError("Expected type that could be cast to int. Found: " + str(type(batch_size)))
-        if len(archive) < 3:
-            raise ValueError("Must provide at least three entries for meaningful machine learning. Found: " + str(len(archive)))
-        numpy_double_array = archive.to_numpy_double_array()
+        if isinstance(initializer, MaterialArchive):
+            if len(initializer) < 3:
+                raise ValueError("Must provide at least three entries for meaningful machine learning. Found: " + str(len(initializer)))
+            numpy_double_array = initializer.to_numpy_double_array()
+        elif isinstance(initializer, numpy.ndarray):
+            if initializer.dtype != numpy.double:
+                raise TypeError("Expected numpy array to have dtype=double. Found: " + str(initializer.dtype))
+            if initializer.shape[0] < 3:
+                raise ValueError("Must provide at least three entries for meaningful machine learning. Found: " + str(initializer.shape[0]))
+            if initializer.shape[1] < 2:
+                raise ValueError("Must provide at least one feature on which to train.")
+            numpy_double_array = initializer
         self.data_range_encoder_array = DataRangeEncoderArray(numpy_double_array)
         self.total_feature_width = len(self.data_range_encoder_array)
         training_data = []
@@ -34,3 +41,6 @@ class TrainingDataManager(object):
     @staticmethod
     def load_from_archive_file(filename):
         return TrainingDataManager(MaterialArchive.load_from_file(filename))
+    @staticmethod
+    def load_from_numpy_file(filename):
+        return TrainingDataManager(numpy.load(filename))

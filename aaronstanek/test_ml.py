@@ -1,6 +1,6 @@
 import pkg
 
-a = pkg.TrainingDataManager.load_from_archive_file("materials.materialarchive")
+a = pkg.TrainingDataManager.load_from_numpy_file("materials.npy")
 
 m = pkg.Model(a)
 

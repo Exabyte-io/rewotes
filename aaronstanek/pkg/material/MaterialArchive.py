@@ -59,3 +59,9 @@ class MaterialArchive(object):
         for material in self:
             rows.append(material.to_numpy_double_array())
         return numpy.array(rows)
+    def save_as_numpy(self, filename):
+        if type(filename) != str:
+            raise TypeError("Expected str. Found: " + str(type(filename)))
+        else:
+            numpy_double_array = self.to_numpy_double_array()
+            numpy.save(filename, numpy_double_array, allow_pickle=False, fix_imports=False)
