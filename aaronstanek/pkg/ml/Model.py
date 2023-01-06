@@ -5,14 +5,18 @@ class Model(torch.nn.Module):
     def __init__(self, training_manager):
         super(Model, self).__init__()
         self.linear1 = torch.nn.Linear(training_manager.total_feature_width - 1, 100)
+        self.drop1 = torch.nn.Dropout(p=0.2)
         self.relu1 = torch.nn.ReLU()
         self.linear2 = torch.nn.Linear(100, 100)
+        self.drop2 = torch.nn.Dropout(p=0.2)
         self.relu2 = torch.nn.ReLU()
         self.linear3 = torch.nn.Linear(100,1)
     def forward(self, x):
         x = self.linear1(x)
+        x = self.drop1(x)
         x = self.relu1(x)
         x = self.linear2(x)
+        x = self.drop2(x)
         x = self.relu2(x)
         x = self.linear3(x)
         return x
@@ -30,6 +34,27 @@ class Model(torch.nn.Module):
                 optimizer.step()
                 loss_for_epoch += loss.item()
             print("loss", loss_for_epoch)
+    def predict_with_error(self, x, iteration_count = None):
+        if iteration_count is None:
+            iteration_count = 10
+        prediction_set = []
+        for i in range(iteration_count):
+            prediction_set.append(self(x).detach().numpy())
+        prediction_set = numpy.array(prediction_set)
+        return numpy.apply_along_axis(numpy.mean, 0, prediction_set), numpy.apply_along_axis(numpy.std, 0, prediction_set)
+    def test_with_error(self, training_manager, iteration_count = None):
+        prediction_z_scores = []
+        for data in training_manager.testing:
+            x, y = data
+            prediction_means, prediction_stds = self.predict_with_error(x, iteration_count=iteration_count)
+            for i in range(len(y)):
+                prediction_z_scores.append(abs(float((prediction_means[i][0] - y[i][0]) / (prediction_stds[i][0] + 10**-30))))
+        prediction_z_scores.sort()
+        return (
+            prediction_z_scores[int(len(prediction_z_scores) * 0.25)],
+            prediction_z_scores[int(len(prediction_z_scores) * 0.50)],
+            prediction_z_scores[int(len(prediction_z_scores) * 0.75)],
+            )
     def test_standard_deviation(self, training_manager):
         prediction_deltas_zero = []
         prediction_deltas_nonzero = []
