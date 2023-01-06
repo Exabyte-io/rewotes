@@ -23,6 +23,7 @@ class TrainingDataManager(object):
             raise ValueError("Must provide at least three entries for meaningful machine learning. Found: " + str(len(archive)))
         numpy_double_array = archive.to_numpy_double_array()
         self.data_range_encoder_array = DataRangeEncoderArray(numpy_double_array)
+        self.total_feature_width = len(self.data_range_encoder_array)
         training_data = []
         testing_data = []
         for material_index in range(len(numpy_double_array)):

@@ -15,10 +15,12 @@ class DataRangeEncoder(object):
         if not math.isfinite(maximum_value):
             raise ValueError("Expected finite value. Found: " + str(maximum_value))
         if minimum_value == maximum_value:
+            self.factor = 1.0
             self.encode = lambda x: 0
             self.decode = lambda x: minimum_value
         elif minimum_value < maximum_value:
             delta = maximum_value - minimum_value
+            self.factor = 1.0 / delta
             self.encode = lambda x: (x - minimum_value) / delta
             self.decode = lambda x: x * delta + minimum_value
         else:

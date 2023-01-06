@@ -20,6 +20,8 @@ class DataRangeEncoderArray(object):
         self.encoders = []
         for property_index in range(len(minimum_values)):
             self.encoders.append(DataRangeEncoder(minimum_values[property_index], maximum_values[property_index]))
+    def __len__(self):
+        return len(self.encoders)
     def encode(self, numpy_double_array):
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError("Expected numpy array. Found: " + str(type(numpy_double_array)))
