@@ -12,7 +12,10 @@ class Model(torch.nn.Module):
         self.linear2 = torch.nn.Linear(100, 100)
         self.drop2 = torch.nn.Dropout(p=0.2)
         self.relu2 = torch.nn.ReLU()
-        self.linear3 = torch.nn.Linear(100,1)
+        self.linear3 = torch.nn.Linear(100, 100)
+        self.drop3 = torch.nn.Dropout(p=0.2)
+        self.relu3 = torch.nn.ReLU()
+        self.linear4 = torch.nn.Linear(100,1)
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.linear1(x)
         x = self.drop1(x)
@@ -21,6 +24,9 @@ class Model(torch.nn.Module):
         x = self.drop2(x)
         x = self.relu2(x)
         x = self.linear3(x)
+        x = self.drop3(x)
+        x = self.relu3(x)
+        x = self.linear4(x)
         return x
     def train(self, training_manager: TrainingDataManager, epochs: int = 5) -> None:
         criterion = torch.nn.MSELoss()
