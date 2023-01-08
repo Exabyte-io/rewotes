@@ -7,11 +7,11 @@ class DataRangeEncoderArray(object):
             raise TypeError("Expected numpy array. Found: " + str(type(numpy_double_array)))
         if len(numpy_double_array.shape) != 2:
             raise ValueError("Expected numpy array to be 2D. Found shape: " + str(numpy_double_array.shape))
-        minimum_values = numpy.apply_along_axis(min, 1, numpy_double_array)
-        maximum_values = numpy.apply_along_axis(max, 1, numpy_double_array)
+        minimum_values = numpy.apply_along_axis(min, 0, numpy_double_array)
+        maximum_values = numpy.apply_along_axis(max, 0, numpy_double_array)
         self.encoders = list(map(
             lambda property_index: DataRangeEncoder(minimum_values[property_index], maximum_values[property_index]),
-            range(numpy_double_array.shape[1])
+            range(len(minimum_values))
         ))
     def __len__(self) -> int:
         return len(self.encoders)
