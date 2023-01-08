@@ -2,7 +2,7 @@
 from .Element import Element
 
 class ElementLookupTable(object):
-    def _put_element_in_table(self, english_name, symbol, atomic_number):
+    def _put_element_in_table(self, english_name: str, symbol: str, atomic_number: int) -> None:
         element = Element(english_name, symbol, atomic_number)
         self._by_english_name[english_name] = element
         self._by_symbol[symbol] = element
@@ -129,17 +129,17 @@ class ElementLookupTable(object):
         self._put_element_in_table("Livermorium", "Lv", 116)
         self._put_element_in_table("Tennessine", "Ts", 117)
         self._put_element_in_table("Oganesson", "Og", 118)
-    def lookup_by_english_name(self, english_name):
+    def lookup_by_english_name(self, english_name: str) -> Element:
         if type(english_name) != str:
             raise TypeError("Expected str. Found: " + str(type(english_name)))
         else:
             return self._by_english_name.get(english_name)
-    def lookup_by_symbol(self, symbol):
+    def lookup_by_symbol(self, symbol: str) -> Element:
         if type(symbol) != str:
             raise TypeError("Expected str. Found: " + str(type(symbol)))
         else:
             return self._by_symbol.get(symbol)
-    def lookup_by_atomic_number(self, atomic_number):
+    def lookup_by_atomic_number(self, atomic_number: int) -> Element:
         try:
             return self._by_atomic_number.get(int(atomic_number))
         except:

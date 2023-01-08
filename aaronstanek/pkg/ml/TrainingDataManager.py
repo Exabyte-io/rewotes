@@ -1,18 +1,20 @@
+from __future__ import annotations
 import hashlib
 import numpy
 import torch
 from ..material import MaterialArchive
 from .DataRangeEncoderArray import DataRangeEncoderArray
 from .Dataset import Dataset
+from typing import Union
 
 # int -> bool
 # pure function which returns True for 20% of input values
-def assign_as_testing(index):
+def assign_as_testing(index: int) -> bool:
     result = hashlib.md5(str(index).encode("utf-8")).digest()
     return result[0] < 241 and result[1] < 119 and result[2] < 117
 
 class TrainingDataManager(object):
-    def __init__(self, initializer, batch_size = 64):
+    def __init__(self, initializer: Union[MaterialArchive, numpy.ndarray], batch_size: int = 64):
         try:
             batch_size = int(batch_size)
         except:
@@ -39,8 +41,8 @@ class TrainingDataManager(object):
         self.training = torch.utils.data.DataLoader(Dataset(training_data), batch_size=batch_size, shuffle=True)
         self.testing = torch.utils.data.DataLoader(Dataset(testing_data), batch_size=batch_size, shuffle=True)
     @staticmethod
-    def load_from_archive_file(filename):
+    def load_from_archive_file(filename: str) -> TrainingDataManager:
         return TrainingDataManager(MaterialArchive.load_from_file(filename))
     @staticmethod
-    def load_from_numpy_file(filename):
+    def load_from_numpy_file(filename: str) -> TrainingDataManager:
         return TrainingDataManager(numpy.load(filename))

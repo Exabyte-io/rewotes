@@ -1,7 +1,7 @@
 import math
 
 class DataRangeEncoder(object):
-    def __init__(self, minimum_value, maximum_value):
+    def __init__(self, minimum_value: float, maximum_value: float):
         try:
             minimum_value = float(minimum_value)
         except:

@@ -3,7 +3,7 @@ from mp_api.client import MPRester
 from ..material import Material, MaterialArchive
 
 class Downloader(object):
-    def __init__(self, destination_filename, api_key):
+    def __init__(self, destination_filename: str, api_key: str):
         if type(destination_filename) != str:
             raise TypeError("Expected str. Found: " + str(type(destination_filename)))
         if type(api_key) != str:
@@ -15,7 +15,7 @@ class Downloader(object):
             file.write("")
         self.destination_filename = destination_filename
         self.api_key = api_key
-    def download(self):
+    def download(self) -> float:
         start_time = time.time()
         with MPRester(self.api_key) as mpr:
             material_ids = list(map(

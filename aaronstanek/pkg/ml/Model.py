@@ -1,5 +1,7 @@
 import numpy
 import torch
+from .TrainingDataManager import TrainingDataManager
+from typing import Tuple
 
 class Model(torch.nn.Module):
     def __init__(self, training_manager):
@@ -11,7 +13,7 @@ class Model(torch.nn.Module):
         self.drop2 = torch.nn.Dropout(p=0.2)
         self.relu2 = torch.nn.ReLU()
         self.linear3 = torch.nn.Linear(100,1)
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.linear1(x)
         x = self.drop1(x)
         x = self.relu1(x)
@@ -20,7 +22,7 @@ class Model(torch.nn.Module):
         x = self.relu2(x)
         x = self.linear3(x)
         return x
-    def train(self, training_manager, epochs = 5):
+    def train(self, training_manager: TrainingDataManager, epochs: int = 5) -> None:
         criterion = torch.nn.MSELoss()
         optimizer = torch.optim.Adam(self.parameters())
         for epoch in range(epochs):
@@ -34,7 +36,7 @@ class Model(torch.nn.Module):
                 optimizer.step()
                 loss_for_epoch += loss.item()
             print("loss", loss_for_epoch)
-    def predict_with_error(self, x, iteration_count = None):
+    def predict_with_error(self, x: torch.Tensor, iteration_count: int = None) -> Tuple[numpy.ndarray, numpy.ndarray]:
         if iteration_count is None:
             iteration_count = 10
         prediction_set = []
@@ -42,7 +44,7 @@ class Model(torch.nn.Module):
             prediction_set.append(self(x).detach().numpy())
         prediction_set = numpy.array(prediction_set)
         return numpy.apply_along_axis(numpy.mean, 0, prediction_set), numpy.apply_along_axis(numpy.std, 0, prediction_set)
-    def test_with_error(self, training_manager, iteration_count = None):
+    def test_with_error(self, training_manager: TrainingDataManager, iteration_count: int = None) -> Tuple[float, float, float]:
         prediction_z_scores = []
         for data in training_manager.testing:
             x, y = data
@@ -55,7 +57,7 @@ class Model(torch.nn.Module):
             prediction_z_scores[int(len(prediction_z_scores) * 0.50)],
             prediction_z_scores[int(len(prediction_z_scores) * 0.75)],
             )
-    def test_standard_deviation(self, training_manager):
+    def test_standard_deviation(self, training_manager: TrainingDataManager) -> Tuple[numpy.floating, numpy.floating, numpy.floating, numpy.floating]:
         prediction_deltas_zero = []
         prediction_deltas_nonzero = []
         for data in training_manager.testing:

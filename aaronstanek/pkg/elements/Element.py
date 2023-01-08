@@ -1,5 +1,5 @@
 class Element(object):
-    def __init__(self, english_name, symbol, atomic_number):
+    def __init__(self, english_name: str, symbol: str, atomic_number: int):
         self._english_name = english_name
         self._symbol = symbol
         self._atomic_number = atomic_number

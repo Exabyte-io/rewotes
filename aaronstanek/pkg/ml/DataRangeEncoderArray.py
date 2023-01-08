@@ -2,7 +2,7 @@ import numpy
 from .DataRangeEncoder import DataRangeEncoder
 
 class DataRangeEncoderArray(object):
-    def __init__(self, numpy_double_array):
+    def __init__(self, numpy_double_array: numpy.ndarray):
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError("Expected numpy array. Found: " + str(type(numpy_double_array)))
         if len(numpy_double_array.shape) != 2:
@@ -13,9 +13,9 @@ class DataRangeEncoderArray(object):
             lambda property_index: DataRangeEncoder(minimum_values[property_index], maximum_values[property_index]),
             range(numpy_double_array.shape[1])
         ))
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.encoders)
-    def encode(self, numpy_double_array):
+    def encode(self, numpy_double_array: numpy.ndarray) -> numpy.ndarray:
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError("Expected numpy array. Found: " + str(type(numpy_double_array)))
         if len(numpy_double_array.shape) != 1:
@@ -26,7 +26,7 @@ class DataRangeEncoderArray(object):
             lambda property_index: self.encoders[property_index].encode(numpy_double_array[property_index]),
             range(len(self.encoders)))),
             dtype=numpy.double)
-    def decode(self, numpy_double_array):
+    def decode(self, numpy_double_array: numpy.ndarray) -> numpy.ndarray:
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError("Expected numpy array. Found: " + str(type(numpy_double_array)))
         if len(numpy_double_array.shape) != 1:
