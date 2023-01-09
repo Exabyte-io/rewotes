@@ -1,26 +1,19 @@
-import time
 from mp_api.client import MPRester
 from ..material import Material, MaterialArchive
 
 
 class Downloader(object):
-    def __init__(self, destination_filename: str, api_key: str):
-        if type(destination_filename) != str:
-            raise TypeError('Expected str. Found: ' +
-                            str(type(destination_filename)))
+    """Manages downloads of materials from materialsproject.org."""
+
+    def __init__(self, api_key: str):
+        """Create a Downloader instance."""
         if type(api_key) != str:
             raise TypeError('Expected str. Found: ' + str(type(api_key)))
-        if destination_filename[-16:] != '.materialarchive':
-            raise ValueError(
-                'Expected file extension materialarchive. Found filename: ' + destination_filename)
-        # verify that we are able to write to the file before we begin downloading data
-        with open(destination_filename, 'w') as file:
-            file.write('')
-        self.destination_filename = destination_filename
         self.api_key = api_key
 
     def download(self) -> MaterialArchive:
-        start_time = time.time()
+        """Download a selected list of material properties for all materials in
+        the materialsproject.org database."""
         with MPRester(self.api_key) as mpr:
             material_ids = list(map(
                 lambda document: document.material_id,
@@ -49,3 +42,17 @@ class Downloader(object):
                             document.composition_reduced[atomic_number])
                     archive.append(material)
             return MaterialArchive
+
+    def download_to_file(self, filename: str) -> None:
+        """Download a selected list of material properties for all materials in
+        the materialsproject.org database.
+
+        Save the results in a provided file.
+        """
+        # verify that we can write to the file before we download
+        if type(filename) != str:
+            raise TypeError('Expected str. Found: ' + str(type(filename)))
+        with open(filename, 'w') as file:
+            file.write('')
+        archive = self.download()
+        archive.save_to_file(filename)
