@@ -10,7 +10,7 @@ class Material(object):
     def __init__(self, initializer: Optional[bytes] = None):
         """Create a new Material instance.
 
-        Optionally pass serialized Material protocol-buffer as
+        Optionally pass a serialized Material protocol-buffer as
         initializer parameter.
         """
         self.__dict__['_values'] = protobuf_material()
@@ -35,7 +35,7 @@ class Material(object):
         delattr(self.__dict__['_values'], property_name)
 
     def serialize(self) -> bytes:
-        """Serialize the wrapped protocol-buffer."""
+        """Return a serialized version the wrapped protocol-buffer."""
         return self.__dict__['_values'] .SerializeToString()
 
     def save_to_file(self, filename: str) -> None:
