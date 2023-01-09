@@ -1,8 +1,8 @@
 import numpy
-from .DataRangeEncoder import DataRangeEncoder
+from .NormalizationEncoder import NormalizationEncoder
 
 
-class DataRangeEncoderArray(object):
+class NormalizationEncoderArray(object):
     def __init__(self, numpy_double_array: numpy.ndarray):
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError('Expected numpy array. Found: ' +
@@ -13,7 +13,7 @@ class DataRangeEncoderArray(object):
         minimum_values = numpy.apply_along_axis(min, 0, numpy_double_array)
         maximum_values = numpy.apply_along_axis(max, 0, numpy_double_array)
         self.encoders = list(map(
-            lambda property_index: DataRangeEncoder(
+            lambda property_index: NormalizationEncoder(
                 minimum_values[property_index], maximum_values[property_index]),
             range(len(minimum_values))
         ))

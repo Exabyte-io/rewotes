@@ -3,7 +3,7 @@ import hashlib
 import numpy
 import torch
 from ..material import MaterialArchive
-from .DataRangeEncoderArray import DataRangeEncoderArray
+from .NormalizationEncoderArray import NormalizationEncoderArray
 from .Dataset import Dataset
 from typing import Union
 
@@ -39,7 +39,7 @@ class TrainingDataManager(object):
                 raise ValueError(
                     'Must provide at least one feature on which to train.')
             numpy_double_array = initializer
-        self.data_range_encoder_array = DataRangeEncoderArray(
+        self.data_range_encoder_array = NormalizationEncoderArray(
             numpy_double_array)
         self.total_feature_width = len(self.data_range_encoder_array)
         training_data = []

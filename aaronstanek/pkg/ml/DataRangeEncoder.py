@@ -1,7 +1,7 @@
 import math
 
 
-class DataRangeEncoder(object):
+class NormalizationEncoder(object):
     """Stores the normalization information for a feature.
 
     The 'factor' data member stores the ratio of the raw variance to the
@@ -11,7 +11,7 @@ class DataRangeEncoder(object):
     """
 
     def __init__(self, minimum_value: float, maximum_value: float):
-        """Create a new DataRangeEncoder instance.
+        """Create a new NormalizationEncoder instance.
 
         The first parameter should be the smallest numerical value for a
         given feature in the training data. The second parameter should
