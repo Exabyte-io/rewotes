@@ -19,7 +19,7 @@ class Downloader(object):
         self.destination_filename = destination_filename
         self.api_key = api_key
 
-    def download(self) -> float:
+    def download(self) -> MaterialArchive:
         start_time = time.time()
         with MPRester(self.api_key) as mpr:
             material_ids = list(map(
@@ -48,5 +48,4 @@ class Downloader(object):
                         material.composition_reduced[atomic_number] = int(
                             document.composition_reduced[atomic_number])
                     archive.append(material)
-            archive.save_to_file(self.destination_filename)
-        return time.time() - start_time
+            return MaterialArchive
