@@ -3,7 +3,18 @@ from .NormalizationEncoder import NormalizationEncoder
 
 
 class NormalizationEncoderArray(object):
+    """Collection of NormalizationEncoder objects.
+
+    Provides normalization and de-normalization for all features in a
+    dataset.
+    """
+
     def __init__(self, numpy_double_array: numpy.ndarray):
+        """Create a new NormalizationEncoderArray object.
+
+        Internally generate and store a NormalizationEncoder for each
+        feature in the input numpy array.
+        """
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError('Expected numpy array. Found: ' +
                             str(type(numpy_double_array)))
@@ -19,9 +30,16 @@ class NormalizationEncoderArray(object):
         ))
 
     def __len__(self) -> int:
+        """Return the number of NormalizationEncoder objects stored in the
+        collection.
+
+        This is equal to the sum of the number of input and target
+        features.
+        """
         return len(self.encoders)
 
     def encode(self, numpy_double_array: numpy.ndarray) -> numpy.ndarray:
+        """Return a normalized copy of an input row."""
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError('Expected numpy array. Found: ' +
                             str(type(numpy_double_array)))
@@ -38,6 +56,7 @@ class NormalizationEncoderArray(object):
             dtype=numpy.double)
 
     def decode(self, numpy_double_array: numpy.ndarray) -> numpy.ndarray:
+        """Return a de-normalized copy of a normalized input row."""
         if type(numpy_double_array) != numpy.ndarray:
             raise TypeError('Expected numpy array. Found: ' +
                             str(type(numpy_double_array)))
