@@ -1,11 +1,15 @@
 import numpy
 import torch
 from .TrainingDataManager import TrainingDataManager
-from typing import Tuple
+from typing import Optional, Tuple
 
 
 class Model(torch.nn.Module):
+    """A PyTorch-compatible neural network."""
+
     def __init__(self, training_manager):
+        """Create a new Model with random weights from a
+        TrainingDataManager."""
         super(Model, self).__init__()
         self.linear1 = torch.nn.Linear(
             training_manager.total_feature_width - 1, 100)
@@ -23,6 +27,7 @@ class Model(torch.nn.Module):
         self.linear5 = torch.nn.Linear(10, 1)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward-pass a batch of input rows."""
         x = self.linear1(x)
         x = self.drop1(x)
         x = self.relu1(x)
@@ -39,6 +44,8 @@ class Model(torch.nn.Module):
         return x
 
     def train(self, training_manager: TrainingDataManager, epochs: int = 5) -> None:
+        """Train using data in TrainingDataManager for a given number of epochs
+        (default 5)."""
         criterion = torch.nn.MSELoss()
         optimizer = torch.optim.Adam(self.parameters())
         for epoch in range(epochs):
@@ -53,16 +60,30 @@ class Model(torch.nn.Module):
                 loss_for_epoch += loss.item()
             print('loss', loss_for_epoch)
 
-    def predict_with_error(self, x: torch.Tensor, iteration_count: int = None) -> Tuple[numpy.ndarray, numpy.ndarray]:
+    def predict_with_error(self, x: torch.Tensor, iteration_count: Optional[int] = None) -> Tuple[numpy.ndarray, numpy.ndarray]:
+        """Predict the target value for a batch of input rows.
+
+        Use dropout to create a distribution of possible output values.
+        Iteration count indicates the number of samples to take for each
+        input row. Return the mean and sample standard deviation of the
+        output distribution for each input row.
+        """
         if iteration_count is None:
             iteration_count = 10
         prediction_set = []
         for i in range(iteration_count):
             prediction_set.append(self(x).detach().numpy())
         prediction_set = numpy.array(prediction_set)
-        return numpy.apply_along_axis(numpy.mean, 0, prediction_set), numpy.apply_along_axis(numpy.std, 0, prediction_set)
+        return numpy.apply_along_axis(numpy.mean, 0, prediction_set), numpy.apply_along_axis(lambda x: numpy.std(x, ddof=1), 0, prediction_set)
 
-    def test_with_error(self, training_manager: TrainingDataManager, iteration_count: int = None) -> Tuple[float, float, float]:
+    def test_with_error(self, training_manager: TrainingDataManager, iteration_count: Optional[int] = None) -> Tuple[float, float, float]:
+        """Predict with error the output value for each testing row in a
+        TrainingDataManager.
+
+        Compute the distribution of absolute-value Z-scores relative to
+        the correct output values. Return the 25th, 50th, and 75th
+        percentiles of the distribution.
+        """
         prediction_z_scores = []
         for data in training_manager.testing:
             x, y = data
@@ -79,6 +100,7 @@ class Model(torch.nn.Module):
         )
 
     def test_standard_deviation(self, training_manager: TrainingDataManager) -> Tuple[numpy.floating, numpy.floating, numpy.floating, numpy.floating]:
+        # TODO document this method
         prediction_deltas_zero = []
         prediction_deltas_nonzero = []
         for data in training_manager.testing:

@@ -8,13 +8,11 @@ from typing import Union
 
 
 class TrainingDataManager(object):
-    '''
-    Builds and holds training and testing Dataset objects.
-    '''
+    """Builds and holds training and testing Dataset objects."""
+
     def __init__(self, initializer: Union[MaterialArchive, numpy.ndarray], batch_size: int = 64):
-        '''
-        Create a TrainingDataManager from either a MaterialArchive or a numpy array.
-        '''
+        """Create a TrainingDataManager from either a MaterialArchive or a
+        numpy array."""
         try:
             batch_size = int(batch_size)
         except:
@@ -45,7 +43,8 @@ class TrainingDataManager(object):
         for material_index in range(len(numpy_double_array)):
             material = self.data_range_encoder_array.encode(
                 numpy_double_array[material_index])
-            [training_data, testing_data][int(rng.integers(0,5) == 0)].append(material)
+            [training_data, testing_data][int(
+                rng.integers(0, 5) == 0)].append(material)
         self.training = torch.utils.data.DataLoader(
             Dataset(training_data), batch_size=batch_size, shuffle=True)
         self.testing = torch.utils.data.DataLoader(
@@ -53,14 +52,12 @@ class TrainingDataManager(object):
 
     @staticmethod
     def load_from_archive_file(filename: str) -> TrainingDataManager:
-        '''
-        Create a TrainingDataManager using a file generated from MaterialArchive.save_to_file.
-        '''
+        """Create a TrainingDataManager using a file generated from
+        MaterialArchive.save_to_file."""
         return TrainingDataManager(MaterialArchive.load_from_file(filename))
 
     @staticmethod
     def load_from_numpy_file(filename: str) -> TrainingDataManager:
-        '''
-        Create a TrainingDataManager using a file generated from MaterialArchive.save_as_numpy.
-        '''
+        """Create a TrainingDataManager using a file generated from
+        MaterialArchive.save_as_numpy."""
         return TrainingDataManager(numpy.load(filename))
