@@ -1,13 +1,21 @@
+import os
 from mp_api.client import MPRester
 from ..material import Material, MaterialArchive
-
+from typing import Optional
 
 class Downloader(object):
     """Manages downloads of materials from materialsproject.org."""
 
-    def __init__(self, api_key: str):
-        """Create a Downloader instance."""
-        if type(api_key) != str:
+    def __init__(self, api_key: Optional[str]):
+        """
+        Create a Downloader instance.
+        
+        Argument is Materials Project API key encoded as a string, or None.
+        If None, Downloader will load the API key from the "MP_API_KEY" environment variable.
+        """
+        if api_key is None:
+            api_key = os.environ.get("MP_API_KEY")
+        elif type(api_key) != str:
             raise TypeError('Expected str. Found: ' + str(type(api_key)))
         self.api_key = api_key
 
