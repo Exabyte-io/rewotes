@@ -1,3 +1,4 @@
+from ..material.Material import Material
 import numpy
 import torch
 from .TrainingDataManager import TrainingDataManager
@@ -25,6 +26,7 @@ class Model(torch.nn.Module):
         self.drop4 = torch.nn.Dropout(p=0.2)
         self.relu4 = torch.nn.ReLU()
         self.linear5 = torch.nn.Linear(10, 1)
+        self.double()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward-pass a batch of input rows."""
@@ -125,3 +127,13 @@ class Model(torch.nn.Module):
         nonzero_mean = numpy.mean(prediction_deltas_nonzero) * factor
         nonzero_std = numpy.std(prediction_deltas_nonzero) * factor
         return zero_mean, zero_std, nonzero_mean, nonzero_std
+    
+    def predict_new_material(self, material: Material) -> Tuple[float, float]:
+        '''
+        Predict the band gap, with error, for a material.
+        '''
+        numpy_values = material.to_numpy_double_array()
+        numpy_matrix = numpy.array([numpy_values])
+        torch_matrix = torch.from_numpy(numpy_matrix[:, 1:])
+        mean_matrix, std_matrix = self.predict_with_error(torch_matrix)
+        return float(mean_matrix[0][0]), float(std_matrix[0][0])

@@ -1,7 +1,7 @@
 import unittest
 import numpy
 import torch
-from pkg import NormalizationEncoder, NormalizationEncoderArray, Material, MaterialArchive, TrainingDataManager
+from pkg import NormalizationEncoder, NormalizationEncoderArray, Material, MaterialArchive, Model, TrainingDataManager
 
 
 class TestMaterial(unittest.TestCase):
@@ -148,6 +148,20 @@ class TestTrainingDataManager(unittest.TestCase):
         self.assertEqual(type(b.training), torch.utils.data.DataLoader)
         self.assertEqual(type(b.testing), torch.utils.data.DataLoader)
 
+class TestModel(unittest.TestCase):
+
+    def test_model_can_be_instantiated(self):
+        a = numpy.array([[1,2],[3,4],[5,6]], dtype=numpy.double)
+        model = Model(TrainingDataManager(a))
+
+    def test_model_can_predict_new_material(self):
+        archive = MaterialArchive()
+        for i in range(3):
+            archive.append(Material())
+        model = Model(TrainingDataManager(archive))
+        mean, std = model.predict_new_material(Material())
+        self.assertEqual(type(mean), float)
+        self.assertEqual(type(std), float)
 
 if __name__ == '__main__':
     unittest.main()
