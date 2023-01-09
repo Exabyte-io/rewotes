@@ -2,7 +2,22 @@ import math
 
 
 class DataRangeEncoder(object):
+    """Stores the normalization information for a feature.
+
+    The 'factor' data member stores the ratio of the raw variance to the
+    normalized variance. The 'encode' method normalizes a value from the
+    initial distribution. The 'decode' method de-normalizes a normalized
+    value back to the initial distribution.
+    """
+
     def __init__(self, minimum_value: float, maximum_value: float):
+        """Create a new DataRangeEncoder instance.
+
+        The first parameter should be the smallest numerical value for a
+        given feature in the training data. The second parameter should
+        be the largest numerical value for a given feature in the
+        training data.
+        """
         try:
             minimum_value = float(minimum_value)
         except:
