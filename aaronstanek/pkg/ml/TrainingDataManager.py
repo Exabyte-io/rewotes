@@ -41,11 +41,11 @@ class TrainingDataManager(object):
         self.total_feature_width = len(self.data_range_encoder_array)
         training_data = []
         testing_data = []
-        rng = numpy.random.Generator(numpy.random.MT19937(123456))
+        rng = numpy.random.Generator(numpy.random.MT19937(6))
         for material_index in range(len(numpy_double_array)):
             material = self.data_range_encoder_array.encode(
                 numpy_double_array[material_index])
-            [training_data, testing_data][rng.integers(0,5) == 0].append(material)
+            [training_data, testing_data][int(rng.integers(0,5) == 0)].append(material)
         self.training = torch.utils.data.DataLoader(
             Dataset(training_data), batch_size=batch_size, shuffle=True)
         self.testing = torch.utils.data.DataLoader(
