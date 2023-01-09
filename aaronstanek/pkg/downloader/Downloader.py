@@ -3,18 +3,19 @@ from mp_api.client import MPRester
 from ..material import Material, MaterialArchive
 from typing import Optional
 
+
 class Downloader(object):
     """Manages downloads of materials from materialsproject.org."""
 
     def __init__(self, api_key: Optional[str]):
-        """
-        Create a Downloader instance.
-        
-        Argument is Materials Project API key encoded as a string, or None.
-        If None, Downloader will load the API key from the "MP_API_KEY" environment variable.
+        """Create a Downloader instance.
+
+        Argument is Materials Project API key encoded as a string, or
+        None. If None, Downloader will load the API key from the
+        "MP_API_KEY" environment variable.
         """
         if api_key is None:
-            api_key = os.environ.get("MP_API_KEY")
+            api_key = os.environ.get('MP_API_KEY')
         elif type(api_key) != str:
             raise TypeError('Expected str. Found: ' + str(type(api_key)))
         self.api_key = api_key
@@ -27,24 +28,26 @@ class Downloader(object):
             'composition_reduced'
         ]
         fields = [
-            "material_id",
+            'material_id',
             'band_gap',
         ]
         if selected_fields is None:
             fields += possible_field_list
         elif type(selected_fields) == list:
             if len(selected_fields) == 0:
-                raise ValueError("Expected nonempty list.")
+                raise ValueError('Expected nonempty list.')
             for field in selected_fields:
                 if type(field) != str:
-                    raise TypeError("Expected str. Found: " + str(type(field)))
+                    raise TypeError('Expected str. Found: ' + str(type(field)))
                 if field not in possible_field_list:
-                    raise ValueError("Received invalid field name: " + field)
+                    raise ValueError('Received invalid field name: ' + field)
                 if field in fields:
-                    raise ValueError("Field already included in download list: " + field)
+                    raise ValueError(
+                        'Field already included in download list: ' + field)
                 fields.append(field)
         else:
-            raise TypeError("Expected None or list. Found: " + str(type(selected_fields)))
+            raise TypeError('Expected None or list. Found: ' +
+                            str(type(selected_fields)))
         with MPRester(self.api_key) as mpr:
             material_ids = list(map(
                 lambda document: document.material_id,
@@ -62,10 +65,10 @@ class Downloader(object):
                     material.material_id = document.material_id
                     material.band_gap = document.band_gap
                     for atomic_number in range(1, 119):
-                        if "composition" in fields:
+                        if 'composition' in fields:
                             material.composition[atomic_number] = int(
                                 document.composition[atomic_number])
-                        if "composition_reduced" in fields:
+                        if 'composition_reduced' in fields:
                             material.composition_reduced[atomic_number] = int(
                                 document.composition_reduced[atomic_number])
                     archive.append(material)

@@ -127,11 +127,9 @@ class Model(torch.nn.Module):
         nonzero_mean = numpy.mean(prediction_deltas_nonzero) * factor
         nonzero_std = numpy.std(prediction_deltas_nonzero) * factor
         return zero_mean, zero_std, nonzero_mean, nonzero_std
-    
+
     def predict_new_material(self, material: Material) -> Tuple[float, float]:
-        '''
-        Predict the band gap, with error, for a material.
-        '''
+        """Predict the band gap, with error, for a material."""
         numpy_values = material.to_numpy_double_array()
         numpy_matrix = numpy.array([numpy_values])
         torch_matrix = torch.from_numpy(numpy_matrix[:, 1:])

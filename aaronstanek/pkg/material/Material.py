@@ -2,9 +2,10 @@ from __future__ import annotations
 import numpy
 from .material_pb2 import Material as protobuf_material
 from typing import Any, Optional
+from .interfaces import MaterialInterface
 
 
-class Material(object):
+class Material(MaterialInterface):
     """Thin wrapper around Material protocol-buffer."""
 
     def __init__(self, initializer: Optional[bytes] = None):

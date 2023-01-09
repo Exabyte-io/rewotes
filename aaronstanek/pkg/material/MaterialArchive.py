@@ -3,9 +3,10 @@ import numpy
 from .material_pb2 import MaterialArchive as protobuf_material_archive
 from .Material import Material
 from typing import Optional
+from .interfaces import MaterialArchiveIteratorInterface, MaterialArchiveInterface
 
 
-class MaterialArchiveIterator(object):
+class MaterialArchiveIterator(MaterialArchiveIteratorInterface):
     def __init__(self, archive):
         self.archive = archive
         self.next_index = 0
@@ -22,7 +23,7 @@ class MaterialArchiveIterator(object):
             return return_value
 
 
-class MaterialArchive(object):
+class MaterialArchive(MaterialArchiveInterface):
     """Memory-efficient collection of Material objects.
 
     Reading from and mutating this object are slow operations. A Python
