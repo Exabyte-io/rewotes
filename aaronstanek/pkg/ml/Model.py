@@ -64,7 +64,7 @@ class Model(torch.nn.Module):
                 optimizer.step()
                 loss_for_epoch += loss.item()
             print('loss', loss_for_epoch)
-    
+
     def testing_loss(self, training_manager: TrainingDataManager) -> float:
         criterion = torch.nn.MSELoss()
         loss_for_epoch = 0.0
@@ -115,9 +115,7 @@ class Model(torch.nn.Module):
         )
 
     def test_standard_deviation(self, training_manager: TrainingDataManager) -> Tuple[numpy.floating, numpy.floating, numpy.floating, numpy.floating]:
-        '''
-        Used for model development, TOTO: expand on this.
-        '''
+        """Used for model development, TOTO: expand on this."""
         prediction_deltas_zero = []
         prediction_deltas_nonzero = []
         for data in training_manager.testing:
