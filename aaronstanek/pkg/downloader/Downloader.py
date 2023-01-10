@@ -21,12 +21,14 @@ class Downloader(DownloaderInterface):
             raise TypeError('Expected str. Found: ' + str(type(api_key)))
         self.api_key = api_key
         self.selected_fields = None
+        self.query = None
 
     def set_feature_list(self, features: list) -> None:
         '''
         Set the list of features to download.
 
         Parameter is a list of strings, where each string is the name of a feature.
+        If not used, all supported features will be downloaded.
         '''
         if type(features) != list:
             raise TypeError("Expected list. Found: " + str(type(features)))
@@ -35,7 +37,39 @@ class Downloader(DownloaderInterface):
         for feature in features:
             if type(feature) != str:
                 raise TypeError("Expected str. Found: " + str(type(feature)))
+            if len(feature) == 0:
+                raise ValueError("Feature name cannot be empty string.")
         self.selected_fields = features
+    
+    def set_query_elements_at_least(self, elements: list) -> None:
+        '''
+        Only download materials containing at least the specified elements.
+
+        Parameter is a nonempty list of elemental symbols encoded as str.
+        '''
+        if type(elements) != list:
+            raise TypeError("Expected list. Found: " + str(type(elements)))
+        for element in elements:
+            if type(element) != str:
+                raise TypeError("Expected str. Found: " + str(type(element)))
+            if len(element) < 1 or len(element) > 2:
+                raise ValueError("Element symbol must be zero or two characters.")
+        self.query = ("elements", elements)
+    
+    def set_query_elements_exact(self, elements: list) -> None:
+        '''
+        Only download materials containing exactly the specified elements.
+
+        Parameter is a nonempty list of elemental symbols encoded as str.
+        '''
+        if type(elements) != list:
+            raise TypeError("Expected list. Found: " + str(type(elements)))
+        for element in elements:
+            if type(element) != str:
+                raise TypeError("Expected str. Found: " + str(type(element)))
+            if len(element) < 1 or len(element) > 2:
+                raise ValueError("Element symbol must be zero or two characters.")
+        self.query = ("chemsys", elements)
 
     def download(self) -> MaterialArchive:
         """Download a selected list of material properties for all materials in
