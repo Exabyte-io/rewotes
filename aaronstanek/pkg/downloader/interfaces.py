@@ -4,8 +4,8 @@ from typing import Optional
 
 
 class DownloaderInterface(ABC):
-    def download(self, selected_fields: Optional[list] = None) -> MaterialArchiveInterface:
+    def download(self) -> MaterialArchiveInterface:
         raise NotImplementedError()
 
-    def download_to_file(self, filename: str, selected_fields: Optional[list] = None) -> None:
+    def download_to_file(self, filename: str) -> None:
         raise NotImplementedError()

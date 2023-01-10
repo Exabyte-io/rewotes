@@ -20,8 +20,24 @@ class Downloader(DownloaderInterface):
         elif type(api_key) != str:
             raise TypeError('Expected str. Found: ' + str(type(api_key)))
         self.api_key = api_key
+        self.selected_fields = None
 
-    def download(self, selected_fields: Optional[list] = None) -> MaterialArchive:
+    def set_feature_list(self, features: list) -> None:
+        '''
+        Set the list of features to download.
+
+        Parameter is a list of strings, where each string is the name of a feature.
+        '''
+        if type(features) != list:
+            raise TypeError("Expected list. Found: " + str(type(features)))
+        if len(features) == 0:
+            raise ValueError("Must specify at least one feature to download.")
+        for feature in features:
+            if type(feature) != str:
+                raise TypeError("Expected str. Found: " + str(type(feature)))
+        self.selected_fields = features
+
+    def download(self) -> MaterialArchive:
         """Download a selected list of material properties for all materials in
         the materialsproject.org database."""
         possible_field_list = [
@@ -32,12 +48,10 @@ class Downloader(DownloaderInterface):
             'material_id',
             'band_gap',
         ]
-        if selected_fields is None:
+        if self.selected_fields is None:
             fields += possible_field_list
-        elif type(selected_fields) == list:
-            if len(selected_fields) == 0:
-                raise ValueError('Expected nonempty list.')
-            for field in selected_fields:
+        else:
+            for field in self.selected_fields:
                 if type(field) != str:
                     raise TypeError('Expected str. Found: ' + str(type(field)))
                 if field not in possible_field_list:
@@ -46,9 +60,6 @@ class Downloader(DownloaderInterface):
                     raise ValueError(
                         'Field already included in download list: ' + field)
                 fields.append(field)
-        else:
-            raise TypeError('Expected None or list. Found: ' +
-                            str(type(selected_fields)))
         with MPRester(self.api_key) as mpr:
             material_ids = list(map(
                 lambda document: document.material_id,
@@ -75,7 +86,7 @@ class Downloader(DownloaderInterface):
                     archive.append(material)
             return archive
 
-    def download_to_file(self, filename: str, selected_fields: Optional[list] = None) -> None:
+    def download_to_file(self, filename: str) -> None:
         """Download a selected list of material properties for all materials in
         the materialsproject.org database.
 
@@ -86,5 +97,5 @@ class Downloader(DownloaderInterface):
             raise TypeError('Expected str. Found: ' + str(type(filename)))
         with open(filename, 'w') as file:
             file.write('')
-        archive = self.download(selected_fields)
+        archive = self.download()
         archive.save_to_file(filename)
