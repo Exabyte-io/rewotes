@@ -31,6 +31,7 @@ class Model(torch.nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward-pass a batch of input rows."""
+        self.factor = 1
         x = self.linear1(x)
         x = self.drop1(x)
         x = self.relu1(x)

@@ -72,7 +72,7 @@ class Downloader(DownloaderInterface):
         self.query = ("chemsys", elements)
 
     def download(self) -> MaterialArchive:
-        """Download a selected list of material properties for all materials in
+        """Download a selected list of material properties for selected materials in
         the materialsproject.org database."""
         possible_field_list = [
             'composition',
