@@ -2,9 +2,10 @@ import os
 from mp_api.client import MPRester
 from ..material import Material, MaterialArchive
 from typing import Optional
+from .interfaces import DownloaderInterface
 
 
-class Downloader(object):
+class Downloader(DownloaderInterface):
     """Manages downloads of materials from materialsproject.org."""
 
     def __init__(self, api_key: Optional[str]):
@@ -72,7 +73,7 @@ class Downloader(object):
                             material.composition_reduced[atomic_number] = int(
                                 document.composition_reduced[atomic_number])
                     archive.append(material)
-            return MaterialArchive
+            return archive
 
     def download_to_file(self, filename: str, selected_fields: Optional[list] = None) -> None:
         """Download a selected list of material properties for all materials in
