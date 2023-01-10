@@ -33,3 +33,11 @@ We leave exact timing to the candidate. Must fit Within 5 days total.
 
 - use a designated github repository for version control
 - suggested source of training data: materialsproject.org
+
+# Setting up an Anaconda environment for this project
+
+To create an environment named `my_environment_name` use the following command
+
+```
+conda create --name my_environment_name --file requirements.txt --channel conda-forge
+```
