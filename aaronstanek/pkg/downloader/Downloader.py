@@ -95,6 +95,14 @@ class Downloader(DownloaderInterface):
                         'Field already included in download list: ' + field)
                 fields.append(field)
         with MPRester(self.api_key) as mpr:
+            if self.query is None:
+                material_ids = mpr.summary.search(fields=['material_id'])
+            elif self.query[0] == "elements":
+                material_ids = mpr.summary.search(elements=self.query[1], fields=['material_id'])
+            elif self.query[0] == "chemsys":
+                material_ids = mpr.summary.search(chemsys="".join(self.query[1]), fields=['material_id'])
+            else:
+                raise Exception("Interal Error")
             material_ids = list(map(
                 lambda document: document.material_id,
                 mpr.summary.search(fields=['material_id'])
