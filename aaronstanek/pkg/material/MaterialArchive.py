@@ -92,13 +92,13 @@ class MaterialArchive(MaterialArchiveInterface):
         if not isinstance(other, MaterialArchive):
             raise TypeError("Expected MaterialArchive instance. Found: " + str(type(other)))
         bytes_set = set()
-        for material_bytes in self._material_archive:
+        for material_bytes in self._material_archive.serialized_materials:
             bytes_set.add(material_bytes)
-        for material_bytes in other._material_archive:
+        for material_bytes in other._material_archive.serialized_materials:
             bytes_set.add(material_bytes)
         output = MaterialArchive()
         for material_bytes in bytes_set:
-            output._material_archive.append(output)
+            output._material_archive.serialized_materials.append(material_bytes)
         return output
 
     def serialize(self) -> bytes:

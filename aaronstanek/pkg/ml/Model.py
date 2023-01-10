@@ -49,6 +49,7 @@ class Model(torch.nn.Module):
     def train(self, training_manager: TrainingDataManager, epochs: int = 5) -> None:
         """Train using data in TrainingDataManager for a given number of epochs
         (default 5)."""
+        self.factor = training_manager.data_range_encoder_array[0].get_factor()
         criterion = torch.nn.MSELoss()
         optimizer = torch.optim.Adam(self.parameters())
         for epoch in range(epochs):
@@ -62,6 +63,16 @@ class Model(torch.nn.Module):
                 optimizer.step()
                 loss_for_epoch += loss.item()
             print('loss', loss_for_epoch)
+    
+    def testing_loss(self, training_manager: TrainingDataManager) -> float:
+        criterion = torch.nn.MSELoss()
+        loss_for_epoch = 0.0
+        for data in training_manager.testing:
+            x, y = data
+            predictions = self(x)
+            loss = criterion(predictions, y)
+            loss_for_epoch += loss.item()
+        return float(loss_for_epoch)
 
     def predict_with_error(self, x: torch.Tensor, iteration_count: Optional[int] = None) -> Tuple[numpy.ndarray, numpy.ndarray]:
         """Predict the target value for a batch of input rows.
@@ -103,7 +114,9 @@ class Model(torch.nn.Module):
         )
 
     def test_standard_deviation(self, training_manager: TrainingDataManager) -> Tuple[numpy.floating, numpy.floating, numpy.floating, numpy.floating]:
-        # TODO document this method
+        '''
+        Used for model development, TOTO: expand on this.
+        '''
         prediction_deltas_zero = []
         prediction_deltas_nonzero = []
         for data in training_manager.testing:
@@ -135,7 +148,7 @@ class Model(torch.nn.Module):
         numpy_matrix = numpy.array([numpy_values])
         torch_matrix = torch.from_numpy(numpy_matrix[:, 1:])
         mean_matrix, std_matrix = self.predict_with_error(torch_matrix)
-        return float(mean_matrix[0][0]), float(std_matrix[0][0])
+        return float(mean_matrix[0][0]) * self.factor, float(std_matrix[0][0]) * self.factor
 
     def save_to_file(self, filename: str) -> None:
         if type(filename) != str:
