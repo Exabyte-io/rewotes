@@ -1,3 +1,4 @@
+from __future__ import annotations
 from ..material.Material import Material
 import numpy
 import torch
@@ -135,3 +136,17 @@ class Model(torch.nn.Module):
         torch_matrix = torch.from_numpy(numpy_matrix[:, 1:])
         mean_matrix, std_matrix = self.predict_with_error(torch_matrix)
         return float(mean_matrix[0][0]), float(std_matrix[0][0])
+
+    def save_to_file(self, filename: str) -> None:
+        if type(filename) != str:
+            raise TypeError('Expected str. Found: ' + str(type(filename)))
+        else:
+            with open(filename, 'wb') as file:
+                torch.save(self, filename)
+
+    @staticmethod
+    def load_from_file(filename: str) -> Model:
+        model = torch.load(filename)
+        if not isinstance(model, Model):
+            raise TypeError('Expected Model. Found: ' + str(type(model)))
+        return model
