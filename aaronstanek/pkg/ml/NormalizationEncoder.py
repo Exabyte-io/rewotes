@@ -1,7 +1,8 @@
+from .interfaces import NormalizationEncoderInterface
 import math
 
 
-class NormalizationEncoder(object):
+class NormalizationEncoder(NormalizationEncoderInterface):
     """Stores the normalization information for a feature.
 
     The 'factor' data member stores the ratio of the raw variance to the
@@ -46,3 +47,6 @@ class NormalizationEncoder(object):
         else:
             raise ValueError(
                 'Expected minimum value to be less than or equal to maximum value. Found: ' + str((minimum_value, maximum_value)))
+
+    def get_factor(self) -> float:
+        return self.factor

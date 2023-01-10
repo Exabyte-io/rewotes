@@ -1,4 +1,5 @@
 from __future__ import annotations
+from .interfaces import TrainingDataManagerInterface
 import numpy
 import torch
 from ..material import MaterialArchive
@@ -7,7 +8,7 @@ from .Dataset import Dataset
 from typing import Union
 
 
-class TrainingDataManager(object):
+class TrainingDataManager(TrainingDataManagerInterface):
     """Builds and holds training and testing Dataset objects."""
 
     def __init__(self, initializer: Union[MaterialArchive, numpy.ndarray], batch_size: int = 64):

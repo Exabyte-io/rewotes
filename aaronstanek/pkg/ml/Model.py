@@ -121,7 +121,7 @@ class Model(torch.nn.Module):
         prediction_deltas_nonzero = numpy.array(
             prediction_deltas_nonzero, dtype=numpy.double)
         factor = 1.0 / \
-            training_manager.data_range_encoder_array.encoders[0].factor
+            training_manager.data_range_encoder_array[0].get_factor()
         zero_mean = numpy.mean(prediction_deltas_zero) * factor
         zero_std = numpy.std(prediction_deltas_zero) * factor
         nonzero_mean = numpy.mean(prediction_deltas_nonzero) * factor

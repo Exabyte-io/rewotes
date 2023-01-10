@@ -1,8 +1,9 @@
+from .interfaces import NormalizationEncoderArrayInterface
 import numpy
 from .NormalizationEncoder import NormalizationEncoder
 
 
-class NormalizationEncoderArray(object):
+class NormalizationEncoderArray(NormalizationEncoderArrayInterface):
     """Collection of NormalizationEncoder objects.
 
     Provides normalization and de-normalization for all features in a
@@ -37,6 +38,15 @@ class NormalizationEncoderArray(object):
         features.
         """
         return len(self.encoders)
+
+    def __getitem__(self, index: int) -> NormalizationEncoder:
+        """Return the encoder for the nth feature."""
+        try:
+            index = int(index)
+        except:
+            raise TypeError(
+                'Expected type that could be cast to int. Found: ' + str(type(index)))
+        return self.encoders[index]
 
     def encode(self, numpy_double_array: numpy.ndarray) -> numpy.ndarray:
         """Return a normalized copy of an input row."""

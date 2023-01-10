@@ -1,9 +1,10 @@
+from .interfaces import DatasetInterface
 import numpy
 import torch
 from typing import List, Tuple
 
 
-class Dataset(torch.utils.data.Dataset):
+class Dataset(torch.utils.data.Dataset, DatasetInterface):
     """Stores a collection of input rows and the associated target output for
     each row."""
 
