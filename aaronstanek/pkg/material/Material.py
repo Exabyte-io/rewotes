@@ -82,5 +82,5 @@ class Material(MaterialInterface):
         values.append(self.lattice_alpha)
         values.append(self.lattice_beta)
         values.append(self.lattice_gamma)
-        values.append(self.lattive_volume)
+        values.append(self.lattice_volume)
         return numpy.array(values, dtype=numpy.double)
