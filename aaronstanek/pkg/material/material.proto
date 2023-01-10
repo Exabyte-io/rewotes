@@ -10,6 +10,15 @@ message Material {
     // value is number of atoms of that element
     map<uint32, uint32> composition = 3;
     map<uint32, uint32> composition_reduced = 4;
+    double density = 5;
+    double density_atomic = 6;
+    double lattice_a = 7;
+    double lattice_b = 8;
+    double lattice_c = 9;
+    double lattice_alpha = 10;
+    double lattice_beta = 11;
+    double lattice_gamma = 12;
+    double lattice_volume = 13;
 }
 
 message MaterialArchive {

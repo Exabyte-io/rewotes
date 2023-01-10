@@ -1,6 +1,5 @@
 docs/build
 api_key.txt
-material_pb2.py
 *.materialarchive
 *.npy
 *.pyc
