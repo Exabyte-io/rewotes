@@ -74,4 +74,13 @@ class Material(MaterialInterface):
             values.append(self.composition[atomic_number])
         for atomic_number in range(1, 119):
             values.append(self.composition_reduced[atomic_number])
+        values.append(self.density)
+        values.append(self.density_atomic)
+        values.append(self.lattice_a)
+        values.append(self.lattice_b)
+        values.append(self.lattice_c)
+        values.append(self.lattice_alpha)
+        values.append(self.lattice_beta)
+        values.append(self.lattice_gamma)
+        values.append(self.lattive_volume)
         return numpy.array(values, dtype=numpy.double)

@@ -76,7 +76,10 @@ class Downloader(DownloaderInterface):
         the materialsproject.org database."""
         possible_field_list = [
             'composition',
-            'composition_reduced'
+            'composition_reduced',
+            "density",
+            "density_atomic",
+            "structure"
         ]
         fields = [
             'material_id',
@@ -125,6 +128,18 @@ class Downloader(DownloaderInterface):
                         if 'composition_reduced' in fields:
                             material.composition_reduced[atomic_number] = int(
                                 document.composition_reduced[atomic_number])
+                    if "density" in fields:
+                        material.density = document.density
+                    if "density_atomic" in fields:
+                        material.density_atomic = document.density_atomic
+                    if "structure" in fields:
+                        material.lattice_a = document.structure.lattice.a
+                        material.lattice_b = document.structure.lattice.b
+                        material.lattice_c = document.structure.lattice.c
+                        material.lattice_alpha = document.structure.lattice.alpha
+                        material.lattice_beta = document.structure.lattice.beta
+                        material.lattice_gamma = document.structure.lattice.gamma
+                        material.lattice_volume = document.structure.lattice.volume
                     archive.append(material)
             return archive
 
