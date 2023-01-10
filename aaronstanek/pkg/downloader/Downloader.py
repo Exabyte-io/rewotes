@@ -108,7 +108,7 @@ class Downloader(DownloaderInterface):
                 raise Exception("Interal Error")
             material_ids = list(map(
                 lambda document: document.material_id,
-                mpr.summary.search(fields=['material_id'])
+                material_ids
             ))
             archive = MaterialArchive()
             for material_ids_slice_index in range(0, len(material_ids), 1000):
