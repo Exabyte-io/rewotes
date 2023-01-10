@@ -80,6 +80,26 @@ class MaterialArchive(MaterialArchiveInterface):
                 'Expected instance of Material. Found: ' + str(type(material)))
         self._material_archive.serialized_materials.append(
             material.serialize())
+        
+    def concatenate(self, other: MaterialArchive) -> MaterialArchive:
+        '''
+        Concatenate this MaterialArchive with another, returning the result.
+
+        Repeated or shared elements will only appear in the output once.
+        The order of the elements in the output may not be preserved.
+        Neither of the input MaterialArchive objects are mutated.
+        '''
+        if not isinstance(other, MaterialArchive):
+            raise TypeError("Expected MaterialArchive instance. Found: " + str(type(other)))
+        bytes_set = set()
+        for material_bytes in self._material_archive:
+            bytes_set.add(material_bytes)
+        for material_bytes in other._material_archive:
+            bytes_set.add(material_bytes)
+        output = MaterialArchive()
+        for material_bytes in bytes_set:
+            output._material_archive.append(output)
+        return output
 
     def serialize(self) -> bytes:
         """Return a serialized version the wrapped protocol-buffer."""
