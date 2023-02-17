@@ -3,24 +3,24 @@ name: Build and test
 on: push
 
 jobs:
-  name: Build and test
-  runs-on: ubuntu-latest
-  steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
 
-    - name: Build container
-      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-      with:
-        context: .
-        push: false
-        tags: demo
+      - name: Build container
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: false
+          tags: demo
 
-    - name: Run tests
-      uses: addnab/docker-run-action@v3
-      with:
-          image: demo
-          run: cd /app && ls -la && bash -c "cd test-suite && \
-                       make clean && \
-                       make run-tests-pw && \
-                       bash -c run-pw.sh"
+      - name: Run tests
+        uses: addnab/docker-run-action@v3
+        with:
+            image: demo
+            run: cd /app && ls -la && bash -c "cd test-suite && \
+                         make clean && \
+                         make run-tests-pw && \
+                         bash -c run-pw.sh"
