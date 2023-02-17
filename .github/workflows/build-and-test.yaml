@@ -20,7 +20,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
             image: demo
-            run: cd /app && ls -la && bash -c "cd test-suite && \
+            run: cd /app && ls -la && bash -c "cd /app/q-e/test-suite && \
                          make clean && \
                          make run-tests-pw && \
                          bash -c run-pw.sh"
