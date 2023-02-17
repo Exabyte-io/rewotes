@@ -5,7 +5,8 @@ RUN apt-get update \
     build-essential \ 
     gfortran \
     wget \
-    python3
+    python3 \
+    git
 
 WORKDIR /app
 RUN git clone https://github.com/QEF/q-e.git
