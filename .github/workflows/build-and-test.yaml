@@ -1,0 +1,23 @@
+name: Build and test
+
+on: push
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Build container
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: false
+          tags: demo
+
+      - name: Run tests
+        uses: addnab/docker-run-action@v3
+        with:
+            image: demo
+            run: bash -c "cd /app/q-e/test-suite && make clean && make run-tests-pw && ./run-pw.sh"

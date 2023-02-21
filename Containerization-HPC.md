@@ -8,13 +8,17 @@ The aim of this task is to build an HPC compatible container (i.e. [Singularity]
 
 # Requirements
 
+0. Build a Dockerfile
+1. A pipeline for building the HPC compatible container
+
+## Stretch goal (optional)
+
 1. A working deployment pipeline - using any preferred tool such as SaltStack, Terraform, CloudFormation - for building out the computational infrastructure
-2. A pipeline for building the HPC compatible container
-3. A set of benchmarks for one or more HPC application on one or more cloud instance type
+2. A set of benchmarks for one or more HPC application on one or more cloud instance type
 
 # Expectations
 
-- The application may be relatively simple - e.g. Linpack, this is focused more on infrastructure
+- The application may be relatively simple - e.g. Quantum ESPRESSO (https://github.com/QEF/q-e)
 - Repeatable approach (no manual setup "in console")
 - Clean workflow logic
 
@@ -27,7 +31,7 @@ We leave exact timing to the candidate. Should fit Within 5 days total.
 As a user of this pipeline I can:
 
 - build an HPC-compatible container for an HPC executable/code
-- run test calculations to assert working state of this container
+- (optional) run test calculations to assert working state of this container
 - (optional) compare the behavior of this container with a OS native installation
 
 # Notes
@@ -39,6 +43,5 @@ As a user of this pipeline I can:
 We suggest:
 
 - using AWS as the cloud provider
-- using Exabench as the source of benchmarks: https://github.com/Exabyte-io/exabyte-benchmarks-suite
 - using CentOS or similar as operating system
 - using Salstack, or Terraform, for infrastructure management
