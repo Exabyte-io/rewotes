@@ -25,3 +25,4 @@ class ConvergenceParameter(Enum):
 def graceful_exit():
     print('aborting program')
     exit()
+

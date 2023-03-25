@@ -1,34 +1,37 @@
-
 from abc import ABC
+from utils import graceful_exit
+
 
 class Calculation(ABC):
     @abstractmethod
-    def __init__(self, attribute, **kwargs):
-        self.attribute = attribute
-        pass 
+    def __init__(self, conv_property, path, **kwargs):
+        self.conv_property = conv_property
+        self.path = path
 
     @property
     def raw_value(self):
-        if self.attribute == 'etotal':
+        if self.conv_property == ConvergenceProperty.etotal:
             return self.energy
-        elif self.attribute == 'forces':
+        elif self.conv_property == ConvergenceProperty.force:
             return self.forces
 
+
 class VaspCalculation(Calculation):
-    def __init__(self, attribute, **kwargs):
-        Calculation.__init__(self, attribute)
-        
+    def __init__(self, conv_property, path=None, calculator=None, **kwargs):
+        Calculation.__init__(self, conv_property, path, **kwargs)
+
         from ase.calculators.vasp import Vasp
-        if 'path' in kwargs.keys():
-            # finished benchmark calculation
-            self.atoms = Vasp(restart=True, directory=path).get_atoms()
-        elif 'calculator' in kwargs.keys():
-            # calculation not yet performed
-            self.atoms = calc.get_atoms()
+
+        if path:
+            calc = Vasp()
+            try:
+                calc.read_incar(filename=f"{self.path}/INCAR")
+            except FileNotFoundError:
+                print(f"No INCAR exists at path {self.path} specified")
+                graceful_exit()
+        
+        elif calculator:
+            calc = calculator
 
         self.energy = self.atoms.get_potential_energy()
         self.forces = self.atoms.get_forces()
-    
-    
-class QuantumEspressoCalculation(Calculation):
-    

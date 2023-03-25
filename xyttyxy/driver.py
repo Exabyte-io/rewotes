@@ -36,17 +36,10 @@ if __name__ == '__main__':
         print(f'{args.convergence_parameter} is not a supported convergence parameter')
         graceful_exit()
 
-    try:
-        atoms = read(f'{path}/POSCAR')
-        # try a couple of other formats
-    except FileNotFoundError:
-        print(f'{path} does not contain a supported structure file')
-        graceful_exit()
-
     # switch on the convergence parameter for which convergence tracker to build
     if convergence_parameter == ConvergenceParameter.kpoints:
         cutoff = args.cutoff
-        tracker = KpointConvergenceTracker(atoms, convergence_property,
+        tracker = KpointConvergenceTracker(path, convergence_property,
                                            package = package,
                                            cutoff = cutoff)
 
@@ -59,12 +52,10 @@ if __name__ == '__main__':
             print(f'invalid kpoints supplied: {args.kpoints}')
             graceful_exit()
 
-        tracker = PwCutoffConvergenceTracker(atoms, convergence_property,
+        tracker = PwCutoffConvergenceTracker(path, convergence_property,
                                              package = package,
                                              kpoints = kpoints)
-        
-
+    tracker.setup_calcs()
+    exit()
     tracker.run_calcs()
     tracker.plot_results()
-
-
