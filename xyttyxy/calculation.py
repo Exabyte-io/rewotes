@@ -28,7 +28,7 @@ class VaspCalculation(Calculation):
 
         self.energy = self.atoms.get_potential_energy()
         self.forces = self.atoms.get_forces()
-        
+    
     
 class QuantumEspressoCalculation(Calculation):
     
