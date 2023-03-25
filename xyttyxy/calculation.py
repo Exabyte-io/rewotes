@@ -29,7 +29,7 @@ class VaspCalculation(Calculation):
             except FileNotFoundError:
                 print(f"No INCAR exists at path {self.path} specified")
                 graceful_exit()
-        
+
         elif calculator:
             calc = calculator
 
