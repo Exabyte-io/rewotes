@@ -1,0 +1,12 @@
+# environment
+venv
+.vscode/
+
+# packaging
+*.egg-info/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# testing files
+tests/resources/
