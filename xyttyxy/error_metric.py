@@ -23,14 +23,14 @@ class ErrorMetricScalar(ErrorMetric):
         ErrorMetric.__init__(self, **kwargs)
 
     def error(self, calc_0, calc_1):
-        e0 = calc_0.raw_value
-        e1 = calc_1.raw_value
-        en_diff = abs(e0 - e1)
+        v0 = calc_0.raw_value
+        v1 = calc_1.raw_value
+        v_diff = abs(v0 - v1)
 
         if self.fractional:
-            return en_diff / e0
+            return v_diff / v0
         else:
-            return en_diff
+            return v_diff
 
 
 class ErrorMetricVector(ErrorMetric):

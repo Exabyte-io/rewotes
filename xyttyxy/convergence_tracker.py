@@ -97,10 +97,33 @@ class ConvergenceTracker(ABC):
         pass
 
     @abstractmethod
-    def run_calcs(self, parameter):
+    def run_calcs(self):
+        error = 1e10
+        # first run calculation 0
+
+        calc_low = self.calculations[0]
+        calc_low.run()
+        
+        for calculation in self.calculations[1:]:
+            calc_high = calculation
+            calc_high.run()
+            error = self.error_metric.error(calc_low, calc_high)
+            if error < self.eps:
+                # calc_low has the converged mesh
+                # since increasing the mesh does not bring significant gain
+                self.converged_calc = calc_low
+                break
+            else:
+                calc_low = calc_high
+                
+        print('Uh-oh, no convergence found.')
+        # we don't need to record the results separately,
+        # they are automatically available in the calculation objects
+
+    @abstractmethod
+    def show_results(self):
         pass
-
-
+    
 class KpointConvergenceTracker(ConvergenceTracker):
     def __init__(self, path, conv_property, **kwargs):
         ConvergenceTracker.__init__(self, path, conv_property, **kwargs)
@@ -109,6 +132,8 @@ class KpointConvergenceTracker(ConvergenceTracker):
 
     def find_kpoint_series(self):
         cell_lengths = self.atoms.cell.cellpar()[0:3]
+        
+        # should not be magic numbers
         min_ka = 10
         max_ka = 80
         num_ka = 10
@@ -128,13 +153,12 @@ class KpointConvergenceTracker(ConvergenceTracker):
         self.kpoint_series = kpoint_series
 
     def setup_calcs(self):
-
         self.find_kpoint_series()
-
         if self.package == PeriodicDftPackages.vasp:
             calculations = []
             for kpoints in self.kpoint_series:
                 calculation = VaspCalculation(
+                    '_'.join([str(k) for k in kpoints]),
                     self.converge_property,
                     self.atoms,
                     self.path,
@@ -147,6 +171,39 @@ class KpointConvergenceTracker(ConvergenceTracker):
             raise NotImplementedError
 
         self.calculations = calculations
+        
+    def run_calcs(self):
+        ConvergenceTracker.run_calcs(self)
+        if self.converged_calc:
+            self.converged_kpoints = self.converged_calc.kpoints
+
+        else:
+            print('No converged kpoint mesh found!')
+
+    def show_results(self):
+        xs = []
+        ys = []
+        labels = []
+        for idx, calculation in self.calculations:
+            if not calculation.calculation_required:
+                xs.append(idx)
+                ys.append(calculation.etotal)
+                labels.append(calculation.name)
+            else:
+                break
+        import matplotlib.pyplot as plt
+
+        plt.plot(xs, ys, 'bo-')
+        for x, y, label in zip(xs, ys, label):
+            plt.annotate(label,
+                         (x, y),
+                         textcoords="offset points",
+                         xytext=(0,10),
+                         ha ='center')
+            
+        plt.savefig('KpointConvergenceTracker_result.png')
+                
+        
 
 
 class PwCutoffConvergenceTracker(ConvergenceTracker):
