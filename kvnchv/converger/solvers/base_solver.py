@@ -11,12 +11,14 @@ implemented_solvers = ["espresso"]
 class BaseSolver(ABC):
     """Base class for solver implementations."""
 
-    def __init__(self, input_dict: dict, input_path: str):
+    def __init__(self, input_dict: dict, input_path: str, parameter_set):
         self.input_dict: dict = deepcopy(input_dict)
+        self.input_path = input_path
+        self.parameter_set = parameter_set
         self.solver_path: Path
         self.results_path: Path = Path(input_path)
         self.results: dict = {}
-        self.solver_path: Path = self._verify_solver_path()
+        self.solver_path: Path = self._validate_solver_path()
 
     @abstractmethod
     def run(self):
@@ -28,7 +30,7 @@ class BaseSolver(ABC):
         """Implement solver-specific output format parsing."""
         raise NotImplementedError
 
-    def _verify_solver_path(self) -> Path:
+    def _validate_solver_path(self) -> Path:
         """Check solver is implemented in package and installed locally."""
         if self.input_dict["name"] not in implemented_solvers:
             raise SolverNotImplementedError
@@ -44,6 +46,16 @@ class BaseSolver(ABC):
             raise SolverNotInstalledError
         return Path(try_path)
 
+    def _validate_parameters(self):
+        """Check editable parameters are supported."""
+        if not all(param in self.supported_parameters for param in self.parameter_set):
+            raise UnsupportedParameterError
+
+    @abstractmethod
+    def _search_and_replace_params(self):
+        """Implement solver-specific input file parameter replacement."""
+        raise NotImplementedError
+
 
 class SolverNotImplementedError(Exception):
     """Error when the requested solver is not implemented."""
@@ -51,3 +63,7 @@ class SolverNotImplementedError(Exception):
 
 class SolverNotInstalledError(Exception):
     """Error when the requested solver is not installed."""
+
+
+class UnsupportedParameterError(Exception):
+    """Error when provided parameters are unsupported."""

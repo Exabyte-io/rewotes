@@ -66,13 +66,13 @@ class Manager():
 
         target_eval = self.run_solver(0)
         run_idx = 1
-        while target_eval < self.tol:
+        while target_eval < self.tol and run_idx < len(self.data):
             target_eval = self.run_solver(run_idx)
             run_idx += 1
 
     def run_solver(self, idx: int) -> float:
         """Run solver for parameter set 'idx' and extract target converence value."""
-        run_params = self.data.iloc[idx]
+        run_params = dict(self.data.iloc[idx])
         solver = self._get_solver(run_params)
         solver.run()
 
