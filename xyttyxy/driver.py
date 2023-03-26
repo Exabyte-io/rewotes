@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from convergence_tracker import KpointConvergenceTracker, PwCutoffConvergenceTracker
 from ase.io import read
 import argparse
@@ -58,6 +59,5 @@ if __name__ == "__main__":
 
     tracker.read_input()
     tracker.setup_calcs()
-    breakpoint()
     tracker.run_calcs()
     tracker.show_results()

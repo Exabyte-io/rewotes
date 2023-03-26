@@ -29,7 +29,7 @@ class ConvergenceTracker(ABC):
         converge_property,
         package=PeriodicDftPackages.VASP,
         cutoff=400,
-        eps=1e-2,
+        eps=1e-5,
         **kwargs,
     ):
         """Constructor; should initialize the series of calculations
@@ -79,17 +79,19 @@ class ConvergenceTracker(ABC):
                 f"Warning: structure file {file_to_read} has multiple structures, picking the first one."
             )
         atoms = atoms[0]
-        self.atoms = atoms
+        self.atoms = atoms.copy()
 
     def read_input(self):
         """initialize other calculation parameters"""
         if self.package == PeriodicDftPackages.vasp:
             self.reference_calculation = VaspCalculation(
-                'reference',
-                self.converge_property,
-                path=self.path,
-                atoms=self.atoms,
+                name = 'reference',
+                conv_property = self.converge_property,
+                path = self.path,
+                atoms = self.atoms,
             )
+            self.reference_calculation.use_gaussian_smearing()
+            self.reference_calculation.set_to_singlepoint()
         elif self.package == PeriodicDftPackages.qe:
             raise NotImplementedError
 
@@ -104,7 +106,6 @@ class ConvergenceTracker(ABC):
 
         calc_low = self.calculations[0]
         calc_low.run()
-        
         for calculation in self.calculations[1:]:
             calc_high = calculation
             calc_high.run()
@@ -113,10 +114,10 @@ class ConvergenceTracker(ABC):
                 # calc_low has the converged mesh
                 # since increasing the mesh does not bring significant gain
                 self.converged_calc = calc_low
-                break
+                print('Convergence found!')
+                return
             else:
                 calc_low = calc_high
-                
         print('Uh-oh, no convergence found.')
         # we don't need to record the results separately,
         # they are automatically available in the calculation objects
@@ -159,11 +160,10 @@ class KpointConvergenceTracker(ConvergenceTracker):
             calculations = []
             for kpoints in self.kpoint_series:
                 calculation = VaspCalculation(
-                    '_'.join([str(k) for k in kpoints]),
-                    self.converge_property,
-                    self.atoms,
-                    self.path,
-                    self.reference_calculation.calculator,
+                    name = '_'.join([str(k) for k in kpoints]),
+                    conv_property = self.converge_property,
+                    atoms = self.atoms,
+                    calculator = self.reference_calculation._calculator,
                 )
                 calculation.kpoints = kpoints
                 calculations.append(calculation)
@@ -177,7 +177,6 @@ class KpointConvergenceTracker(ConvergenceTracker):
         ConvergenceTracker.run_calcs(self)
         if self.converged_calc:
             self.converged_kpoints = self.converged_calc.kpoints
-
         else:
             print('No converged kpoint mesh found!')
 
@@ -185,27 +184,37 @@ class KpointConvergenceTracker(ConvergenceTracker):
         xs = []
         ys = []
         labels = []
-        for idx, calculation in self.calculations:
+        for idx, calculation in enumerate(self.calculations):
             if not calculation.calculation_required:
                 xs.append(idx)
                 ys.append(calculation.etotal)
-                labels.append(calculation.name)
+                label = r'$\times$'.join([str(k) for k in calculation.kpoints])
+                labels.append(label)
             else:
                 break
         import matplotlib.pyplot as plt
 
-        plt.plot(xs, ys, 'bo-')
-        for x, y, label in zip(xs, ys, label):
-            plt.annotate(label,
-                         (x, y),
-                         textcoords="offset points",
-                         xytext=(0,10),
-                         ha ='center')
-            
-        plt.savefig('KpointConvergenceTracker_result.png')
-                
+        xs = np.array(xs)
+        ys = (np.array(ys) - ys[-1])
         
-
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        
+        ax.plot(xs, ys, 'bo-')
+        ax.set_yscale('symlog', linthresh = self.eps * 1e-2)
+        for x, y, label in zip(xs, ys, labels):
+            ax.annotate(label,
+                        (x, y),
+                        textcoords="offset points",
+                        xytext=(0,10),
+                        ha ='center')
+        ax.axhline(y = self.eps, color = 'r', linestyle = 'dotted')
+        ax.annotate('dE', (0, self.eps), textcoords="offset points", xytext=(0,10), ha = 'center')
+        
+        ax.set_ylabel('Error / eV')
+        plt.savefig('KpointConvergenceTracker_result.png')
+        print('Converged k-point set: ', self.converged_kpoints)
+        
 
 class PwCutoffConvergenceTracker(ConvergenceTracker):
     def __init__(self, path, conv_property):

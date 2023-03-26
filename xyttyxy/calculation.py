@@ -1,21 +1,21 @@
 from abc import ABC, abstractmethod
-from utils import graceful_exit
-
+from utils import graceful_exit, ConvergenceProperty
+from copy import deepcopy as dcopy
 
 class Calculation(ABC):
     @abstractmethod
     def __init__(self, name, conv_property, atoms, path, **kwargs):
         self.conv_property = conv_property
-        self.atoms = atoms
+        self.atoms = atoms.copy()
         self.path = path
         self.name = name
 
     @property
     def raw_value(self):
         if self.conv_property == ConvergenceProperty.etotal:
-            return self.energy
+            return self.etotal
         elif self.conv_property == ConvergenceProperty.force:
-            return self.forces
+            raise NotImplementedError
 
     @property
     @abstractmethod
@@ -39,36 +39,52 @@ class Calculation(ABC):
 class VaspCalculation(Calculation):
     def __init__(self, name, conv_property, atoms, path=None, calculator=None, **kwargs):
         Calculation.__init__(self, name, conv_property, atoms, path, **kwargs)
-
+        
         from ase.calculators.vasp import Vasp
 
         if path:
-            calculator = Vasp()
+            _calculator = Vasp()
             try:
-                calculator.read_incar(filename=f"{self.path}/INCAR")
+                _calculator.read_incar(filename=f"{self.path}/INCAR")
+            
             except FileNotFoundError:
                 print(f"No INCAR exists at path {self.path} specified")
                 graceful_exit()
+        elif calculator:
+            _calculator = dcopy(calculator)
+        else:
+            print('Either path to an INCAR or a _calculator object must be supplied')
+            graceful_exit()
 
-        calculator.set(directory = name)
-        self.calculator = calculator
-        self.atoms.calc = calculator
+        _calculator.set(directory = name)
+        self._calculator = _calculator
+        self.atoms.calc = _calculator
         self.calculation_required = True
 
     @property
     def kpoints(self):
-        return self.calculator.kpts
+        return self._calculator.kpts
+
+    def use_gaussian_smearing(self):
+        self._calculator.set(ismear = 0, sigma = 0.02)
+
+    def set_to_singlepoint(self):
+        ibrion = self._calculator.int_params['ibrion']
+        nsw = self._calculator.int_params['nsw']
+        if ibrion != -1 and nsw != 0:
+            print('setting to a single point calculation for convergence tracking')
+        self._calculator.set(ibrion = -1, nsw = 0)
 
     @property
     def etotal(self):
         # this should be tested as a read-only attribute
-        if self.calculator.calculation_required(self.atoms, ['energy']):
+        if self._calculator.calculation_required(self.atoms, ['energy']):
             print('Total energy not available yet, call VaspCalculation.run first')
         return self.atoms.get_potential_energy()
 
     @kpoints.setter
     def kpoints(self, kpts):
-        self.calculator.set(kpts=kpts)
+        self._calculator.set(kpts=kpts)
 
     def run(self):
         self.atoms.get_potential_energy()
