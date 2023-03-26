@@ -1,9 +1,9 @@
 """Preliminary pytest for components, to be broken up."""
 from pathlib import Path
 
+import pytest
 from converger import Manager
 
-import pytest
 
 resources = Path(__file__).parent.joinpath("resources")
 
@@ -12,9 +12,17 @@ input_espresso = {
         "name": "espresso",
         "solver_path": "/usr/local/bin/pw.x"
     },
-    "input_path": str(resources),
+    "input_path": str('/home/chuk/testrun/'),
+    "target": "total_energy",
     "tol": 1.0e-10,
-    "target": "total_energy"
+    "parameter_space": [
+        {
+            "name": "k",
+            "start": 1,
+            "max": 5,
+            "delta": 1
+        },
+    ]
 }
 
 input_v = {
@@ -28,14 +36,14 @@ input_v = {
 
 
 @pytest.fixture
-def manager():
+def job():
     """Espresso input object."""
     return Manager(input_espresso)
 
 
-def test_valid_input(manager):
+def test_valid_input(job):
     """Test schema validation."""
-    assert manager.validate_input()
+    assert job.validate_input()
 
 
 def test_solver_not_implemented():
@@ -44,6 +52,36 @@ def test_solver_not_implemented():
         Manager(input_v)
 
 
-def test_solver_run(manager):
+def test_solver_run(job):
     """Test single solver run through manager class."""
-    manager.run_solver()
+    job.run()
+
+
+def test_two_parameter_space():
+    """Test generated parameter pairs for two parameters."""
+    two_param_space_dict = {
+        "solver_input": {
+            "name": "espresso",
+            "solver_path": "/usr/local/bin/pw.x"
+        },
+        "input_path": str('/home/chuk/testrun/'),
+        "target": "total_energy",
+        "tol": 1.0e-10,
+        "parameter_space": [
+            {
+                "name": "k",
+                "start": 1,
+                "max": 5,
+                "delta": 1
+            },
+            {
+                "name": "p",
+                "start": 0,
+                "max": 10,
+                "delta": 2
+            },
+        ]
+    }
+    job = Manager(two_param_space_dict)
+    job._process_parameters()
+    assert len(job.data) == 20
