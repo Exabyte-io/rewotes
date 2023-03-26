@@ -85,6 +85,7 @@ class ConvergenceTracker(ABC):
         """initialize other calculation parameters"""
         if self.package == PeriodicDftPackages.vasp:
             self.reference_calculation = VaspCalculation(
+                'reference',
                 self.converge_property,
                 path=self.path,
                 atoms=self.atoms,

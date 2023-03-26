@@ -58,5 +58,6 @@ if __name__ == "__main__":
 
     tracker.read_input()
     tracker.setup_calcs()
+    breakpoint()
     tracker.run_calcs()
     tracker.show_results()
