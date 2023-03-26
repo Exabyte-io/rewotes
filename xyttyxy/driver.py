@@ -55,7 +55,10 @@ if __name__ == "__main__":
         tracker = PwCutoffConvergenceTracker(
             path, convergence_property, package=package, kpoints=kpoints
         )
+
+    tracker.read_input()
     tracker.setup_calcs()
+    breakpoint()
     exit()
     tracker.run_calcs()
     tracker.plot_results()

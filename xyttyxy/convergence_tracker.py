@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from ase.io import read
 from error_metric import ErrorMetricScalar, ErrorMetricVector, ErrorMetricMatrix
 from utils import PeriodicDftPackages, ConvergenceProperty, ConvergenceParameter
+from calculation import VaspCalculation
 
 
 class ConvergenceTracker(ABC):
@@ -25,7 +26,7 @@ class ConvergenceTracker(ABC):
     def __init__(
         self,
         path,
-        conv_property,
+        converge_property,
         package=PeriodicDftPackages.VASP,
         cutoff=400,
         eps=1e-2,
@@ -35,12 +36,12 @@ class ConvergenceTracker(ABC):
         but not start them. Must be overriden
         """
 
-        if conv_property == ConvergenceProperty.etotal:
+        if converge_property == ConvergenceProperty.etotal:
             self.error_metric = ErrorMetricScalar()
-        elif conv_property == ConvergenceProperty.phonon_modes:
+        elif converge_property == ConvergenceProperty.phonon_modes:
             self.error_metric = ErrorMetricVector()
 
-        self.conv_property = conv_property
+        self.converge_property = converge_property
         self.path = path
         self.package = package
         self.cutoff = cutoff
@@ -78,18 +79,24 @@ class ConvergenceTracker(ABC):
                 f"Warning: structure file {file_to_read} has multiple structures, picking the first one."
             )
         atoms = atoms[0]
+        self.atoms = atoms
 
     def read_input(self):
         """initialize other calculation parameters"""
         if self.package == PeriodicDftPackages.vasp:
-            self.reference_calc = VaspCalculation(
-                self.converge_property, path=self.path
+            self.reference_calculation = VaspCalculation(
+                self.converge_property,
+                path=self.path,
+                atoms=self.atoms,
             )
+        elif self.package == PeriodicDftPackages.qe:
+            raise NotImplementedError
 
     @abstractmethod
     def setup_calcs(self):
         pass
 
+    @abstractmethod
     def run_calcs(self, parameter):
         pass
 
@@ -100,25 +107,46 @@ class KpointConvergenceTracker(ConvergenceTracker):
         # initialize a series of calculations
         # setting attribute to 'etotal'
 
-    def setup_calcs(self):
+    def find_kpoint_series(self):
         cell_lengths = self.atoms.cell.cellpar()[0:3]
         min_ka = 10
         max_ka = 80
         num_ka = 10
 
         # loop over ka values.
-        ks = []
+        kpoint_series = []
         for ka in np.linspace(min_ka, max_ka, 10):
-            k = []
+            kpoints = []
             for axis_length in cell_lengths:
-                k.append(int(ka / axis_length))
+                kpoints.append(int(ka / axis_length))
 
             # if already in the set do not add
-            if len(ks) > 0 and k == ks[-1]:
+            if len(kpoint_series) > 0 and kpoints == kpoint_series[-1]:
                 continue
 
-            ks.append(k)
-        print(ks)
+            kpoint_series.append(kpoints)
+        self.kpoint_series = kpoint_series
+
+    def setup_calcs(self):
+
+        self.find_kpoint_series()
+
+        if self.package == PeriodicDftPackages.vasp:
+            calculations = []
+            for kpoints in self.kpoint_series:
+                calculation = VaspCalculation(
+                    self.converge_property,
+                    self.atoms,
+                    self.path,
+                    self.reference_calculation.calculator,
+                )
+                calculation.kpoints = kpoints
+                calculations.append(calculation)
+
+        elif self.package == PeriodicDftPackages.qe:
+            raise NotImplementedError
+
+        self.calculations = calculations
 
 
 class PwCutoffConvergenceTracker(ConvergenceTracker):
