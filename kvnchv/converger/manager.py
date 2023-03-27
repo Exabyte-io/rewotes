@@ -60,23 +60,41 @@ class Manager():
 
     def run(self):
         """Run convergence workflow."""
-        # run at least once
-
         self._process_parameters()
+        return_vals = np.zeros(len(self.data))
+        return_vals.fill((np.nan))
 
+        # run first iteration
+        target_prev = 0.0
         target_eval = self.run_solver(0)
-        run_idx = 1
-        while target_eval < self.tol and run_idx < len(self.data):
+        return_vals[0] = (target_eval)
+
+        delta = target_prev - target_eval  # expected sign of etot is negative
+        target_prev = target_eval
+
+        for run_idx in range(1, len(self.data)):
+            if delta < self.tol:
+                # assemble results dataframe
+                self.data['self.target'] = return_vals
+                return 0
             target_eval = self.run_solver(run_idx)
-            run_idx += 1
+            return_vals[run_idx] = target_eval
+
+            delta = target_prev - target_eval
+            target_prev = target_eval
+
+        return 1
 
     def run_solver(self, idx: int) -> float:
         """Run solver for parameter set 'idx' and extract target converence value."""
         run_params = dict(self.data.iloc[idx])
         solver = self._get_solver(run_params)
         solver.run()
-
-        return 0.0
+        if self.target not in solver.results.keys():
+            err_string = (f"{self.target} not found in results."
+                          f"Possible values are {list(solver.results.keys())}")
+            raise TargetOutputNotFoundError(err_string)
+        return solver.results[self.target]
 
     def _process_parameters(self) -> pd.DataFrame:
         """Process parameter_space input values define simulation set."""
@@ -95,3 +113,7 @@ class Manager():
 
 class InputFilesNotFoundError(Exception):
     """Error when the provided input path string is not a valid Path."""
+
+
+class TargetOutputNotFoundError(Exception):
+    """Error when requested target variable was not found in solver results."""

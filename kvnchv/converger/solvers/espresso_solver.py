@@ -18,8 +18,12 @@ class EspressoSolver(BaseSolver):
         self._validate_parameters()
 
     def run(self):
-        """Excute solver subprocess."""
+        """Run solver subprocess."""
         print(f"can run on {self.solver_path}")
+
+        # modify input file based on parameters
+        self._search_and_replace_params()
+
         # run solver in input_path
         run_cmd = f"{self.solver_path} < {self.input_path.joinpath('pw.in')}"
         result = subprocess.run(run_cmd, check=False, shell=True,
@@ -56,6 +60,7 @@ class EspressoSolver(BaseSolver):
         return re.search(r"Error.*\s*.+", stdout)[0]
 
     def _search_and_replace_params(self):
+        """Modify input file to update specified parameters."""
         pass
 
 

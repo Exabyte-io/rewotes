@@ -13,7 +13,7 @@ input_espresso = {
         "solver_path": "/usr/local/bin/pw.x"
     },
     "input_path": str('/home/chuk/testrun/'),
-    "target": "total_energy",
+    "target": "etot",
     "tol": 1.0e-10,
     "parameter_space": [
         {
@@ -31,7 +31,7 @@ input_v = {
     },
     "input_path": str(resources),
     "tol": 1.0e-10,
-    "target": "total_energy"
+    "target": "etot"
 }
 
 two_param_space_dict = {
@@ -40,7 +40,7 @@ two_param_space_dict = {
         "solver_path": "/usr/local/bin/pw.x"
     },
     "input_path": str('/home/chuk/testrun/'),
-    "target": "total_energy",
+    "target": "etot",
     "tol": 1.0e-10,
     "parameter_space": [
         {
