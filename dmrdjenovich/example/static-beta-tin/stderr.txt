@@ -1,0 +1,1 @@
+bash: mpirun: command not found

@@ -1,0 +1,30 @@
+&CONTROL
+calculation=scf
+pseudo_dir=.
+tprnfor=.true.
+prefix=beta_relax
+outdir=.
+tstress=.true.
+/
+&SYSTEM
+nbnd=12
+ecutwfc=11.1
+occupations=smearing
+celldm(1)=8.851118
+ibrav=7
+celldm(3)=0.450000
+degauss=1.0E-4
+smearing=gaussian
+nat=2
+ntyp=1
+/
+&ELECTRONS
+mixing_beta=0.4
+conv_thr=1.0E-6
+/
+ATOMIC_SPECIES
+Si 28.085000 Si.pbe-rrkj.UPF.txt
+ATOMIC_POSITIONS crystal
+Si 0.000000 0.000000 0.000000Si 0.500000 0.250000 -0.250000
+K_POINTS automatic
+3 3 3 0 0 0 
