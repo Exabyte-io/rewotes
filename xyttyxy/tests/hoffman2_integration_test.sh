@@ -17,20 +17,20 @@ export VASP_BIN='/u/home/x/xyttyxy/selfcompiled-programs/compile/vasp-5.4.4/sour
 export VASP_COMMAND="mpirun -np 16 $VASP_BIN"
 
 semiconductors=(Si_primitive Si_conventional GaAs CuO)
-insulators=(SiO2 Al2O3 Fe2O3)
+insulators=(SiO2 NaCl Fe2O3)
 # SiO2 must decrease eps to 1e-3, otherwise will not converge
 metals=(Cu Ni Au)
 
 for material in ${semiconductors[@]}; do
-    echo $material
+    driver.py $material --eps 1e-3
 done
 		
 for material in ${insulators[@]}; do
-    echo $material
+    driver.py $material --eps 1e-3
 done
 		
 for material in ${metals[@]}; do
-    echo $material
+    driver.py $material --eps 1e-3
 done
 
 

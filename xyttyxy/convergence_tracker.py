@@ -3,8 +3,14 @@ import os
 from abc import ABC, abstractmethod
 from ase.io import read
 from error_metric import ErrorMetricScalar, ErrorMetricVector, ErrorMetricMatrix
-from utils import PeriodicDftPackages, ConvergenceProperty, ConvergenceParameter
+from utils import (
+    PeriodicDftPackages,
+    ConvergenceProperty,
+    ConvergenceParameter,
+    messages,
+)
 from calculation import VaspCalculation
+from logging import getLogger
 
 
 class ConvergenceTracker(ABC):
@@ -46,6 +52,11 @@ class ConvergenceTracker(ABC):
         self.package = package
         self.eps = eps
 
+        if "logger" in kwargs.keys():
+            self.logger = kwargs["logger"]
+        else:
+            self.logger = getLogger("ConvergenceTracker")  # level defaults to warning
+
         if workdir:
             self.workdir = workdir
         else:
@@ -73,14 +84,15 @@ class ConvergenceTracker(ABC):
         ), f"{path} does not contain a supported structure file"
         file_to_read = supported_files[0]
         if len(supported_files):
-            print(
-                f"Warning: more than one supported files found! Reading the first one: {file_to_read}"
+            self.logger.warning(
+                messages("multiple_structure_files").format(file_to_read)
             )
+
         atoms = read(os.path.join(self.path, file_to_read), index=":")
 
         if len(atoms) > 1:
-            print(
-                f"Warning: structure file {file_to_read} has multiple structures, picking the first one."
+            self.logger.warning(
+                messages("multiple_structure_images").format(file_to_read)
             )
         atoms = atoms[0]
         self.atoms = atoms.copy()
@@ -93,7 +105,10 @@ class ConvergenceTracker(ABC):
                 conv_property=self.converge_property,
                 path=self.path,
                 atoms=self.atoms,
+                logger=self.logger,
             )
+            # make sure input contains only electronics step related stuff
+            # todo: these should be more decoupled from VASP
             self.reference_calculation.no_tetrahedron_smearing()
             self.reference_calculation.set_to_singlepoint()
         elif self.package == PeriodicDftPackages.qe:
@@ -120,12 +135,13 @@ class ConvergenceTracker(ABC):
                 # calc_low has the converged mesh
                 # since increasing the mesh does not bring significant gain
                 self.converged_calc = calc_low
-                print("Convergence found!")
+                self.logger.info(messages("converged"))
                 os.chdir("..")
                 return
             else:
                 calc_low = calc_high
-        print("Uh-oh, no convergence found.")
+
+        self.logger.warning(messages("unconverged"))
         os.chdir("..")
         # we don't need to record the results separately,
         # they are automatically available in the calculation objects
@@ -142,6 +158,11 @@ class KpointConvergenceTracker(ConvergenceTracker):
         )
         # initialize a series of calculations
         # setting attribute to 'etotal'
+
+    def read_input(self):
+        ConvergenceTracker.read_input(self)
+        # additionally stop it trying to manipulate kpoints
+        self.reference_calculation.no_kspacing()
 
     def find_kpoint_series(self):
         cell_lengths = self.atoms.cell.cellpar()[0:3]
@@ -162,6 +183,10 @@ class KpointConvergenceTracker(ConvergenceTracker):
             if len(kpoint_series) > 0 and kpoints == kpoint_series[-1]:
                 continue
 
+            # if any is 0, do not add
+            if any(np.array(kpoints) == 0):
+                continue
+
             kpoint_series.append(kpoints)
         self.kpoint_series = kpoint_series
 
@@ -175,6 +200,7 @@ class KpointConvergenceTracker(ConvergenceTracker):
                     conv_property=self.converge_property,
                     atoms=self.atoms,
                     calculator=self.reference_calculation._calculator,
+                    logger=self.logger,
                 )
                 calculation.kpoints = kpoints
                 calculations.append(calculation)
@@ -189,7 +215,7 @@ class KpointConvergenceTracker(ConvergenceTracker):
         try:
             self.converged_kpoints = self.converged_calc.kpoints
         except AttributeError:
-            print("No converged kpoint mesh found!")
+            self.logger.warning(messages("unconverged_kpts"))
             self.converged_kpoints = [-1, -1, -1]
 
     def show_results(self):
@@ -206,8 +232,8 @@ class KpointConvergenceTracker(ConvergenceTracker):
                 break
         import matplotlib.pyplot as plt
 
-        xs = np.array(xs)
-        ys = np.abs((np.array(ys) - ys[-1]))
+        xs = np.array(xs)[0:-1]
+        ys = np.abs(np.diff(ys))
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
@@ -224,8 +250,10 @@ class KpointConvergenceTracker(ConvergenceTracker):
         )
 
         ax.set_ylabel("Error / eV")
+        ax.get_xaxis().set_visible(False)
         plt.savefig(f"{self.workdir}/KpointConvergenceTrack.png")
-        print("Converged k-point set: ", self.converged_kpoints)
+
+        self.logger.info(messages("converged_kpts").format(str(self.converged_kpoints)))
 
 
 class PwCutoffConvergenceTracker(ConvergenceTracker):

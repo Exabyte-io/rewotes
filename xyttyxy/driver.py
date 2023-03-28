@@ -3,6 +3,7 @@ from convergence_tracker import KpointConvergenceTracker, PwCutoffConvergenceTra
 from ase.io import read
 import argparse
 from utils import *
+import logging
 
 
 if __name__ == "__main__":
@@ -16,24 +17,35 @@ if __name__ == "__main__":
     parser.add_argument("--convergence_property", default="etotal")
     parser.add_argument("--convergence_parameter", default="kpoints")
 
+    logger = logging.getLogger("ConvergenceTrackingDriver")
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+
     args = parser.parse_args()
     path = args.path
     try:
         package = PeriodicDftPackages[args.package]
     except KeyError:
-        print(f"{args.package} is not a supported periodic DFT package")
+        logger.error(messages("unsupported_package").format(args.package))
         graceful_exit()
 
     try:
         convergence_property = ConvergenceProperty[args.convergence_property]
     except KeyError:
-        print(f"{args.convergence_property} is not a supported convergence property")
+        logger.error(messages("unsupported_property").format(args.convergence_property))
         graceful_exit()
 
     try:
         convergence_parameter = ConvergenceParameter[args.convergence_parameter]
     except KeyError:
-        print(f"{args.convergence_parameter} is not a supported convergence parameter")
+        logger.error(
+            messages("unsupported_parameter").format(args.convergence_parameter)
+        )
         graceful_exit()
 
     # switch on the convergence parameter for which convergence tracker to build
@@ -45,6 +57,7 @@ if __name__ == "__main__":
             conv_property=convergence_property,
             package=package,
             eps=float(args.epsilon),
+            logger=logger,
         )
 
     elif convergence_parameter == ConvergenceParameter.encut:
@@ -53,7 +66,7 @@ if __name__ == "__main__":
             kpoints = [int(k) for k in args.kpoints[1:-1].split(",")]
             assert len(kpoints) == 3
         except (ValueError, AssertionError):
-            print(f"invalid kpoints supplied: {args.kpoints}")
+            logger.error(messages("invalid_kpts").format(args.kpoints))
             graceful_exit()
 
         tracker = PwCutoffConvergenceTracker(

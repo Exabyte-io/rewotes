@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
-from utils import graceful_exit, ConvergenceProperty
+from utils import graceful_exit, ConvergenceProperty, messages
 from copy import deepcopy as dcopy
+import os
+import logging
 
 
 class Calculation(ABC):
@@ -10,6 +12,11 @@ class Calculation(ABC):
         self.atoms = atoms.copy()
         self.path = path
         self.name = name
+
+        if "logger" in kwargs.keys():
+            self.logger = kwargs["logger"]
+        else:
+            self.logger = getLogger("Calculation")  # level defaults to warning
 
     @property
     def raw_value(self):
@@ -43,21 +50,44 @@ class VaspCalculation(Calculation):
         self, name, conv_property, atoms, path=None, calculator=None, **kwargs
     ):
         Calculation.__init__(self, name, conv_property, atoms, path, **kwargs)
-
         from ase.calculators.vasp import Vasp
 
         if path:
             _calculator = Vasp()
             try:
-                _calculator.read_incar(filename=f"{self.path}/INCAR")
+                _calculator.read_incar(filename=os.path.join(self.path, "INCAR"))
 
             except FileNotFoundError:
-                print(f"No INCAR exists at path {self.path} specified")
-                graceful_exit()
+                self.logger.warning(messages("no_incar").format("INCAR", self.path))
+                try:
+                    files = [
+                        f
+                        for f in os.listdir(self.path)
+                        if ".incar" in f and os.path.isfile(os.path.join(self.path, f))
+                    ]
+                    assert isinstance(files, list), "BUG 1"
+
+                    if len(files) == 0:
+                        self.logger.warning(
+                            messages("no_incar").format(".incar", self.path)
+                        )
+                        raise FileNotFoundError
+                    elif len(files) > 1:
+                        self.logger.warning(messages("multiple_incar").format(".incar"))
+                        fname = files[0]
+                    else:
+                        fname = files[0]
+
+                    _calculator.read_incar(filename=os.path.join(self.path, fname))
+
+                except FileNotFoundError:
+                    self.logger.error(messages("no_incar_final"))
+                    graceful_exit()
+
         elif calculator:
             _calculator = dcopy(calculator)
         else:
-            print("Either path to an INCAR or a _calculator object must be supplied")
+            self.logger.error(messages("no_calculation_input"))
             graceful_exit()
 
         _calculator.set(directory=name)
@@ -78,14 +108,20 @@ class VaspCalculation(Calculation):
         ibrion = self._calculator.int_params["ibrion"]
         nsw = self._calculator.int_params["nsw"]
         if ibrion != -1 and nsw != 0:
-            print("setting to a single point calculation for convergence tracking")
+            self.logger.warning(messages("set_to_singlepoint"))
         self._calculator.set(ibrion=-1, nsw=0)
+
+    def no_kspacing(self):
+        kspacing = self._calculator.float_params["kspacing"]
+        if kspacing:
+            self.logger.warning(messages("ignore_kspacing"))
+        self._calculator.set(kspacing=None)
 
     @property
     def etotal(self):
         # this should be tested as a read-only attribute
         if self._calculator.calculation_required(self.atoms, ["energy"]):
-            print("Total energy not available yet, call VaspCalculation.run first")
+            self.logger.error(messages("no_etotal"))
         return self.atoms.get_potential_energy()
 
     @kpoints.setter
