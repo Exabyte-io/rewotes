@@ -11,11 +11,12 @@ implemented_solvers = ["espresso"]
 class BaseSolver(ABC):
     """Base class for solver implementations."""
 
-    def __init__(self, input_dict: dict, input_path: str, parameter_set):
+    def __init__(self, input_dict: dict, input_path: str, parameter_set: dict):
         self.input_dict: dict = deepcopy(input_dict)
-        self.input_path = input_path
-        self.parameter_set = parameter_set
+        self.input_path: Path = input_path
+        self.parameter_set: dict = parameter_set
         self.solver_path: Path
+        self.supported_parameters: list
         self.results_path: Path = Path(input_path)
         self.results: dict = {}
         self.solver_path: Path = self._validate_solver_path()
@@ -52,7 +53,7 @@ class BaseSolver(ABC):
             raise UnsupportedParameterError
 
     @abstractmethod
-    def _search_and_replace_params(self):
+    def _generate_new_file(self, new_input_fname: str):
         """Implement solver-specific input file parameter replacement."""
         raise NotImplementedError
 
