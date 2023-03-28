@@ -92,7 +92,7 @@ class ConvergenceTracker(ABC):
         if self.package == PeriodicDftPackages.vasp:
             self.reference_calculation = VaspCalculation(
                 name="reference",
-                conv_property=self.convergence_property,
+                convergence_property=self.convergence_property,
                 path=self.path,
                 atoms=self.atoms,
                 logger=self.logger,
@@ -181,7 +181,7 @@ class KpointConvergenceTracker(ConvergenceTracker):
             for kpoints in self.kpoint_series:
                 calculation = VaspCalculation(
                     name="_".join([str(k) for k in kpoints]),
-                    conv_property=self.convergence_property,
+                    convergence_property=self.convergence_property,
                     atoms=self.atoms,
                     calculator=self.reference_calculation._calculator,
                     logger=self.logger,

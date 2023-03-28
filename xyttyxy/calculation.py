@@ -7,8 +7,8 @@ import logging
 
 class Calculation(ABC):
     @abstractmethod
-    def __init__(self, name, conv_property, atoms, path, **kwargs):
-        self.conv_property = conv_property
+    def __init__(self, name, convergence_property, atoms, path, **kwargs):
+        self.convergence_property = convergence_property
         self.atoms = atoms.copy()
         self.path = path
         self.name = name
@@ -20,9 +20,9 @@ class Calculation(ABC):
 
     @property
     def raw_value(self):
-        if self.conv_property == ConvergenceProperty.etotal:
+        if self.convergence_property == ConvergenceProperty.etotal:
             return self.etotal
-        elif self.conv_property == ConvergenceProperty.force:
+        elif self.convergence_property == ConvergenceProperty.force:
             raise NotImplementedError
 
     @property
@@ -47,9 +47,9 @@ class Calculation(ABC):
 
 class VaspCalculation(Calculation):
     def __init__(
-        self, name, conv_property, atoms, path=None, calculator=None, **kwargs
+        self, name, convergence_property, atoms, path=None, calculator=None, **kwargs
     ):
-        Calculation.__init__(self, name, conv_property, atoms, path, **kwargs)
+        Calculation.__init__(self, name, convergence_property, atoms, path, **kwargs)
         from ase.calculators.vasp import Vasp
 
         if path:

@@ -1,0 +1,93 @@
+@startuml classes
+skinparam dpi 300
+set namespaceSeparator none
+class "Calculation" as xyttyxy.calculation.Calculation {
+  atoms
+  convergence_property
+  etotal
+  kpoints
+  logger : NoneType, RootLogger, Logger
+  name
+  path
+  raw_value
+  run()
+}
+class "ConvergenceParameter" as xyttyxy.utils.ConvergenceParameter {
+  name
+}
+class "ConvergenceProperty" as xyttyxy.utils.ConvergenceProperty {
+  name
+}
+class "ConvergenceTracker" as xyttyxy.convergence_tracker.ConvergenceTracker {
+  atoms
+  converged_calc
+  convergence_property
+  eps : float
+  error_metric
+  logger : RootLogger
+  package
+  path
+  reference_calculation
+  workdir
+  read_input()
+  read_structure()
+  run_calcs()
+  setup_calcs()
+  show_results()
+}
+class "ErrorMetric" as xyttyxy.error_metric.ErrorMetric {
+  error
+  fractional : bool
+}
+class "ErrorMetricMatrix" as xyttyxy.error_metric.ErrorMetricMatrix {
+  error(calc_0, calc_1)
+}
+class "ErrorMetricScalar" as xyttyxy.error_metric.ErrorMetricScalar {
+  error(calc_0, calc_1)
+}
+class "ErrorMetricVector" as xyttyxy.error_metric.ErrorMetricVector {
+  error(calc_0, calc_1)
+}
+class "KpointConvergenceTracker" as xyttyxy.convergence_tracker.KpointConvergenceTracker {
+  calculations : list
+  converged_kpoints : list
+  kpoint_series : list
+  max_ka
+  min_ka
+  num_ka
+  find_kpoint_series()
+  read_input()
+  run_calcs()
+  setup_calcs()
+  show_results()
+}
+class "PeriodicDftPackages" as xyttyxy.utils.PeriodicDftPackages {
+  name
+}
+class "PwCutoffConvergenceTracker" as xyttyxy.convergence_tracker.PwCutoffConvergenceTracker {
+}
+class "VaspCalculation" as xyttyxy.calculation.VaspCalculation {
+  calculation_required : bool
+  etotal
+  kpoints
+  no_kspacing()
+  no_tetrahedron_smearing()
+  run()
+  set_to_singlepoint()
+}
+xyttyxy.calculation.VaspCalculation --|> xyttyxy.calculation.Calculation
+xyttyxy.convergence_tracker.KpointConvergenceTracker --|> xyttyxy.convergence_tracker.ConvergenceTracker
+xyttyxy.convergence_tracker.PwCutoffConvergenceTracker --|> xyttyxy.convergence_tracker.ConvergenceTracker
+xyttyxy.error_metric.ErrorMetricMatrix --|> xyttyxy.error_metric.ErrorMetric
+xyttyxy.error_metric.ErrorMetricScalar --|> xyttyxy.error_metric.ErrorMetric
+xyttyxy.error_metric.ErrorMetricVector --|> xyttyxy.error_metric.ErrorMetric
+' manual edits
+class "Enum" as python.enum {
+  error
+}
+xyttyxy.utils.ConvergenceParameter --|> python.enum
+xyttyxy.utils.ConvergenceProperty --|> python.enum
+xyttyxy.utils.PeriodicDftPackages --|> python.enum
+xyttyxy.calculation.VaspCalculation --* xyttyxy.convergence_tracker.KpointConvergenceTracker
+xyttyxy.error_metric.ErrorMetricScalar --* xyttyxy.convergence_tracker.KpointConvergenceTracker
+@enduml
