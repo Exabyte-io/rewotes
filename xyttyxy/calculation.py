@@ -16,7 +16,7 @@ class Calculation(ABC):
         if "logger" in kwargs.keys():
             self.logger = kwargs["logger"]
         else:
-            self.logger = getLogger("Calculation")  # level defaults to warning
+            self.logger = logging.getLogger("Calculation")  # level defaults to warning
 
     @property
     def raw_value(self):
@@ -56,7 +56,6 @@ class VaspCalculation(Calculation):
             _calculator = Vasp()
             try:
                 _calculator.read_incar(filename=os.path.join(self.path, "INCAR"))
-
             except FileNotFoundError:
                 self.logger.warning(messages("no_incar").format("INCAR", self.path))
                 try:
@@ -119,9 +118,9 @@ class VaspCalculation(Calculation):
 
     @property
     def etotal(self):
-        # this should be tested as a read-only attribute
-        if self._calculator.calculation_required(self.atoms, ["energy"]):
-            self.logger.error(messages("no_etotal"))
+        # if self._calculator.calculation_required(self.atoms, ["energy"]):
+        if self.calculation_required:
+            raise Exception(messages("no_etotal"))
         return self.atoms.get_potential_energy()
 
     @kpoints.setter

@@ -28,7 +28,7 @@ class ErrorMetricScalar(ErrorMetric):
         v_diff = abs(v0 - v1)
 
         if self.fractional:
-            return v_diff / v0
+            return v_diff / abs(v0)
         else:
             return v_diff
 
