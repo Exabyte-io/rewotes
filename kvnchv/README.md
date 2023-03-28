@@ -31,7 +31,29 @@ As a user of this software I can start it passing:
 
 as parameters and get the k-point dimensions (eg. 5 5 5).
 
+# Operating assumptions
+
+The assumed directory structure is:
+```
+rundir/
+    pw.in
+    pseudo/
+        potentialfile.UPF
+```
+
+The input file should be named `pw.in` and is assumed to have the following:
+
+&CONTROL section contains the following relative paths
+- outdir = 'outdir'
+- pseudo_dir = 'pseudo'
+
+Automatically generated uniform of k-points, i.e. `K_POINTS automatic`
+- K_POINTS is the last "card" in the input
+
+
 # Notes
 
-- create an account at exabyte.io and use it for the calculation purposes
+- *create an account at exabyte.io and use it for the calculation purposes*
+    - Could authenticate API but not submit jobs succesfully.
+    - Package tests are with a local quantum ESPRESSO install. 
 - suggested modeling engine: Quantum ESPRESSO

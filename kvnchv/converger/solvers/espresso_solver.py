@@ -72,15 +72,20 @@ class EspressoSolver(BaseSolver):
         new_lines = original_lines.replace("'outdir'", f"'{outdir}'")
 
         for param, value in self.parameter_set.items():
-            target_string, replace_string = getattr(self, f"_match_{param}")(value)
-            new_lines = new_lines.replace(target_string, replace_string)
+            regex, replace_string = getattr(self, f"_match_{param}")(value)
+            new_lines = re.sub(regex, replace_string, new_lines)
 
         with open(self.input_path.joinpath(new_input_fname), 'w+') as new_fp:
             new_fp.write(new_lines)
 
     def _match_k(self, k: int):
-        """Return original and replacement k points string."""
-        return ("K_POINTS automatic\n2 2 2 0 0 0",
+        """Return match regex and replace_string.
+
+        Room for flexibility improvement. Assumptions:
+        - K_POINTS automatic is used.
+        - K_POINTS is the last command issued
+        """
+        return ("K_POINTS automatic.*",
                 f"K_POINTS automatic\n{k} {k} {k} 0 0 0")
 
 
