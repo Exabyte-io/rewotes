@@ -1,8 +1,9 @@
 from calculation import Calculation, VaspCalculation
-from utils import ConvergenceProperty, messages
+from utils import ConvergenceProperty, messages, PeriodicDftPackages
 from error_metric import ErrorMetricScalar
 from ase.io import read
 from ase.calculators.vasp import Vasp
+from convergence_tracker import ConvergenceTracker, KpointConvergenceTracker
 import os
 import pytest
 
@@ -149,3 +150,91 @@ def test_error_metric_scalar_fractional(
         si_primitive_calculation_222, si_primitive_calculation_444
     )
     assert abs(error - 0.014776226780188476) < 1e-10
+
+
+def test_convergence_tracker_abstract(si_primitive_path):
+    with pytest.raises(TypeError):
+        ConvergenceTracker(
+            ".",
+            si_primitive_path,
+            ConvergenceProperty.etotal,
+            PeriodicDftPackages.VASP,
+            eps=1e-5,
+        )
+
+
+def test_kpoint_convergence_tracker(si_primitive_path):
+    try:
+        KpointConvergenceTracker(
+            10,
+            80,
+            10,
+            si_primitive_path,
+            si_primitive_path,
+            ConvergenceProperty.etotal,
+            PeriodicDftPackages.VASP,
+            eps=1e-5,
+        )
+    except TypeError as ex:
+        assert (
+            False
+        ), f"KpointConvergenceTracker constructor raised an exception {ex} when path {si_primitive_path} is passed in"
+
+
+@pytest.fixture
+def kpoint_convergence_tracker(si_primitive_path):
+    tracker = KpointConvergenceTracker(
+        10,
+        80,
+        10,
+        si_primitive_path,
+        si_primitive_path,
+        ConvergenceProperty.etotal,
+        PeriodicDftPackages.VASP,
+        eps=1e-5,
+    )
+    return tracker
+
+
+def test_kpoint_convergence_tracker_read_input(kpoint_convergence_tracker):
+    tracker = kpoint_convergence_tracker
+    tracker.read_input()
+    calc = tracker.reference_calculation
+    assert isinstance(calc, VaspCalculation)
+    assert calc._calculator.int_params["ismear"] == 0
+    assert calc._calculator.calculation_required
+
+
+def test_kpoint_convergence_tracker_find_kpoint_series(kpoint_convergence_tracker):
+    tracker = kpoint_convergence_tracker
+    tracker.read_input()
+    tracker.find_kpoint_series()
+
+    expected_kpts = [
+        [2, 2, 2],
+        [4, 4, 4],
+        [6, 6, 6],
+        [8, 8, 8],
+        [10, 10, 10],
+        [12, 12, 12],
+        [14, 14, 14],
+        [16, 16, 16],
+        [18, 18, 18],
+        [20, 20, 20],
+    ]
+
+    assert tracker.kpoint_series == expected_kpts
+
+
+@pytest.mark.skip(
+    reason="no restarting implemented so can't build fixture. re-running is expensive"
+)
+def test_kpoint_convergence_tracker_run_calcs(kpoint_convergence_tracker):
+    pass
+
+
+@pytest.mark.skip(
+    reason="no restarting implemented so can't build fixture. re-running is expensive"
+)
+def test_kpoint_convergence_tracker_show_results(kpoint_convergence_tracker):
+    pass

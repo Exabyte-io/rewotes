@@ -16,7 +16,9 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--epsilon", default=1e-5)
     parser.add_argument("--convergence_property", default="etotal")
     parser.add_argument("--convergence_parameter", default="kpoints")
-
+    parser.add_argument("--min-ka", default=10)
+    parser.add_argument("--max-ka", default=80)
+    parser.add_argument("--num-ka", default=10)
     logger = logging.getLogger("ConvergenceTrackingDriver")
     handler = logging.StreamHandler()
     formatter = logging.Formatter(
@@ -52,9 +54,12 @@ if __name__ == "__main__":
 
     if convergence_parameter == ConvergenceParameter.kpoints:
         tracker = KpointConvergenceTracker(
+            min_ka=args.min_ka,
+            max_ka=args.max_ka,
+            num_ka=args.num_ka,
             workdir=args.workdir,
             path=path,
-            conv_property=convergence_property,
+            convergence_property=convergence_property,
             package=package,
             eps=float(args.epsilon),
             logger=logger,

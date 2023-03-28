@@ -33,40 +33,30 @@ class ConvergenceTracker(ABC):
         self,
         workdir,
         path,
-        converge_property,
+        convergence_property,
         package=PeriodicDftPackages.VASP,
         eps=1e-5,
+        logger=getLogger("ConvergenceTracker"),
         **kwargs,
     ):
         """Constructor; should initialize the series of calculations
         but not start them. Must be overriden
         """
-
-        if converge_property == ConvergenceProperty.etotal:
+        if convergence_property == ConvergenceProperty.etotal:
             self.error_metric = ErrorMetricScalar()
-        elif converge_property == ConvergenceProperty.phonon_modes:
+        elif convergence_property == ConvergenceProperty.phonon_modes:
             self.error_metric = ErrorMetricVector()
 
-        self.converge_property = converge_property
+        self.convergence_property = convergence_property
         self.path = path
         self.package = package
         self.eps = eps
-
-        if "logger" in kwargs.keys():
-            self.logger = kwargs["logger"]
-        else:
-            self.logger = getLogger("ConvergenceTracker")  # level defaults to warning
+        self.logger = logger
 
         if workdir:
             self.workdir = workdir
         else:
             self.workdir = self.path
-
-        # less important parameters
-        defined_params = "max_trials"
-        for key in defined_params:
-            if key in kwargs:
-                setattr(self, key, kwargs[key])
 
         self.read_structure()
 
@@ -102,7 +92,7 @@ class ConvergenceTracker(ABC):
         if self.package == PeriodicDftPackages.vasp:
             self.reference_calculation = VaspCalculation(
                 name="reference",
-                conv_property=self.converge_property,
+                conv_property=self.convergence_property,
                 path=self.path,
                 atoms=self.atoms,
                 logger=self.logger,
@@ -152,12 +142,11 @@ class ConvergenceTracker(ABC):
 
 
 class KpointConvergenceTracker(ConvergenceTracker):
-    def __init__(self, workdir, path, conv_property, package, eps, **kwargs):
-        ConvergenceTracker.__init__(
-            self, workdir, path, conv_property, package, eps, **kwargs
-        )
-        # initialize a series of calculations
-        # setting attribute to 'etotal'
+    def __init__(self, min_ka, max_ka, num_ka, *args, **kwargs):
+        ConvergenceTracker.__init__(self, *args, **kwargs)
+        self.min_ka = min_ka
+        self.max_ka = max_ka
+        self.num_ka = num_ka
 
     def read_input(self):
         ConvergenceTracker.read_input(self)
@@ -167,14 +156,9 @@ class KpointConvergenceTracker(ConvergenceTracker):
     def find_kpoint_series(self):
         cell_lengths = self.atoms.cell.cellpar()[0:3]
 
-        # should not be magic numbers
-        min_ka = 10
-        max_ka = 80
-        num_ka = 10
-
         # loop over ka values.
         kpoint_series = []
-        for ka in np.linspace(min_ka, max_ka, 10):
+        for ka in np.linspace(self.min_ka, self.max_ka, self.num_ka):
             kpoints = []
             for axis_length in cell_lengths:
                 kpoints.append(int(ka / axis_length))
@@ -197,7 +181,7 @@ class KpointConvergenceTracker(ConvergenceTracker):
             for kpoints in self.kpoint_series:
                 calculation = VaspCalculation(
                     name="_".join([str(k) for k in kpoints]),
-                    conv_property=self.converge_property,
+                    conv_property=self.convergence_property,
                     atoms=self.atoms,
                     calculator=self.reference_calculation._calculator,
                     logger=self.logger,
