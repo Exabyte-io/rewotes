@@ -1,5 +1,5 @@
 @startuml classes
-skinparam dpi 300
+skinparam dpi 100
 set namespaceSeparator none
 class "Calculation" as xyttyxy.calculation.Calculation {
   atoms

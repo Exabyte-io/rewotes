@@ -6,5 +6,3 @@ Usage examples are provided in `tests/hoffman2_integration_test.sh`. More option
 
 To run the test suite, point `$REWOTE_TEST_DATA` to `tests/` folder, cd to this directory, and do `pytest .`
 
-
-
