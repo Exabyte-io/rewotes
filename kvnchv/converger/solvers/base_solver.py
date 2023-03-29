@@ -4,20 +4,48 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 from pathlib import Path
 
+from ..exceptions import (SolverNotInstalledError,
+                          UnsupportedParameterError)
 
-implemented_solvers = ["espresso"]
+# solver name and executable name on path
+implemented_solvers = {"espresso": "pw.x"}
 
 
 class BaseSolver(ABC):
-    """Base class for solver implementations."""
+    """Base class for solver implementations.
+
+    Attributes
+    ----------
+    input_dict : dict
+        Contains name and solver_path
+    input_path : str
+        Directory containing expected input structure
+    parameter_set : dict
+        Parameter name(s) and value(s) to replace in the provided input file
+    supported_parameters : list
+        Valid parameterizable inputs, correspond to keys in parameter_set
+    results : dict
+        All implemented return values from simulation. Keys match 'target'
+    solver_path : Path
+        Resolved solver path, provided or default (on PATH)
+    """
 
     def __init__(self, input_dict: dict, input_path: str, parameter_set: dict):
+        """Construct base Solver object.
+
+        Parameters
+        ----------
+        input_dict : dict
+            Contains name and solver_path
+        input_path : str
+            Directory containing expected input structure
+        parameter_set : dict
+            Parameter name(s) and value(s) to replace in the provided input file
+        """
         self.input_dict: dict = deepcopy(input_dict)
         self.input_path: Path = input_path
         self.parameter_set: dict = parameter_set
-        self.solver_path: Path
-        self.supported_parameters: list
-        self.results_path: Path = Path(input_path)
+        self.supported_parameters: list = []
         self.results: dict = {}
         self.solver_path: Path = self._validate_solver_path()
 
@@ -32,14 +60,11 @@ class BaseSolver(ABC):
         raise NotImplementedError
 
     def _validate_solver_path(self) -> Path:
-        """Check solver is implemented in package and installed locally."""
-        if self.input_dict["name"] not in implemented_solvers:
-            raise SolverNotImplementedError
-
+        """Check solver is installed locally."""
         if "solver_path" in self.input_dict:
             try_path = self.input_dict["solver_path"]
         else:
-            try_path = shutil.which("pw.x")
+            try_path = shutil.which(implemented_solvers[self.input_dict["name"]])
             if not try_path:
                 raise SolverNotInstalledError
 
@@ -56,15 +81,3 @@ class BaseSolver(ABC):
     def _generate_new_file(self, new_input_fname: str):
         """Implement solver-specific input file parameter replacement."""
         raise NotImplementedError
-
-
-class SolverNotImplementedError(Exception):
-    """Error when the requested solver is not implemented."""
-
-
-class SolverNotInstalledError(Exception):
-    """Error when the requested solver is not installed."""
-
-
-class UnsupportedParameterError(Exception):
-    """Error when provided parameters are unsupported."""

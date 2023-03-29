@@ -7,17 +7,28 @@ from pathlib import Path
 import numpy as np
 
 from .base_solver import BaseSolver
+from ..exceptions import SolverSubprocessFailedError
 
 
 class EspressoSolver(BaseSolver):
-    """Derived class for quantum espresso simulations."""
+    """Derived class for quantum espresso simulations.
+
+    Attributes
+    ----------
+    supported_parameters : list
+        String keys corresponding to implemented search/replace methods.
+    default_input_name : str
+        Default input file name to copy/replace parameters in.
+    params_string : str
+        String built from provided param, value pairs to generate input file copies.
+    """
 
     def __init__(self, input_dict: dict, input_path: Path, parameter_set: dict):
         super().__init__(input_dict, input_path, parameter_set)
         self.supported_parameters: list = ["k"]
         self.default_input_name: str = "pw.in"
         self._validate_parameters()
-        self.params_string = "_".join(f"{k}-{v}" for k, v in self.parameter_set.items())
+        self.params_string: str = "_".join(f"{k}-{v}" for k, v in self.parameter_set.items())
 
     def run(self):
         """Run solver subprocess."""
@@ -87,7 +98,3 @@ class EspressoSolver(BaseSolver):
         """
         return ("K_POINTS automatic.*",
                 f"K_POINTS automatic\n{k} {k} {k} 0 0 0")
-
-
-class SolverSubprocessFailedError(Exception):
-    """Return processed subprocess error."""
