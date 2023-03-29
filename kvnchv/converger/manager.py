@@ -7,6 +7,10 @@ import numpy as np
 import pandas as pd
 from jsonschema import ValidationError, validate
 
+from .exceptions import (InputFilesNotFoundError,
+                         SolverNotImplementedError,
+                         TargetOutputNotFoundError
+                         )
 from .schema import input_schema
 from .solvers import EspressoSolver
 
@@ -52,6 +56,9 @@ class Manager():
 
     def _get_solver(self, run_params: dict):
         """Initialize solver object."""
+        if self.solver_input["name"] not in solvers:
+            raise SolverNotImplementedError
+
         return solvers[self.solver_input["name"]](
                     self.solver_input,
                     self.input_path,
@@ -60,29 +67,35 @@ class Manager():
 
     def run(self):
         """Run convergence workflow."""
-        self._process_parameters()
+        self.process_parameters()
         return_vals = np.zeros(len(self.data))
         return_vals.fill((np.nan))
 
         # run first iteration
         target_prev = 0.0
         target_eval = self.run_solver(0)
-        return_vals[0] = (target_eval)
+        return_vals[0] = target_eval
 
-        delta = target_prev - target_eval  # expected sign of etot is negative
+        rel_tol = (target_eval - target_prev) / target_eval
         target_prev = target_eval
 
+        converged = False
         for run_idx in range(1, len(self.data)):
-            if delta < self.tol:
+            if rel_tol < self.tol:
                 # assemble results dataframe
-                self.data['self.target'] = return_vals
-                return 0
+                converged = True
+                break
             target_eval = self.run_solver(run_idx)
             return_vals[run_idx] = target_eval
 
-            delta = target_prev - target_eval
+            rel_tol = (target_eval - target_prev) / target_prev
             target_prev = target_eval
 
+        # update job results data
+        self.data['self.target'] = return_vals
+
+        if converged:
+            return 0
         return 1
 
     def run_solver(self, idx: int) -> float:
@@ -96,7 +109,7 @@ class Manager():
             raise TargetOutputNotFoundError(err_string)
         return solver.results[self.target]
 
-    def _process_parameters(self) -> pd.DataFrame:
+    def process_parameters(self) -> pd.DataFrame:
         """Process parameter_space input values define simulation set."""
         param_arrays = []
         param_names = []
@@ -104,16 +117,8 @@ class Manager():
             # if delta is not provided, assume unit step
             del_p = 1.0 if "delta" not in param_d else param_d["delta"]
             param_names.append(param_d["name"])
-            param_arrays.append(np.arange(param_d["start"], param_d["max"], del_p))
+            param_arrays.append(np.arange(param_d["start"], param_d["max"]+del_p, del_p))
 
         self.data = pd.DataFrame(
             list(itertools.product(*param_arrays)),
             columns=param_names)
-
-
-class InputFilesNotFoundError(Exception):
-    """Error when the provided input path string is not a valid Path."""
-
-
-class TargetOutputNotFoundError(Exception):
-    """Error when requested target variable was not found in solver results."""

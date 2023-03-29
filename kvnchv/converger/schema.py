@@ -25,7 +25,7 @@ input_schema = {
             "type": "string"
         },
         "tol": {
-            "description": "Minimum tolerance for target quantity.",
+            "description": "Minimum relative tolerance for target quantity.",
             "type": "number"
         },
         "target": {
