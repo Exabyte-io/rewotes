@@ -43,9 +43,12 @@ rundir/
 
 The input file should be named `pw.in` and is assumed to have the following:
 
-&CONTROL section contains the following relative paths
+&CONTROL section contains the following fixed parameters
 - outdir = 'outdir'
 - pseudo_dir = 'pseudo'
+- prefix='__prefix__',
+- tstress = .true.
+- tprnfor = .true.
 
 Automatically generated uniform of k-points, i.e. `K_POINTS automatic`
 - K_POINTS is the last "card" in the input

@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 from converger import EspressoSolver
-from converger.exceptions import UnsupportedParameterError
+from converger.exceptions import EspressoOutputNotFoundError, UnsupportedParameterError
 
 resources = Path(__file__).parent.joinpath("resources")
 
@@ -41,3 +41,10 @@ def test_solver_result_close_k1(test_dir_tmp_si):
     solver_k1.run()
     np.testing.assert_allclose(list(solver_k1.results.values()),
                                list(expected_Si_k1.values()))
+
+
+def test_raises_output_not_found_error(test_dir_tmp_si):
+    """Test espresso output not found rasied when no output data."""
+    solver_k1 = EspressoSolver(base_solver_input, test_dir_tmp_si, supported_param)
+    with pytest.raises(EspressoOutputNotFoundError):
+        solver_k1.parse_output(test_dir_tmp_si)
