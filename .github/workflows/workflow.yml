@@ -17,7 +17,26 @@ jobs:
         pip install -r kvnchv/requirements.txt
         pip install -e kvnchv/
         pip install pytest pytest-cov pytest-assume
-        sudo apt-get install -y quantum-espresso
+    -name: Build qe from source
+      run: |
+        sudo apt install --no-install-recommends \
+          autoconf \
+          build-essential \
+          ca-certificates \
+          gfortran \
+          libblas3 \
+          libc6 \
+          libfftw3-dev \
+          libgcc-s1 \
+          liblapack-dev \
+          wget
+        wget https://gitlab.com/QEF/q-e/-/archive/qe-7.2/q-e-qe-7.2.tar.gz
+        tar -zxvf q-e-qe-7.2.tar.gz
+        cd q-e-qe-7.2
+        ./configure
+        make pw
+        echo 'export PATH="/root/q-e-qe-7.1/bin:$PATH"' >> ~/.bashrc
+        source ~/.bashrc
     - name: Run pytest
       run: |
         pytest --rootdir=/home/runner/work/rewotes/rewotes/kvnchv/ --cov=kvnchv/ --cov-append --verbose kvnchv/tests

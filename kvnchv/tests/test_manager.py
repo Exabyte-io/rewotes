@@ -1,5 +1,6 @@
 """Preliminary pytest for components, to be broken up."""
 import shutil
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -24,7 +25,7 @@ two_param_space_dict = {
         "name": "espresso",
         "solver_path": "/usr/local/bin/pw.x"
     },
-    "input_path": str('/home/chuk/testrun/'),
+    "input_path": '',
     "target": "etot",
     "tol": 1.0e-10,
     "parameter_space": [
@@ -45,8 +46,18 @@ two_param_space_dict = {
 
 
 @pytest.fixture
-def two_param_job():
+def test_dir_tmp_si(tmp_path):
+    """Return temporary testing directory for Si."""
+    tmp_outdir = tmp_path.joinpath("Si")
+    shutil.copytree(resources.joinpath("Si"), tmp_outdir)
+    return tmp_outdir
+
+
+@pytest.fixture
+def two_param_job(test_dir_tmp_si):
     """Job with unsupported parameters."""
+    tmpdir_dict = deepcopy(two_param_space_dict)
+    tmpdir_dict["input_path"] = str(test_dir_tmp_si)
     return Manager(two_param_space_dict)
 
 

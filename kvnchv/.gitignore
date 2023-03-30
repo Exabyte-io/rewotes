@@ -9,4 +9,5 @@ venv
 __pycache__/
 
 # testing files
-tests/
+tests/.pytest_cache
+tests/resources/*/outdir/
