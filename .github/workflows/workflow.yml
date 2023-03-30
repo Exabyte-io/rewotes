@@ -21,7 +21,7 @@ jobs:
         pip install pytest pytest-cov pytest-assume
     - name: Run pytest
       run: |
-        pytest --cov=kvnchv/converger --cov-append --verbose kvnchv/tests
+        pytest --cov=kvnchv/converger --cov-append --verbose -m "not espresso" kvnchv/tests
     - name: Generate Report
       run: |
         pip install coverage

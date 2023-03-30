@@ -98,6 +98,7 @@ def test_valid_input(job_si):
     assert job_si.validate_input()
 
 
+@pytest.mark.espresso
 def test_solver_run(job_si):
     """Test Si job does not error and converges in 3 steps."""
     pytest.assume(job_si.run() == 0)
