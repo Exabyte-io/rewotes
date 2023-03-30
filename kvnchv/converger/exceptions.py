@@ -23,3 +23,7 @@ class SolverNotInstalledError(Exception):
 
 class UnsupportedParameterError(Exception):
     """Error when provided parameters are unsupported."""
+
+
+class EspressoOutputNotFoundError(Exception):
+    """Error when expected espresso output XML file was not found."""

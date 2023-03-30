@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from .base_solver import BaseSolver
-from ..exceptions import SolverSubprocessFailedError
+from ..exceptions import EspressoOutputNotFoundError, SolverSubprocessFailedError
 
 
 class EspressoSolver(BaseSolver):
@@ -32,8 +32,6 @@ class EspressoSolver(BaseSolver):
 
     def run(self):
         """Run solver subprocess."""
-        print(f"can run on {self.solver_path}")
-
         # modify input file based on parameters
         run_input_file = f"{self.default_input_name}_{self.params_string}"
         run_output_dir = f"outdir_{self.params_string}"
@@ -52,6 +50,8 @@ class EspressoSolver(BaseSolver):
     def parse_output(self, outdir: Path):
         """Parse XML output and save as dict."""
         result_xml = self.input_path.joinpath(outdir, "__prefix__.xml")
+        if not result_xml.exists():
+            raise EspressoOutputNotFoundError
         tree = ET.parse(result_xml)
         self.results["etot"] = self.parse_etot(tree)
         self.results["fnorm"] = self.parse_forces(tree)

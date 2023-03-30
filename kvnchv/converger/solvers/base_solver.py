@@ -55,7 +55,7 @@ class BaseSolver(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def parse_output(self):
+    def parse_output(self, outdir: Path):
         """Implement solver-specific output format parsing."""
         raise NotImplementedError
 

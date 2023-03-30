@@ -68,31 +68,37 @@ class Manager():
     def run(self):
         """Run convergence workflow."""
         self.process_parameters()
-        return_vals = np.zeros(len(self.data))
-        return_vals.fill((np.nan))
+        return_target = np.zeros(len(self.data))
+        return_target.fill((np.nan))
+        return_reldelta = np.zeros(len(self.data))
+        return_reldelta.fill((np.nan))
 
         # run first iteration
         target_prev = 0.0
         target_eval = self.run_solver(0)
-        return_vals[0] = target_eval
+        return_target[0] = target_eval
 
         rel_tol = (target_eval - target_prev) / target_eval
+        return_reldelta[0] = rel_tol
         target_prev = target_eval
 
         converged = False
         for run_idx in range(1, len(self.data)):
-            if rel_tol < self.tol:
+            if abs(rel_tol) < self.tol:
                 # assemble results dataframe
                 converged = True
                 break
             target_eval = self.run_solver(run_idx)
-            return_vals[run_idx] = target_eval
+            return_target[run_idx] = target_eval
 
             rel_tol = (target_eval - target_prev) / target_prev
+            return_reldelta[run_idx] = rel_tol
             target_prev = target_eval
 
         # update job results data
-        self.data['self.target'] = return_vals
+        self.data[self.target] = return_target
+        self.data["relative_tol"] = return_reldelta
+        self.data = self.data.dropna()
 
         if converged:
             return 0
