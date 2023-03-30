@@ -35,7 +35,7 @@ jobs:
         cd q-e-qe-7.2
         ./configure
         make pw
-        echo 'export PATH="/root/q-e-qe-7.1/bin:$PATH"' >> ~/.bashrc
+        echo 'export PATH="/root/q-e-qe-7.2/bin:$PATH"' >> ~/.bashrc
         source ~/.bashrc
     - name: Run pytest
       run: |
