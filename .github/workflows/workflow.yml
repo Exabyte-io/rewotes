@@ -17,7 +17,7 @@ jobs:
         pip install -r kvnchv/requirements.txt
         pip install -e kvnchv/
         pip install pytest pytest-cov pytest-assume
-        apt-get install quantum-espresso
+        sudo apt-get install -y quantum-espresso
     - name: Run pytest
       run: |
         pytest --rootdir=/home/runner/work/rewotes/rewotes/kvnchv/ --cov=kvnchv/ --cov-append --verbose kvnchv/tests
