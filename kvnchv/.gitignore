@@ -9,4 +9,4 @@ venv
 __pycache__/
 
 # testing files
-tests/resources/
+tests/
