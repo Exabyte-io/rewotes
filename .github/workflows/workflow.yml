@@ -17,9 +17,9 @@ jobs:
         pip install -r kvnchv/requirements.txt
         pip install -e kvnchv/
         pip install pytest pytest-cov pytest-assume
-    -name: Build qe from source
+    - name: Build qe from source
       run: |
-        sudo apt install --no-install-recommends \
+        sudo apt install -y --no-install-recommends \
           autoconf \
           build-essential \
           ca-certificates \
