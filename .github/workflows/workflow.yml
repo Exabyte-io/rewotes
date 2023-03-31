@@ -1,0 +1,49 @@
+name: CodeCov
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      OS: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r kvnchv/requirements.txt
+        pip install -e kvnchv/
+        pip install pytest pytest-cov pytest-assume
+    - name: Build qe from source
+      run: |
+        sudo apt-get install -y --no-install-recommends \
+          autoconf \
+          build-essential \
+          ca-certificates \
+          gfortran \
+          libblas3 \
+          libc6 \
+          libfftw3-dev \
+          libgcc-s1 \
+          liblapack-dev \
+          wget
+        cd $HOME
+        wget https://gitlab.com/QEF/q-e/-/archive/qe-7.1/q-e-qe-7.1.tar.gz
+        tar -xzf q-e-qe-7.1.tar.gz
+        cd q-e-qe-7.1
+        ./configure
+        make pw
+        echo 'export PATH="$HOME/q-e-qe-7.1/bin:$PATH"' >> ~/.bashrc
+        source ~/.bashrc
+    - name: Run pytest
+      run: |
+        pytest --rootdir=/home/runner/work/rewotes/rewotes/kvnchv/ --cov=kvnchv/converger --cov-report=xml --verbose kvnchv/tests
+    - name: Build coverage report
+      run: coverage lcov
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.lcov

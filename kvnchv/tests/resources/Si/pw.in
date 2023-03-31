@@ -1,0 +1,44 @@
+&CONTROL
+    calculation = 'scf'
+    title = ''
+    verbosity = 'low'
+    restart_mode = 'from_scratch'
+    wf_collect = .true.
+    tstress = .true.
+    tprnfor = .true.
+    outdir = 'outdir'
+    wfcdir = 'outdir'
+    prefix = '__prefix__'
+    pseudo_dir = 'pseudo'
+/
+&SYSTEM
+    ibrav = 0
+    nat = 2
+    ntyp = 1
+    ecutwfc = 40
+    ecutrho = 200
+    occupations = 'smearing'
+    degauss = 0.005
+/
+&ELECTRONS
+    diagonalization = 'david'
+    diago_david_ndim = 4
+    diago_full_acc = .true.
+    mixing_beta = 0.3
+    startingwfc = 'atomic+random'
+/
+&IONS
+/
+&CELL
+/
+ATOMIC_SPECIES
+Si 28.0855 Si_r.upf
+ATOMIC_POSITIONS crystal
+Si 0.000000000 0.000000000 0.000000000
+Si 0.250000000 0.250000000 0.250000000
+CELL_PARAMETERS angstrom
+3.348920000 0.000000000 1.933500000
+1.116307000 3.157392000 1.933500000
+0.000000000 0.000000000 3.867000000
+K_POINTS automatic
+2 2 2 0 0 0 
