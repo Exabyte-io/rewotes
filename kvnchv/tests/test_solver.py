@@ -17,7 +17,7 @@ unsupported_params = {"k": 1, "p": 2}
 
 base_solver_input = {
         "name": "espresso",
-        "solver_path": "/usr/local/bin/pw.x"
+        "solver_path": "/home/runner/q-e-qe-7.1/bin/pw.x"
     }
 
 

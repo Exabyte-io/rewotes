@@ -23,7 +23,7 @@ input_v = {
 two_param_space_dict = {
     "solver_input": {
         "name": "espresso",
-        "solver_path": "/usr/local/bin/pw.x"
+        "solver_path": "/home/runner/q-e-qe-7.1/bin/pw.x"
     },
     "input_path": '',
     "target": "etot",
@@ -88,6 +88,7 @@ def job_si(tmp_path):
     input_espresso_si = {
         "solver_input": {
             "name": "espresso",
+            "solver_path": "/home/runner/q-e-qe-7.1/bin/pw.x"
         },
         "input_path": str(tmp_path.joinpath("Si")),
         "target": "etot",

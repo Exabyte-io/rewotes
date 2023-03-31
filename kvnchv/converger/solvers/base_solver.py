@@ -63,10 +63,11 @@ class BaseSolver(ABC):
         """Check solver is installed locally."""
         if "solver_path" in self.input_dict:
             try_path = self.input_dict["solver_path"]
+            # fallback to check for solver on PATH
+            if not Path(try_path).exists():
+                try_path = shutil.which(implemented_solvers[self.input_dict["name"]])
         else:
             try_path = shutil.which(implemented_solvers[self.input_dict["name"]])
-            if not try_path:
-                raise SolverNotInstalledError
 
         if not Path(try_path).exists():
             raise SolverNotInstalledError
