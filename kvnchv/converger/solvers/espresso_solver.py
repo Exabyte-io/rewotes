@@ -89,7 +89,8 @@ class EspressoSolver(BaseSolver):
         with open(self.input_path.joinpath(new_input_fname), 'w+') as new_fp:
             new_fp.write(new_lines)
 
-    def _match_k(self, k: int):
+    @staticmethod
+    def _match_k(value: int):
         """Return match regex and replace_string.
 
         Room for flexibility improvement. Assumptions:
@@ -97,4 +98,4 @@ class EspressoSolver(BaseSolver):
         - K_POINTS is the last command issued
         """
         return ("K_POINTS automatic.*",
-                f"K_POINTS automatic\n{k} {k} {k} 0 0 0")
+                f"K_POINTS automatic\n{value} {value} {value} 0 0 0")

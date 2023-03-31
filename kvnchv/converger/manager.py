@@ -32,7 +32,7 @@ class Manager():
 
         self.data: pd.DataFrame  # DataFrame for parameter sets and outputs
 
-        self.validate_input()
+        self.validate_schema()
         self._parse_input()
 
     def _parse_input(self):
@@ -46,7 +46,7 @@ class Manager():
             else:
                 setattr(self, param, val)
 
-    def validate_input(self):
+    def validate_schema(self):
         """Validate against schema."""
         try:
             validate(self.input_dict, self.schema)
@@ -115,7 +115,7 @@ class Manager():
             raise TargetOutputNotFoundError(err_string)
         return solver.results[self.target]
 
-    def process_parameters(self) -> pd.DataFrame:
+    def process_parameters(self):
         """Process parameter_space input values define simulation set."""
         param_arrays = []
         param_names = []

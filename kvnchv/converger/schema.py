@@ -33,7 +33,7 @@ input_schema = {
             "type": "string",
         },
         "parameter_space": {
-            "description": "Parameteric space to evaluate convergence on.",
+            "description": "Parametric space to evaluate convergence on.",
             "type": "array",
             "items": {
                 "type": "object",

@@ -38,8 +38,8 @@ two_param_space_dict = {
         {
             "name": "p",
             "start": 0,
-            "max": 10,
-            "delta": 2
+            "max": 1,
+            "delta": 0.2
         },
     ]
 }
@@ -106,7 +106,7 @@ def job_si(tmp_path):
 
 def test_valid_input(job_si):
     """Test schema validation."""
-    assert job_si.validate_input()
+    assert job_si.validate_schema()
 
 
 @pytest.mark.espresso
