@@ -1,0 +1,13 @@
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra"
+testpaths = [
+    "tests",
+    "integration",
+]
+
+cache_dir = '.pytest_cache'
+
+
+[build-system]
+requires = ["setuptools >= 49.6", "ase >= 3.21.1", "matplotlib >= 3.7.1", "python >= 3.9.2", "numpy >= 1.20.1"]
