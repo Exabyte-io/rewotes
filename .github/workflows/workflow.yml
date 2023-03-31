@@ -41,9 +41,9 @@ jobs:
     - name: Run pytest
       run: |
         pytest --rootdir=/home/runner/work/rewotes/rewotes/kvnchv/ --cov=kvnchv/converger --cov-report=xml --verbose kvnchv/tests
-    - name: Generate Report
-      run: |
-        pip install coverage
-        coverage run -m unittest
+    - name: Build coverage report
+      run: coverage lcov
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.lcov
