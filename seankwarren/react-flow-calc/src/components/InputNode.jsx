@@ -15,10 +15,10 @@ const InputNode = ({ id, data }) => {
         <div className='node input' data-testid='input-node'>
             <input type='number' onChange={handleInputChange} />
             <Handle
+                className='handle output'
                 type='source'
                 position='right'
                 id={`${id}-right`}
-                style={{ background: '#000000' }}
             />
         </div>
     );

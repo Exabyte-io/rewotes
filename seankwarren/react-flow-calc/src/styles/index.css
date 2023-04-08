@@ -48,6 +48,16 @@ body {
     font-weight: 700;
 }
 
+.handle.input {
+    background-color: #fff;
+    border-color: #000;
+}
+
+.handle.output {
+    background-color: #000;
+    border-color: #fff;
+}
+
 .round {
     border-radius: 50%;
     aspect-ratio: 1;

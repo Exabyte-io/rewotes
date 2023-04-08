@@ -5,11 +5,10 @@ const OutputNode = ({ id, data}) => {
   return (
     <div className='node output' data-testid='output-node'>
     <Handle
+        className='handle input'
         type='target'
         position='left'
         id={`${id}-left`}
-        style={{ background: '#ffffff', borderColor: '#000000' }}
-        // onConnect={(params) => console.log('handle onConnect', params)}
     />
     <strong>Result: </strong> {String(data.value)}
 </div>

@@ -8,28 +8,24 @@ const OperationNode = ({ id, data }) => {
     };
 
     return (
-        <div className='node operation' data-testid='operation-node'>
+        <div className='node operation round' data-testid='operation-node'>
             <Handle
+                className='handle input'
                 type='target'
                 position='left'
                 id={`${id}-left-top`}
                 style={{
-                    background: '#ffffff',
-                    borderColor: '#000000',
                     top: '30%',
                 }}
-                // onConnect={(params) => console.log('handle onConnect', params)}
             />
             <Handle
+                className='handle input'
                 type='target'
                 position='left'
                 id={`${id}-left-bottom`}
                 style={{
-                    background: '#ffffff',
-                    borderColor: '#000000',
                     top: '70%',
                 }}
-                // onConnect={(params) => console.log('handle onConnect', params)}
             />
             <select onChange={handleSelectChange}>
                 <option value='add'>+</option>
@@ -38,11 +34,10 @@ const OperationNode = ({ id, data }) => {
                 <option value='divide'>/</option>
             </select>
             <Handle
+                className='handle output'
                 type='source'
                 position='right'
                 id={`${id}-right`}
-                style={{ background: '#000000' }}
-                // onConnect={(params) => console.log('handle onConnect', params)}
             />
         </div>
     );
