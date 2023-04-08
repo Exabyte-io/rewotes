@@ -1,7 +1,7 @@
 :root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Courier New', Courier, monospace;
     line-height: 1.5;
-    font-weight: 400;
+    font-weight: 500;
   
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -31,7 +31,6 @@ body {
     display: grid;
     grid-auto-flow: column;
     align-items: center;
-    /* flex-wrap: nowrap; */
 }
 
 .node {
@@ -43,14 +42,10 @@ body {
     align-items: center;
 }
 
-.node-button {
+.node.button {
     margin: 5px;
-    padding: var(--med-padding);
-    border: 1px solid black;
-    border-radius: var(--small-radius);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
 }
 
 .round {
