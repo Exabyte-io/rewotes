@@ -62,7 +62,7 @@ const CalculatorWrapper = () => {
 
     return (
         <SplitPane split="vertical" sizes={sizes} onChange={handleSizeChange}>
-            <div style={{ height: '100vh', width: '100%' }}>
+            <div className="flowchart-container" style={{ height: '100vh', width: '100%' }}>
                 <NodeButtons addNode={addNode} handleDragStart={handleDragStart} />
                 <FlowchartViewer
                     nodes={nodes}

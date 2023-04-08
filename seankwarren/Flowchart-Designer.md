@@ -47,4 +47,5 @@ Potential Improvement User Stories:
 - [ ] As an end user, I should be able to use common unary oeprators such as sin, cos, tan, and e<sup>x</sup>.
 - [ ] As an end user, I should be able to use the y<sup>x</sup> binary operator, that takes two inputs and calculates the exponential.
 - [ ] As an end user, I should be able to attach a GradientNode to any node, and get the gradient of that value with respect to the final result
+- [ ] As a user, the input nodes should be exapandable to include multiple values each with their own handle
 

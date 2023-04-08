@@ -2,7 +2,7 @@ import React from 'react'
 
 const NodeButtons = ({ addNode, handleDragStart }) => {
     return (
-        <div className='buttons-panel'>
+        <div className='buttons-panel' style={{width: '100%'}}>
             <button
                 className='node button input'
                 draggable='true'

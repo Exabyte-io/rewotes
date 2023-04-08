@@ -13,6 +13,7 @@
     --operation-color: #f8e1fe;
     --comparison-color: #e1f5fe;
     --output-color: #f8f6ce;
+    --gray: rgba(51, 51, 51, 0.5);;
     --small-padding: 10px;
     --med-padding: 15px;
     --small-radius: 5px;
@@ -23,15 +24,22 @@ body {
     margin: 0;
 }
 
+
+.flowchart-container {
+    display: flex;
+}
+
 .buttons-panel {
-    position: fixed;
+    position: absolute;
     top: 0;
     z-index: 10;
-    padding: var(--small-padding);
-    display: grid;
-    grid-auto-flow: column;
+    justify-content: center;
     align-items: center;
+    background-color: var(--gray);
+    display: flex;
+    height: fit-content;
 }
+
 
 .react-split {
     height: 100vh;
@@ -50,6 +58,7 @@ body {
     margin: 5px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 700;
+    height: 40px
 }
 
 .handle.input {
@@ -68,6 +77,7 @@ body {
     white-space: pre-wrap;
     width: 100%;
     border-left: 2px solid #ccc;
+    overflow-y: auto;
 }
 
 .round {
@@ -89,4 +99,12 @@ body {
 
 .output {
     background-color: var(--output-color);
+}
+
+input {
+    width: 80px;
+}
+
+select {
+    width: 40px;
 }
