@@ -1,6 +1,14 @@
-body {
-    padding: 0;
-    margin: 0;
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+  
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
     --input-color: #cefada;
     --operation-color: #f8e1fe;
     --comparison-color: #e1f5fe;
@@ -10,33 +18,58 @@ body {
     --small-radius: 5px;
 }
 
-.node-buttons {
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.buttons-panel {
     position: fixed;
     top: 0;
     z-index: 10;
     padding: var(--small-padding);
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    /* flex-wrap: nowrap; */
+}
+
+.node {
+    border: 1px solid #000;
+    padding: var(--med-padding);
+    border-radius: var(--small-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .node-button {
     margin: 5px;
-    padding: var(--small-padding);
-    border-radius: var(--small-radius);
+    padding: var(--med-padding);
     border: 1px solid black;
+    border-radius: var(--small-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.input-button {
+.round {
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+.input {
     background-color: var(--input-color);
 }
 
-.operation-button {
+.operation {
     background-color: var(--operation-color);
-    border-radius: 50%;
 }
 
-.comparison-button {
+.comparison {
     background-color: var(--comparison-color);
 }
 
-.output-button {
+.output {
     background-color: var(--output-color);
 }

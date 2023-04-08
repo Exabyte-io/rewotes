@@ -2,34 +2,34 @@ import React from 'react'
 
 const NodeButtons = ({ addNode, handleDragStart }) => {
     return (
-        <div className='node-buttons'>
+        <div className='buttons-panel'>
             <button
-                className='node-button input-button'
+                className='node-button input'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'input')}
             >
-                Add Input
+                in
             </button>
             <button
-                className='node-button operation-button'
+                className='node-button operation round'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'operation')}
             >
-                Add Operation
+                +
             </button>
             <button
-                className='node-button output-button'
-                draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'output')}
-            >
-                Add Output
-            </button>
-            <button
-                className='node-button comparison-button'
+                className='node-button comparison round'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'comparison')}
             >
-                Add Comparison
+                &gt;
+            </button>
+            <button
+                className='node-button output'
+                draggable='true'
+                onDragStart={(e) => handleDragStart(e, 'output')}
+            >
+                out
             </button>
         </div>
     );

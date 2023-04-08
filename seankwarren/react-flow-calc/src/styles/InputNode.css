@@ -1,9 +1,0 @@
-.input-node {
-    background-color: var(--input-color);
-    padding: var(--med-padding);
-    border: 1px solid #000;
-    border-radius: var(--small-radius);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}

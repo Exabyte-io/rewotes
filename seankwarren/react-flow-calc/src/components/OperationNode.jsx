@@ -1,9 +1,8 @@
 import React from 'react'
-import '../styles/OperationNode.css'
 
 const OperationNode = () => {
   return (
-    <div className='operation-node'>OperationNode</div>
+    <div className='node operation round'>OperationNode</div>
   )
 }
 

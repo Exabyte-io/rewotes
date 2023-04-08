@@ -1,9 +1,0 @@
-.output-node {
-    background-color: var(--output-color);
-    padding: var(--med-padding);
-    border: 1px solid #000;
-    border-radius: 5px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-}
