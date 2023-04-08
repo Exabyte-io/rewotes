@@ -45,7 +45,7 @@ const CalculatorWrapper = () => {
                 value:
                     type === 'input'
                         ? 0
-                        : type === 'operation'
+                        : type === 'binary'
                         ? 'add'
                         : type === 'comparison'
                         ? 'greater'

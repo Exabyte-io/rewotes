@@ -7,7 +7,8 @@ import ReactFlow, {
     applyEdgeChanges,
 } from 'reactflow';
 import InputNode from './customNodes/InputNode';
-import OperationNode from './customNodes/OperationNode';
+import BinaryNode from './customNodes/BinaryNode';
+import UnaryNode from './customNodes/UnaryNode';
 import OutputNode from './customNodes/OutputNode';
 import ComparisonNode from './customNodes/ComparisonNode';
 import calculate from '../utils/calculate';
@@ -106,8 +107,13 @@ const FlowchartViewer = ({
                     {...props} 
                 />
             ),
-            operationNode: (props) => (
-                <OperationNode
+            binaryNode: (props) => (
+                <BinaryNode
+                    {...props}
+                />
+            ),
+            unaryNode: (props) => (
+                <UnaryNode
                     {...props}
                 />
             ),

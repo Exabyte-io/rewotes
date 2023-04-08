@@ -9,7 +9,7 @@ const calculate = (nodes, edges, sourceHandleId) => {
     // Calculate value based on node type
     if (node.type === 'inputNode') {
         return node.data.value;
-    } else if (node.type === 'operationNode' || node.type === 'comparisonNode') {
+    } else if (node.type === 'binaryNode' || node.type === 'unaryNode' || node.type === 'comparisonNode') {
         // Get all incoming edges for the node
         const inputEdges = edges.filter((e) => e.target === node.id);
 

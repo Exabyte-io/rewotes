@@ -1,5 +1,18 @@
 // Helper function to perform an operation
 const performOperation = (op, val1, val2) => {
+    if (!val2) {
+        switch (op) {
+            case 'sin':
+                return Math.sin(val1);
+            case 'cos':
+                return Math.cos(val1);
+            case 'tan':
+                return Math.tan(val1);
+            case 'exp':
+                return Math.exp(val1);
+        }
+    }
+
     switch (op) {
         case 'add':
             return val1 + val2;

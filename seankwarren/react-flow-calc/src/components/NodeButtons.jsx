@@ -15,11 +15,18 @@ const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
                 in
             </button>
             <button
-                className='node button operation round'
+                className='node button binary round'
                 draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'operation')}
+                onDragStart={(e) => handleDragStart(e, 'binary')}
             >
                 +
+            </button>
+            <button
+                className='node button unary round'
+                draggable='true'
+                onDragStart={(e) => handleDragStart(e, 'unary')}
+            >
+                sin
             </button>
             <button
                 className='node button comparison round'

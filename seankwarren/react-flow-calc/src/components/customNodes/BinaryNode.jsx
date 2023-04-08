@@ -1,14 +1,14 @@
 import React from 'react'
 import { Handle } from 'reactflow';
 
-const OperationNode = ({ id, data }) => {
+const BinaryNode = ({ id, data }) => {
 
     const handleSelectChange = (e) => {
         data.onChange(e.target.value);
     };
 
     return (
-        <div className='node operation round' data-testid='operation-node'>
+        <div className='node binary round'>
             <Handle
                 className='handle input'
                 type='target'
@@ -43,4 +43,4 @@ const OperationNode = ({ id, data }) => {
     );
 }
 
-export default OperationNode
+export default BinaryNode

@@ -9,10 +9,11 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
 
-    --input-color: #cefada;
-    --operation-color: #f8e1fe;
-    --comparison-color: #e1f5fe;
-    --output-color: #f8f6ce;
+    --input-color: #b5f7c6;
+    --binary-color: #eec2f9;
+    --unary-color: #f7c4d4;
+    --comparison-color: #c1e8f9;
+    --output-color: #f8f5b9;
     --gray: rgba(51, 51, 51, 0.5);;
     --small-padding: 10px;
     --med-padding: 15px;
@@ -91,8 +92,12 @@ body {
     background-color: var(--input-color);
 }
 
-.operation {
-    background-color: var(--operation-color);
+.binary {
+    background-color: var(--binary-color);
+}
+
+.unary {
+    background-color: var(--unary-color);
 }
 
 .comparison {
