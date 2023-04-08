@@ -69,7 +69,7 @@ const CalculatorWrapper = () => {
                     setDraggedNodeType={setDraggedNodeType}
                 />
             </div>
-            <JSONViewer/>
+            <JSONViewer nodes={nodes} edges={edges}/>
         </div>
     );
 };
