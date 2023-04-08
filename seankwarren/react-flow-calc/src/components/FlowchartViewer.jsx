@@ -1,25 +1,26 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import ReactFlow, {
     Controls,
     Background,
     MiniMap,
     applyNodeChanges,
     applyEdgeChanges,
-} from 'reactflow'
+} from 'reactflow';
 import InputNode from './InputNode';
 import OperationNode from './OperationNode';
-import ComparisonNode from './ComparisonNode';
 import OutputNode from './OutputNode';
+import ComparisonNode from './ComparisonNode';
 
-const FlowchartViewer = ({ 
-    nodes, 
-    edges, 
+const FlowchartViewer = ({
+    nodes,
+    edges,
     setNodes,
-    setEdges, 
-    addNode, 
+    setEdges,
+    addNode,
     draggedNodeType,
-    setDraggedNodeType, 
+    setDraggedNodeType,
 }) => {
+    //setup state for drag and drop
 
     const onNodesChange = useCallback(
         (changes) => setNodes((els) => applyNodeChanges(changes, els)),
@@ -31,8 +32,52 @@ const FlowchartViewer = ({
         []
     );
 
+    // Function to handle connecting nodes
+    const handleConnect = () => {
+        
+    };
+
+    const updateOutputNodes = useCallback(() => {
+        setNodes((currentNodes) => {
+            const outputNodes = currentNodes.filter((node) => {
+                return node.type === 'outputNode';
+            });
+            // console.log(currentNodes)
+            const newNodes = currentNodes.map((node) => {
+                if (node.type !== 'outputNode') return node;
+
+                const connectedEdge = edges.find(
+                    (edge) => edge.target === node.id
+                );
+                console.log(connectedEdge);
+                if (connectedEdge) {
+                    const newValue = calculate(
+                        nodes,
+                        edges,
+                        connectedEdge.sourceHandle
+                    );
+                    return { ...node, data: { ...node.data, value: newValue } };
+                } else {
+                    return node;
+                }
+            });
+            console.log(newNodes.length);
+
+            return newNodes;
+        });
+    }, [nodes, edges]);
+
+    // Define custom node types
+    const nodeTypes = useMemo(() => {
+        return {
+            inputNode: (props) => <InputNode {...props} />,
+            operationNode: (props) => <OperationNode {...props}/>,
+            outputNode: (props) => <OutputNode {...props} />,
+            comparisonNode: (props) => <ComparisonNode {...props}/>,
+        };
+    }, []);
+
     const handleDrop = (e) => {
-        console.log('dropped', draggedNodeType);
         e.preventDefault();
         e.stopPropagation();
 
@@ -53,21 +98,13 @@ const FlowchartViewer = ({
         e.stopPropagation();
     };
 
-    const nodeTypes = useMemo(() => {
-        return {
-            inputNode: (props) => <InputNode {...props}/>,
-            operationNode: (props) => <OperationNode {...props}/>,
-            outputNode: (props) => <OutputNode {...props} />,
-            comparisonNode: (props) => <ComparisonNode {...props}/>
-        };
-    }, []);
-
     return (
         <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onConnect={handleConnect}
             nodeTypes={nodeTypes}
             snapToGrid
             onDrop={handleDrop}
@@ -77,7 +114,7 @@ const FlowchartViewer = ({
             <Controls />
             <Background />
         </ReactFlow>
-    )
-}
+    );
+};
 
-export default FlowchartViewer
+export default FlowchartViewer;

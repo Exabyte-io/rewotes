@@ -1,17 +1,15 @@
-import React, { useState } from 'react'
-import FlowchartViewer from './FlowchartViewer'
-import JSONViewer from './JSONViewer'
-import NodeButtons from './NodeButtons'
+import React, { useState } from 'react';
+import FlowchartViewer from './FlowchartViewer';
+import JSONViewer from './JSONViewer';
+import NodeButtons from './NodeButtons';
 import 'reactflow/dist/style.css';
 
 const CalculatorWrapper = () => {
-
     // Set up state for nodes and edges
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
 
     const [draggedNodeType, setDraggedNodeType] = useState(null);
-
 
     const handleDragStart = (e, nodeType) => {
         setDraggedNodeType(nodeType);
@@ -38,13 +36,14 @@ const CalculatorWrapper = () => {
                         : null,
                 onChange: (value, callback) => {
                     // Update the value of the node when its input changes
-                    setNodes((ns) =>
-                        ns.map((n) =>
+                    setNodes((ns) => {
+                        return (ns.map((n) => {
                             n.id === id
-                                ? { ...n, data: { ...n.data, value } }
-                                : n
-                        )
-                    );
+                            ? { ...n, data: { ...n.data, value } }
+                            : n
+                        }))
+                    });
+                    
                     // Call the provided callback function
                     if (callback) {
                         callback();
@@ -61,12 +60,23 @@ const CalculatorWrapper = () => {
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ height: '100vh', width: '70vw' }}>
-                <NodeButtons addNode={addNode} handleDragStart={handleDragStart} />
-                <FlowchartViewer nodes={nodes} edges={edges} setNodes={setNodes} setEdges={setEdges} addNode={addNode} draggedNodeType={draggedNodeType} setDraggedNodeType={setDraggedNodeType}/>
+                <NodeButtons
+                    addNode={addNode}
+                    handleDragStart={handleDragStart}
+                />
+                <FlowchartViewer
+                    nodes={nodes}
+                    edges={edges}
+                    setNodes={setNodes}
+                    setEdges={setEdges}
+                    addNode={addNode}
+                    draggedNodeType={draggedNodeType}
+                    setDraggedNodeType={setDraggedNodeType}
+                />
             </div>
-            <JSONViewer />
+            <JSONViewer/>
         </div>
-    )
-}
+    );
+};
 
-export default CalculatorWrapper
+export default CalculatorWrapper;
