@@ -2,9 +2,16 @@ import React from 'react'
 
 const JSONViewer = ({ nodes, edges }) => {
     return (
-        <div style={{ height: '100vh', width: '30vw' }}>
-            nodes: {JSON.stringify(nodes, ['id', 'data', 'value', 'type'], 4)}
-            edges: {JSON.stringify(edges, ['id', 'source', 'sourceHandle', 'target', 'targetHandle'], 4)}
+        <div className="json-viewer" style={{ height: '100vh' }}>
+            nodes:
+            {nodes.map((node) => {
+                return <p>{JSON.stringify(node, ['id', 'data', 'value', 'type'], 4)}</p>
+            })}
+            <br />
+            edges:
+            {edges.map((edge) => {
+                return <p>{JSON.stringify(edge, ['id', 'source', 'sourceHandle', 'target', 'targetHandle'], 4)}</p>
+            })}
         </div>
     )
 }

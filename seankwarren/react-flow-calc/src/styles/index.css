@@ -33,6 +33,10 @@ body {
     align-items: center;
 }
 
+.react-split {
+    height: 100vh;
+}
+
 .node {
     border: 1px solid #000;
     padding: var(--med-padding);
@@ -56,6 +60,14 @@ body {
 .handle.output {
     background-color: #000;
     border-color: #fff;
+}
+
+.json-viewer {
+    padding: var(--small-padding);
+    line-height: 1;
+    white-space: pre-wrap;
+    width: 100%;
+    border-left: 2px solid #ccc;
 }
 
 .round {

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import FlowchartViewer from './FlowchartViewer';
 import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
+import SplitPane, { Pane } from 'split-pane-react';
+import 'split-pane-react/esm/themes/default.css';
 import 'reactflow/dist/style.css';
 
 const CalculatorWrapper = () => {
@@ -10,6 +12,12 @@ const CalculatorWrapper = () => {
     const [edges, setEdges] = useState([]);
 
     const [draggedNodeType, setDraggedNodeType] = useState(null);
+
+    const [sizes, setSizes] = useState(['60%', '50%']);
+
+    const handleSizeChange = (sizes) => {
+        setSizes(sizes);
+    };
 
     const handleDragStart = (e, nodeType) => {
         setDraggedNodeType(nodeType);
@@ -53,12 +61,9 @@ const CalculatorWrapper = () => {
     };
 
     return (
-        <div style={{ display: 'flex' }}>
-            <div style={{ height: '100vh', width: '70vw' }}>
-                <NodeButtons
-                    addNode={addNode}
-                    handleDragStart={handleDragStart}
-                />
+        <SplitPane split="vertical" sizes={sizes} onChange={handleSizeChange}>
+            <div style={{ height: '100vh', width: '100%' }}>
+                <NodeButtons addNode={addNode} handleDragStart={handleDragStart} />
                 <FlowchartViewer
                     nodes={nodes}
                     edges={edges}
@@ -69,8 +74,8 @@ const CalculatorWrapper = () => {
                     setDraggedNodeType={setDraggedNodeType}
                 />
             </div>
-            <JSONViewer nodes={nodes} edges={edges}/>
-        </div>
+            <JSONViewer nodes={nodes} edges={edges} />
+        </SplitPane>
     );
 };
 
