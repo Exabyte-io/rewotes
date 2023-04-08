@@ -32,6 +32,7 @@ const BinaryNode = ({ id, data }) => {
                 <option value='subtract'>-</option>
                 <option value='multiply'>*</option>
                 <option value='divide'>/</option>
+                <option value='exponent'>^</option>
             </select>
             <Handle
                 className='handle output'

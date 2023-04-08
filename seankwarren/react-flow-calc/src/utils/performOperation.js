@@ -22,6 +22,8 @@ const performOperation = (op, val1, val2) => {
             return val1 * val2;
         case 'divide':
             return val1 / val2;
+        case 'exponent':
+            return val1 ** val2;
         case 'greater':
             return val1 > val2;
         case 'less':
