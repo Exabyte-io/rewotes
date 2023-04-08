@@ -161,6 +161,21 @@ const FlowchartViewer = ({
         backgroundColor: isDarkMode ? 'rgba(40, 40, 40, 1)' : 'rgba(255, 255, 255, 1)',
     };
 
+    const customNodeColor = (node) => {
+        switch (node.type) {
+          case 'inputNode':
+            return 'var(--input-color)';
+          case 'operationNode':
+            return 'var(--operation-color)';
+          case 'comparisonNode':
+            return 'var(--comparison-color)';
+          case 'outputNode':
+            return 'var(--output-color)';
+          default:
+            return '#eee';
+        }
+    };
+
     return (
         <ReactFlow
             nodes={nodes}
@@ -174,7 +189,7 @@ const FlowchartViewer = ({
             onDragOver={handleDragOver}
             style={reactFlowStyle}
         >
-            <MiniMap />
+            <MiniMap nodeColor={customNodeColor} />
             <Controls />
             <Background 
                 gap={16}
