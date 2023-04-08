@@ -37,11 +37,11 @@ const CalculatorWrapper = () => {
                 onChange: (value, callback) => {
                     // Update the value of the node when its input changes
                     setNodes((ns) => {
-                        return (ns.map((n) => {
+                        return (ns.map((n) => 
                             n.id === id
-                            ? { ...n, data: { ...n.data, value } }
-                            : n
-                        }))
+                                ? { ...n, data: { ...n.data, value } }
+                                : n
+                        ))
                     });
                     
                     // Call the provided callback function
