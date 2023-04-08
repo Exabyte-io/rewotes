@@ -1,44 +1,50 @@
-# Flowchart Designer (Frontend/UX)
+# Flowchart Calculator
 
-> Ideal candidate: skilled front-end developer with UI/UX chops.
+Flowchart Calculator is a React application that allows users to create flowcharts representing mathematical operations and logical comparisons. Users can visually create and connect nodes representing input values, operations, comparisons, and output results.
+### Features
 
-# Overview
+- Drag and drop interface for adding nodes to the flowchart
+- Custom node types: input, operation, comparison, and output
+- Visual connections between nodes using edges
+- Automatic calculation and display of output node results based on connected input and operation nodes
+- Support for arithmetic operations (+, -, *, /) and logical comparisons (>, <, >=, <=, ==, !=)
+- Real-time update of output nodes when input values or operations are changed
+- Interactive flowchart editor powered by React Flow
 
-Create a drag-and-drop flowchart designer close to a basic programming flowchart editor that is purpose-built for dealing with certain types of data.
+### Use Case
 
-Front-end developers: use Meteor and React.js and minimalistic UX/UI.
-Pure UI/UX designers: create high fidelity mockups. 
+This application can be used as a visual calculator for solving complex mathematical expressions and logical comparisons. Users can create a flowchart by connecting input nodes to operation and comparison nodes, which can then be connected to output nodes to display the results. By adjusting the input values and operations, users can easily explore different scenarios and observe the corresponding output changes in real time.
 
-# Requirements
+### How to Run:
 
-1. Implement basic arithmetic units as flowchart elements: increment, decrement, multiply, divide
-1. Implement conditions
-1. Implement 2 viewer components:
-    - flowchart
-    - underlying data structure (JSON)
-1. Make JSON data structure to update reactively based on flowchart content
+install dependecies:
+> `npm install`
 
-# Expectations
+then launch:
+> `npm run dev`
+>
+> will launch on <a href="http://localhost:5173/">localhost:5173/</a>
 
-1. up and running application OR high fidelity clickable mockups
-1. drag-and-drop flowchart builder with support for basic arithmetics
-1. clean and documented code
-1. tests
 
-# Timeline
+Complete User Stories:
+- [x] As an end user, I should be able to perform calculations using these 4 binary operators (+, -, *, /) and 6 comparison operators (<, >, >=, <=, ==, !=)
+- [x] As an end user, when I operate on two values, I should be able to read the output as a number in an output node
+- [x] As an end user, when I compare two values, I should be able to read the output as 'true' or 'false' in an output node
+- [x] As an end user, when I operate on or compare two values, the top-most edge should always come first in the operation. e.g $3\over4$ vs $4\over3$
+- [x] As an end user, when I add any nodes or edges, the results in all output nodes should update.
+- [x] As an end user, the result should update on any change to the input values or selected operators that I make.
+- [x] As an end user, I should be able to construct flowcharts of arbitrary depth and number of output cells.
+- [x] As an end user, I should be able to drag desired nodes onto the flowchart, and they should be placed at the dropped position.
 
-We leave exact timing to the candidate. Must fit Within 5 days total.
 
-# Notes
+Potential Improvement User Stories:
+- [ ] As an end user, node types should be quickly and easily distinguished by shape and color.
+- [ ] As an end user, I should be able to edit the flowchart and have the JSON update accordingly.
+- [ ] As an end user, I should be able to edit the JSON and have the flowchart update accordingly.
+- [ ] As an end user, I should be able to click a 'Save Flow' button to save the JSON datastructure to a MongoDB instance.
+- [ ] As an end user, I should be able to select a saved flow from a dropdown list and load it in the flowchart and JSON viewers.
+- [ ] As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.
+- [ ] As an end user, I should be able to use common unary oeprators such as sin, cos, tan, and e<sup>x</sup>.
+- [ ] As an end user, I should be able to use the y<sup>x</sup> binary operator, that takes two inputs and calculates the exponential.
+- [ ] As an end user, I should be able to attach a GradientNode to any node, and get the gradient of that value with respect to the final result
 
-- use a designated github repo for version control and submission
-
-# Examples
-
-We recommend reviewing the following:
-
-- Introduction to Flowcharts: https://www.geeksforgeeks.org/an-introduction-to-flowcharts/
-- An example convergence workflow: https://docs.mat3ra.com/models/auxiliary-concepts/reciprocal-space/convergence/
-- ReactFlow library examples: https://reactflow.dev/docs/examples/overview/ and https://pro.reactflow.dev/pro-examples
-
-To discuss this task more in details, please [contact us](README.md).
