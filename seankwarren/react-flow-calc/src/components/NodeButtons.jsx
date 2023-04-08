@@ -1,8 +1,12 @@
 import React from 'react'
 
-const NodeButtons = ({ addNode, handleDragStart }) => {
+const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
+    const buttonsPanelStyle = {
+        backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(51, 51, 51, 0.3)',
+    };
+
     return (
-        <div className='buttons-panel' style={{width: '100%'}}>
+        <div className='buttons-panel' style={{ ...buttonsPanelStyle, width: '100%'}}>
             <button
                 className='node button input'
                 draggable='true'

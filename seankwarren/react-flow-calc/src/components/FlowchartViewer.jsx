@@ -6,10 +6,10 @@ import ReactFlow, {
     applyNodeChanges,
     applyEdgeChanges,
 } from 'reactflow';
-import InputNode from './InputNode';
-import OperationNode from './OperationNode';
-import OutputNode from './OutputNode';
-import ComparisonNode from './ComparisonNode';
+import InputNode from './customNodes/InputNode';
+import OperationNode from './customNodes/OperationNode';
+import OutputNode from './customNodes/OutputNode';
+import ComparisonNode from './customNodes/ComparisonNode';
 import calculate from '../utils/calculate';
 import usePrevious from '../hooks/usePrevious';
 
@@ -21,6 +21,7 @@ const FlowchartViewer = ({
     addNode,
     draggedNodeType,
     setDraggedNodeType,
+    isDarkMode
 }) => {
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
@@ -150,6 +151,10 @@ const FlowchartViewer = ({
         e.stopPropagation();
     };
 
+    const reactFlowStyle = {
+        backgroundColor: isDarkMode ? 'rgba(40, 40, 40, 1)' : 'rgba(255, 255, 255, 1)',
+    };
+
     return (
         <ReactFlow
             nodes={nodes}
@@ -161,10 +166,15 @@ const FlowchartViewer = ({
             snapToGrid
             onDrop={handleDrop}
             onDragOver={handleDragOver}
+            style={reactFlowStyle}
         >
             <MiniMap />
             <Controls />
-            <Background />
+            <Background 
+                gap={16}
+                color={isDarkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(100, 100, 100, 1)'} 
+                isDarkMode={isDarkMode}
+            />
         </ReactFlow>
     );
 };

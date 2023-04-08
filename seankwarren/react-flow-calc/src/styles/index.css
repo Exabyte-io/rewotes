@@ -16,6 +16,7 @@
     --gray: rgba(51, 51, 51, 0.5);;
     --small-padding: 10px;
     --med-padding: 15px;
+    --large-padding: 35px;
     --small-radius: 5px;
 }
 
@@ -72,6 +73,7 @@ body {
 }
 
 .json-viewer {
+    position: absolute;
     padding: var(--small-padding);
     line-height: 1;
     white-space: pre-wrap;
@@ -107,4 +109,19 @@ input {
 
 select {
     width: 40px;
+}
+
+.darkmode-switch {
+    position: absolute !important;
+    right: var(--large-padding);
+    z-index: 10;
+}
+
+.json-contents {
+    position: absolute;
+    z-index: 1;
+}
+
+.react-flow__attribution {
+    background: none;
 }
