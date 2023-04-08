@@ -37,17 +37,21 @@ const FlowchartViewer = ({
 
     // Function to handle connecting nodes
     const handleConnect = (params) => {
+        
         const { source, sourceHandle, target, targetHandle } = params;
+        
         // Check if an edge with the same source and target already exists
         const existingEdge = edges.find(
             (edge) =>
                 edge.source === sourceHandle && edge.target === targetHandle
         );
-        // If a duplicate edge is found, do not add the new edge
-        if (existingEdge) {
-            console.log('Duplicate edge detected, not adding the new edge');
-            return;
-        }
+        if (existingEdge) return;
+
+        // Check if there is already an edge connected to the target handle
+        const existingEdgeWithSameTargetHandle = edges.find(
+            (edge) => edge.targetHandle === targetHandle
+        );
+        if (existingEdgeWithSameTargetHandle) return;
 
         // Create a new edge with an ID, source node ID, target node ID, and arrowhead type
         const newEdge = {
