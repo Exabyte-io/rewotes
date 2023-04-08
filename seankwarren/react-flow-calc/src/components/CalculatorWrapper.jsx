@@ -34,7 +34,7 @@ const CalculatorWrapper = () => {
                         : type === 'comparison'
                         ? 'greater'
                         : null,
-                onChange: (value, callback) => {
+                onChange: (value) => {
                     // Update the value of the node when its input changes
                     setNodes((ns) => {
                         return (ns.map((n) => 
@@ -43,10 +43,6 @@ const CalculatorWrapper = () => {
                                 : n
                         ))
                     });
-                    // Call the provided callback function
-                    if (callback) {
-                        callback();
-                    }
                 },
             },
             position: position, // Set the position here

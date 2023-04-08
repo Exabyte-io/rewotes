@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Handle } from 'reactflow';
 
-const InputNode = ({ id, data, updateOutputNodes }) => {
+const InputNode = ({ id, data }) => {
     const [val, setVal] = useState(data);
 
     const handleInputChange = (e) => {
         const inputValue = parseFloat(e.target.value)
-        data.onChange(inputValue, updateOutputNodes);
+        data.onChange(inputValue);
         // updateOutputNodes();
         setVal(inputValue);
     };

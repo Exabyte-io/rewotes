@@ -6,8 +6,6 @@ const calculate = (nodes, edges, sourceHandleId) => {
     const node = nodes.find((n) => n.id === sourceHandleId.split("-")[0]);
     if (!node) return 0;
 
-    console.log(node)
-
     // Calculate value based on node type
     if (node.type === 'inputNode') {
         return node.data.value;

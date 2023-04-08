@@ -11,6 +11,7 @@ import OperationNode from './OperationNode';
 import OutputNode from './OutputNode';
 import ComparisonNode from './ComparisonNode';
 import calculate from '../utils/calculate';
+import usePrevious from '../hooks/usePrevious';
 
 const FlowchartViewer = ({
     nodes,
@@ -21,7 +22,8 @@ const FlowchartViewer = ({
     draggedNodeType,
     setDraggedNodeType,
 }) => {
-    //setup state for drag and drop
+    const prevNodes = usePrevious(nodes);
+    const prevEdges = usePrevious(edges);
 
     const onNodesChange = useCallback(
         (changes) => setNodes((els) => applyNodeChanges(changes, els)),
@@ -64,13 +66,11 @@ const FlowchartViewer = ({
         updateOutputNodes();
     };
 
-    const updateOutputNodes = () => {
-        console.log("updating outputs")
+    const updateOutputNodes = (currentEdges) => {
         setNodes((currentNodes) => {
             const outputNodes = currentNodes.filter((node) => {
                 return node.type === 'outputNode';
             });
-            console.log(currentNodes)
             const newNodes = currentNodes.map((node) => {
 
                 if (node.type !== 'outputNode') return node;
@@ -78,22 +78,17 @@ const FlowchartViewer = ({
                 const connectedEdge = edges.find(
                     (edge) => edge.target === node.id
                 );
-
-                console.log(connectedEdge)
                 if (connectedEdge) {
                     const newValue = calculate(
                         nodes,
                         edges,
                         connectedEdge.sourceHandle
                     );
-                    console.log(newValue);
                     return { ...node, data: { ...node.data, value: newValue } };
                 } else {
                     return node;
                 }
             });
-            // console.log(newNodes.length);
-
             return newNodes;
         });
     }
@@ -104,19 +99,16 @@ const FlowchartViewer = ({
             inputNode: (props) => (
                 <InputNode 
                     {...props} 
-                    updateOutputNodes={updateOutputNodes} 
                 />
             ),
             operationNode: (props) => (
                 <OperationNode
                     {...props}
-                    updateOutputNodes={updateOutputNodes}
                 />
             ),
             comparisonNode: (props) => (
                 <ComparisonNode
                     {...props}
-                    updateOutputNodes={updateOutputNodes}
                 />
             ),
             outputNode: (props) => <OutputNode {...props} />,
@@ -124,8 +116,14 @@ const FlowchartViewer = ({
     }, []);
 
     useEffect(() => {
-        updateOutputNodes();
-    }, [edges]);
+        // TODO: use lodash to evaluate equality?
+        if (
+            JSON.stringify(prevNodes) !== JSON.stringify(nodes) ||
+            JSON.stringify(prevEdges) !== JSON.stringify(edges)
+        ) {
+            updateOutputNodes();
+        }
+    }, [nodes, edges, prevNodes, prevEdges]);
 
     const handleDrop = (e) => {
         e.preventDefault();
