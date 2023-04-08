@@ -43,7 +43,6 @@ const CalculatorWrapper = () => {
                                 : n
                         ))
                     });
-                    
                     // Call the provided callback function
                     if (callback) {
                         callback();
