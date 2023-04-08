@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react';
 import { Handle } from 'reactflow';
 
-const InputNode = ({ id, data }) => {
+const InputNode = ({ id, data, updateOutputNodes }) => {
     const [val, setVal] = useState(data);
 
     const handleInputChange = (e) => {
-        const inputValue = parseFloat(e.target.value);
-        data.onChange({ id, data: { ...data, value: inputValue } });
+        const inputValue = parseFloat(e.target.value)
+        data.onChange(inputValue, updateOutputNodes);
+        // updateOutputNodes();
         setVal(inputValue);
     };
 
@@ -18,10 +19,9 @@ const InputNode = ({ id, data }) => {
                 position='right'
                 id={`${id}-right`}
                 style={{ background: '#000000' }}
-                // onConnect={(params) => console.log('handle onConnect', params)}
             />
         </div>
-    )
-}
+    );
+};
 
-export default InputNode
+export default InputNode;

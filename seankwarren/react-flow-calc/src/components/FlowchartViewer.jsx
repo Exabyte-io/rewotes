@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import ReactFlow, {
     Controls,
     Background,
@@ -10,6 +10,7 @@ import InputNode from './InputNode';
 import OperationNode from './OperationNode';
 import OutputNode from './OutputNode';
 import ComparisonNode from './ComparisonNode';
+import calculate from '../utils/calculate';
 
 const FlowchartViewer = ({
     nodes,
@@ -56,50 +57,75 @@ const FlowchartViewer = ({
             arrowHeadType: 'arrowclosed',
         };
 
-        setEdges((es) => [...es, newEdge]);
+        const newEdges = [...edges, newEdge];
+        setEdges(newEdges);
 
         // If the target node is an output node, calculate its value and update its state
+        updateOutputNodes();
     };
 
-    const updateOutputNodes = useCallback(() => {
+    const updateOutputNodes = () => {
+        console.log("updating outputs")
         setNodes((currentNodes) => {
             const outputNodes = currentNodes.filter((node) => {
                 return node.type === 'outputNode';
             });
-            // console.log(currentNodes)
+            console.log(currentNodes)
             const newNodes = currentNodes.map((node) => {
-                if (node.type !== 'outputNode') return node;
 
+                if (node.type !== 'outputNode') return node;
+                
                 const connectedEdge = edges.find(
                     (edge) => edge.target === node.id
                 );
-                console.log(connectedEdge);
+
+                console.log(connectedEdge)
                 if (connectedEdge) {
                     const newValue = calculate(
                         nodes,
                         edges,
                         connectedEdge.sourceHandle
                     );
+                    console.log(newValue);
                     return { ...node, data: { ...node.data, value: newValue } };
                 } else {
                     return node;
                 }
             });
-            console.log(newNodes.length);
+            // console.log(newNodes.length);
 
             return newNodes;
         });
-    }, [nodes, edges]);
+    }
 
     // Define custom node types
     const nodeTypes = useMemo(() => {
         return {
-            inputNode: (props) => <InputNode {...props} />,
-            operationNode: (props) => <OperationNode {...props}/>,
+            inputNode: (props) => (
+                <InputNode 
+                    {...props} 
+                    updateOutputNodes={updateOutputNodes} 
+                />
+            ),
+            operationNode: (props) => (
+                <OperationNode
+                    {...props}
+                    updateOutputNodes={updateOutputNodes}
+                />
+            ),
+            comparisonNode: (props) => (
+                <ComparisonNode
+                    {...props}
+                    updateOutputNodes={updateOutputNodes}
+                />
+            ),
             outputNode: (props) => <OutputNode {...props} />,
-            comparisonNode: (props) => <ComparisonNode {...props}/>,
         };
     }, []);
+
+    useEffect(() => {
+        updateOutputNodes();
+    }, [edges]);
 
     const handleDrop = (e) => {
         e.preventDefault();
