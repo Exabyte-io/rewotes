@@ -1,7 +1,9 @@
+import CalculatorWrapper from "./components/CalculatorWrapper"
+
 function App() {
   return (
     <div className="App">
-     Hello World!
+        <CalculatorWrapper />
     </div>
   )
 }
