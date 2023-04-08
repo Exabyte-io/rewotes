@@ -1,0 +1,42 @@
+body {
+    padding: 0;
+    margin: 0;
+    --input-color: #cefada;
+    --operation-color: #f8e1fe;
+    --comparison-color: #e1f5fe;
+    --output-color: #f8f6ce;
+    --small-padding: 10px;
+    --med-padding: 15px;
+    --small-radius: 5px;
+}
+
+.node-buttons {
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    padding: var(--small-padding);
+}
+
+.node-button {
+    margin: 5px;
+    padding: var(--small-padding);
+    border-radius: var(--small-radius);
+    border: 1px solid black;
+}
+
+.input-button {
+    background-color: var(--input-color);
+}
+
+.operation-button {
+    background-color: var(--operation-color);
+    border-radius: 50%;
+}
+
+.comparison-button {
+    background-color: var(--comparison-color);
+}
+
+.output-button {
+    background-color: var(--output-color);
+}

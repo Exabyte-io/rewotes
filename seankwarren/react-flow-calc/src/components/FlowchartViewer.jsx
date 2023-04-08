@@ -6,6 +6,10 @@ import ReactFlow, {
     applyNodeChanges,
     applyEdgeChanges,
 } from 'reactflow'
+import InputNode from './InputNode';
+import OperationNode from './OperationNode';
+import ComparisonNode from './ComparisonNode';
+import OutputNode from './OutputNode';
 
 const FlowchartViewer = ({ 
     nodes, 
@@ -64,6 +68,7 @@ const FlowchartViewer = ({
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
             snapToGrid
             onDrop={handleDrop}
             onDragOver={handleDragOver}
