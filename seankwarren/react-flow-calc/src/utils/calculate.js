@@ -12,10 +12,20 @@ const calculate = (nodes, edges, sourceHandleId) => {
     } else if (node.type === 'operationNode' || node.type === 'comparisonNode') {
         // Get all incoming edges for the node
         const inputEdges = edges.filter((e) => e.target === node.id);
+
+        // Sort the input edges based on the position of their target handle
+        inputEdges.sort((edge1, edge2) => {
+            const edge1Position = edge1.targetHandle.split('-')[2];
+            const edge2Position = edge2.targetHandle.split('-')[2];
+          
+            return edge1Position === 'top' ? -1 : 1;
+          });
+
         // Calculate the values of all incoming nodes
         const inputValues = inputEdges.map((e) => {
             return calculate(nodes, edges, e.sourceHandle);
         });
+
 
         // Perform the specified operation on the input values
         const result = performOperation(
