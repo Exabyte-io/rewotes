@@ -6,13 +6,9 @@ import ReactFlow, {
     applyNodeChanges,
     applyEdgeChanges,
 } from 'reactflow';
-import InputNode from './customNodes/InputNode';
-import BinaryNode from './customNodes/BinaryNode';
-import UnaryNode from './customNodes/UnaryNode';
-import OutputNode from './customNodes/OutputNode';
-import ComparisonNode from './customNodes/ComparisonNode';
 import calculate from '../utils/calculate';
 import usePrevious from '../hooks/usePrevious';
+import nodeTypesConfig from './customNodes/nodeTypes';
 
 const FlowchartViewer = ({
     nodes,
@@ -104,13 +100,7 @@ const FlowchartViewer = ({
 
     // Define custom node types
     const nodeTypes = useMemo(() => {
-        return {
-            inputNode: (props) => <InputNode {...props} />,
-            binaryNode: (props) => <BinaryNode {...props} />,
-            unaryNode: (props) => <UnaryNode {...props} />,
-            comparisonNode: (props) => <ComparisonNode {...props} />,
-            outputNode: (props) => <OutputNode {...props} />,
-        };
+        return nodeTypesConfig
     }, []);
 
     useEffect(() => {
@@ -134,6 +124,11 @@ const FlowchartViewer = ({
             x: e.clientX - reactFlowBounds.left,
             y: e.clientY - reactFlowBounds.top,
         };
+
+        // Adjust position based on current pan position
+        // const transform = zoomPanHelper.getTransform(e.currentTarget);
+        // position.x = (position.x - transform[4]) / transform[0];
+        // position.y = (position.y - transform[5]) / transform[3];
 
         addNode(draggedNodeType, position);
         setDraggedNodeType(null);
