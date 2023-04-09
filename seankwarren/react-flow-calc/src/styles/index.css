@@ -9,11 +9,11 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
 
-    --input-color: #b5f7c6;
+    --input-color: #f8f5b9;
     --binary-color: #eec2f9;
     --unary-color: #f7c4d4;
     --comparison-color: #c1e8f9;
-    --output-color: #f8f5b9;
+    --output-color: #b5f7c6;
     --gray: rgba(51, 51, 51, 0.5);;
     --small-padding: 10px;
     --med-padding: 15px;
@@ -35,7 +35,8 @@ body {
     position: absolute;
     top: 0;
     z-index: 10;
-    justify-content: center;
+    justify-content: left;
+    padding-left: var(--small-padding);
     align-items: center;
     background-color: var(--gray);
     display: flex;
@@ -110,10 +111,15 @@ body {
 
 input {
     width: 80px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
 }
 
 select {
     width: 40px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    font-size: small;
 }
 
 .darkmode-switch {
