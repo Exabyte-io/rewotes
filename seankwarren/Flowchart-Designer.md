@@ -1,51 +1,54 @@
 # Flowchart Calculator
 
-Flowchart Calculator is a React application that allows users to create flowcharts representing mathematical operations and logical comparisons. Users can visually create and connect nodes representing input values, operations, comparisons, and output results.
+Flowchart Calculator is a React application that allows users to create flowcharts representing mathematical operations, functions, and logical comparisons. It's built using React, Vite, and the React Flow library.
+
 ### Features
 
 - Drag and drop interface for adding nodes to the flowchart
-- Custom node types: input, operation, comparison, and output
-- Visual connections between nodes using edges
-- Automatic calculation and display of output node results based on connected input and operation nodes
-- Support for arithmetic operations (+, -, *, /) and logical comparisons (>, <, >=, <=, ==, !=)
-- Real-time update of output nodes when input values or operations are changed
+- Live calculation and display of results
+- Support for arithmetic operations (+, -, *, /, ^), functions (sin, cos, tan, exp), and logical comparisons (>, <, >=, <=, ==, !=)
+- View real-time JSON representation of nodes and edges
 - Interactive flowchart editor powered by React Flow
+- Dark mode 🎉
 
-### Use Case
+### Usage
 
-This application can be used as a visual calculator for solving complex mathematical expressions and logical comparisons. Users can create a flowchart by connecting input nodes to operation and comparison nodes, which can then be connected to output nodes to display the results. By adjusting the input values and operations, users can easily explore different scenarios and observe the corresponding output changes in real time.
+- Drag and drop a custom node (input, operation, comparison, or output) from the buttons panel onto the flowchart area.
+- Connect nodes using the handles on each node. Ensure to connect the output handle of one node to the input handle of another.
+- Edit input nodes or operation/comparison nodes to see the updated output values in the output nodes.
+- View the JSON representation of nodes and edges in the right pane.
 
-### How to Run:
+### Setup
 
-install dependecies:
-> `npm install`
+Install dependencies using `npm install`.
 
-then launch:
-> `npm run dev`
->
+Run the development server using `npm run dev`.
 > will launch on <a href="http://localhost:5173/">localhost:5173/</a>
 
+Build the production version using `npm run build`.
 
 ### Complete User Stories:
-- [x] As an end user, I should be able to perform calculations using these 4 binary operators (+, -, *, /) and 6 comparison operators (<, >, >=, <=, ==, !=)
-- [x] As an end user, when I operate on two values, I should be able to read the output as a number in an output node
-- [x] As an end user, when I compare two values, I should be able to read the output as 'true' or 'false' in an output node
+- [x] As an end user, I should be able to perform calculations using these 4 binary operators (+, -, *, /) and 6 comparison operators (<, >, >=, <=, ==, !=).
+- [x] As an end user, when I operate on two values, I should be able to read the output as a number in an output node.
+- [x] As an end user, when I compare two values, I should be able to read the output as 'true' or 'false' in an output node.
 - [x] As an end user, when I operate on or compare two values, the top-most edge should always come first in the operation. e.g $3\over4$ vs $4\over3$
 - [x] As an end user, when I add any nodes or edges, the results in all output nodes should update.
 - [x] As an end user, the result should update on any change to the input values or selected operators that I make.
 - [x] As an end user, I should be able to construct flowcharts of arbitrary depth and number of output cells.
 - [x] As an end user, I should be able to drag desired nodes onto the flowchart, and they should be placed at the dropped position.
 - [x] As an end user, I should be able to edit the flowchart and have the JSON update accordingly.
+- [x] As an end user, I should be able to use common unary operators such as sin, cos, tan, and e<sup>x</sup>.
+- [x] As an end user, I should be able to use the y<sup>x</sup> binary operator, that takes two inputs and calculates the exponential.
+- [x] As an end user, node types should be quickly and easily distinguished by shape and color.
 
 ### Potential Improvement User Stories:
-- [ ] As an end user, node types should be quickly and easily distinguished by shape and color.
-- [ ] As an end user, I should be able to edit the JSON and have the flowchart update accordingly.
+- [ ] As an end user, I should see some nodes on screen when I launch the application that explain how to use the app.
+- [ ] ~~As an end user, I should be able to edit the JSON and have the flowchart update accordingly.~~
+- [ ] As an end user, I should be able to easily read the JSON representation with syntax highlighting.
 - [ ] As an end user, I should be able to click a 'Save Flow' button to save the JSON datastructure to a MongoDB instance.
 - [ ] As an end user, I should be able to select a saved flow from a dropdown list and load it in the flowchart and JSON viewers.
-- [ ] As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.
-- [ ] As an end user, I should be able to use common unary operators such as sin, cos, tan, and e<sup>x</sup>.
-- [ ] As an end user, I should be able to use the y<sup>x</sup> binary operator, that takes two inputs and calculates the exponential.
-- [ ] As a user, the input nodes should be exapandable to include multiple values each with their own handle
-- [ ] As an end user, I should be able to click on a button called 'clear' to clear the flowchart
-- [ ] As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place
+- [ ] ~~As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.~~
+- [ ] As an end user, the input nodes should be exapandable to include multiple values each with their own handle.
+- [ ] As an end user, I should be able to click on a button called 'clear' to clear the flowchart.
+- [ ] As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place.
 
