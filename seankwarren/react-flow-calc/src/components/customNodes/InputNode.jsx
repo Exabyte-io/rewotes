@@ -13,7 +13,7 @@ const InputNode = ({ id, data }) => {
 
     return (
         <div className='node input' data-testid='input-node'>
-            <input type='number' onChange={handleInputChange} />
+            <input type='number' defaultValue={0} onChange={handleInputChange} />
             <Handle
                 className='handle output'
                 type='source'

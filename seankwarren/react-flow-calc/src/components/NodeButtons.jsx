@@ -18,35 +18,35 @@ const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'input')}
             >
-                in
+                <span>in</span>
             </button>
             <button
                 className='node button binary round'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'binary')}
             >
-                +
+                <span>+</span>
             </button>
             <button
                 className='node button unary round'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'unary')}
             >
-                sin
+                <span>sin</span>
             </button>
             <button
                 className='node button comparison round'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'comparison')}
             >
-                &gt;
+                <span>&gt;</span>
             </button>
             <button
                 className='node button output'
                 draggable='true'
                 onDragStart={(e) => handleDragStart(e, 'output')}
             >
-                out
+                <span>out</span>
             </button>
         </div>
     );

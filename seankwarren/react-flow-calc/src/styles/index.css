@@ -2,7 +2,7 @@
     font-family: 'Courier New', Courier, monospace;
     line-height: 1.5;
     font-weight: 500;
-  
+
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -14,18 +14,20 @@
     --unary-color: #f7c4d4;
     --comparison-color: #c1e8f9;
     --output-color: #b5f7c6;
-    --gray: rgba(51, 51, 51, 0.5);;
+    --gray: rgba(51, 51, 51, 0.5);
+    --light-gray: #ccc;
     --small-padding: 10px;
     --med-padding: 15px;
     --large-padding: 35px;
     --small-radius: 5px;
+    --ft-wt-bold: 600;
+    --ft-wt-norm: 400;
 }
 
 body {
     padding: 0;
     margin: 0;
 }
-
 
 .flowchart-container {
     display: flex;
@@ -43,7 +45,6 @@ body {
     height: fit-content;
 }
 
-
 .react-split {
     height: 100vh;
 }
@@ -60,8 +61,20 @@ body {
 .node.button {
     margin: 5px;
     font-family: 'Courier New', Courier, monospace;
-    font-weight: 700;
-    height: 40px
+    font-weight: var(--ft-wt-bold);
+    height: 40px;
+}
+
+.node.button > span {
+    padding: var(--med-padding);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.handle {
+    width: 7px;
+    height: 7px;
 }
 
 .handle.input {
@@ -80,7 +93,7 @@ body {
     line-height: 1;
     white-space: pre-wrap;
     width: 100%;
-    border-left: 2px solid #ccc;
+    border-left: 2px solid var(--light-gray);
     overflow-y: auto;
 }
 
@@ -112,14 +125,34 @@ body {
 input {
     width: 80px;
     font-family: 'Courier New', Courier, monospace;
-    font-weight: 600;
+    font-weight: var(--ft-wt-bold);
 }
 
 select {
     width: 40px;
     font-family: 'Courier New', Courier, monospace;
-    font-weight: 600;
+    font-weight: var(--ft-wt-bold);
     font-size: small;
+    background-color: transparent;
+    border: 1px solid #000;
+    border-radius: var(--small-radius);
+    appearance: none; 
+    text-align: center;
+}
+
+/* Add this to style the dropdown arrow */
+select::-ms-expand {
+    display: none;
+}
+
+select::after {
+    content: '▼';
+    font-size: 10px;
+    /* position: absolute; */
+    /* right: 5px;
+    top: 50%; */
+    /* transform: translateY(-50%); */
+    pointer-events: none; /* Ignore clicks on the arrow */
 }
 
 .darkmode-switch {
@@ -135,4 +168,12 @@ select {
 
 .react-flow__attribution {
     background: none;
+}
+
+.react-flow__node-default {
+    width: 400px;
+    white-space: pre-wrap;
+    text-align: left;
+    font-weight: var(--ft-wt-bold);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
