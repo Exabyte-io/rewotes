@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FlowchartViewer from './FlowchartViewer';
 import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
@@ -6,10 +6,24 @@ import SplitPane, { Pane } from 'split-pane-react';
 import Switch from 'react-switch';
 import 'split-pane-react/esm/themes/default.css';
 import 'reactflow/dist/style.css';
+import { nanoid } from 'nanoid';
+// import { initialEdges, initialNodes } from '../../public/initialFlow';
 
 const CalculatorWrapper = () => {
     // Set up state for nodes and edges
-    const [nodes, setNodes] = useState([]);
+    const [nodes, setNodes] = useState([
+        {
+            id: 'instructions',
+            type: 'default',
+            position: { x: 250, y: 150 },
+            selected: true,
+            data: { label: `
+            1. Drag and drop a node onto the flowchart\n
+            2. Connect nodes using the handles on each node. Ensure to connect an outputs (black) to input (white).\n
+            3. Edit input values and select functions from the dropdown to see the updated results in the output nodes.\n
+            4. View the JSON representation of nodes and edges on the right.` },
+        },
+    ]);
     const [edges, setEdges] = useState([]);
 
     // Drag and drop state
@@ -33,9 +47,9 @@ const CalculatorWrapper = () => {
     };
 
     // Function to add a new node
-    const addNode = (type, position) => {
+    const addNode = (type, position, value) => {
         // Generate a unique ID for the node
-        const id = `${type}${nodes.length + 1}`;
+        const id = `${type}${nanoid(11)}`;
 
         // Create a new node object with an ID, type, initial value, and onChange function
         const newNode = {
@@ -43,6 +57,7 @@ const CalculatorWrapper = () => {
             type: `${type}Node`,
             data: {
                 value:
+                    value !== undefined ? value :
                     type === 'input'
                         ? 0
                         : type === 'binary'
