@@ -5,7 +5,7 @@ const InputNode = ({ id, data }) => {
     const [val, setVal] = useState(data);
 
     const handleInputChange = (e) => {
-        const inputValue = parseFloat(e.target.value)
+        const inputValue = parseFloat(e.target.value);
         data.onChange(inputValue);
         // updateOutputNodes();
         setVal(inputValue);

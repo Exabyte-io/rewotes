@@ -22,11 +22,13 @@ const FlowchartViewer = ({
     addNode,
     draggedNodeType,
     setDraggedNodeType,
-    isDarkMode
+    isDarkMode,
 }) => {
+    // store previous nodes and edges as state
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
 
+    // handle nodes and edges changes
     const onNodesChange = useCallback(
         (changes) => setNodes((els) => applyNodeChanges(changes, els)),
         []
@@ -39,9 +41,8 @@ const FlowchartViewer = ({
 
     // Function to handle connecting nodes
     const handleConnect = (params) => {
-        
         const { source, sourceHandle, target, targetHandle } = params;
-        
+
         // Check if an edge with the same source and target already exists
         const existingEdge = edges.find(
             (edge) =>
@@ -74,13 +75,15 @@ const FlowchartViewer = ({
 
     const updateOutputNodes = (currentEdges) => {
         setNodes((currentNodes) => {
+            // get all nodes of type 'output'
             const outputNodes = currentNodes.filter((node) => {
                 return node.type === 'outputNode';
             });
-            const newNodes = currentNodes.map((node) => {
 
+            // replace all the output nodes in the `nodes` state with new values
+            const newNodes = currentNodes.map((node) => {
                 if (node.type !== 'outputNode') return node;
-                
+
                 const connectedEdge = edges.find(
                     (edge) => edge.target === node.id
                 );
@@ -97,31 +100,15 @@ const FlowchartViewer = ({
             });
             return newNodes;
         });
-    }
+    };
 
     // Define custom node types
     const nodeTypes = useMemo(() => {
         return {
-            inputNode: (props) => (
-                <InputNode 
-                    {...props} 
-                />
-            ),
-            binaryNode: (props) => (
-                <BinaryNode
-                    {...props}
-                />
-            ),
-            unaryNode: (props) => (
-                <UnaryNode
-                    {...props}
-                />
-            ),
-            comparisonNode: (props) => (
-                <ComparisonNode
-                    {...props}
-                />
-            ),
+            inputNode: (props) => <InputNode {...props} />,
+            binaryNode: (props) => <BinaryNode {...props} />,
+            unaryNode: (props) => <UnaryNode {...props} />,
+            comparisonNode: (props) => <ComparisonNode {...props} />,
             outputNode: (props) => <OutputNode {...props} />,
         };
     }, []);
@@ -158,7 +145,9 @@ const FlowchartViewer = ({
     };
 
     const reactFlowStyle = {
-        backgroundColor: isDarkMode ? 'rgba(40, 40, 40, 1)' : 'rgba(255, 255, 255, 1)',
+        backgroundColor: isDarkMode
+            ? 'rgba(40, 40, 40, 1)'
+            : 'rgba(255, 255, 255, 1)',
     };
 
     const customNodeColor = (node) => {
@@ -193,9 +182,13 @@ const FlowchartViewer = ({
         >
             <MiniMap nodeColor={customNodeColor} />
             <Controls />
-            <Background 
+            <Background
                 gap={16}
-                color={isDarkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(100, 100, 100, 1)'} 
+                color={
+                    isDarkMode
+                        ? 'rgba(255, 255, 255, 1)'
+                        : 'rgba(100, 100, 100, 1)'
+                }
                 isDarkMode={isDarkMode}
             />
         </ReactFlow>

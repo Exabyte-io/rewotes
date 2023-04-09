@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { Handle } from 'reactflow';
 
 const BinaryNode = ({ id, data }) => {
-
     const handleSelectChange = (e) => {
         data.onChange(e.target.value);
     };
@@ -42,6 +41,6 @@ const BinaryNode = ({ id, data }) => {
             />
         </div>
     );
-}
+};
 
-export default BinaryNode
+export default BinaryNode;

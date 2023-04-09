@@ -3,7 +3,7 @@ import FlowchartViewer from './FlowchartViewer';
 import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
 import SplitPane, { Pane } from 'split-pane-react';
-import Switch from "react-switch";
+import Switch from 'react-switch';
 import 'split-pane-react/esm/themes/default.css';
 import 'reactflow/dist/style.css';
 
@@ -53,11 +53,11 @@ const CalculatorWrapper = () => {
                 onChange: (value) => {
                     // Update the value of the node when its input changes
                     setNodes((ns) => {
-                        return (ns.map((n) => 
+                        return ns.map((n) =>
                             n.id === id
                                 ? { ...n, data: { ...n.data, value } }
                                 : n
-                        ))
+                        );
                     });
                 },
             },
@@ -69,9 +69,16 @@ const CalculatorWrapper = () => {
     };
 
     return (
-        <SplitPane split="vertical" sizes={sizes} onChange={handleSizeChange}>
-            <div className="flowchart-container" style={{ height: '100vh', width: '100%' }}>
-                <NodeButtons addNode={addNode} handleDragStart={handleDragStart} isDarkMode={isDarkMode}/>
+        <SplitPane split='vertical' sizes={sizes} onChange={handleSizeChange}>
+            <div
+                className='flowchart-container'
+                style={{ height: '100vh', width: '100%' }}
+            >
+                <NodeButtons
+                    addNode={addNode}
+                    handleDragStart={handleDragStart}
+                    isDarkMode={isDarkMode}
+                />
                 <FlowchartViewer
                     nodes={nodes}
                     edges={edges}
@@ -84,22 +91,22 @@ const CalculatorWrapper = () => {
                 />
             </div>
             <JSONViewer nodes={nodes} edges={edges} isDarkMode={isDarkMode}>
-            <Switch
-                checked={isDarkMode}
-                onChange={toggleDarkMode}
-                offColor="#f0f0f0"
-                onColor="#606060"
-                offHandleColor="#ccc"
-                onHandleColor="#444"
-                handleDiameter={30}
-                uncheckedIcon={false}
-                checkedIcon={false}
-                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                // activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                height={15}
-                width={40}
-                className="react-switch darkmode-switch"
-            />
+                <Switch
+                    checked={isDarkMode}
+                    onChange={toggleDarkMode}
+                    offColor='#f0f0f0'
+                    onColor='#606060'
+                    offHandleColor='#ccc'
+                    onHandleColor='#444'
+                    handleDiameter={30}
+                    uncheckedIcon={false}
+                    checkedIcon={false}
+                    boxShadow='0px 1px 5px rgba(0, 0, 0, 0.6)'
+                    // activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                    height={15}
+                    width={40}
+                    className='react-switch darkmode-switch'
+                />
             </JSONViewer>
         </SplitPane>
     );

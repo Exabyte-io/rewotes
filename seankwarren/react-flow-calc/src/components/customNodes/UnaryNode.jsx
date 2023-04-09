@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { Handle } from 'reactflow';
 
 const UnaryNode = ({ id, data }) => {
-
     const handleSelectChange = (e) => {
         data.onChange(e.target.value);
     };
@@ -29,6 +28,6 @@ const UnaryNode = ({ id, data }) => {
             />
         </div>
     );
-}
+};
 
-export default UnaryNode
+export default UnaryNode;
