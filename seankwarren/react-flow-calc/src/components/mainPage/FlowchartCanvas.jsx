@@ -128,6 +128,7 @@ const FlowchartCanvas = ({
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             style={reactFlowStyle}
+            proOptions={{ hideAttribution: true }}
         >
             <MiniMap nodeColor={getNodeColor} />
             <Controls />

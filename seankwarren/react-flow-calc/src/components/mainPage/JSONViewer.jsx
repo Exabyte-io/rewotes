@@ -35,7 +35,7 @@ const JSONViewer = ({ children, nodes, edges, isDarkMode }) => {
                         );
                     })}
                     ]
-                    <br />
+                    <br /><br />
                     edges: [
                     {edges.map((edge) => {
                         return (

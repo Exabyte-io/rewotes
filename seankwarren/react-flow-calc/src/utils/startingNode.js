@@ -1,7 +1,7 @@
 const startingNode = {
     id: 'instructions',
     type: 'default',
-    position: { x: 250, y: 150 },
+    position: { x: 100, y: 150 },
     selected: true,
     data: { label: 
     `1. Drag and drop a node onto the flowchart\n` +

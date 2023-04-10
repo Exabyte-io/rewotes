@@ -140,21 +140,6 @@ select {
     text-align: center;
 }
 
-/* Add this to style the dropdown arrow */
-select::-ms-expand {
-    display: none;
-}
-
-select::after {
-    content: '▼';
-    font-size: 10px;
-    /* position: absolute; */
-    /* right: 5px;
-    top: 50%; */
-    /* transform: translateY(-50%); */
-    pointer-events: none; /* Ignore clicks on the arrow */
-}
-
 .darkmode-switch {
     position: absolute !important;
     right: var(--large-padding);
@@ -164,10 +149,6 @@ select::after {
 .json-contents {
     position: absolute;
     z-index: 1;
-}
-
-.react-flow__attribution {
-    background: none;
 }
 
 .react-flow__node-default {
