@@ -27,6 +27,8 @@ const FlowchartCalculator = () => {
                 console.log(error.reason);
             } else {
                 console.log('Data saved to MongoDB');
+                setFlowName('');
+                fetchFlows();
             }
         });
     };
@@ -40,6 +42,16 @@ const FlowchartCalculator = () => {
             }
         });
     };
+
+    const clearFlows = () => {
+        Meteor.call('clearFlows', (error) => {
+          if (error) {
+            console.error("Error clearing flows:", error);
+          } else {
+            console.log("Flows collection cleared");
+          }
+        });
+      };
 
     const loadFlow = (flow) => {
         const newNodes = attachOnConnect(flow.nodes);
@@ -88,7 +100,9 @@ const FlowchartCalculator = () => {
     const attachOnConnect = (nodes) => {
         return nodes.map((node) => ({
             ...node,
-            data: { ...node.data, onChange: handleNodeChange },
+            data: { ...node.data, onChange: (newValue) => { 
+                handleNodeChange(node.id, newValue) 
+            } },
         }));
     };
 
@@ -102,6 +116,7 @@ const FlowchartCalculator = () => {
                 className='flowchart-container'
                 style={{ height: '100vh', width: '100%' }}
             >
+                {/* <button onClick={clearFlows}>Clear Flows</button> */}
                 <NodeButtons
                     addNode={addNode}
                     handleDragStart={handleDragStart}

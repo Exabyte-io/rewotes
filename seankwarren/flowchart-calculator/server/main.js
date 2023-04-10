@@ -18,4 +18,8 @@ Meteor.methods({
     fetchFlows() {
         return FlowsCollection.find().fetch();
     },
+
+    clearFlows() {
+        FlowsCollection.remove({});
+    },
 });
