@@ -14,6 +14,16 @@ const FlowchartCalculator = () => {
     const [nodes, setNodes] = useState([startingNode]);
     const [edges, setEdges] = useState([]);
 
+    const saveFlow = () => {
+        Meteor.call('saveFlow', {nodes, edges}, (error) => {
+            if (error) {
+                console.log(error.reason);
+            } else {
+                console.log('Data saved to MongoDB');
+            }
+        });
+    };
+
     // Drag and drop state
     const [draggedNodeType, setDraggedNodeType] = useState(null);
 
@@ -57,6 +67,7 @@ const FlowchartCalculator = () => {
                 className='flowchart-container'
                 style={{ height: '100vh', width: '100%' }}
             >
+                <button onClick={saveFlow}>Save to MongoDB</button>
                 <NodeButtons
                     addNode={addNode}
                     handleDragStart={handleDragStart}
