@@ -1,5 +1,5 @@
 import React from 'react';
-import DraggableButton from './DraggableButton';
+import DraggableButton from '../reusable/DraggableButton';
 
 const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
     // Darkmode style toggling
@@ -12,9 +12,9 @@ const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
     return (
         <div className='buttons-panel' style={{ ...buttonsPanelStyle, width: '100%' }}>
             <DraggableButton label="in" nodeType="input" onDragStart={handleDragStart} />
-            <DraggableButton label="+" nodeType="binary" onDragStart={handleDragStart} />
-            <DraggableButton label="sin" nodeType="unary" onDragStart={handleDragStart} />
-            <DraggableButton label="&gt;" nodeType="comparison" onDragStart={handleDragStart} />
+            <DraggableButton label="+" nodeType="binary" onDragStart={handleDragStart} className="round"/>
+            <DraggableButton label="sin" nodeType="unary" onDragStart={handleDragStart} className="round"/>
+            <DraggableButton label="&gt;" nodeType="comparison" onDragStart={handleDragStart} className="round"/>
             <DraggableButton label="out" nodeType="output" onDragStart={handleDragStart} />
         </div>
     );

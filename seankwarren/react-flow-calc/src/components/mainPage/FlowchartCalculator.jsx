@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import FlowchartViewer from './FlowchartViewer';
+import FlowchartCanvas from './FlowchartCanvas';
 import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
 import SplitPane, { Pane } from 'split-pane-react';
 import Switch from 'react-switch';
 import 'split-pane-react/esm/themes/default.css';
 import 'reactflow/dist/style.css';
-import { nanoid } from 'nanoid';
-import createNode from '../utils/createNode';
+import createNode from '../../utils/createNode';
 // import { initialEdges, initialNodes } from '../../public/initialFlow';
 
-const CalculatorWrapper = () => {
+const FlowchartCalculator = () => {
     // Set up state for nodes and edges
     const [nodes, setNodes] = useState([
         {
@@ -64,7 +63,7 @@ const CalculatorWrapper = () => {
                     handleDragStart={handleDragStart}
                     isDarkMode={isDarkMode}
                 />
-                <FlowchartViewer
+                <FlowchartCanvas
                     nodes={nodes}
                     edges={edges}
                     setNodes={setNodes}
@@ -97,4 +96,4 @@ const CalculatorWrapper = () => {
     );
 };
 
-export default CalculatorWrapper;
+export default FlowchartCalculator;

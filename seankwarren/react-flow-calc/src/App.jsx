@@ -1,9 +1,9 @@
-import CalculatorWrapper from "./components/CalculatorWrapper"
+import FlowchartCalculator from "./components/mainPage/FlowchartCalculator"
 
 function App() {
   return (
     <div className="App">
-        <CalculatorWrapper />
+        <FlowchartCalculator />
     </div>
   )
 }

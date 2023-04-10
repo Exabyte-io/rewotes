@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import ReactFlow, {
     Controls,
     Background,
@@ -6,11 +6,12 @@ import ReactFlow, {
     applyNodeChanges,
     applyEdgeChanges,
 } from 'reactflow';
-import calculate from '../utils/calculate';
-import usePrevious from '../hooks/usePrevious';
-import nodeTypesConfig from './customNodes/nodeTypes';
+import calculate from '../../utils/calculate';
+import usePrevious from '../../hooks/usePrevious';
+import nodeTypesConfig from '../customNodes/nodeTypes';
+import getNodeColor from '../../utils/getNodeColor';
 
-const FlowchartViewer = ({
+const FlowchartCanvas = ({
     nodes,
     edges,
     setNodes,
@@ -23,6 +24,7 @@ const FlowchartViewer = ({
     // store previous nodes and edges as state
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
     // handle nodes and edges changes
     const onNodesChange = useCallback(
@@ -120,10 +122,10 @@ const FlowchartViewer = ({
         if (!draggedNodeType) return;
 
         const reactFlowBounds = e.currentTarget.getBoundingClientRect();
-        const position = {
+        const position = reactFlowInstance.project({
             x: e.clientX - reactFlowBounds.left,
             y: e.clientY - reactFlowBounds.top,
-        };
+        });
 
         // Adjust position based on current pan position
         // const transform = zoomPanHelper.getTransform(e.currentTarget);
@@ -145,23 +147,6 @@ const FlowchartViewer = ({
             : 'rgba(255, 255, 255, 1)',
     };
 
-    const customNodeColor = (node) => {
-        switch (node.type) {
-            case 'inputNode':
-                return 'var(--input-color)';
-            case 'binaryNode':
-                return 'var(--binary-color)';
-            case 'unaryNode':
-                return 'var(--unary-color)';
-            case 'comparisonNode':
-                return 'var(--comparison-color)';
-            case 'outputNode':
-                return 'var(--output-color)';
-            default:
-                return '#eee';
-        }
-    };
-
     return (
         <ReactFlow
             nodes={nodes}
@@ -169,13 +154,14 @@ const FlowchartViewer = ({
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={handleConnect}
+            onInit={setReactFlowInstance}
             nodeTypes={nodeTypes}
             snapToGrid
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             style={reactFlowStyle}
         >
-            <MiniMap nodeColor={customNodeColor} />
+            <MiniMap nodeColor={getNodeColor} />
             <Controls />
             <Background
                 gap={16}
@@ -190,4 +176,4 @@ const FlowchartViewer = ({
     );
 };
 
-export default FlowchartViewer;
+export default FlowchartCanvas;
