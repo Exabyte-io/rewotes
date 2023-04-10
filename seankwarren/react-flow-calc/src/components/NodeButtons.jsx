@@ -1,4 +1,5 @@
 import React from 'react';
+import DraggableButton from './DraggableButton';
 
 const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
     // Darkmode style toggling
@@ -9,45 +10,12 @@ const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
     };
 
     return (
-        <div
-            className='buttons-panel'
-            style={{ ...buttonsPanelStyle, width: '100%' }}
-        >
-            <button
-                className='node button input'
-                draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'input')}
-            >
-                <span>in</span>
-            </button>
-            <button
-                className='node button binary round'
-                draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'binary')}
-            >
-                <span>+</span>
-            </button>
-            <button
-                className='node button unary round'
-                draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'unary')}
-            >
-                <span>sin</span>
-            </button>
-            <button
-                className='node button comparison round'
-                draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'comparison')}
-            >
-                <span>&gt;</span>
-            </button>
-            <button
-                className='node button output'
-                draggable='true'
-                onDragStart={(e) => handleDragStart(e, 'output')}
-            >
-                <span>out</span>
-            </button>
+        <div className='buttons-panel' style={{ ...buttonsPanelStyle, width: '100%' }}>
+            <DraggableButton label="in" nodeType="input" onDragStart={handleDragStart} />
+            <DraggableButton label="+" nodeType="binary" onDragStart={handleDragStart} />
+            <DraggableButton label="sin" nodeType="unary" onDragStart={handleDragStart} />
+            <DraggableButton label="&gt;" nodeType="comparison" onDragStart={handleDragStart} />
+            <DraggableButton label="out" nodeType="output" onDragStart={handleDragStart} />
         </div>
     );
 };
