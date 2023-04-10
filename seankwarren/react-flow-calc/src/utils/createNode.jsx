@@ -4,7 +4,7 @@ import { customAlphabet } from 'nanoid'
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 6)
 
 const createNode = (type, position, value, onInputChange) => {
-    const id = `${type}${nanoid()}`;
+    const id = `${type}_${nanoid()}`;
 
     const newNode = {
         id,

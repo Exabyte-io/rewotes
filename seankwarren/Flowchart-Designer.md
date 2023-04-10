@@ -41,10 +41,10 @@ Build the production version using `npm run build`.
 - [x] As an end user, I should be able to use the y<sup>x</sup> binary operator, that takes two inputs and calculates the exponential.
 - [x] As an end user, node types should be quickly and easily distinguished by shape and color.
 - [x] As an end user, I should see some nodes on screen when I launch the application that explain how to use the app.
+- [x] As an end user, I should be able to easily read the JSON representation with syntax highlighting.
 
 ### Potential Improvement User Stories:
 - [ ] ~~As an end user, I should be able to edit the JSON and have the flowchart update accordingly.~~
-- [ ] As an end user, I should be able to easily read the JSON representation with syntax highlighting.
 - [ ] As an end user, I should be able to click a 'Save Flow' button to save the JSON datastructure to a MongoDB instance.
 - [ ] As an end user, I should be able to select a saved flow from a dropdown list and load it in the flowchart and JSON viewers.
 - [ ] ~~As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.~~
