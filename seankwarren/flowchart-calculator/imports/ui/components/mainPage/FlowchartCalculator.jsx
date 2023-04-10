@@ -17,8 +17,12 @@ const FlowchartCalculator = () => {
     // state for fetching saved flows from db
     const [fetchedFlows, setFetchedFlows] = useState([]);
 
+    // state for user input flow name
+    const [flowName, setFlowName] = useState('');
+
+
     const saveFlow = () => {
-        Meteor.call('saveFlow', {nodes, edges}, (error) => {
+        Meteor.call('saveFlow', {nodes, edges, name: flowName || undefined}, (error) => {
             if (error) {
                 console.log(error.reason);
             } else {
@@ -98,7 +102,6 @@ const FlowchartCalculator = () => {
                 className='flowchart-container'
                 style={{ height: '100vh', width: '100%' }}
             >
-                <button onClick={saveFlow}>Save Flow</button>
                 <NodeButtons
                     addNode={addNode}
                     handleDragStart={handleDragStart}
@@ -121,6 +124,10 @@ const FlowchartCalculator = () => {
                 isDarkMode={isDarkMode}
                 flows={fetchedFlows}
                 loadFlow={loadFlow}
+                saveFlow={saveFlow}
+                onSave={saveFlow}
+                flowName={flowName}
+                setFlowName={setFlowName}
             >
                 <Switch
                     checked={isDarkMode}

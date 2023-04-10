@@ -27,7 +27,7 @@ const BinaryNode = ({ id, data }) => {
                     top: '70%',
                 }}
             />
-            <select onChange={handleSelectChange}>
+            <select className="node-dropdown" onChange={handleSelectChange}>
                 {binaryOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
             </select>
             <Handle

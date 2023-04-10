@@ -15,7 +15,7 @@ const UnaryNode = ({ id, data }) => {
                 position='left'
                 id={`${id}-left`}
             />
-            <select onChange={handleSelectChange}>
+            <select className="node-dropdown" onChange={handleSelectChange}>
                 {unaryOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
             </select>
             <Handle

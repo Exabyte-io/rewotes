@@ -27,7 +27,7 @@ export const ComparisonNode = ({ id, data }) => {
                     top: '70%',
                 }}
             />
-            <select onChange={handleSelectChange}>
+            <select className="node-dropdown" onChange={handleSelectChange}>
                 {comparisonOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
             </select>
             <Handle

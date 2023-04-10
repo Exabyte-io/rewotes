@@ -128,7 +128,7 @@ input {
     font-weight: var(--ft-wt-bold);
 }
 
-select {
+.node-dropdown {
     width: 40px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: var(--ft-wt-bold);
