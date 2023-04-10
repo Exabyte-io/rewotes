@@ -22,15 +22,22 @@ const FlowchartCalculator = () => {
 
 
     const saveFlow = () => {
-        Meteor.call('saveFlow', {nodes, edges, name: flowName || undefined}, (error) => {
-            if (error) {
-                console.log(error.reason);
-            } else {
-                console.log('Data saved to MongoDB');
-                setFlowName('');
-                fetchFlows();
-            }
-        });
+        // Check if a flow with the same name already exists
+        const flowWithNameExists = fetchedFlows.some(flow => flow.name === flowName);
+        
+        if (flowWithNameExists) {
+            alert('A flow with this name already exists. Please choose a different name.');
+        } else {
+            Meteor.call('saveFlow', {nodes, edges, name: flowName}, (error) => {
+                if (error) {
+                    console.log(error.reason);
+                } else {
+                    console.log('Data saved to MongoDB');
+                    setFlowName(''); // Clear the flow name input field after a successful save
+                    fetchFlows(); // Fetch the flows again to update the dropdown
+                }
+            });
+        }
     };
 
     const fetchFlows = () => {
