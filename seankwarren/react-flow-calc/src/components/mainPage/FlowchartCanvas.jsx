@@ -27,6 +27,13 @@ const FlowchartCanvas = ({
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const updateOutputNodes = useUpdateOutputNodes(nodes, edges, setNodes);
 
+    // Darkmode style toggling
+    const reactFlowStyle = {
+        backgroundColor: isDarkMode
+            ? 'rgba(40, 40, 40, 1)'
+            : 'rgba(255, 255, 255, 1)',
+    };
+
     // handle nodes and edges changes
     const onNodesChange = useCallback(
         (changes) => setNodes((els) => applyNodeChanges(changes, els)),
@@ -106,12 +113,6 @@ const FlowchartCanvas = ({
     const handleDragOver = (e) => {
         e.preventDefault();
         e.stopPropagation();
-    };
-
-    const reactFlowStyle = {
-        backgroundColor: isDarkMode
-            ? 'rgba(40, 40, 40, 1)'
-            : 'rgba(255, 255, 255, 1)',
     };
 
     return (
