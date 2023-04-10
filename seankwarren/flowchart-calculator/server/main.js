@@ -10,7 +10,12 @@ Meteor.startup(async () => {
 });
 
 Meteor.methods({
+
     saveFlow(data) {
       FlowsCollection.insert(data);
-    }
+    },
+
+    fetchFlows() {
+        return FlowsCollection.find().fetch();
+    },
 });

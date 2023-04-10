@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Switch from 'react-switch';
 import 'reactflow/dist/style.css';
 import SplitPane from 'split-pane-react';
@@ -10,9 +10,12 @@ import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
 
 const FlowchartCalculator = () => {
-    // Set up state for nodes and edges
+    // state for nodes and edges
     const [nodes, setNodes] = useState([startingNode]);
     const [edges, setEdges] = useState([]);
+
+    // state for fetching saved flows from db
+    const [fetchedFlows, setFetchedFlows] = useState([]);
 
     const saveFlow = () => {
         Meteor.call('saveFlow', {nodes, edges}, (error) => {
@@ -23,6 +26,23 @@ const FlowchartCalculator = () => {
             }
         });
     };
+
+    const fetchFlows = () => {
+        Meteor.call('fetchFlows', (error, result) => {
+            if (error) {
+                console.error("Error fetching flows:", error);
+            } else {
+                setFetchedFlows(result);
+            }
+        });
+    };
+
+    const loadFlow = (flow) => {
+        const newNodes = attachOnConnect(flow.nodes);
+        setNodes(newNodes);
+        setEdges(flow.edges);
+    };
+      
 
     // Drag and drop state
     const [draggedNodeType, setDraggedNodeType] = useState(null);
@@ -61,13 +81,24 @@ const FlowchartCalculator = () => {
         setNodes((nodes) => [...nodes, newNode]);
     };
 
+    const attachOnConnect = (nodes) => {
+        return nodes.map((node) => ({
+            ...node,
+            data: { ...node.data, onChange: handleNodeChange },
+        }));
+    };
+
+    useEffect(() => {
+        fetchFlows();
+    }, []);
+
     return (
         <SplitPane split='vertical' sizes={sizes} onChange={handleSizeChange}>
             <div
                 className='flowchart-container'
                 style={{ height: '100vh', width: '100%' }}
             >
-                <button onClick={saveFlow}>Save to MongoDB</button>
+                <button onClick={saveFlow}>Save Flow</button>
                 <NodeButtons
                     addNode={addNode}
                     handleDragStart={handleDragStart}
@@ -84,7 +115,13 @@ const FlowchartCalculator = () => {
                     isDarkMode={isDarkMode}
                 />
             </div>
-            <JSONViewer nodes={nodes} edges={edges} isDarkMode={isDarkMode}>
+            <JSONViewer 
+                nodes={nodes} 
+                edges={edges} 
+                isDarkMode={isDarkMode}
+                flows={fetchedFlows}
+                loadFlow={loadFlow}
+            >
                 <Switch
                     checked={isDarkMode}
                     onChange={toggleDarkMode}

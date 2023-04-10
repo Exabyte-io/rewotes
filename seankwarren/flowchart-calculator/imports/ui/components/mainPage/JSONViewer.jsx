@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import hljs from 'highlight.js';
 
-const JSONViewer = ({ children, nodes, edges, isDarkMode }) => {
+const JSONViewer = ({ children, nodes, edges, flows, loadFlow, isDarkMode }) => {
     // Darkmode style toggling
     const jsonViewerStyle = {
         backgroundColor: isDarkMode
@@ -20,6 +20,15 @@ const JSONViewer = ({ children, nodes, edges, isDarkMode }) => {
             style={{ ...jsonViewerStyle, height: '100vh' }}
         >
             {children}
+            <select
+                onChange={(e) => loadFlow(flows[e.target.selectedIndex - 1])}
+                style={{ margin: "1rem" }}
+            >
+                <option>Select a flow</option>
+                {flows.map((flow, index) => (
+                    <option key={index}>{flow._id}</option>
+                ))}
+            </select>
             <div className='json-contents'>
                 <pre>
                     nodes: [
