@@ -6,10 +6,11 @@ import ReactFlow, {
     applyNodeChanges,
     applyEdgeChanges,
 } from 'reactflow';
-import calculate from '../../utils/calculate';
+// import calculate from '../../utils/calculate';
 import usePrevious from '../../hooks/usePrevious';
 import nodeTypesConfig from '../customNodes/nodeTypes';
 import getNodeColor from '../../utils/getNodeColor';
+import useUpdateOutputNodes from '../../hooks/useUpdateOutputNodes';
 
 const FlowchartCanvas = ({
     nodes,
@@ -25,6 +26,7 @@ const FlowchartCanvas = ({
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const updateOutputNodes = useUpdateOutputNodes(nodes, edges, setNodes);
 
     // handle nodes and edges changes
     const onNodesChange = useCallback(
@@ -71,35 +73,6 @@ const FlowchartCanvas = ({
         updateOutputNodes();
     };
 
-    const updateOutputNodes = (currentEdges) => {
-        setNodes((currentNodes) => {
-            // get all nodes of type 'output'
-            const outputNodes = currentNodes.filter((node) => {
-                return node.type === 'outputNode';
-            });
-
-            // replace all the output nodes in the `nodes` state with new values
-            const newNodes = currentNodes.map((node) => {
-                if (node.type !== 'outputNode') return node;
-
-                const connectedEdge = edges.find(
-                    (edge) => edge.target === node.id
-                );
-                if (connectedEdge) {
-                    const newValue = calculate(
-                        nodes,
-                        edges,
-                        connectedEdge.sourceHandle
-                    );
-                    return { ...node, data: { ...node.data, value: newValue } };
-                } else {
-                    return node;
-                }
-            });
-            return newNodes;
-        });
-    };
-
     // Define custom node types
     const nodeTypes = useMemo(() => {
         return nodeTypesConfig
@@ -113,7 +86,7 @@ const FlowchartCanvas = ({
         ) {
             updateOutputNodes();
         }
-    }, [nodes, edges, prevNodes, prevEdges]);
+    }, [nodes, edges, prevNodes, prevEdges, updateOutputNodes]);
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -126,11 +99,6 @@ const FlowchartCanvas = ({
             x: e.clientX - reactFlowBounds.left,
             y: e.clientY - reactFlowBounds.top,
         });
-
-        // Adjust position based on current pan position
-        // const transform = zoomPanHelper.getTransform(e.currentTarget);
-        // position.x = (position.x - transform[4]) / transform[0];
-        // position.y = (position.y - transform[5]) / transform[3];
 
         addNode(draggedNodeType, position);
         setDraggedNodeType(null);

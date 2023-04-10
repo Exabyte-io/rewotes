@@ -1,10 +1,9 @@
 import React from 'react';
 import { Handle } from 'reactflow';
 
-export const ComparisonNode = ({ id, data, updateOutputNodes }) => {
+export const ComparisonNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
-        data.onChange(e.target.value, updateOutputNodes);
-        updateOutputNodes();
+        data.onChange(e.target.value,);
     };
 
     return (

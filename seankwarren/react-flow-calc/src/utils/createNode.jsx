@@ -1,15 +1,20 @@
 import { nanoid } from 'nanoid';
 
-const createNode = (type, position, value) => {
-    const id = `${type}-${nanoid(11)}`;
+const generateID = () => {
+  const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return nanoid(10, alphabet);
+};
+
+const createNode = (type, position, value, onInputChange) => {
+    const id = `${type}${generateID()}`;
 
     const newNode = {
         id,
         type: `${type}Node`,
         data: {
             value: value !== undefined ? value : getDefaultNodeValue(type),
-            onChange: (value) => {
-                // This function will be updated later in the component
+            onChange: (newValue) => { 
+                onInputChange(id, newValue) 
             },
         },
         position: position,

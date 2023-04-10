@@ -7,23 +7,11 @@ import Switch from 'react-switch';
 import 'split-pane-react/esm/themes/default.css';
 import 'reactflow/dist/style.css';
 import createNode from '../../utils/createNode';
-// import { initialEdges, initialNodes } from '../../public/initialFlow';
+import startingNode from '../../utils/startingNode';
 
 const FlowchartCalculator = () => {
     // Set up state for nodes and edges
-    const [nodes, setNodes] = useState([
-        {
-            id: 'instructions',
-            type: 'default',
-            position: { x: 250, y: 150 },
-            selected: true,
-            data: { label: 
-            `1. Drag and drop a node onto the flowchart\n` +
-            `2. Connect nodes using the handles on each node. Ensure to connect an outputs (black) to input (white).\n` +
-            `3. Edit input values and select functions from the dropdown to see the updated results in the output nodes.\n` +
-            `4. View the JSON representation of nodes and edges on the right.` },
-        },
-    ]);
+    const [nodes, setNodes] = useState([startingNode]);
     const [edges, setEdges] = useState([]);
 
     // Drag and drop state
@@ -46,9 +34,20 @@ const FlowchartCalculator = () => {
         e.dataTransfer.setData('text/plain', nodeType);
     };
 
+    const handleNodeChange = (id, value) => {
+        setNodes((ns) => {
+            const newNodes = ns.map((n) => 
+                n.id === id
+                    ? { ...n, data: { ...n.data, value } }
+                    : n
+            );
+            return newNodes;
+        });
+    };
+
     // Function to add a new node
     const addNode = (type, position) => {
-        const newNode = createNode(type, position);
+        const newNode = createNode(type, position, undefined, handleNodeChange);
         setNodes((nodes) => [...nodes, newNode]);
     };
 
