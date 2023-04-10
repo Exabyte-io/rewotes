@@ -1,12 +1,10 @@
-import { nanoid } from 'nanoid';
 
-const generateID = () => {
-  const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  return nanoid(10, alphabet);
-};
+import { customAlphabet } from 'nanoid'
+
+const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 6)
 
 const createNode = (type, position, value, onInputChange) => {
-    const id = `${type}${generateID()}`;
+    const id = `${type}${nanoid()}`;
 
     const newNode = {
         id,

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import hljs from 'highlight.js';
 
 const JSONViewer = ({ children, nodes, edges, isDarkMode }) => {
     // Darkmode style toggling
@@ -9,6 +10,10 @@ const JSONViewer = ({ children, nodes, edges, isDarkMode }) => {
         color: isDarkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)',
     };
 
+    useEffect(() => {
+        hljs.highlightAll();
+    }, [nodes, edges]);
+
     return (
         <div
             className='json-viewer'
@@ -16,39 +21,41 @@ const JSONViewer = ({ children, nodes, edges, isDarkMode }) => {
         >
             {children}
             <div className='json-contents'>
-                nodes: [
-                {nodes.map((node) => {
-                    return (
-                        <p key={node.id}>
-                            {JSON.stringify(
-                                node,
-                                ['id', 'data', 'value', 'type'],
-                                4
-                            )}
-                        </p>
-                    );
-                })}
-                ]
-                <br />
-                edges: [
-                {edges.map((edge) => {
-                    return (
-                        <p key={edge.id}>
-                            {JSON.stringify(
-                                edge,
-                                [
-                                    'id',
-                                    'source',
-                                    'sourceHandle',
-                                    'target',
-                                    'targetHandle',
-                                ],
-                                4
-                            )}
-                        </p>
-                    );
-                })}
-                ]
+                <pre>
+                    nodes: [
+                    {nodes.map((node) => {
+                        return (
+                            <code key={node.id}>
+                                {JSON.stringify(
+                                    node,
+                                    ['id', 'data', 'value', 'type'],
+                                    4
+                                )}
+                            </code>
+                        );
+                    })}
+                    ]
+                    <br />
+                    edges: [
+                    {edges.map((edge) => {
+                        return (
+                            <code key={edge.id}>
+                                {JSON.stringify(
+                                    edge,
+                                    [
+                                        'id',
+                                        'source',
+                                        'sourceHandle',
+                                        'target',
+                                        'targetHandle',
+                                    ],
+                                    4
+                                )}
+                            </code>
+                        );
+                    })}
+                    ]
+                </pre>
             </div>
         </div>
     );
