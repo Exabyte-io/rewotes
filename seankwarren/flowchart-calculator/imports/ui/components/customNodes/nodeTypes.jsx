@@ -1,3 +1,4 @@
+import React from 'react';
 import InputNode from './InputNode';
 import BinaryNode from './BinaryNode';
 import UnaryNode from './UnaryNode';

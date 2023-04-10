@@ -1,13 +1,13 @@
 # Flowchart Calculator
 
-Flowchart Calculator is a React application that allows users to create flowcharts representing mathematical operations, functions, and logical comparisons. It's built using React, Vite, and the React Flow library.
+Flowchart Calculator is a Meteor/React application that allows users to create flowcharts representing mathematical operations, functions, and logical comparisons. It's built using React, Meteor, and MongoDB and the React Flow library.
 
 ### Features
 
 - Drag and drop interface for adding nodes to the flowchart
 - Live calculation and display of results
 - Support for arithmetic operations (+, -, *, /, ^), functions (sin, cos, tan, exp), and logical comparisons (>, <, >=, <=, ==, !=)
-- View real-time JSON representation of nodes and edges
+- View real-time syntax-highlighted JSON representation of nodes and edges
 - Interactive flowchart editor powered by React Flow
 - Dark mode 🎉
 
@@ -22,10 +22,8 @@ Flowchart Calculator is a React application that allows users to create flowchar
 
 Install dependencies using `npm install`.
 
-Run the development server using `npm run dev`.
-> will launch on <a href="http://localhost:5173/">localhost:5173/</a>
-
-Build the production version using `npm run build`.
+Run the development server using `meteor`.
+> will launch on <a href="http://localhost:3000/">localhost:3000/</a>
 
 ### Complete User Stories:
 - [x] As an end user, I should be able to perform calculations using these 4 binary operators (+, -, *, /) and 6 comparison operators (<, >, >=, <=, ==, !=).

@@ -70,6 +70,7 @@ const FlowchartCanvas = ({
             target: target,
             targetHandle: targetHandle,
             arrowHeadType: 'arrowclosed',
+            animated: true,
         };
 
         const newEdges = [...edges, newEdge];

@@ -158,3 +158,9 @@ select {
     font-weight: var(--ft-wt-bold);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
+.selected > .node {
+    border-width: 4px;
+    border-style: double;
+    transform: translate(-2px, -2px);
+}
