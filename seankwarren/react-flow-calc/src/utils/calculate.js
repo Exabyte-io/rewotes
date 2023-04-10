@@ -26,14 +26,12 @@ const calculate = (nodes, edges, sourceHandleId) => {
             return calculate(nodes, edges, e.sourceHandle);
         });
 
-
         // Perform the specified operation on the input values
         const result = performOperation(
             node.data.value, 
             inputValues[0], 
             inputValues[1]
         );
-        // console.log(result);
         return result;
     }
 

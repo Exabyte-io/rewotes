@@ -6,7 +6,6 @@ const useUpdateOutputNodes = (nodes, edges, setNodes) => {
         setNodes((currentNodes) => {
             // replace all the output nodes in the `nodes` state with new values
             const newNodes = currentNodes.map((node) => {
-
                 if (node.type !== 'outputNode') return node;
                 const connectedEdge = edges.find(
                     (edge) => edge.target === node.id
@@ -17,7 +16,6 @@ const useUpdateOutputNodes = (nodes, edges, setNodes) => {
                         edges,
                         connectedEdge.sourceHandle
                     );
-                    console.log(currentNodes, edges, connectedEdge.sourceHandle)
                     return { ...node, data: { ...node.data, value: newValue } };
                 } else {
                     return node;

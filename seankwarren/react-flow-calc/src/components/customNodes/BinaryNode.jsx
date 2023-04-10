@@ -1,5 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
+import { binaryOperations } from '../../utils/operations'
 
 const BinaryNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
@@ -27,11 +28,7 @@ const BinaryNode = ({ id, data }) => {
                 }}
             />
             <select onChange={handleSelectChange}>
-                <option value='add'>+</option>
-                <option value='subtract'>-</option>
-                <option value='multiply'>*</option>
-                <option value='divide'>/</option>
-                <option value='exponent'>^</option>
+                {binaryOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
             </select>
             <Handle
                 className='handle output'

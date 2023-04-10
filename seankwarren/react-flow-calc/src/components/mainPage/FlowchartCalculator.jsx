@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Switch from 'react-switch';
+import 'reactflow/dist/style.css';
+import SplitPane from 'split-pane-react';
+import 'split-pane-react/esm/themes/default.css';
+import createNode from '../../utils/createNode';
+import startingNode from '../../utils/startingNode';
 import FlowchartCanvas from './FlowchartCanvas';
 import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
-import SplitPane, { Pane } from 'split-pane-react';
-import Switch from 'react-switch';
-import 'split-pane-react/esm/themes/default.css';
-import 'reactflow/dist/style.css';
-import createNode from '../../utils/createNode';
-import startingNode from '../../utils/startingNode';
 
 const FlowchartCalculator = () => {
     // Set up state for nodes and edges

@@ -1,16 +1,15 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
-    Controls,
     Background,
+    Controls,
     MiniMap,
-    applyNodeChanges,
     applyEdgeChanges,
+    applyNodeChanges,
 } from 'reactflow';
-// import calculate from '../../utils/calculate';
 import usePrevious from '../../hooks/usePrevious';
-import nodeTypesConfig from '../customNodes/nodeTypes';
-import getNodeColor from '../../utils/getNodeColor';
 import useUpdateOutputNodes from '../../hooks/useUpdateOutputNodes';
+import getNodeColor from '../../utils/getNodeColor';
+import nodeTypesConfig from '../customNodes/nodeTypes';
 
 const FlowchartCanvas = ({
     nodes,

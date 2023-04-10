@@ -29,6 +29,8 @@ const getDefaultNodeValue = (type) => {
             return 0;
         case 'binary':
             return 'add';
+        case 'unary':
+            return 'sin';
         case 'comparison':
             return 'greater';
         default:

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
+import { comparisonOperations } from '../../utils/operations'
 
 export const ComparisonNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
@@ -27,12 +28,7 @@ export const ComparisonNode = ({ id, data }) => {
                 }}
             />
             <select onChange={handleSelectChange}>
-                <option value='greater'>{'>'}</option>
-                <option value='less'>{'<'}</option>
-                <option value='greaterEqual'>{'>='}</option>
-                <option value='lessEqual'>{'<='}</option>
-                <option value='equal'>{'=='}</option>
-                <option value='notEqual'>{'!='}</option>
+                {comparisonOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
             </select>
             <Handle
                 className='handle output'
