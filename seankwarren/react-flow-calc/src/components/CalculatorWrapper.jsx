@@ -7,6 +7,7 @@ import Switch from 'react-switch';
 import 'split-pane-react/esm/themes/default.css';
 import 'reactflow/dist/style.css';
 import { nanoid } from 'nanoid';
+import createNode from '../utils/createNode';
 // import { initialEdges, initialNodes } from '../../public/initialFlow';
 
 const CalculatorWrapper = () => {
@@ -47,40 +48,9 @@ const CalculatorWrapper = () => {
     };
 
     // Function to add a new node
-    const addNode = (type, position, value) => {
-        // Generate a unique ID for the node
-        const id = `${type}${nanoid(11)}`;
-
-        // Create a new node object with an ID, type, initial value, and onChange function
-        const newNode = {
-            id,
-            type: `${type}Node`,
-            data: {
-                value:
-                    value !== undefined ? value :
-                    type === 'input'
-                        ? 0
-                        : type === 'binary'
-                        ? 'add'
-                        : type === 'comparison'
-                        ? 'greater'
-                        : null,
-                onChange: (value) => {
-                    // Update the value of the node when its input changes
-                    setNodes((ns) => {
-                        return ns.map((n) =>
-                            n.id === id
-                                ? { ...n, data: { ...n.data, value } }
-                                : n
-                        );
-                    });
-                },
-            },
-            position: position, // Set the position here
-        };
-
-        // Add the new node to the list of nodes
-        setNodes((ns) => [...ns, newNode]);
+    const addNode = (type, position) => {
+        const newNode = createNode(type, position);
+        setNodes((nodes) => [...nodes, newNode]);
     };
 
     return (
