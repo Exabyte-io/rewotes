@@ -17,12 +17,12 @@ const FlowchartCanvas = ({
     setNodes,
     setEdges,
     addNode,
-    reactFlowInstance,
-    setReactFlowInstance,
     draggedNodeType,
     setDraggedNodeType,
     isDarkMode,
 }) => {
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
     // store previous nodes and edges as state
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);

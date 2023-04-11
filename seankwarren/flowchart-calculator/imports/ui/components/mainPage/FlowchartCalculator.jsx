@@ -13,7 +13,6 @@ const FlowchartCalculator = () => {
     // state for nodes and edges
     const [nodes, setNodes] = useState([startingNode]);
     const [edges, setEdges] = useState([]);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
     // state for fetching saved flows from db
     const [fetchedFlows, setFetchedFlows] = useState([]);
@@ -33,7 +32,6 @@ const FlowchartCalculator = () => {
                 if (error) {
                     console.log(error.reason);
                 } else {
-                    console.log('Data saved to MongoDB');
                     setFlowName(''); // Clear the flow name input field after a successful save
                     fetchFlows(); // Fetch the flows again to update the dropdown
                 }
@@ -63,8 +61,6 @@ const FlowchartCalculator = () => {
 
 
     const clearFlowchart = () => {
-        console.log("clearing flowchart");
-        setReactFlowInstance(null);
         setNodes([]);
         setEdges([]);
     }
@@ -145,8 +141,6 @@ const FlowchartCalculator = () => {
                     setNodes={setNodes}
                     setEdges={setEdges}
                     addNode={addNode}
-                    reactFlowInstance={reactFlowInstance}
-                    setReactFlowInstance={setReactFlowInstance}
                     draggedNodeType={draggedNodeType}
                     setDraggedNodeType={setDraggedNodeType}
                     isDarkMode={isDarkMode}
