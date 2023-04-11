@@ -40,13 +40,13 @@ Run the development server using `meteor`.
 - [x] As an end user, node types should be quickly and easily distinguished by shape and color.
 - [x] As an end user, I should see some nodes on screen when I launch the application that explain how to use the app.
 - [x] As an end user, I should be able to easily read the JSON representation with syntax highlighting.
+- [x] As an end user, I should be able to click a 'Save Flow' button to save the JSON datastructure to a MongoDB instance.
+- [x] As an end user, I should be able to select a saved flow from a dropdown list and load it in the flowchart and JSON viewers.
 
 ### Potential Improvement User Stories:
 - [ ] ~~As an end user, I should be able to edit the JSON and have the flowchart update accordingly.~~
-- [ ] As an end user, I should be able to click a 'Save Flow' button to save the JSON datastructure to a MongoDB instance.
-- [ ] As an end user, I should be able to select a saved flow from a dropdown list and load it in the flowchart and JSON viewers.
 - [ ] ~~As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.~~
 - [ ] As an end user, the input nodes should be exapandable to include multiple values each with their own handle.
 - [ ] As an end user, I should be able to click on a button called 'clear' to clear the flowchart.
-- [ ] As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place.
+- [ ] ~~As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place.~~
 
