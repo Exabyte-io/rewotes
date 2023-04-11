@@ -51,8 +51,8 @@ body {
     margin-right: var(--small-padding);
     margin-left: auto;
     background: none;
-    border: 2px solid var(--light-gray);
-    color: var(--light-gray);
+    border: 2px solid #7a7a7a;
+    color: #7a7a7a;
     padding: var(--xsmall-padding) var(--small-padding);
     font-weight: var(--ft-wt-bold);
 }

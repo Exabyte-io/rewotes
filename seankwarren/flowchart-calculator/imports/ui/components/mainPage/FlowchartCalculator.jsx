@@ -13,6 +13,7 @@ const FlowchartCalculator = () => {
     // state for nodes and edges
     const [nodes, setNodes] = useState([startingNode]);
     const [edges, setEdges] = useState([]);
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
     // state for fetching saved flows from db
     const [fetchedFlows, setFetchedFlows] = useState([]);
@@ -52,13 +53,21 @@ const FlowchartCalculator = () => {
 
     const clearFlows = () => {
         Meteor.call('clearFlows', (error) => {
-          if (error) {
-            console.error("Error clearing flows:", error);
-          } else {
-            console.log("Flows collection cleared");
-          }
+            if (error) {
+                console.error("Error clearing flows:", error);
+            } else {
+                console.log("Flows collection cleared");
+            }
         });
-      };
+    };
+
+
+    const clearFlowchart = () => {
+        console.log("clearing flowchart");
+        setReactFlowInstance(null);
+        setNodes([]);
+        setEdges([]);
+    }
 
     const loadFlow = (flow) => {
         const newNodes = attachOnConnect(flow.nodes);
@@ -128,6 +137,7 @@ const FlowchartCalculator = () => {
                     handleDragStart={handleDragStart}
                     isDarkMode={isDarkMode}
                     clearFlows={clearFlows}
+                    clearFlowchart={clearFlowchart}
                 />
                 <FlowchartCanvas
                     nodes={nodes}
@@ -135,6 +145,8 @@ const FlowchartCalculator = () => {
                     setNodes={setNodes}
                     setEdges={setEdges}
                     addNode={addNode}
+                    reactFlowInstance={reactFlowInstance}
+                    setReactFlowInstance={setReactFlowInstance}
                     draggedNodeType={draggedNodeType}
                     setDraggedNodeType={setDraggedNodeType}
                     isDarkMode={isDarkMode}

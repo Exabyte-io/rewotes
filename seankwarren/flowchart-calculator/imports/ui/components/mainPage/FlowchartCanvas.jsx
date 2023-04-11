@@ -17,6 +17,8 @@ const FlowchartCanvas = ({
     setNodes,
     setEdges,
     addNode,
+    reactFlowInstance,
+    setReactFlowInstance,
     draggedNodeType,
     setDraggedNodeType,
     isDarkMode,
@@ -24,7 +26,7 @@ const FlowchartCanvas = ({
     // store previous nodes and edges as state
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    
     const updateOutputNodes = useUpdateOutputNodes(nodes, edges, setNodes);
 
     // Darkmode style toggling

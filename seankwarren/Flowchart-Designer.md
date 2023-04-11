@@ -9,6 +9,7 @@ Flowchart Calculator is a Meteor/React application that allows users to create f
 - Support for arithmetic operations (+, -, *, /, ^), functions (sin, cos, tan, exp), and logical comparisons (>, <, >=, <=, ==, !=)
 - View real-time syntax-highlighted JSON representation of nodes and edges
 - Interactive flowchart editor powered by React Flow
+- Support for saving and loading flowcharts
 - Dark mode 🎉
 
 ### Usage
@@ -17,6 +18,7 @@ Flowchart Calculator is a Meteor/React application that allows users to create f
 - Connect nodes using the handles on each node. Ensure to connect the output handle of one node to the input handle of another.
 - Edit input nodes or operation/comparison nodes to see the updated output values in the output nodes.
 - View the JSON representation of nodes and edges in the right pane.
+- Name and save flowcharts and reload them
 
 ### Setup
 
@@ -46,9 +48,6 @@ Run the development server using `meteor`.
 ### Potential Improvement User Stories:
 - [ ] ~~As an end user, I should be able to edit the JSON and have the flowchart update accordingly.~~
 - [ ] ~~As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.~~
-- [ ] As an end user, the input nodes should be exapandable to include multiple values each with their own handle.
+- [ ] ~~As an end user, the input nodes should be exapandable to include multiple values each with their own handle.~~
 - [ ] As an end user, I should be able to click on a button called 'clear' to clear the flowchart.
 - [ ] ~~As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place.~~
-
-TODO: when op nodes are loaded back in the state is correct, but the displayed values are not.
-
