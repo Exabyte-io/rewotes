@@ -1,7 +1,7 @@
 import React from 'react';
 import DraggableButton from '../reusable/DraggableButton';
 
-const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
+const NodeButtons = ({ addNode, handleDragStart, isDarkMode, clearFlows }) => {
     // Darkmode style toggling
     const buttonsPanelStyle = {
         backgroundColor: isDarkMode
@@ -16,6 +16,7 @@ const NodeButtons = ({ addNode, handleDragStart, isDarkMode }) => {
             <DraggableButton label="sin" nodeType="unary" onDragStart={handleDragStart} className="round"/>
             <DraggableButton label="&gt;" nodeType="comparison" onDragStart={handleDragStart} className="round"/>
             <DraggableButton label="out" nodeType="output" onDragStart={handleDragStart} />
+            <button className="clear" onClick={clearFlows}>Clear</button>
         </div>
     );
 };

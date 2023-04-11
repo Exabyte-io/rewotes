@@ -71,6 +71,7 @@ const FlowchartCanvas = ({
             targetHandle: targetHandle,
             arrowHeadType: 'arrowclosed',
             animated: true,
+            interactionWidth: 40,
         };
 
         const newEdges = [...edges, newEdge];

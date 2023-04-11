@@ -123,11 +123,11 @@ const FlowchartCalculator = () => {
                 className='flowchart-container'
                 style={{ height: '100vh', width: '100%' }}
             >
-                {/* <button onClick={clearFlows}>Clear Flows</button> */}
                 <NodeButtons
                     addNode={addNode}
                     handleDragStart={handleDragStart}
                     isDarkMode={isDarkMode}
+                    clearFlows={clearFlows}
                 />
                 <FlowchartCanvas
                     nodes={nodes}

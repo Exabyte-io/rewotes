@@ -37,8 +37,8 @@ const JSONViewer = ({
             {children}
             <div className="save-control-panel">
                 <select
+                    className='flow-dropdown'
                     onChange={(e) => loadFlow(flows[e.target.selectedIndex - 1])}
-                    style={{ margin: "1rem" }}
                 >
                     <option>Select a flow</option>
                     {
@@ -49,8 +49,9 @@ const JSONViewer = ({
                         ))
                     }
                 </select>
-                <button onClick={onSave}>Save Flow</button>
+                <button className='saveflow button' onClick={onSave}>Save Flow</button>
                 <input
+                    className='flowname text-input'
                     type="text"
                     placeholder="Flow Name"
                     value={flowName}
