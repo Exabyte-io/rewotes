@@ -50,3 +50,5 @@ Run the development server using `meteor`.
 - [ ] As an end user, I should be able to click on a button called 'clear' to clear the flowchart.
 - [ ] ~~As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place.~~
 
+TODO: when op nodes are loaded back in the state is correct, but the displayed values are not.
+
