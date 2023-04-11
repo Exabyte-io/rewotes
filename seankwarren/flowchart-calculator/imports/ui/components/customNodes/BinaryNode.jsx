@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import { binaryOperations } from '../../utils/operationLabels'
+import { binaryOperations } from '../../utils/operationDef'
 
 const BinaryNode = ({ id, data }) => {
     const handleSelectChange = (e) => {

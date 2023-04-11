@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import { unaryOperations } from '../../utils/operationLabels'
+import { unaryOperations } from '../../utils/operationDef'
 
 const UnaryNode = ({ id, data }) => {
     const handleSelectChange = (e) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import { comparisonOperations } from '../../utils/operationLabels'
+import { comparisonOperations } from '../../utils/operationDef'
 
 export const ComparisonNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
