@@ -8,8 +8,6 @@ Create a skeleton IDE (integrated development environment) for materials design,
 
 Front-end developers: use React.js and minimalistic UX/UI.
 
-Pure UI/UX designers: create high fidelity mockups. 
-
 # Requirements
 
 1. Build a general layout with focus areas (eg. toolbar, structure viewer, source viewer)
@@ -20,7 +18,7 @@ Pure UI/UX designers: create high fidelity mockups. 
 
 # Expectations
 
-1. up and running application OR high fidelity clickable mockups
+1. up and running application
 2. general IDE layout (e.g. menu, toolboxes)
 3. reactive material editor (edit material file → immediately see results on 3D representation)
 4. clean and documented code
