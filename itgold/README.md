@@ -39,3 +39,12 @@ We suggest:
 - using Exabench as the source of benchmarks: https://github.com/Exabyte-io/exabyte-benchmarks-suite
 - using CentOS or similar as operating system
 - using Terraform for infrastructure management
+
+# Flow
+1. trigger github pipeline
+2. initiate cluster with terraform
+3. initialize hosts (ec2, ansible)
+4. deploy application (any app)
+5. run application
+6. run benchmarking (exabench)
+7. shut down the cluster
