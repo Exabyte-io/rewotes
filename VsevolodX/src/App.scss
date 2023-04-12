@@ -1,0 +1,50 @@
+$primary-color: #2b467d;
+:root {
+  box-sizing: border-box;
+}
+
+.App {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.App-header {
+  margin: 0;
+  height: 5vh;
+  padding: 0;
+  text-align: left;
+  justify-content: flex-start;
+  background-color: $primary-color;
+}
+
+.App-main {
+  height: 93vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-footer {
+  height: 2vh;
+  background-color: $primary-color;
+}
+
+.HStack {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.VStack {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.VStack > * {
+  margin: 0.25rem 0;
+}
+
+
+

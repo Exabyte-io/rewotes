@@ -1,0 +1,5 @@
+npm i @react-three/fiber
+npm i @types/three
+npm add @blueprintjs/core @blueprintjs/icons
+npm install --save @types/react @types/react-dom
+npm i sass

@@ -1,0 +1,23 @@
+.SourceEditor {
+    height: 100%;
+    max-width: 80vw;
+}
+
+.ControlGroup {
+    height: 80%;
+    width: 100%;
+    justify-content: left;
+}
+
+.TextEditor {
+    height: 85%;
+    width: 100%;
+    min-height: 30vh;
+    min-width: 30vw;
+    max-height: 60vh;
+    max-width: 80vw;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow: visible;
+}
+
