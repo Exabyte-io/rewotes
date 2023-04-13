@@ -1,11 +1,35 @@
-import React, { useState, useEffect, ReactNode } from 'react';
-import SourceContext from './SourceContext';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+type SourceContextType = {
+  source: string;
+  setSource: (source: string) => void;
+  importSource: (file: File) => Promise<void>;
+  sourceName: string;
+  setSourceName: (sourceName: string) => void;
+  isValidXYZFormat: boolean;
+  setIsValidXYZFormat: (isValidXYZFormat: boolean) => void;
+};
+
+const SourceContext = createContext<SourceContextType>({
+  source: '',
+  setSource: () => {},
+  importSource: async () => {},
+  sourceName: '',
+  setSourceName: () => {},
+  isValidXYZFormat: false,
+  setIsValidXYZFormat: () => {}
+});
+
+export const useSourceContext = () => useContext(SourceContext);
+
+export default SourceContext;
+
 
 interface SourceProviderProps {
   children: ReactNode;
 }
 
-const SourceProvider: React.FC<SourceProviderProps> = ({ children }) => {
+export const SourceProvider: React.FC<SourceProviderProps> = ({ children }) => {
   const [source, setSource] = useState<string>('');
   const [sourceName, setSourceName] = useState<string>('');
   const [isValidXYZFormat, setIsValidXYZFormat] = useState(true);
@@ -59,5 +83,3 @@ const SourceProvider: React.FC<SourceProviderProps> = ({ children }) => {
     </SourceContext.Provider>
   );
 };
-
-export default SourceProvider;

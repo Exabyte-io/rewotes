@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSettings } from './SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import { Button, Card, Icon, Menu, MenuItem } from '@blueprintjs/core';
 import styles from './SettingsEditor.module.scss';
 
@@ -15,7 +15,6 @@ function SettingsEditor() {
   }
 
   return (
-    // TODO: Turn into a drawer, visibility control at App level by settings button in Toolbox
     <Card className={styles.SettingsEditor}>
       <h3>Settings</h3>
       <Button onClick={toggleTheme}>
@@ -25,14 +24,14 @@ function SettingsEditor() {
       <Menu>
         {atomColors.map((element) => {
           return(
-            <MenuItem text={element.element} 
+            <MenuItem 
+            text={element.element} 
             icon={<Icon icon='full-circle' color={element.color} />}
             />
           )
         })}
       </Menu>
     </Card>
-
   );
 }
 

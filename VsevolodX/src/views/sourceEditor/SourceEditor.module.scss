@@ -1,6 +1,8 @@
 .SourceEditor {
+    margin: 0;
     height: 100%;
-    max-width: 80vw;
+    width: 40%;
+    max-width: 40%;
 }
 
 .ControlGroup {
@@ -19,5 +21,7 @@
     font-family: monospace;
     white-space: pre-wrap;
     overflow: visible;
+    resize: none;
 }
+
 

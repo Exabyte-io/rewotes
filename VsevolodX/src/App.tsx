@@ -1,53 +1,41 @@
-import React, { useEffect, useState } from 'react';
-
 import './App.scss';
-import Toolbar from './components/Toolbar';
-import SourceEditor from './components/SourceEditor';
-import StructureViewer from './components/StructureViewer';
-import SettingsEditor from './components/SettingsEditor';
-import { useSettings } from './components/SettingsContext';
-import SourceProvider from './components/SourceProvider';
-
+import Toolbar from './components/toolbar/Toolbar';
+import SourceEditor from './views/sourceEditor/SourceEditor'
+import StructureViewer from './views/structureViewer/StructureViewer';
+import SettingsEditor from './views/settingsEditor/SettingsEditor';
+import { useSettings } from './context/SettingsContext';
+import { SourceProvider } from './context/SourceContext';
+import { useState } from 'react';
+import HStack from './components/utils/HStack';
 
 function App() {
   const settings = useSettings();
   const theme = settings.settings.theme;
-
-  const [version, setVersion] = useState(null);
-
-  useEffect(() => {
-    fetch('../package.json')
-      .then(response => response.json())
-      .then(data => {
-        setVersion(data.version);
-      });
-  }, []);
-
+  const [settingsShown, setSettingsShown] = useState(false);
+  const toggleSettings = () => setSettingsShown(!settingsShown);
+  
   return (
-    <SourceProvider>
-      <div className={`App bp4-${theme}`}>
-        <header className="App-header">
-      </header>
-
-      <main className="App-main">
-        <Toolbar />
-        <div className="HStack">
-          <SourceEditor />
-          <StructureViewer />
-          <SettingsEditor />
+    <>
+      <SourceProvider>
+        <div className={`App bp4-${theme}`}>
+          <header className="App-header">
+            <h2>For Mat3ra. Materials Designer PoC</h2>
+          </header>
+          <main className="App-main">
+        <Toolbar toggleSettings={toggleSettings}/>
+  
+            <HStack>
+              <SourceEditor />
+              <StructureViewer />
+              {settingsShown && <SettingsEditor />}
+            </HStack>
+        </main>
+          <footer className='App-footer'>
+            <p>Version: 0.1.1</p>
+          </footer>
         </div>
-
-      </main>
-      <footer className='App-footer'>
-          {version ? (
-          <p>Version: {version}</p>
-        ) : (
-          <p>Loading version...</p>
-        )}
-      </footer>
-        <SourceEditor />
-      </div>
-    </SourceProvider>
+      </SourceProvider>
+    </>
   );
 }
 
