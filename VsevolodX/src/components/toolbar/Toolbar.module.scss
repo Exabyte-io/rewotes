@@ -1,5 +1,7 @@
+@import '../../variables.scss';
 .Toolbar {
     margin:0;
+    height: $toolbar-height;
 }
 
 .Toolbar button {

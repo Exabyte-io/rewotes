@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Dialog, Divider, FileInput, Menu, MenuItem, Navbar, NavbarGroup } from '@blueprintjs/core'
-import { Popover2 } from '@blueprintjs/popover2';
+import { Button, Dialog, Divider, FileInput, Navbar, NavbarGroup } from '@blueprintjs/core'
 import styles from './Toolbar.module.scss';
 import { useSourceContext } from '../../context/SourceContext';
 import { useSettings } from '../../context/SettingsContext';
@@ -31,6 +30,14 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
     }
   };
 
+  const handleUndo = () => {
+    console.log('You can`t undo what has been done...');
+  }
+
+  const handleRedo = () => {
+    console.log('You can`t redo it either...');
+  }
+
   return (
     <Navbar className={styles.Toolbar}>
       <NavbarGroup>
@@ -59,8 +66,8 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
           isOpen={isEditShown}
           onInteraction={(v) => setEditShown(v)}
           content={<EditMenu
-              handleUndo={() => { console.log('You can`t undo what has been done...') }}
-              handleRedo={() => { console.log('You can`t redo it either...') }}
+              handleUndo={handleUndo}
+              handleRedo={handleRedo}
             />
           }
         >

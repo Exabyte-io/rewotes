@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { IconName } from '@blueprintjs/icons';
-import { Button, Menu as BPMenu, MenuItem } from '@blueprintjs/core';
+import { Menu as BPMenu, MenuItem } from '@blueprintjs/core';
 import styles from './Menu.module.scss';
 
 interface MenuItemProps {

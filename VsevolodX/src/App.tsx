@@ -7,6 +7,7 @@ import { useSettings } from './context/SettingsContext';
 import { SourceProvider } from './context/SourceContext';
 import { useState } from 'react';
 import HStack from './components/utils/HStack';
+import MainView from './views/main_view/MainView';
 
 function App() {
   const settings = useSettings();
@@ -22,13 +23,12 @@ function App() {
             <h2>For Mat3ra. Materials Designer PoC</h2>
           </header>
           <main className="App-main">
-        <Toolbar toggleSettings={toggleSettings}/>
-  
-            <HStack>
+            <Toolbar toggleSettings={toggleSettings}/>
+            <MainView>
               <SourceEditor />
               <StructureViewer />
               {settingsShown && <SettingsEditor />}
-            </HStack>
+            </MainView>
         </main>
           <footer className='App-footer'>
             <p>Version: 0.1.1</p>

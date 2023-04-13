@@ -5,8 +5,11 @@ import { Canvas } from '@react-three/fiber';
 import { Sphere, OrbitControls } from '@react-three/drei'
 import { Vector3 } from 'three';
 import SourceContext from '../../context/SourceContext';
+import ViewHeading from '../../components/view_heading/ViewHeading';
 
 import settingsJSON from './temp.json'; //TODO: remoove this temp color setting and move to global context
+import { useSettings } from '../../context/SettingsContext';
+
 const atomColors = settingsJSON.atomColors;
 interface Atom {
   element: string;
@@ -45,6 +48,8 @@ function parseAndRender(input: string, setAtoms: { (value: React.SetStateAction<
 }
 
 const StructureViewer: React.FC = () => {
+  const settings = useSettings();
+  const theme = settings.settings.theme;
   const { source, isValidXYZFormat, setIsValidXYZFormat } = React.useContext(SourceContext);
   
   const [atoms, setAtoms] = useState<Atom[]>([]);
@@ -57,10 +62,12 @@ const StructureViewer: React.FC = () => {
     }
   }, [source, isValidXYZFormat, setIsValidXYZFormat]);
 
-
   return (
     <Card className={styles.StructureViewer}>
-    <Canvas style={{ width: '100%', height: '100%' }}>
+      <ViewHeading>
+        <h4>Structure Viewer</h4>
+      </ViewHeading>
+    <Canvas className={styles.Canvas}>
       <OrbitControls />
       <ambientLight />
       <pointLight position={[10, 10, 10]} />

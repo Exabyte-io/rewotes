@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import styles from './SourceEditor.module.scss';
 import { useSourceContext } from '../../context/SourceContext';
 import VStack from '../../components/utils/VStack';
+import ViewHeading from '../../components/view_heading/ViewHeading';
 
 function SourceEditor() {
   const { source, setSource, importSource, sourceName, setSourceName, isValidXYZFormat, setIsValidXYZFormat } = useSourceContext();
@@ -26,7 +27,9 @@ function SourceEditor() {
   return (
     <Card className={styles.SourceEditor}>
       <VStack>
+        <ViewHeading>
         <h4>Source editor</h4>
+        </ViewHeading>
         <ControlGroup>
           <InputGroup readOnly={true} value={sourceName} fill={true} />
           <Tag
@@ -35,7 +38,6 @@ function SourceEditor() {
           >
             {isValidXYZFormat ? 'Correct XYZ pattern' : 'Wrong XYZ pattern'}
           </Tag>
-
         </ControlGroup>
 
         <ControlGroup className={styles.ControlGroup}>

@@ -1,4 +1,5 @@
-$primary-color: #2b467d;
+@import './variables.scss';
+
 :root {
   box-sizing: border-box;
 }
@@ -16,7 +17,7 @@ h2 {
 
 .App-header {
   margin: 0;
-  height: 5vh;
+  height: $header-height;
   padding: 0;
   text-align: left;
   justify-content: flex-start;
@@ -30,26 +31,10 @@ h2 {
 }
 
 .App-footer {
-  height: 2vh;
+  height: $footer-height;
   background-color: $primary-color;
 }
 
-.HStack {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-.VStack {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.VStack > * {
-  margin: 0.25rem 0;
-}
 
 
 
