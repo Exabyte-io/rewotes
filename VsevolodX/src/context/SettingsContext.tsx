@@ -2,13 +2,20 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 export interface Settings {
   theme?: string;
-  //TODO: add atomColor
+  defaultAtomColor?: string;
+  atomsData?: AtomData[];
   // other user settings 
 }
 
 interface SettingsContextType {
   settings: Settings;
   updateSettings: (settings: Settings) => void;
+}
+
+interface AtomData {
+  element: string,
+  color?: string,
+  radius?: string,
 }
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -29,7 +36,12 @@ export function useSettings(): SettingsContextType {
   
 
 export function SettingsProvider({ children } : SettingsProviderProps) {
-  const [settings, setSettings] = useState<Settings>({});
+  const defaultSettings: Settings = {
+    theme: 'light',
+    defaultAtomColor: 'white',
+    atomsData: [{ element: 'C', color: 'grey' }]};
+
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
 
   useEffect(() => {
     const storedSettings = localStorage.getItem('settings');

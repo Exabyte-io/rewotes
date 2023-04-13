@@ -1,18 +1,26 @@
 import React from 'react';
 import { useSettings } from '../../context/SettingsContext';
-import { Button, Card, ControlGroup, Icon, MenuItem } from '@blueprintjs/core';
+import { Button, Card, Icon, MenuItem } from '@blueprintjs/core';
 import styles from './SettingsEditor.module.scss';
 import Menu from '../../components/menu/Menu';
 import VStack from '../../components/utils/VStack';
 // TODO: this is temporary file
-const atomColors = [{'element': 'Si', 'color': 'blue'}, {'element': 'O', 'color': 'red'}, {'element': 'C', 'color': 'grey'}, {'element': 'H', 'color': 'black'}, {'element': 'Fe', 'color': 'orange'}]
 
 function SettingsEditor() {
   const { settings, updateSettings } = useSettings();
+  const atomsData = useSettings().settings.atomsData || [];
+
 
   function toggleTheme() {
     const newTheme = settings.theme === 'light' ? 'dark' : 'light';
     updateSettings({ theme: newTheme });
+  }
+
+  async function loadAtomsData() {
+    const res = await fetch('/atomsData.json');
+    const data = await res.json();
+    console.log(data);
+    updateSettings({atomsData: data.atomsData});
   }
 
   return (
@@ -27,10 +35,12 @@ function SettingsEditor() {
         {settings.theme === 'light'? 'Dark' : 'Light'} Theme
       </Button>
       {/*TODO: Add ability to change colors in Settings */}
+      <Button onClick={() => loadAtomsData()} >Load atoms</Button>
       <Menu>
-        {atomColors.map((element) => {
+        {atomsData.map((element) => {
           return(
             <MenuItem 
+            key={element.element}
             text={element.element} 
             icon={<Icon icon='full-circle' color={element.color} />}
             />

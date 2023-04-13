@@ -2,15 +2,13 @@ import { Card } from '@blueprintjs/core'
 import React, { useEffect, useState } from 'react'
 import styles from './StructureViewer.module.scss';
 import { Canvas } from '@react-three/fiber';
-import { Sphere, OrbitControls } from '@react-three/drei'
+import { Sphere, OrbitControls } from '@react-three/drei';
 import { Vector3 } from 'three';
 import SourceContext from '../../context/SourceContext';
 import ViewHeading from '../../components/view_heading/ViewHeading';
 
-import settingsJSON from './temp.json'; //TODO: remoove this temp color setting and move to global context
 import { useSettings } from '../../context/SettingsContext';
 
-const atomColors = settingsJSON.atomColors;
 interface Atom {
   element: string;
   position: Vector3;
@@ -51,7 +49,10 @@ const StructureViewer: React.FC = () => {
   const settings = useSettings();
   const theme = settings.settings.theme;
   const { source, isValidXYZFormat, setIsValidXYZFormat } = React.useContext(SourceContext);
-  
+  const atomsData = settings.settings.atomsData || [];
+  console.log(atomsData); //TODO: REMOVE before production
+
+  const viewBoxSize: number = 20;
   const [atoms, setAtoms] = useState<Atom[]>([]);
 
   useEffect(() => {
@@ -67,15 +68,18 @@ const StructureViewer: React.FC = () => {
       <ViewHeading>
         <h4>Structure Viewer</h4>
       </ViewHeading>
-    <Canvas className={styles.Canvas}>
+    <Canvas className={styles.Canvas + ' ' + theme}>
       <OrbitControls />
       <ambientLight />
-      <pointLight position={[10, 10, 10]} />
+      <pointLight position={[viewBoxSize, viewBoxSize, viewBoxSize]} />
+      <gridHelper args={[viewBoxSize, viewBoxSize, '#FF2200', '#AAAAAA']} rotation-x={Math.PI / 2} />
+
       {atoms.map((atom, index) => {
-         const colorObj = atomColors.find((color) => color.element === atom.element);
-         const materialColor = colorObj ? colorObj.color : 'white';
+        const colorObj = atomsData.find((color) => color.element === atom.element);
+        const defaultColor = settings.settings.defaultAtomColor;
+        const materialColor = colorObj ? colorObj.color : defaultColor;
       return (
-        <Sphere key={index} args={[0.1]} position={atom.position.toArray()}>
+        <Sphere key={atom.position.x} args={[0.1]} position={atom.position.toArray()}>
           <meshStandardMaterial attach="material" color={materialColor} />
         </Sphere>
       )}

@@ -1,5 +1,6 @@
 {
-    "atomColors": [
+    "atomsData": [
+      {"element": "default", "color": "white"},
       {"element": "Si", "color": "blue"}, 
       {"element": "O", "color": "red"}, 
       {"element": "C", "color": "grey"}, 
