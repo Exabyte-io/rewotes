@@ -2,8 +2,7 @@
 variable "subnet_id" {
 }
 
-variable "instance_ips" {
-  type = list(string)
+variable "security_group_id" {
 }
 
 variable "instance_template_number" {
@@ -37,9 +36,10 @@ variable "instance_templates" {
   }
 }
 
-# Defines a path to ec2 hosts access key
-variable "key_path" {
-  default = "access/ir-keypair.pem"
+# Defines ssh access key pair
+resource "aws_key_pair" "ir_ssh_key_pair" {
+  key_name   = "ir-key-pair"
+  public_key = file("access/id_rsa.pub")
 }
 
 output "instance_template_number" {
@@ -51,37 +51,35 @@ output "instance_template_number" {
 
 # Create a simple EC2 instance
 resource "aws_instance" "ir_ec2_instance" {
-  ami           = var.instance_templates[var.instance_template_number].ami
-  instance_type = var.instance_templates[var.instance_template_number].instance_type
-  subnet_id     = var.subnet_id
+  ami                         = var.instance_templates[var.instance_template_number].ami
+  instance_type               = var.instance_templates[var.instance_template_number].instance_type
+  subnet_id                   = var.subnet_id
+  key_name                    = aws_key_pair.ir_ssh_key_pair.key_name
   associate_public_ip_address = true
-  count         = 1
+  count                       = 1
+
+  vpc_security_group_ids = [var.security_group_id]
 
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file(var.key_path)
+    private_key = file("access/id_rsa")
     host        = self.public_ip
   }
-
   tags = {
     Name = "ir_ec2_instance-${count.index + 1}"
   }
-}
 
-# pupulate list of public IPs for EC2 resources
-resource "null_resource" "collect_ips" {
-  count = length(aws_instance.ir_ec2_instance)
-
-  depends_on = [aws_instance.ir_ec2_instance]
-
-  provisioner "local-exec" {
-    command = <<EOF
-      #!/bin/bash
-      sudo apt-get update
-      sudo apt-get install -y jq
-      terraform output -json instance_ips | jq -r '.[]' > compute.list
-    EOF
+  # Creating user luke with the right permissions and ssh access
+  provisioner "remote-exec" {
+    inline = [
+      "sudo useradd -m -s /bin/bash luke",
+      "sudo mkdir -p /home/luke/.ssh",
+      "sudo sh -c 'echo \"${file("access/id_rsa.pub")}\" >> /home/luke/.ssh/authorized_keys'",
+      "sudo chmod 700 /home/luke/.ssh",
+      "sudo chmod 600 /home/luke/.ssh/authorized_keys",
+      "sudo chown -R luke:luke /home/luke/.ssh"
+    ]
   }
 }
 

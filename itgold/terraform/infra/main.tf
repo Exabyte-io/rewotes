@@ -52,6 +52,16 @@ resource "aws_network_acl" "ir_network_acl" {
     to_port    = 22
   }
 
+  egress {
+    rule_no    = 200
+    protocol   = "all"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+
   tags = {
     Name = "ir_network_acl"
   }
@@ -65,11 +75,6 @@ resource "aws_subnet" "ir_subnet" {
   tags = {
     Name = "ir_subnet"
   }
-}
-
-output "ir_subnet_id" {
-  description = "ir_subnet object output"
-  value       = aws_subnet.ir_subnet.id
 }
 
 # Associate subnet with the network ACL
@@ -115,4 +120,14 @@ resource "aws_route_table" "ir_route_table" {
 resource "aws_route_table_association" "ir_route_table_subnet_association" {
   subnet_id      = aws_subnet.ir_subnet.id
   route_table_id = aws_route_table.ir_route_table.id
+}
+
+output "ir_subnet_id" {
+  description = "ir_subnet object id output"
+  value       = aws_subnet.ir_subnet.id
+}
+
+output "ir_security_group_id" {
+  description = "ir_security_group object id output"
+  value       = aws_security_group.ir_security_group.id
 }

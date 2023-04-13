@@ -17,7 +17,6 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
-
 module "infra" {
   source = "./infra"
 }
@@ -26,6 +25,21 @@ module "compute" {
   source = "./compute"
 
   subnet_id = module.infra.ir_subnet_id
+  security_group_id = module.infra.ir_security_group_id
   instance_template_number = 1
-  instance_ips = []
+}
+
+# populate list of public IPs for EC2 resources
+resource "null_resource" "collect_ips" {
+  depends_on = [module.compute]
+
+  provisioner "local-exec" {
+    command = <<EOF
+      #!/bin/bash
+      sudo apt-get update
+      sudo apt-get install -y jq
+      rm -rf compute.list || true
+      terraform output -json instance_ips | jq -r '.[]' > compute.list
+    EOF
+  }
 }
