@@ -6,11 +6,11 @@ const JSONViewer = ({
     nodes, 
     edges, 
     flows, 
-    loadFlow, 
+    loadFlowchart, 
     isDarkMode, 
     onSave, 
     flowName,
-    setFlowName,
+    updateFlowName,
 }) => {
     // Darkmode style toggling
     const jsonViewerStyle = {
@@ -19,10 +19,6 @@ const JSONViewer = ({
             : 'rgba(255, 255, 255, 1)',
         color: isDarkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)',
     };
-
-    const handleFlowNameChange = (e) => {
-        setFlowName(e.target.value);
-      };
 
     useEffect(() => {
         hljs.highlightAll();
@@ -38,7 +34,7 @@ const JSONViewer = ({
             <div className="save-control-panel">
                 <select
                     className='flow-dropdown'
-                    onChange={(e) => loadFlow(flows[e.target.selectedIndex - 1])}
+                    onChange={(e) => loadFlowchart(flows[e.target.selectedIndex - 1])}
                 >
                     <option>Select a flow</option>
                     {
@@ -55,7 +51,7 @@ const JSONViewer = ({
                     type="text"
                     placeholder="Flow Name"
                     value={flowName}
-                    onChange={handleFlowNameChange}
+                    onChange={updateFlowName}
                 />
             </div>
             <div className='json-contents'>

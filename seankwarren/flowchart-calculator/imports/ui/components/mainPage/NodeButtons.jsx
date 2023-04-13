@@ -1,7 +1,7 @@
 import React from 'react';
 import DraggableButton from '../reusable/DraggableButton';
 
-const NodeButtons = ({ addNode, handleDragStart, isDarkMode, clearFlowchart, clearFlows }) => {
+const NodeButtons = ({ handleDragStart, isDarkMode, clearFlowchart, clearFlows }) => {
     // Darkmode style toggling
     const buttonsPanelStyle = {
         backgroundColor: isDarkMode
