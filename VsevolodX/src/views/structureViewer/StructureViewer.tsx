@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react'
 import styles from './StructureViewer.module.scss';
 import { Canvas } from '@react-three/fiber';
 import { Sphere, OrbitControls } from '@react-three/drei';
-import { Vector3 } from 'three';
+import { Object3D, Vector3 } from 'three';
 import SourceContext from '../../context/SourceContext';
 import ViewHeading from '../../components/view_heading/ViewHeading';
 
 import { useSettings } from '../../context/SettingsContext';
+
 
 interface Atom {
   element: string;
@@ -63,6 +64,8 @@ const StructureViewer: React.FC = () => {
     }
   }, [source, isValidXYZFormat, setIsValidXYZFormat]);
 
+  Object3D.DEFAULT_UP.set(0, 0, 1);
+
   return (
     <Card className={styles.StructureViewer}>
       <ViewHeading>
@@ -72,8 +75,8 @@ const StructureViewer: React.FC = () => {
       <OrbitControls />
       <ambientLight />
       <pointLight position={[viewBoxSize, viewBoxSize, viewBoxSize]} />
-      <gridHelper args={[viewBoxSize, viewBoxSize, '#FF2200', '#AAAAAA']} rotation-x={Math.PI / 2} />
-
+      <gridHelper args={[viewBoxSize, viewBoxSize, '#CCCCCC', '#AAAAAA']} rotation-x={Math.PI / 2} />
+      <axesHelper args={[viewBoxSize/2]} />
       {atoms.map((atom, index) => {
         const colorObj = atomsData.find((color) => color.element === atom.element);
         const defaultColor = settings.settings.defaultAtomColor;
@@ -84,7 +87,7 @@ const StructureViewer: React.FC = () => {
         </Sphere>
       )}
       )};
-
+  
     </Canvas>
     </Card>
   );
