@@ -1,11 +1,6 @@
 # =============== Variables =============== #
-# Name of the ec2 access key
-variable "key_name" {
-  default = "ir-keypair"
-}
 
 # =============== AWS infrastructure =============== #
-
 # Create IR VPC
 resource "aws_vpc" "ir_vpc" {
   cidr_block = "10.0.0.0/16"

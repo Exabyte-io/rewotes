@@ -31,15 +31,15 @@ module "compute" {
 
 # populate list of public IPs for EC2 resources
 resource "null_resource" "collect_ips" {
-  depends_on = [module.compute]
+  depends_on = [module.compute.instance_ips]
 
   provisioner "local-exec" {
     command = <<EOF
       #!/bin/bash
       sudo apt-get update
       sudo apt-get install -y jq
-      rm -rf compute.list || true
-      terraform output -json instance_ips | jq -r '.[]' > compute.list
+      rm -rf ../compute.list || true
+      terraform output -json instance_ips | jq -r '.[]' > ../compute.list
     EOF
   }
 }

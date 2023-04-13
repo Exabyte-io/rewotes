@@ -39,7 +39,7 @@ variable "instance_templates" {
 # Defines ssh access key pair
 resource "aws_key_pair" "ir_ssh_key_pair" {
   key_name   = "ir-key-pair"
-  public_key = file("access/id_rsa.pub")
+  public_key = file("../access/id_rsa.pub")
 }
 
 output "instance_template_number" {
@@ -63,7 +63,7 @@ resource "aws_instance" "ir_ec2_instance" {
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("access/id_rsa")
+    private_key = file("../access/id_rsa")
     host        = self.public_ip
   }
   tags = {
@@ -74,8 +74,9 @@ resource "aws_instance" "ir_ec2_instance" {
   provisioner "remote-exec" {
     inline = [
       "sudo useradd -m -s /bin/bash luke",
+      "echo \"luke ALL=(ALL) NOPASSWD: ALL\" | sudo tee -a /etc/sudoers",
       "sudo mkdir -p /home/luke/.ssh",
-      "sudo sh -c 'echo \"${file("access/id_rsa.pub")}\" >> /home/luke/.ssh/authorized_keys'",
+      "sudo sh -c 'echo \"${file("../access/id_rsa.pub")}\" >> /home/luke/.ssh/authorized_keys'",
       "sudo chmod 700 /home/luke/.ssh",
       "sudo chmod 600 /home/luke/.ssh/authorized_keys",
       "sudo chown -R luke:luke /home/luke/.ssh"

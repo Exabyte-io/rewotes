@@ -1,0 +1,8 @@
+---
+- name: Provision hosts
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    isc_hostname: "{{ inventory_hostname }}"
