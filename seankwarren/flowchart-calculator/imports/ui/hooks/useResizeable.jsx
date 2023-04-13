@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 const useResizeable = () => {
     const [sizes, setSizes] = useState(['60%', '50%']);
@@ -7,7 +7,7 @@ const useResizeable = () => {
         setSizes(sizes);
     };
 
-    return {sizes, handleSizeChange}
-}
+    return { sizes, handleSizeChange };
+};
 
-export default useResizeable
+export default useResizeable;

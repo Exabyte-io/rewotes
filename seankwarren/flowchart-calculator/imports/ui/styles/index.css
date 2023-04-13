@@ -192,7 +192,7 @@ input {
 }
 
 .save-control-panel select {
-    margin-right: var(--med-padding); 
+    margin-right: var(--med-padding);
     padding: var(--xsmall-padding);
     border-radius: var(--small-radius);
     font-family: 'Courier New', Courier, monospace;

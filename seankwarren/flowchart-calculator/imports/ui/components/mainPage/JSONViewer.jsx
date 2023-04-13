@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import hljs from 'highlight.js';
 
-const JSONViewer = ({ 
-    children, 
-    nodes, 
-    edges, 
-    flows, 
-    loadFlowchart, 
-    isDarkMode, 
-    onSave, 
+const JSONViewer = ({
+    children,
+    nodes,
+    edges,
+    flows,
+    loadFlowchart,
+    isDarkMode,
+    onSave,
     flowName,
     updateFlowName,
 }) => {
@@ -31,25 +31,27 @@ const JSONViewer = ({
             style={{ ...jsonViewerStyle, height: '100vh' }}
         >
             {children}
-            <div className="save-control-panel">
+            <div className='save-control-panel'>
                 <select
                     className='flow-dropdown'
-                    onChange={(e) => loadFlowchart(flows[e.target.selectedIndex - 1])}
+                    onChange={(e) =>
+                        loadFlowchart(flows[e.target.selectedIndex - 1])
+                    }
                 >
                     <option>Select a flow</option>
-                    {
-                        flows.map((flow) => (
-                            <option key={flow._id} value={flow._id}>
+                    {flows.map((flow) => (
+                        <option key={flow._id} value={flow._id}>
                             {flow.name ? `${flow.name}` : flow._id}
-                            </option>
-                        ))
-                    }
+                        </option>
+                    ))}
                 </select>
-                <button className='saveflow button' onClick={onSave}>Save Flow</button>
+                <button className='saveflow button' onClick={onSave}>
+                    Save Flow
+                </button>
                 <input
                     className='flowname text-input'
-                    type="text"
-                    placeholder="Flow Name"
+                    type='text'
+                    placeholder='Flow Name'
                     value={flowName}
                     onChange={updateFlowName}
                 />
@@ -69,7 +71,8 @@ const JSONViewer = ({
                         );
                     })}
                     ]
-                    <br /><br />
+                    <br />
+                    <br />
                     edges: [
                     {edges.map((edge) => {
                         return (

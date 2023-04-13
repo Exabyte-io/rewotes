@@ -1,10 +1,10 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import { comparisonOperations } from '../../utils/operationDef'
+import { comparisonOperations } from '../../utils/operationDef';
 
 export const ComparisonNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
-        data.onChange(e.target.value,);
+        data.onChange(e.target.value);
     };
 
     return (
@@ -27,8 +27,16 @@ export const ComparisonNode = ({ id, data }) => {
                     top: '70%',
                 }}
             />
-            <select className="node-dropdown" defaultValue={data.value ? data.value : ">"} onChange={handleSelectChange}>
-                {comparisonOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
+            <select
+                className='node-dropdown'
+                defaultValue={data.value ? data.value : '>'}
+                onChange={handleSelectChange}
+            >
+                {comparisonOperations.map((op) => (
+                    <option key={op.value} value={op.value}>
+                        {op.content}
+                    </option>
+                ))}
             </select>
             <Handle
                 className='handle output'

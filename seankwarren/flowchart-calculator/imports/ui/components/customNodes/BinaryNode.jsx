@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import { binaryOperations } from '../../utils/operationDef'
+import { binaryOperations } from '../../utils/operationDef';
 
 const BinaryNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
@@ -27,8 +27,16 @@ const BinaryNode = ({ id, data }) => {
                     top: '70%',
                 }}
             />
-            <select className="node-dropdown" defaultValue={data.value ? data.value : "+"} onChange={handleSelectChange}>
-                {binaryOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
+            <select
+                className='node-dropdown'
+                defaultValue={data.value ? data.value : '+'}
+                onChange={handleSelectChange}
+            >
+                {binaryOperations.map((op) => (
+                    <option key={op.value} value={op.value}>
+                        {op.content}
+                    </option>
+                ))}
             </select>
             <Handle
                 className='handle output'

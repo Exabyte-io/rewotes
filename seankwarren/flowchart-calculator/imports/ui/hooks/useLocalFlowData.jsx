@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react';
 import { applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import createNode from '../utils/createNode';
 import useUpdateOutputNodes from './useUpdateOutputNodes';
@@ -10,16 +10,8 @@ const useLocalFlowData = (initial = {}) => {
 
     const updateOutputNodes = useUpdateOutputNodes(nodes, edges, setNodes);
 
-    const updateNodes = (nodes) => {
-        setNodes(nodes);
-    };
-    
-    const updateEdges = (edges) => {
-        setEdges(edges);
-    };
-
-     // handle nodes and edges changes
-     const onNodesChange = useCallback(
+    // handle nodes and edges changes
+    const onNodesChange = useCallback(
         (changes) => setNodes((els) => applyNodeChanges(changes, els)),
         []
     );
@@ -29,33 +21,31 @@ const useLocalFlowData = (initial = {}) => {
         []
     );
 
-     // Function to add a new node
-     const addNode = (type, position) => {
+    // Function to add a new node
+    const addNode = (type, position) => {
         const newNode = createNode(type, position, undefined, handleNodeChange);
-        updateNodes((nodes) => [...nodes, newNode]);
+        setNodes((nodes) => [...nodes, newNode]);
     };
 
     const updateReactFlowInstance = (instance) => {
         setReactFlowInstance(instance);
-    }
+    };
 
     const clearFlowchart = () => {
-        updateNodes([]);
-        updateEdges([]);
-    }
+        setNodes([]);
+        setEdges([]);
+    };
 
     const loadFlowchart = (flow) => {
         const newNodes = attachOnConnect(flow.nodes);
-        updateNodes(newNodes);
-        updateEdges(flow.edges);
+        setNodes(newNodes);
+        setEdges(flow.edges);
     };
 
     const handleNodeChange = (id, value) => {
-        updateNodes((ns) => {
-            const newNodes = ns.map((n) => 
-                n.id === id
-                    ? { ...n, data: { ...n.data, value } }
-                    : n
+        setNodes((ns) => {
+            const newNodes = ns.map((n) =>
+                n.id === id ? { ...n, data: { ...n.data, value } } : n
             );
             return newNodes;
         });
@@ -64,9 +54,12 @@ const useLocalFlowData = (initial = {}) => {
     const attachOnConnect = (nodes) => {
         return nodes.map((node) => ({
             ...node,
-            data: { ...node.data, onChange: (newValue) => { 
-                handleNodeChange(node.id, newValue) 
-            } },
+            data: {
+                ...node.data,
+                onChange: (newValue) => {
+                    handleNodeChange(node.id, newValue);
+                },
+            },
         }));
     };
 
@@ -105,8 +98,20 @@ const useLocalFlowData = (initial = {}) => {
         // If the target node is an output node, calculate its value and update its state
         updateOutputNodes();
     };
-    
-    return {reactFlowInstance, updateReactFlowInstance, clearFlowchart, loadFlowchart, nodes, updateNodes, onNodesChange, addNode, edges, updateEdges, onEdgesChange, handleConnect, updateOutputNodes};
-}
+
+    return {
+        reactFlowInstance,
+        updateReactFlowInstance,
+        clearFlowchart,
+        loadFlowchart,
+        nodes,
+        onNodesChange,
+        addNode,
+        edges,
+        onEdgesChange,
+        handleConnect,
+        updateOutputNodes,
+    };
+};
 
 export default useLocalFlowData;

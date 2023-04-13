@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 const useDraggable = (reactFlowInstance, addNode) => {
     // Drag and drop state
@@ -30,7 +30,7 @@ const useDraggable = (reactFlowInstance, addNode) => {
         setDraggedNodeType(null);
     };
 
-    return {handleDragStart, handleDragOver, handleDrop}
-}
+    return { handleDragStart, handleDragOver, handleDrop };
+};
 
-export default useDraggable
+export default useDraggable;

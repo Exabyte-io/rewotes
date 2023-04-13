@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 const useInputField = () => {
     const [flowName, setFlowName] = useState('');
@@ -7,7 +7,7 @@ const useInputField = () => {
         setFlowName(e.target.value);
     };
 
-    return {flowName, updateFlowName}
-}
+    return { flowName, updateFlowName };
+};
 
-export default useInputField
+export default useInputField;

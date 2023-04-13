@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'reactflow';
-import { unaryOperations } from '../../utils/operationDef'
+import { unaryOperations } from '../../utils/operationDef';
 
 const UnaryNode = ({ id, data }) => {
     const handleSelectChange = (e) => {
@@ -15,8 +15,16 @@ const UnaryNode = ({ id, data }) => {
                 position='left'
                 id={`${id}-left`}
             />
-            <select className="node-dropdown" defaultValue={data.value ? data.value : "sin"} onChange={handleSelectChange}>
-                {unaryOperations.map((op) => <option key={op.value} value={op.value}>{op.content}</option>)}
+            <select
+                className='node-dropdown'
+                defaultValue={data.value ? data.value : 'sin'}
+                onChange={handleSelectChange}
+            >
+                {unaryOperations.map((op) => (
+                    <option key={op.value} value={op.value}>
+                        {op.content}
+                    </option>
+                ))}
             </select>
             <Handle
                 className='handle output'

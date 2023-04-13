@@ -57,6 +57,11 @@ export const binaryOperations = [
         content: '^',
         expression: (val1, val2) => val1 ** val2
     },
+    {
+        value: 'custom',
+        content: '(a+b)^2',
+        expression: (val1, val2) => (val1 + val2) ** 2
+    },
 ]
 
 export const unaryOperations = [
@@ -79,5 +84,15 @@ export const unaryOperations = [
         value: 'exp',
         content: 'e^x',
         expression: (val1, val2) => Math.exp(val1)
-    }
+    },
+    {
+        value: 'custom',
+        content: '2*e^x',
+        expression: (val1, val2) => 2 * Math.exp(val1)
+    },
+    {
+        value: 'tanh',
+        content: 'tanh',
+        expression: (val1, val2) => (Math.exp(2 * val1) - 1) / (Math.exp(2 * val1) + 1)
+    },
 ]

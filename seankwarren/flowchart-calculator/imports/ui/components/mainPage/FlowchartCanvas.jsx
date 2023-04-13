@@ -1,15 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ReactFlow, {
-    Background,
-    Controls,
-    MiniMap,
-    applyEdgeChanges,
-    applyNodeChanges,
-} from 'reactflow';
-import usePrevious from '../../hooks/usePrevious';
-import useUpdateOutputNodes from '../../hooks/useUpdateOutputNodes';
-import getNodeColor from '../../utils/getNodeColor';
+import React, { useEffect, useMemo } from 'react';
+import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
+
 import nodeTypesConfig from '../customNodes/nodeTypes';
+import usePrevious from '../../hooks/usePrevious';
+import getNodeColor from '../../utils/getNodeColor';
 
 const FlowchartCanvas = ({
     setReactFlowInstance,
@@ -26,8 +20,6 @@ const FlowchartCanvas = ({
     // store previous nodes and edges as state
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
-    
-    // const updateOutputNodes = useUpdateOutputNodes(nodes, edges, setNodes);
 
     // Darkmode style toggling
     const reactFlowStyle = {
@@ -38,7 +30,7 @@ const FlowchartCanvas = ({
 
     // Define custom node types
     const nodeTypes = useMemo(() => {
-        return nodeTypesConfig
+        return nodeTypesConfig;
     }, []);
 
     useEffect(() => {

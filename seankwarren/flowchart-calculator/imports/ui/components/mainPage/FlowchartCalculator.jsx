@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+
 import 'reactflow/dist/style.css';
-import SplitPane from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
-import startingNode from '../../utils/startingNode';
+
 import FlowchartCanvas from './FlowchartCanvas';
 import JSONViewer from './JSONViewer';
 import NodeButtons from './NodeButtons';
 import useLocalFlowData from '../../hooks/useLocalFlowData';
-import useResizeable from '../../hooks/useResizeable';
 import useRemoteFlowData from '../../hooks/useRemoteFlowData';
 import useDraggable from '../../hooks/useDraggable';
 import useToggleable from '../../hooks/useToggleable';
 import DarkModeSwitch from '../reusable/DarkModeSwitch';
+import ResizablePane from '../reusable/ResizablePane';
+import startingNode from '../../utils/startingNode';
 
 const FlowchartCalculator = () => {
     // state for nodes and edges
@@ -20,42 +21,40 @@ const FlowchartCalculator = () => {
         updateReactFlowInstance,
         clearFlowchart,
         loadFlowchart,
-        nodes, 
-        updateNodes,
+        nodes,
         onNodesChange,
         addNode,
-        edges, 
-        updateEdges, 
+        edges,
         onEdgesChange,
         handleConnect,
         updateOutputNodes,
-    } = useLocalFlowData({nodes: [startingNode]});
-
-    // Style states
-    const {sizes, handleSizeChange}= useResizeable();
+    } = useLocalFlowData({ nodes: [startingNode] });
 
     // state for flows on db
     const {
-        fetchedFlows, 
-        saveFlow, 
-        fetchFlows, 
-        clearFlows, 
+        fetchedFlows,
+        saveFlow,
+        fetchFlows,
+        clearFlows,
         flowName,
         updateFlowName,
     } = useRemoteFlowData(nodes, edges);
-      
+
     // Drag and drop handling
-    const {handleDragStart, handleDragOver, handleDrop} = useDraggable(reactFlowInstance, addNode);
+    const { handleDragStart, handleDragOver, handleDrop } = useDraggable(
+        reactFlowInstance,
+        addNode
+    );
 
     // Dark mode toggling
-    const {isDarkMode, toggleDarkMode} = useToggleable(true);
+    const { isDarkMode, toggleDarkMode } = useToggleable(true);
 
     useEffect(() => {
         fetchFlows();
     }, []);
 
     return (
-        <SplitPane split='vertical' sizes={sizes} onChange={handleSizeChange}>
+        <ResizablePane>
             <div
                 className='flowchart-container'
                 style={{ height: '100vh', width: '100%' }}
@@ -80,9 +79,9 @@ const FlowchartCalculator = () => {
                     isDarkMode={isDarkMode}
                 />
             </div>
-            <JSONViewer 
-                nodes={nodes} 
-                edges={edges} 
+            <JSONViewer
+                nodes={nodes}
+                edges={edges}
                 flows={fetchedFlows}
                 loadFlowchart={loadFlowchart}
                 onSave={saveFlow}
@@ -90,9 +89,12 @@ const FlowchartCalculator = () => {
                 updateFlowName={updateFlowName}
                 isDarkMode={isDarkMode}
             >
-                <DarkModeSwitch isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+                <DarkModeSwitch
+                    isDarkMode={isDarkMode}
+                    toggleDarkMode={toggleDarkMode}
+                />
             </JSONViewer>
-        </SplitPane>
+        </ResizablePane>
     );
 };
 

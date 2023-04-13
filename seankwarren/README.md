@@ -2,7 +2,7 @@
 
 Flowchart Calculator is a Meteor/React application that allows users to create flowcharts representing mathematical operations, functions, and logical comparisons. It's built using React, Meteor, and MongoDB and the React Flow library.
 
-### Features
+## Features
 
 - Drag and drop interface for adding nodes to the flowchart
 - Live calculation and display of results
@@ -12,7 +12,7 @@ Flowchart Calculator is a Meteor/React application that allows users to create f
 - Support for saving and loading flowcharts
 - Dark mode 🎉
 
-### Usage
+## Usage
 
 - Drag and drop a custom node (input, operation, comparison, or output) from the buttons panel onto the flowchart area.
 - Connect nodes using the handles on each node. Ensure to connect the output handle of one node to the input handle of another.
@@ -20,14 +20,64 @@ Flowchart Calculator is a Meteor/React application that allows users to create f
 - View the JSON representation of nodes and edges in the right pane.
 - Name and save flowcharts and reload them
 
-### Setup
+## Setup
 
 Install dependencies using `npm install`.
 
 Run the development server using `meteor`.
 > will launch on <a href="http://localhost:3000/">localhost:3000/</a>
 
-### Complete User Stories:
+## Front-end Environment Structure:
+    imports
+    │
+    ├── api
+    │   └── flows.js                            // Defines collection on MongoDB
+    └── ui
+        ├── App.jsx                             // Root component for React
+        ├── components                          // All React components
+        │   ├── customNodes                     // Custom node types for React Flow
+        │   │   ├── BinaryNode.jsx
+        │   │   ├── ComparisonNode.jsx
+        │   │   ├── InputNode.jsx
+        │   │   ├── OutputNode.jsx
+        │   │   ├── UnaryNode.jsx
+        │   │   ├── index.js                    // Allows for destructured import
+        │   │   └── nodeTypes.jsx               // Defines node types for React Flow
+        │   ├── mainPage                        // Main page elements
+        │   │   ├── FlowchartCalculator.jsx     // Main component containing the app's state
+        │   │   ├── FlowchartCanvas.jsx         // Contains the React Flow component
+        │   │   ├── JSONViewer.jsx              // Contains the JSON panel
+        │   │   └── NodeButtons.jsx             // Contains the drag and drop node buttons
+        │   └── reusable                        // Generic components that can be reused anywhere
+        │       ├── DarkModeSwitch.jsx          
+        │       ├── DraggableButton.jsx         
+        │       └── ResizablePane.jsx           
+        ├── hooks                               // Hooks for maintaining state
+        │   ├── useDraggable.jsx                // Handles Drag & Drop functionality
+        │   ├── useInputField.jsx               // Handles InputField state change
+        │   ├── useLocalFlowData.jsx            // Handles all state for React Flow
+        │   ├── usePrevious.jsx                 // Stores previous value of a state
+        │   ├── useRemoteFlowData.jsx           // Handles interaction with flows on DB
+        │   ├── useResizeable.jsx               // Stores state for SplitPane
+        │   ├── useToggleable.jsx               // Handles state change for any toggleable state
+        │   └── useUpdateOutputNodes.jsx        // Contains logic for updating outputs on state change
+        ├── styles
+        │   ├── a11y_light.css                  // Syntax highlighting styling
+        │   └── index.css                       // Main page styling
+        └── utils
+            ├── calculate.js                    // Recursive calculation function
+            ├── createNode.js                   // Node creation logic
+            ├── getNodeColor.js                 // Access node colors
+            ├── operationDef.js                 // Defines operations for the different node type
+            ├── performOperation.js             // Performs a single operation
+            └── startingNode.js                 // Contains the starting instructions node
+
+
+
+
+
+
+## Complete User Stories:
 - [x] As an end user, I should be able to perform calculations using these 4 binary operators (+, -, *, /) and 6 comparison operators (<, >, >=, <=, ==, !=).
 - [x] As an end user, when I operate on two values, I should be able to read the output as a number in an output node.
 - [x] As an end user, when I compare two values, I should be able to read the output as 'true' or 'false' in an output node.

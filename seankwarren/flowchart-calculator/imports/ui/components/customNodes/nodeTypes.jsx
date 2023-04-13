@@ -1,9 +1,11 @@
 import React from 'react';
-import InputNode from './InputNode';
-import BinaryNode from './BinaryNode';
-import UnaryNode from './UnaryNode';
-import OutputNode from './OutputNode';
-import ComparisonNode from './ComparisonNode';
+import {
+    InputNode,
+    BinaryNode,
+    UnaryNode,
+    OutputNode,
+    ComparisonNode,
+} from './index';
 
 const nodeTypesConfig = {
     inputNode: (props) => <InputNode {...props} />,
