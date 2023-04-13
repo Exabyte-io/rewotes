@@ -2,8 +2,12 @@
 variable "subnet_id" {
 }
 
+variable "instance_ips" {
+  type = list(string)
+}
+
 variable "instance_template_number" {
-  type    = number
+  type = number
 }
 
 # types of ec2 instances declaration
@@ -50,6 +54,7 @@ resource "aws_instance" "ir_ec2_instance" {
   ami           = var.instance_templates[var.instance_template_number].ami
   instance_type = var.instance_templates[var.instance_template_number].instance_type
   subnet_id     = var.subnet_id
+  associate_public_ip_address = true
   count         = 1
 
   connection {
@@ -62,4 +67,24 @@ resource "aws_instance" "ir_ec2_instance" {
   tags = {
     Name = "ir_ec2_instance-${count.index + 1}"
   }
+}
+
+# pupulate list of public IPs for EC2 resources
+resource "null_resource" "collect_ips" {
+  count = length(aws_instance.ir_ec2_instance)
+
+  depends_on = [aws_instance.ir_ec2_instance]
+
+  provisioner "local-exec" {
+    command = <<EOF
+      #!/bin/bash
+      sudo apt-get update
+      sudo apt-get install -y jq
+      terraform output -json instance_ips | jq -r '.[]' > compute.list
+    EOF
+  }
+}
+
+output "instance_ips" {
+  value = aws_instance.ir_ec2_instance.*.public_ip
 }

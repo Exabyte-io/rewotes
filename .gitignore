@@ -3,3 +3,4 @@
 itgold/terraform/.**
 *.tfstate*
 *keypair.pem
+compute.list

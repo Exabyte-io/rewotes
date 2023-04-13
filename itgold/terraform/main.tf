@@ -27,4 +27,5 @@ module "compute" {
 
   subnet_id = module.infra.ir_subnet_id
   instance_template_number = 1
+  instance_ips = []
 }
