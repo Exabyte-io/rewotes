@@ -1,9 +1,5 @@
-import { ControlGroup } from '@blueprintjs/core'
 import React, { ReactNode } from 'react'
-
-const viewHeadingStyle = {
-    height: '5vh'
-}
+import styles from '../view_heading/ViewHeading.module.scss';
 
 interface ViewHeadingProps {
     children: ReactNode;
@@ -11,9 +7,9 @@ interface ViewHeadingProps {
 
 const ViewHeading = ({children}: ViewHeadingProps) => {
   return (
-    <ControlGroup style={viewHeadingStyle}>
+    <div className={styles.ViewHeadingStyle}>
         {children}
-    </ControlGroup>
+    </div>
 
   )
 }

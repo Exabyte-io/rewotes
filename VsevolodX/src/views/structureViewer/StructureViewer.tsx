@@ -8,6 +8,7 @@ import SourceContext from '../../context/SourceContext';
 import ViewHeading from '../../components/view_heading/ViewHeading';
 
 import { useSettings } from '../../context/SettingsContext';
+import VStack from '../../components/utils/VStack';
 
 
 interface Atom {
@@ -54,7 +55,7 @@ const StructureViewer: React.FC = () => {
   console.log(atomsData); //TODO: REMOVE before production
 
   const viewBoxSize: number = 20;
-  const [atoms, setAtoms] = useState<Atom[]>([]);
+  const [atoms, setAtoms] = useState<Atom[]>([]); //TODO: save atoms to a Context
 
   useEffect(() => {
     if (isValidXYZFormat) {
@@ -68,6 +69,7 @@ const StructureViewer: React.FC = () => {
 
   return (
     <Card className={styles.StructureViewer}>
+      <VStack>
       <ViewHeading>
         <h4>Structure Viewer</h4>
       </ViewHeading>
@@ -81,14 +83,15 @@ const StructureViewer: React.FC = () => {
         const colorObj = atomsData.find((color) => color.element === atom.element);
         const defaultColor = settings.settings.defaultAtomColor;
         const materialColor = colorObj ? colorObj.color : defaultColor;
-      return (
-        <Sphere key={atom.position.x} args={[0.1]} position={atom.position.toArray()}>
+        return (
+          <Sphere key={atom.position.x} args={[0.1]} position={atom.position.toArray()}>
           <meshStandardMaterial attach="material" color={materialColor} />
         </Sphere>
       )}
       )};
   
     </Canvas>
+      </VStack>
     </Card>
   );
 };

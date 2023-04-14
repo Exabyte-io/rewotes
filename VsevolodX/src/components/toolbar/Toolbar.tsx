@@ -3,10 +3,10 @@ import { Button, Dialog, Divider, FileInput, Navbar, NavbarGroup } from '@bluepr
 import styles from './Toolbar.module.scss';
 import { useSourceContext } from '../../context/SourceContext';
 import { useSettings } from '../../context/SettingsContext';
-import { FileMenu } from '../file_menu/FileMenu';
-import { EditMenu } from '../edit_menu/EditMenu';
-import { ViewMenu } from '../view_menu/ViewMenu';
-import { HelpMenu } from '../help_menu/HelpMenu';
+import { FileMenu } from '../menu/file_menu/FileMenu';
+import { EditMenu } from '../menu/edit_menu/EditMenu';
+import { ViewMenu } from '../menu/view_menu/ViewMenu';
+import { HelpMenu } from '../menu/help_menu/HelpMenu';
 import MyPopover from '../utils/MyPopover';
 
 interface ToolbarProps {
@@ -51,7 +51,6 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
           title='Menu'
           onClick={() => console.log('Clicked on Menu')}
         />
-        <Divider style={{ width: '2rem' }} />
 
         <MyPopover
           isOpen={isFileShown}
@@ -60,7 +59,6 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
         >
           <Button icon="document">File</Button>
         </MyPopover>
-
 
         <MyPopover
           isOpen={isEditShown}

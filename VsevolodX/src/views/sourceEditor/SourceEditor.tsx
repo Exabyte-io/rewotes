@@ -4,6 +4,7 @@ import styles from './SourceEditor.module.scss';
 import { useSourceContext } from '../../context/SourceContext';
 import VStack from '../../components/utils/VStack';
 import ViewHeading from '../../components/view_heading/ViewHeading';
+import HStack from '../../components/utils/HStack';
 
 function SourceEditor() {
   const { source, setSource, importSource, sourceName, setSourceName, isValidXYZFormat, setIsValidXYZFormat } = useSourceContext();
@@ -30,24 +31,23 @@ function SourceEditor() {
         <ViewHeading>
         <h4>Source editor</h4>
         </ViewHeading>
+
         <ControlGroup>
           <InputGroup readOnly={true} value={sourceName} fill={true} />
           <Tag
             style={{ width: '30%' }}
             intent={isValidXYZFormat ? 'success' : 'warning'}
-          >
+            >
             {isValidXYZFormat ? 'Correct XYZ pattern' : 'Wrong XYZ pattern'}
           </Tag>
         </ControlGroup>
 
-        <ControlGroup className={styles.ControlGroup}>
           <TextArea
             id='text-editor'
             className={styles.TextEditor}
             value={source}
             onChange={handleChange}
           />
-        </ControlGroup>
       </VStack>
     </Card>
   )

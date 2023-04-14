@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import Menu from '../menu/Menu';
+import Menu from '../Menu';
 export const ViewMenu: React.FC = () => {
   return (
     <Menu>

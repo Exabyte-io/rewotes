@@ -4,6 +4,7 @@ import { Button, Card, Icon, MenuItem } from '@blueprintjs/core';
 import styles from './SettingsEditor.module.scss';
 import Menu from '../../components/menu/Menu';
 import VStack from '../../components/utils/VStack';
+import ViewHeading from '../../components/view_heading/ViewHeading';
 // TODO: this is temporary file
 
 function SettingsEditor() {
@@ -25,8 +26,10 @@ function SettingsEditor() {
 
   return (
     <Card className={styles.SettingsEditor}>
-      <h4>Settings</h4>
       <VStack>
+      <ViewHeading>
+      <h4>Settings</h4>
+      </ViewHeading>
 
       <Button 
         onClick={toggleTheme}
