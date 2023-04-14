@@ -56,7 +56,7 @@ const StructureViewer: React.FC = () => {
 
   const viewBoxSize: number = 20;
   const [atoms, setAtoms] = useState<Atom[]>([]); //TODO: save atoms to a Context
-
+  
   useEffect(() => {
     if (isValidXYZFormat) {
       if (!parseAndRender(source, setAtoms)) {

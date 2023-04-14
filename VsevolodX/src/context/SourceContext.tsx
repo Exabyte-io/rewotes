@@ -6,6 +6,7 @@ type SourceContextType = {
   importSource: (file: File) => Promise<void>;
   sourceName: string;
   setSourceName: (sourceName: string) => void;
+  saveSourceToLocalStorage: (source: string) => void;
   isValidXYZFormat: boolean;
   setIsValidXYZFormat: (isValidXYZFormat: boolean) => void;
 };
@@ -16,6 +17,7 @@ const SourceContext = createContext<SourceContextType>({
   importSource: async () => {},
   sourceName: '',
   setSourceName: () => {},
+  saveSourceToLocalStorage: () => {},
   isValidXYZFormat: false,
   setIsValidXYZFormat: () => {}
 });
@@ -32,7 +34,7 @@ interface SourceProviderProps {
 export const SourceProvider: React.FC<SourceProviderProps> = ({ children }) => {
   const [source, setSource] = useState<string>('');
   const [sourceName, setSourceName] = useState<string>('');
-  const [isValidXYZFormat, setIsValidXYZFormat] = useState(true);
+  const [isValidXYZFormat, setIsValidXYZFormat] = useState(false);
   
   const loadSourceFromLocalStorage = () => {
     const storedSource = localStorage.getItem('sourceText');
@@ -78,7 +80,7 @@ export const SourceProvider: React.FC<SourceProviderProps> = ({ children }) => {
   };
 
   return (
-    <SourceContext.Provider value={{ source, setSource, importSource, sourceName, setSourceName, isValidXYZFormat, setIsValidXYZFormat  }}>
+    <SourceContext.Provider value={{ source, setSource, importSource, sourceName, setSourceName, saveSourceToLocalStorage, isValidXYZFormat, setIsValidXYZFormat  }}>
       {children}
     </SourceContext.Provider>
   );

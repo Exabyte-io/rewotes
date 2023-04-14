@@ -1,27 +1,27 @@
 import React, { ReactNode } from 'react';
 import { Popover2 } from '@blueprintjs/popover2';
+import styles from './MenuPopover.module.scss';
 
-interface MyPopoverProps {
+interface MenuPopoverProps {
   isOpen: boolean;
   onInteraction: (willOpen: boolean) => void;
-  position?: 'auto' | 'top' | 'bottom' | 'left' | 'right';
+  position?: 'auto' | 'top' | 'bottom-left' | 'left' | 'right';
   content: string | JSX.Element | undefined;
   children: ReactNode;
 }
 
-export const MyPopover: React.FC<MyPopoverProps> = ({
+export const MenuPopover: React.FC<MenuPopoverProps> = ({
   isOpen,
   onInteraction,
-  position = 'bottom',
+  position = 'bottom-left',
   content,
   children,
 }) => {
   return (
-    <Popover2
+    <Popover2 className={styles.MenuPopover}
       isOpen={isOpen}
       onInteraction={onInteraction}
       position={position}
-      hoverCloseDelay={300}
       content={content}
       transitionDuration={100}
     >
@@ -30,4 +30,4 @@ export const MyPopover: React.FC<MyPopoverProps> = ({
   );
 };
 
-export default MyPopover;
+export default MenuPopover;

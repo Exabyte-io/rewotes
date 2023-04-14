@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Dialog, Divider, FileInput, Navbar, NavbarGroup } from '@blueprintjs/core'
+import { Button, Dialog, FileInput, Navbar, NavbarGroup } from '@blueprintjs/core'
 import styles from './Toolbar.module.scss';
 import { useSourceContext } from '../../context/SourceContext';
 import { useSettings } from '../../context/SettingsContext';
@@ -7,7 +7,7 @@ import { FileMenu } from '../menu/file_menu/FileMenu';
 import { EditMenu } from '../menu/edit_menu/EditMenu';
 import { ViewMenu } from '../menu/view_menu/ViewMenu';
 import { HelpMenu } from '../menu/help_menu/HelpMenu';
-import MyPopover from '../utils/MyPopover';
+import MenuPopover from '../menu/MenuPopover';
 
 interface ToolbarProps {
   toggleSettings: () => void,
@@ -52,15 +52,15 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
           onClick={() => console.log('Clicked on Menu')}
         />
 
-        <MyPopover
+        <MenuPopover
           isOpen={isFileShown}
           onInteraction={(v) => setFileShown(v)}
           content={<FileMenu openDialog={() => setIsDialogOpen(true)} />}
         >
           <Button icon="document">File</Button>
-        </MyPopover>
+        </MenuPopover>
 
-        <MyPopover
+        <MenuPopover
           isOpen={isEditShown}
           onInteraction={(v) => setEditShown(v)}
           content={<EditMenu
@@ -70,24 +70,24 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
           }
         >
           <Button icon="edit">Edit</Button>
-        </MyPopover>
+        </MenuPopover>
 
-        <MyPopover
+        <MenuPopover
           isOpen={isViewShown}
           onInteraction={(v) => setViewShown(v)}
           content={<ViewMenu />}
         >
           <Button icon="eye-open" >View</Button>
-        </MyPopover>
+        </MenuPopover>
 
-        <MyPopover
+        <MenuPopover
           isOpen={isHelpShown}
           onInteraction={(v) => setHelpShown(v)}
           // eslint-disable-next-line react/jsx-no-undef
           content={<HelpMenu />}
         >
           <Button icon="help">Help</Button>
-        </MyPopover>
+        </MenuPopover>
 
       </NavbarGroup>
       <NavbarGroup align='right'>

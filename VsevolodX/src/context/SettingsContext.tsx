@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 export interface Settings {
   theme?: string;
   defaultAtomColor?: string;
-  atomsData?: AtomData[];
+  atomsData?: AtomDisplayData[];
   // other user settings 
 }
 
@@ -12,7 +12,7 @@ interface SettingsContextType {
   updateSettings: (settings: Settings) => void;
 }
 
-interface AtomData {
+interface AtomDisplayData {
   element: string,
   color?: string,
   radius?: string,

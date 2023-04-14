@@ -23,7 +23,7 @@ const Menu = ({ children }: MenuProps) => {
   return (
     <BPMenu className={styles.Menu}>
       {React.Children.map(children, (child, index) => (
-        <div key={index}>
+        <div key={child?.toString()}>
           {child}
         </div>
       ))}
