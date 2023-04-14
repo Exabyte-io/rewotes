@@ -12,7 +12,21 @@ Meteor.startup(async () => {
 Meteor.methods({
 
     saveFlow(data) {
-      FlowsCollection.insert(data);
+        // Check if a flow with the same name already exists
+        const existingFlow = FlowsCollection.findOne({ name: data.name });
+
+        if (existingFlow) {
+            // Update the existing flow with the new data (nodes and edges)
+            FlowsCollection.update(existingFlow._id, {
+                $set: {
+                    nodes: data.nodes,
+                    edges: data.edges,
+                },
+            });
+        } else {
+            // If the flow with the same name doesn't exist, insert the new flow
+            FlowsCollection.insert(data);
+        }
     },
 
     fetchFlows() {
