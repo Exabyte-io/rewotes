@@ -82,7 +82,7 @@ const useLocalFlowData = (initial = {}) => {
 
         // Create a new edge with an ID, source node ID, target node ID, and arrowhead type
         const newEdge = {
-            id: `${source}-${target}`,
+            id: `${sourceHandle}-${targetHandle}`,
             source: source,
             sourceHandle: sourceHandle,
             target: target,
