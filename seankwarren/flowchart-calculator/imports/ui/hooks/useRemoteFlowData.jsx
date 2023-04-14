@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import useInputField from './useInputField';
 
-const useRemoteFlowData = ({ nodes, edges }) => {
+const useRemoteFlowData = ( nodes, edges ) => {
     // state for fetching saved flows from db
     const [fetchedFlows, setFetchedFlows] = useState([]);
     const { flowName, updateFlowName } = useInputField();
 
     function updateFetchedFlows(flows) {
+        // console.log("updating flow list");
         setFetchedFlows(flows);
     }
 
@@ -15,13 +16,12 @@ const useRemoteFlowData = ({ nodes, edges }) => {
         const flowWithNameExists = fetchedFlows.some(
             (flow) => flow.name === flowName
         );
-
         if (flowWithNameExists) {
+            // TODO: permit overwriting saved flow
             alert(
                 'A flow with this name already exists. Please choose a different name.'
             );
         } else {
-            console.log(nodes, edges);
             Meteor.call(
                 'saveFlow',
                 { nodes, edges, name: flowName },
@@ -29,13 +29,13 @@ const useRemoteFlowData = ({ nodes, edges }) => {
                     if (error) {
                         console.log(error.reason);
                     } else {
-                        // updateFlowName(''); // Clear the flow name input field after a successful save
+                        updateFlowName({ target: { value: '' } }); // Clear the flow name input field after a successful save
                         fetchFlows(); // Fetch the flows again to update the dropdown
                     }
                 }
             );
         }
-    }, [nodes, edges]);
+    }, [nodes, edges, flowName, fetchedFlows]);
 
     const fetchFlows = () => {
         Meteor.call('fetchFlows', (error, result) => {
