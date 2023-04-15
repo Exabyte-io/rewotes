@@ -29,13 +29,14 @@ export default SourceContext;
 
 interface SourceProviderProps {
   children: ReactNode;
+  initialSource?: string;
 }
 
-export const SourceProvider: React.FC<SourceProviderProps> = ({ children }) => {
-  const [source, setSource] = useState<string>('');
+export const SourceProvider: React.FC<SourceProviderProps> = ({ children, initialSource = ''}) => {
+  const [source, setSource] = useState<string>(initialSource);
   const [sourceName, setSourceName] = useState<string>('');
   const [isValidXYZFormat, setIsValidXYZFormat] = useState(false);
-  
+
   const loadSourceFromLocalStorage = () => {
     const storedSource = localStorage.getItem('sourceText');
     if (storedSource) {

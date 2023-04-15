@@ -33,7 +33,7 @@ interface AtomsProps {
 
 export function AtomsProvider({ children }: AtomsProps) {
     const [atoms, setAtoms] = useState<Atom[]>([]);
-    const {source, setSource} = useSourceContext();
+    const {source} = useSourceContext();
 
     useEffect(() => {
         const parsedAtoms = parseXYZ(source);

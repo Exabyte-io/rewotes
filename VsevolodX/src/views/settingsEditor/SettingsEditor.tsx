@@ -5,11 +5,10 @@ import styles from './SettingsEditor.module.scss';
 import Menu from '../../components/menu/Menu';
 import VStack from '../../components/utils/VStack';
 import ViewHeading from '../../components/view_heading/ViewHeading';
-// TODO: this is temporary file
 
 function SettingsEditor() {
   const { settings, updateSettings } = useSettings();
-  const atomsData = useSettings().settings.atomsDisplayData || [];
+  const atomsDisplayData = useSettings().settings.atomsDisplayData || [];
   const editingIn3D = useSettings().settings.editingIn3D;
 
   function toggleTheme() {
@@ -17,10 +16,10 @@ function SettingsEditor() {
     updateSettings({ theme: newTheme });
   }
 
-  async function loadAtomsData() {
+  async function loadAtomsDisplayData() {
     const res = await fetch('/atomsDisplayData.json');
     const data = await res.json();
-    console.log(data);
+    console.log('Atoms display:', data);
     updateSettings({atomsDisplayData: data.atomsDisplayData});
   }
 
@@ -42,10 +41,10 @@ function SettingsEditor() {
         {settings.theme === 'light'? 'Dark' : 'Light'} Theme
       </Button>
       {/*TODO: Add ability to change colors in Settings */}
-      <Button onClick={() => loadAtomsData()} >Load atoms peferences</Button>
+      <Button onClick={() => loadAtomsDisplayData()} >Load atoms preferences</Button>
       <Button onClick={() => toggleEditMode()} >Edit {editingIn3D? 'Source' : '3D'}</Button>
       <Menu>
-        {atomsData.map((element) => {
+        {atomsDisplayData.map((element) => {
           return(
             <MenuItem 
             key={element.element}

@@ -17,7 +17,7 @@ function App() {
   return (
     <>  
         <SourceProvider>
-      <div className={`App bp4-${theme}`}>
+      <div className={`App bp4-${theme}`} >
         <header className="App-header">
           <h2>For Mat3ra. Materials Designer PoC</h2>
         </header>

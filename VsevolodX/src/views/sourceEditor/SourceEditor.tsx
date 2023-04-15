@@ -8,8 +8,8 @@ import ViewHeading from '../../components/view_heading/ViewHeading';
 import { Vector3 } from 'three';
 
 function SourceEditor() {
-  const { source, setSource, importSource, sourceName, setSourceName, isValidXYZFormat, setIsValidXYZFormat, saveSourceToLocalStorage } = useSourceContext();
-  const { atoms, updateAtoms } = useAtomsContext();
+  const { source, setSource, sourceName, isValidXYZFormat, setIsValidXYZFormat } = useSourceContext();
+  const { updateAtoms } = useAtomsContext();
 
   type ParsedXYZResult = {
     isValid: boolean;
@@ -74,7 +74,7 @@ function SourceEditor() {
         console.log('updating atoms');
       });
     }
-    else console.log('problem at handle chnge');
+    else console.log('problem at handle change');
   };
 
   const handleSave = () => {
@@ -88,17 +88,19 @@ function SourceEditor() {
           <h4>Source editor</h4>
         </ViewHeading>
 
-        <ControlGroup>
+        <ControlGroup data-testid='control-group'>
           <InputGroup readOnly={true} value={sourceName} fill={true} rightElement={<Button text='Save' onClick={handleSave} />} />
           <Tag
+            data-testid='xyz-validity-tag'
             style={{ width: '30%' }}
             intent={isValidXYZFormat ? 'success' : 'warning'}
           >
-            {isValidXYZFormat ? 'Correct XYZ pattern' : 'Wrong XYZ pattern'}
+            {isValidXYZFormat ? 'Correct' : 'Wrong'} XYZ format
           </Tag>
         </ControlGroup>
         <TextArea
           id='text-editor'
+          aria-label='source-editor-textarea'
           className={styles.TextEditor}
           value={source}
           onChange={handleChange}

@@ -13,7 +13,7 @@ import { useAtomsContext, Atom } from '../../context/AtomsContext';
 import { useSourceContext } from '../../context/SourceContext';
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 extend({ OrbitControls });
 
 function useOrbitControls(
@@ -101,7 +101,7 @@ const StructureViewer: React.FC = () => {
   const atomsDisplayData = settings.settings.atomsDisplayData || [];
 
   const viewBoxSize: number = 20;
-  const {atoms, updateAtoms} = useAtomsContext();
+  const {atoms} = useAtomsContext();
   const {source, setSource} = useSourceContext();
   const [shiftPressed, setShiftPressed] = useState(false);
 
