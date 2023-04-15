@@ -10,6 +10,7 @@ import ViewHeading from '../../components/view_heading/ViewHeading';
 function SettingsEditor() {
   const { settings, updateSettings } = useSettings();
   const atomsData = useSettings().settings.atomsDisplayData || [];
+  const editingIn3D = useSettings().settings.editingIn3D;
 
   function toggleTheme() {
     const newTheme = settings.theme === 'light' ? 'dark' : 'light';
@@ -21,6 +22,10 @@ function SettingsEditor() {
     const data = await res.json();
     console.log(data);
     updateSettings({atomsDisplayData: data.atomsDisplayData});
+  }
+
+  function toggleEditMode() {
+    updateSettings({editingIn3D: !editingIn3D})
   }
 
   return (
@@ -37,7 +42,8 @@ function SettingsEditor() {
         {settings.theme === 'light'? 'Dark' : 'Light'} Theme
       </Button>
       {/*TODO: Add ability to change colors in Settings */}
-      <Button onClick={() => loadAtomsData()} >Load atoms</Button>
+      <Button onClick={() => loadAtomsData()} >Load atoms peferences</Button>
+      <Button onClick={() => toggleEditMode()} >Edit {editingIn3D? 'Source' : '3D'}</Button>
       <Menu>
         {atomsData.map((element) => {
           return(

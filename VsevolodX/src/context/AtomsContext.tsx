@@ -33,8 +33,7 @@ interface AtomsProps {
 
 export function AtomsProvider({ children }: AtomsProps) {
     const [atoms, setAtoms] = useState<Atom[]>([]);
-    const {source} = useSourceContext();
-    console.log('Atoms Provider: ', atoms);
+    const {source, setSource} = useSourceContext();
 
     useEffect(() => {
         const parsedAtoms = parseXYZ(source);
@@ -48,9 +47,9 @@ export function AtomsProvider({ children }: AtomsProps) {
         const updatedAtoms = prevAtoms.map((atom) =>
           atom.id === atomId ? { ...atom, position: newPosition } : atom
         );
-
         return updatedAtoms;
       });
+
     }, []);
   
     const saveAtomsToLocalStorage = useCallback(() => {

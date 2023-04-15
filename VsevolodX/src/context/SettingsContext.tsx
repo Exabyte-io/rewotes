@@ -4,6 +4,7 @@ export interface Settings {
   theme?: string;
   defaultAtomColor?: string;
   atomsDisplayData?: AtomDisplayData[];
+  editingIn3D?: boolean;
   // other user settings 
 }
 
