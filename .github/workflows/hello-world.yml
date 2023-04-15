@@ -12,26 +12,35 @@ jobs:
       - name: Say Hello
         run: echo "Hello World. Initiating the pipeline"
 
-      - name: Wait for approval
-        id: approval
-        uses: wei/cancel-action@v1
-        with:
-          prompt: 'Do you want to approve this deployment?'
+#      - name: Wait for approval
+#        id: approval
+#        uses: wei/cancel-action@v1
+#        with:
+#          prompt: 'Do you want to approve this deployment?'
 
       - name: Checkout Code
-        if: steps.approval.outputs.result == 'true'
+#        if: steps.approval.outputs.result == 'true'
         uses: actions/checkout@v2
         with:
           ref: itgold
 
       - name: Install Dependencies
-        if: steps.approval.outputs.result == 'true'
+#        if: steps.approval.outputs.result == 'true'
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible terraform
+          sudo apt-get install -y ansible
+
+      - name: Install Terraform
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install -y terraform
+
 
       - name: Deploy Infrastructure
-        if: steps.approval.outputs.result == 'true'
+#        if: steps.approval.outputs.result == 'true'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -40,7 +49,7 @@ jobs:
           ./init.sh 1 1
 
       - name: Destroy Infrastructure
-        if: steps.approval.outputs.result == 'true'
+#        if: steps.approval.outputs.result == 'true'
         env:
           ANSIBLE_HOST_KEY_CHECKING: "false"
         run: |
