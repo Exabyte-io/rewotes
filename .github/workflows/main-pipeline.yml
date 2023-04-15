@@ -1,0 +1,52 @@
+name: Benchmarking Pipeline
+
+on:
+  push:
+    branches:
+      - itgold
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello
+        run: echo "Hello World. Initiating the pipeline"
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: itgold
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Install Terraform
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install -y terraform
+
+      - name: Create .env file
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd itgold/scripts
+          echo "TF_VAR_aws_access_key: ${AWS_ACCESS_KEY_ID}" >> .env
+          echo "TF_VAR_aws_secret_key: ${AWS_SECRET_ACCESS_KEY}" >> .env
+
+      - name: Deploy Infrastructure
+        run: |
+          cd itgold/scripts
+          ./init.sh 1 1
+
+      - name: Destroy Infrastructure
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "false"
+        run: |
+          cd itgold/scripts
+          ./destroy.sh
