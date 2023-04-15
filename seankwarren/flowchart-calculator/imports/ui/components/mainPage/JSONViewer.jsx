@@ -67,7 +67,7 @@ const JSONViewer = ({
                     nodes: [
                     {nodes.map((node) => {
                         return (
-                            <code key={node.id}>
+                            <code className="json" key={node.id}>
                                 {JSON.stringify(
                                     node,
                                     ['id', 'data', 'value', 'type'],
