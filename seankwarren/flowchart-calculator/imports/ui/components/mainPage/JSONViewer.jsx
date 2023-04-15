@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
+import json from 'highlight.js/lib/languages/json';
 
 const JSONViewer = ({
     children,
@@ -23,6 +24,11 @@ const JSONViewer = ({
     useEffect(() => {
         hljs.highlightAll();
     }, [nodes, edges]);
+
+    useEffect(() => {
+        hljs.registerLanguage('json', json);
+    }, [])
+    
 
     // TODO: move save/load controls to seperate component
     return (
