@@ -38,12 +38,18 @@ jobs:
           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
           sudo apt-get update && sudo apt-get install -y terraform
 
-
-      - name: Deploy Infrastructure
-#        if: steps.approval.outputs.result == 'true'
+      - name: Create .env file
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd itgold/scripts
+          echo "TF_VAR_aws_access_key: ${AWS_ACCESS_KEY_ID}" >> .env
+          echo "TF_VAR_aws_secret_key: ${AWS_SECRET_ACCESS_KEY}" >> .env
+
+
+      - name: Deploy Infrastructure
+#        if: steps.approval.outputs.result == 'true'
         run: |
           cd itgold/scripts
           ./init.sh 1 1
