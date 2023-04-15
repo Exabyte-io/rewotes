@@ -1,11 +1,39 @@
-name: Hello World
+name: Benchmarking Pipeline
 
-on: [push]
+on:
+  push:
+    branches: [ itgold ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Say Hello
-        run: echo "Hello World Test"
+        run: echo "Hello World. Initiating the pipeline"
+
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: itgold
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible terraform
+
+      - name: Deploy Infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd itgold/scripts
+          ./init.sh 1 1
+
+      - name: Configure Infrastructure
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "false"
+        run: |
+          cd itgold/scripts
+          ./destroy.sh
