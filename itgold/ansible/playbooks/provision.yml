@@ -1,0 +1,27 @@
+---
+- name: Update and upgrade packages
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update package list
+      apt:
+        update_cache: yes
+
+    - name: Upgrade packages
+      apt:
+        upgrade: yes
+        autoremove: yes
+        autoclean: yes
+
+    - name: Install unzip package
+      become: true
+      apt:
+        name: unzip
+        state: present
+
+    - name: Install tar
+      become: true
+      apt:
+        name: tar
+        state: present

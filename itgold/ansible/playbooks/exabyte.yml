@@ -1,0 +1,12 @@
+---
+
+- name: Checkout Exabyte Benchmarks Suite
+  hosts: all
+  become: true
+  vars:
+    git_repo_url: "https://github.com/Exabyte-io/exabyte-benchmarks-suite.git"
+    git_repo_version: "master"
+    git_repo_dest: "/opt/exabyte-benchmarks-suite"
+
+  roles:
+    - exabyte

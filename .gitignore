@@ -3,3 +3,4 @@
 itgold/**/.**
 *.tfstate*
 compute.list
+workspace/**

@@ -2,7 +2,7 @@
 all:
   hosts:
     ir_ec2_instance-1:
-      ansible_host: 18.222.30.86
+      ansible_host: 18.220.4.124
   vars:
     ansible_user: luke
     ansible_ssh_private_key_file: ../access/id_rsa

@@ -1,0 +1,43 @@
+- name: Install dependencies
+  apt:
+    name: [ build-essential, libfftw3-dev, libblas-dev, liblapack-dev, gfortran ]
+    state: present
+- name: Download and extract Quantum ESPRESSO
+  get_url:
+    url: https://github.com/QEF/q-e/releases/download/qe-6.6/qe-6.6-ReleasePack.tgz
+    dest: /tmp/qe-{{ qe_version }}.tar.gz
+  become: yes
+- name: Create directory /opt/qe
+  file:
+    path: /opt/qe
+    state: directory
+- name: Extract Quantum ESPRESSO
+  unarchive:
+    src: /tmp/qe-{{ qe_version }}.tar.gz
+    dest: /opt/qe
+    remote_src: yes
+- name: Create make.inc file
+  template:
+    src: make.inc.j2
+    dest: /opt/qe/qe-{{ qe_version }}/make.inc
+    owner: luke
+    group: luke
+    mode: "0644"
+- name: Configure Quantum ESPRESSO
+  shell: |
+    cd /opt/qe/qe-{{ qe_version }}
+    ./configure
+  args:
+    chdir: /opt/qe/qe-{{ qe_version }}
+- name: Build Quantum ESPRESSO
+  shell: |
+    cd /opt/qe/qe-{{ qe_version }}
+    make all
+  args:
+    chdir: /opt/qe/qe-{{ qe_version }}
+- name: Install Quantum ESPRESSO
+  shell: |
+    cd /opt/qe/qe-{{ qe_version }}
+    make install
+  args:
+    chdir: /opt/qe/qe-{{ qe_version }}
