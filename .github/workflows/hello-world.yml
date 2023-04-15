@@ -2,12 +2,12 @@ name: Benchmarking Pipeline
 
 on:
   push:
-    branches: [ itgold ]
+    branches:
+      - itgold
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Say Hello
         run: echo "Hello World. Initiating the pipeline"
@@ -17,29 +17,32 @@ jobs:
         uses: wei/cancel-action@v1
         with:
           prompt: 'Do you want to approve this deployment?'
-        steps:
-          - name: Checkout Code
-            if: steps.approval.outputs.result == 'true'
-            uses: actions/checkout@v2
-            with:
-              ref: itgold
 
-          - name: Install Dependencies
-            run: |
-              sudo apt-get update
-              sudo apt-get install -y ansible terraform
+      - name: Checkout Code
+        if: steps.approval.outputs.result == 'true'
+        uses: actions/checkout@v2
+        with:
+          ref: itgold
 
-          - name: Deploy Infrastructure
-            env:
-              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            run: |
-              cd itgold/scripts
-              ./init.sh 1 1
+      - name: Install Dependencies
+        if: steps.approval.outputs.result == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible terraform
 
-          - name: Configure Infrastructure
-            env:
-              ANSIBLE_HOST_KEY_CHECKING: "false"
-            run: |
-              cd itgold/scripts
-              ./destroy.sh
+      - name: Deploy Infrastructure
+        if: steps.approval.outputs.result == 'true'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd itgold/scripts
+          ./init.sh 1 1
+
+      - name: Destroy Infrastructure
+        if: steps.approval.outputs.result == 'true'
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "false"
+        run: |
+          cd itgold/scripts
+          ./destroy.sh
