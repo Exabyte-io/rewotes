@@ -36,11 +36,12 @@ const useLocalFlowData = (initial = {}) => {
         setEdges([]);
     };
 
-    const loadFlowchart = (flow) => {
+    const loadFlowchart = useCallback((flow) => {
         const newNodes = attachOnConnect(flow.nodes);
         setNodes(newNodes);
         setEdges(flow.edges);
-    };
+        reactFlowInstance.fitView();
+    },[reactFlowInstance]);
 
     const handleNodeChange = (id, value) => {
         setNodes((ns) => {
