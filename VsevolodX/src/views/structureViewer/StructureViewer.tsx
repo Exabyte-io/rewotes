@@ -1,4 +1,4 @@
-import { Card } from '@blueprintjs/core'
+import { Button, Card, ControlGroup, Tag } from '@blueprintjs/core'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './StructureViewer.module.scss';
 
@@ -140,12 +140,22 @@ const StructureViewer: React.FC = () => {
     
   };
 
+  function toggleEditMode() {
+    settings.updateSettings({editingIn3D: !editEnabled})
+  }
+
   return (
     <Card className={styles.StructureViewer}>
       <VStack>
       <ViewHeading>
         <h4>Structure Viewer</h4>
       </ViewHeading>
+      <ControlGroup>
+        <Button onClick={toggleEditMode} active={editEnabled}>
+          Edit 3D
+          </Button>
+          {editEnabled && <Tag>Press Shift to move atoms</Tag>}
+      </ControlGroup>
     <Canvas className={styles.Canvas + ' ' + theme}>
       <Controls  shiftPressed={shiftPressed} editEnabled={editEnabled} />
       <ambientLight />
