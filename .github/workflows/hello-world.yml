@@ -17,29 +17,29 @@ jobs:
         uses: wei/cancel-action@v1
         with:
           prompt: 'Do you want to approve this deployment?'
+        steps:
+          - name: Checkout Code
+            if: steps.approval.outputs.result == 'true'
+            uses: actions/checkout@v2
+            with:
+              ref: itgold
 
-      - name: Checkout Code
-        if: steps.approval.outputs.result == 'true'
-        uses: actions/checkout@v2
-        with:
-          ref: itgold
+          - name: Install Dependencies
+            run: |
+              sudo apt-get update
+              sudo apt-get install -y ansible terraform
 
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible terraform
+          - name: Deploy Infrastructure
+            env:
+              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            run: |
+              cd itgold/scripts
+              ./init.sh 1 1
 
-      - name: Deploy Infrastructure
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          cd itgold/scripts
-          ./init.sh 1 1
-
-      - name: Configure Infrastructure
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: "false"
-        run: |
-          cd itgold/scripts
-          ./destroy.sh
+          - name: Configure Infrastructure
+            env:
+              ANSIBLE_HOST_KEY_CHECKING: "false"
+            run: |
+              cd itgold/scripts
+              ./destroy.sh
