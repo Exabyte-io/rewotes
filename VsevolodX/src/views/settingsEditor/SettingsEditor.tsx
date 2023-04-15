@@ -9,8 +9,7 @@ import ViewHeading from '../../components/view_heading/ViewHeading';
 
 function SettingsEditor() {
   const { settings, updateSettings } = useSettings();
-  const atomsData = useSettings().settings.atomsData || [];
-
+  const atomsData = useSettings().settings.atomsDisplayData || [];
 
   function toggleTheme() {
     const newTheme = settings.theme === 'light' ? 'dark' : 'light';
@@ -18,10 +17,10 @@ function SettingsEditor() {
   }
 
   async function loadAtomsData() {
-    const res = await fetch('/atomsData.json');
+    const res = await fetch('/atomsDisplayData.json');
     const data = await res.json();
     console.log(data);
-    updateSettings({atomsData: data.atomsData});
+    updateSettings({atomsDisplayData: data.atomsDisplayData});
   }
 
   return (

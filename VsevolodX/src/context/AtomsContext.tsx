@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Vector3 } from 'three';
+import parseXYZ from '../actions/parseXYZ';
+import { useSourceContext } from './SourceContext';
 
 export type Atom = {
     id: number,
@@ -31,12 +33,22 @@ interface AtomsProps {
 
 export function AtomsProvider({ children }: AtomsProps) {
     const [atoms, setAtoms] = useState<Atom[]>([]);
-  
+    const {source} = useSourceContext();
+    console.log('Atoms Provider: ', atoms);
+
+    useEffect(() => {
+        const parsedAtoms = parseXYZ(source);
+        if (parsedAtoms.isValid && parsedAtoms.atoms) {
+            setAtoms(parsedAtoms.atoms);
+        }
+    }, [source]);
+
     const updateAtoms = useCallback((atomId: number, newPosition: Vector3) => {
       setAtoms((prevAtoms) => {
         const updatedAtoms = prevAtoms.map((atom) =>
           atom.id === atomId ? { ...atom, position: newPosition } : atom
         );
+
         return updatedAtoms;
       });
     }, []);

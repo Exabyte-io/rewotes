@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 export interface Settings {
   theme?: string;
   defaultAtomColor?: string;
-  atomsData?: AtomDisplayData[];
+  atomsDisplayData?: AtomDisplayData[];
   // other user settings 
 }
 
@@ -39,7 +39,7 @@ export function SettingsProvider({ children } : SettingsProviderProps) {
   const defaultSettings: Settings = {
     theme: 'light',
     defaultAtomColor: 'white',
-    atomsData: [{ element: 'C', color: 'grey' }]};
+    atomsDisplayData: [{ element: 'C', color: 'grey' }]};
 
   const [settings, setSettings] = useState<Settings>(defaultSettings);
 

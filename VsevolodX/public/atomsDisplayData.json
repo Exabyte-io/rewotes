@@ -1,5 +1,5 @@
 {
-    "atomsData": [
+    "atomsDisplayData": [
       {"element": "default", "color": "white"},
       {"element": "Si", "color": "blue"}, 
       {"element": "O", "color": "red"}, 

@@ -1,5 +1,5 @@
 import { Card, ControlGroup, TextArea, InputGroup, Tag, Button } from '@blueprintjs/core'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styles from './SourceEditor.module.scss';
 import { useSourceContext } from '../../context/SourceContext';
 import { useAtomsContext, Atom} from '../../context/AtomsContext';
@@ -11,22 +11,22 @@ function SourceEditor() {
   const { source, setSource, importSource, sourceName, setSourceName, isValidXYZFormat, setIsValidXYZFormat, saveSourceToLocalStorage } = useSourceContext();
   const { atoms, updateAtoms } = useAtomsContext();
 
-  
   type ParsedXYZResult = {
     isValid: boolean;
     atoms?: Atom[];
   };
   
   const parseXYZ = (text: string): ParsedXYZResult => {
+    const FIRST_LINES = 2;
     const lines = text.split('\n');
     const atomCount = parseInt(lines[0].trim(), 10);
     const newAtoms: Atom[] = [];
   
-    if (isNaN(atomCount) || lines.length < atomCount + 2) {
+    if (isNaN(atomCount) || lines.length < atomCount + FIRST_LINES) {
       return { isValid: false };
     }
   
-    for (let i = 2; i < atomCount + 2; i++) {
+    for (let i = FIRST_LINES; i < atomCount + FIRST_LINES; i++) {
       const line = lines[i].split(/\s+/);
       if (line.length < 4) {
         return { isValid: false };
@@ -40,7 +40,7 @@ function SourceEditor() {
       }
   
       newAtoms.push({
-        id: i - 2,
+        id: i - FIRST_LINES,
         element: element,
         position: new Vector3(x, y, z),
       });
@@ -49,7 +49,6 @@ function SourceEditor() {
     return { isValid: true, atoms: newAtoms };
   };
   
-
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = event.target.value;
     setSource(newValue);
@@ -58,8 +57,10 @@ function SourceEditor() {
     if (parsedResult.isValid && parsedResult.atoms) {
       parsedResult.atoms.forEach((atom) => {
         updateAtoms(atom.id, atom.position);
+        console.log('updating atoms');
       });
     }
+    else console.log('problem at handle chnge');
   };
 
   const handleSave = () => {
