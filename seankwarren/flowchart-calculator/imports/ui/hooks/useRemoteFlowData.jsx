@@ -13,28 +13,30 @@ const useRemoteFlowData = ( nodes, edges ) => {
 
     const saveFlow = useCallback(() => {
         // Check if a flow with the same name already exists
-        const flowWithNameExists = fetchedFlows.some(
-            (flow) => flow.name === flowName
-        );
-        if (flowWithNameExists) {
-            // TODO: permit overwriting saved flow
-            alert(
-                'A flow with this name already exists. Please choose a different name.'
+        const existingFlow = fetchedFlows.find((flow) => flow.name === flowName);
+        if (existingFlow) {
+            // Ask the user if they want to overwrite the existing flow
+            const overwrite = window.confirm(
+                'A flow with this name already exists. Do you want to overwrite it?'
             );
-        } else {
-            Meteor.call(
-                'saveFlow',
-                { nodes, edges, name: flowName },
-                (error) => {
-                    if (error) {
-                        console.log(error.reason);
-                    } else {
-                        updateFlowName({ target: { value: '' } }); // Clear the flow name input field after a successful save
-                        fetchFlows(); // Fetch the flows again to update the dropdown
-                    }
-                }
-            );
+    
+            if (!overwrite) {
+                return; // If the user chooses not to overwrite, return immediately
+            }
         }
+    
+        Meteor.call(
+            'saveFlow',
+            { nodes, edges, name: flowName },
+            (error) => {
+                if (error) {
+                    console.log(error.reason);
+                } else {
+                    updateFlowName({ target: { value: '' } }); // Clear the flow name input field after a successful save
+                    fetchFlows(); // Fetch the flows again to update the dropdown
+                }
+            }
+        );
     }, [nodes, edges, flowName, fetchedFlows]);
 
     const fetchFlows = () => {
