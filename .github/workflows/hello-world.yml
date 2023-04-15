@@ -12,8 +12,14 @@ jobs:
       - name: Say Hello
         run: echo "Hello World. Initiating the pipeline"
 
+      - name: Wait for approval
+        id: approval
+        uses: wei/cancel-action@v1
+        with:
+          prompt: 'Do you want to approve this deployment?'
 
       - name: Checkout Code
+        if: steps.approval.outputs.result == 'true'
         uses: actions/checkout@v2
         with:
           ref: itgold
