@@ -1,0 +1,9 @@
+- name: Initialize Terraform
+  command: terraform init
+  args:
+    chdir: ../../terraform
+
+- name: Run terraform apply
+  command: terraform apply -auto-approve -var instance_template_index={{ instance_template_index }} -var instance_count={{ instance_count }} -var aws_access_key="{{ TF_VAR_aws_access_key }}" -var aws_secret_key="{{ TF_VAR_aws_secret_key }}"
+  args:
+    chdir: ../../terraform

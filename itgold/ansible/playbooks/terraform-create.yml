@@ -6,4 +6,4 @@
     - ../../scripts/.env
 
   roles:
-    - terraform-apply
+    - terraform-create
