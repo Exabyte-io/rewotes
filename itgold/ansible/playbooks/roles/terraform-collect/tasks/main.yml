@@ -1,0 +1,37 @@
+- name: Update package list
+  apt:
+    update_cache: yes
+
+- name: Upgrade packages
+  apt:
+    upgrade: yes
+    autoremove: yes
+    autoclean: yes
+
+- name: Install unzip package
+  become: true
+  apt:
+    name: jq
+    state: present
+
+- name: Remove compute.list file
+  file:
+    path: ../../compute.list
+    state: absent
+
+- name: Run terraform collect
+  shell: terraform output -json instance_ips | jq -r '.[]' > ../compute.list
+  args:
+    chdir: ../../terraform
+
+- name: Write hosts to file
+  copy:
+    content: |
+      ---
+      all:
+        hosts:
+          {% for host in lookup('file', '../../compute.list').splitlines() %}
+      {{ host }}:
+            ansible_host: {{ host }}
+          {% endfor %}
+    dest: ../inventory/dev.yml
