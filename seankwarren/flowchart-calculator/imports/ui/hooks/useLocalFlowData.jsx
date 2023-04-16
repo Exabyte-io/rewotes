@@ -95,15 +95,11 @@ const useLocalFlowData = (initial = {}) => {
             interactionWidth: 40,
         };
 
-        const newEdges = [...currentEdges, newEdge];
-
-        setEdges(newEdges);
-
-        console.log(newEdges)
-
+        setEdges((currEdges) => [...currEdges, newEdge]);
+        
         // If the target node is an output node, calculate its value and update its state
         updateOutputNodes();
-    }, [edges, setEdges]);
+    }, [setEdges]);
 
     return {
         reactFlowInstance,

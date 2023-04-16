@@ -10,7 +10,7 @@ export const ComparisonNode = ({ id, data }) => {
     return (
         <div className='node comparison round' data-testid='comparison-node'>
             <Handle
-                className='handle input'
+                className='handle input top'
                 type='target'
                 position='left'
                 id={`${id}-left-top`}
@@ -19,7 +19,7 @@ export const ComparisonNode = ({ id, data }) => {
                 }}
             />
             <Handle
-                className='handle input'
+                className='handle input bottom'
                 type='target'
                 position='left'
                 id={`${id}-left-bottom`}

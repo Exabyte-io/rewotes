@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
 
 import nodeTypesConfig from '../customNodes/nodeTypes';
@@ -29,15 +29,6 @@ const FlowchartCanvas = ({
     }, []);
 
     useEffect(() => {
-        window.handleConnect = handleConnect;
-        window.edges = edges;
-        return () => {
-            window.handleConnect = null;
-            window.edges = null;
-        };
-    }, [handleConnect, edges]);
-
-    useEffect(() => {
         // TODO: use lodash to evaluate equality?
         if (
             JSON.stringify(prevNodes) !== JSON.stringify(nodes) ||
@@ -46,6 +37,16 @@ const FlowchartCanvas = ({
             updateOutputNodes();
         }
     }, [nodes, edges, prevNodes, prevEdges, updateOutputNodes]);
+
+    useEffect(() => {
+        window.handleConnect = handleConnect;
+        window.edges = edges;
+    
+        return () => {
+            window.handleConnect = null;
+            window.edges = null;
+        };
+    }, [handleConnect, edges]);    
 
     return (
         <ReactFlow
