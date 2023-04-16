@@ -95,9 +95,11 @@ Run the development server using `meteor`.
 - [x] As an end user, I should be able to click a 'Save Flow' button to save the JSON datastructure to a MongoDB instance.
 - [x] As an end user, I should be able to select a saved flow from a dropdown list and load it in the flowchart and JSON viewers.
 - [x] As an end user, I should be able to click on a button called 'clear' to clear the flowchart.
+- [x] As a development user, I should be able to automatically test all of the binary, unary, and comparison operations using cypress.
+- [x] As a development user, I should be able to automatically test all basic user interactions, including toggling darkmode, __resizing the pane__, clearing the flowchart, dragging and dropping nodes, and drawing edges using cypress.
+- [x] As a development user, I should be able to automatically test the save and load procedure using cypress.
 
-### Potential Improvement User Stories:
-- [ ] ~~As an end user, I should be able to edit the JSON and have the flowchart update accordingly.~~
-- [ ] ~~As an end user, I should be able to use the comparison nodes as a gate to decide whether another node should be executed.~~
-- [ ] ~~As an end user, the input nodes should be exapandable to include multiple values each with their own handle.~~
-- [ ] ~~As an end user, I should be able to click on a button called 'restore' to put the previously clear flowchart back in place.~~
+### TODO User Stories:
+- [ ] As a development user, I should be able to automatically test a complex flowchart like the tanh() function using cypress.
+- [ ] As a development user, I should be able to automatically test that the rendered JSON is updated on change, and accurate using cypress.
+- [ ] As a development user, I should be able to unit test each react component and hook using jest.
