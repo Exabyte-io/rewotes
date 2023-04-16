@@ -19,7 +19,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Say Hello
+      - name: Initialization step
         run: echo "Hello World. Initiating the pipeline"
 
       - name: Checkout Code
