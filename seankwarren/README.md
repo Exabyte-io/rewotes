@@ -27,6 +27,9 @@ Install dependencies using `npm install`.
 Run the development server using `meteor`.
 > will launch on <a href="http://localhost:3000/">localhost:3000/</a>
 
+Run tests with `npm run cypress:open`
+
+
 ## Front-end Environment Structure:
     imports
     │
@@ -49,6 +52,7 @@ Run the development server using `meteor`.
         │   │   ├── JSONViewer.jsx              // Contains the JSON panel
         │   │   └── NodeButtons.jsx             // Contains the drag and drop node buttons
         │   └── reusable                        // Generic components that can be reused anywhere
+        │       ├── DarkModeContext.jsx
         │       ├── DarkModeSwitch.jsx          
         │       ├── DraggableButton.jsx         
         │       └── ResizablePane.jsx           
