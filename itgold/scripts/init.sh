@@ -31,11 +31,11 @@ ansible-playbook ../ansible/playbooks/terraform-collect.yml
 echo 'Provisioning compute hosts'
 ansible-playbook ../ansible/playbooks/provision.yml
 
-echo 'Installing Quantum Espresso'
-ansible-playbook ../ansible/playbooks/quantum_espresso.yml
-
-echo 'Installing Exabyte Benchmark Suite'
-ansible-playbook ../ansible/playbooks/exabyte.yml
+#echo 'Installing Quantum Espresso'
+#ansible-playbook ../ansible/playbooks/quantum_espresso.yml
+#
+#echo 'Installing Exabyte Benchmark Suite'
+#ansible-playbook ../ansible/playbooks/exabyte.yml
 
 #echo 'Tear down infrastructure'
 #ansible-playbook ../ansible/playbooks/terraform-destroy.yml

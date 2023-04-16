@@ -17,6 +17,14 @@ jobs:
         with:
           ref: itgold
 
+      - name: Get user input for instance parameters
+        id: user-input
+        run: |
+          read -p "Enter instance_count (how many instances to create. Default - 1): " instance_count
+          read -p "Enter instance_template_index (what types of ec2 instances to use. Default - 1): " instance_template_index
+          echo "::set-output name=instance_count::$instance_count"
+          echo "::set-output name=instance_template_index::$instance_template_index"
+
       - name: Install Dependencies
         run: |
           sudo apt-get update
@@ -47,9 +55,16 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           cd itgold/scripts
-          ./init.sh 1 1
+          ./init.sh ${{ steps.user-input.outputs.instance_template_index }} ${{ steps.user-input.outputs.instance_count }}
+
+      - name: Confirm Destroy Infrastructure
+        id: confirm-destroy
+        run: |
+          read -p "Do you want to destroy the infrastructure? (yes/no) " destroy_confirm
+          echo "::set-output name=destroy_confirm::$destroy_confirm"
 
       - name: Destroy Infrastructure
+        if: steps.confirm-destroy.outputs.destroy_confirm == 'yes'
         env:
           ANSIBLE_HOST_KEY_CHECKING: "false"
         run: |

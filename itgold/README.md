@@ -25,7 +25,7 @@ As a user of this CI/CD pipeline I can:
 7. Pipeline shuts down the whole AWS infrastructure
 
 # Project assumptions and allowances
-- AWS infrastructure is not the most secure configuration. Some work needs to be done to make it better on that front
+- AWS infrastructure configuration is not the most secure. Some work needs to be done to make it better on that front
 - The pipeline just builds and Quantum Espresso on all declared instances
 - Pipeline builds Exabyte Test Suite but is not running it due to some libraries compatibility errors
 - EC2 instance templates should be moved to configuration going forward 
