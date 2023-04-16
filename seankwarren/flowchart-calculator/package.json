@@ -5,7 +5,6 @@
     "start": "meteor run",
     "test": "jest",
     "cypress:open": "cypress open",
-    "test2": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },

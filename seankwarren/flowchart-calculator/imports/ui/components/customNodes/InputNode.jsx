@@ -8,7 +8,7 @@ const InputNode = ({ id, data }) => {
     };
 
     return (
-        <div className='node input' data-testid='input-node'>
+        <div className='node input' data-testid='input-node' data-nodeid={id}>
             <input
                 type='number'
                 defaultValue={data.value ? data.value : 0}

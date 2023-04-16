@@ -3,7 +3,7 @@ import { Handle } from 'reactflow';
 
 const OutputNode = ({ id, data }) => {
     return (
-        <div className='node output' data-testid='output-node'>
+        <div className='node output' data-testid='output-node' data-nodeid={id}>
             <Handle
                 className='handle input'
                 type='target'

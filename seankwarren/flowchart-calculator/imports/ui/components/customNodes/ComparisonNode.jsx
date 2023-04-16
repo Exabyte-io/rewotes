@@ -8,7 +8,7 @@ export const ComparisonNode = ({ id, data }) => {
     };
 
     return (
-        <div className='node comparison round' data-testid='comparison-node'>
+        <div className='node comparison round' data-testid='comparison-node' data-nodeid={id}>
             <Handle
                 className='handle input top'
                 type='target'

@@ -8,7 +8,7 @@ const UnaryNode = ({ id, data }) => {
     };
 
     return (
-        <div className='node unary round' data-testid='unary-node'>
+        <div className='node unary round' data-testid='unary-node' data-nodeid={id}>
             <Handle
                 className='handle input'
                 type='target'
