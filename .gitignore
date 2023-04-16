@@ -1,0 +1,6 @@
+.idea
+*.iml
+itgold/**/.**
+*.tfstate*
+compute.list
+workspace/**

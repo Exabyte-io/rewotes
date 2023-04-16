@@ -1,0 +1,68 @@
+name: Benchmarking Pipeline
+
+on:
+  push:
+    branches:
+      - itgold
+  workflow_dispatch:
+    inputs:
+      instance_template_index:
+        description: 'Instance template index (what types of ec2 instances to use. Default - 1)'
+        required: false
+        default: '1'
+      instance_count:
+        description: 'Instance count (how many instances to create. Default - 1)'
+        required: false
+        default: '1'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialization step
+        run: echo "Hello World. Initiating the pipeline"
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          ref: itgold
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Install Terraform
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install -y terraform
+
+      - name: Create .env file
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd itgold/scripts
+          echo "TF_VAR_aws_access_key: ${AWS_ACCESS_KEY_ID}" >> .env
+          echo "TF_VAR_aws_secret_key: ${AWS_SECRET_ACCESS_KEY}" >> .env
+
+      - name: Correct private key access permission
+        run: |
+          cd itgold/access
+          chmod 600 id_rsa
+
+      - name: Deploy Infrastructure
+        run: |
+          cd itgold/scripts
+          ./init.sh ${{ github.event.inputs.instance_template_index }} ${{ github.event.inputs.instance_count }}
+
+      - name: Destroy Infrastructure
+        if: steps.confirm-destroy.outputs.destroy_confirm == 'yes'
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "false"
+        run: |
+          cd itgold/scripts
+          ./destroy.sh

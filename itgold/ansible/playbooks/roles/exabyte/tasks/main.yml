@@ -1,0 +1,30 @@
+- name: Install dependencies
+  apt:
+    name: [ python3-pip, python3-virtualenv, pkg-config, liblapack-dev, libcairo2-dev ]
+    state: present
+
+- name: Checkout Git repository
+  git:
+    repo: "{{ git_repo_url }}"
+    version: "{{ git_repo_version }}"
+    dest: "{{ git_repo_dest }}"
+
+- name: Install virtualenv
+  pip:
+    name: virtualenv
+    state: present
+
+- name: Create virtual environment
+  command: virtualenv env
+  args:
+    chdir: "{{ git_repo_dest }}"
+
+- name: Install Python requirements
+  shell: . env/bin/activate && pip install -r requirements.txt
+  args:
+    chdir: "{{ git_repo_dest }}"
+
+#- name: Add exabyte directory to PATH and execute all cases
+#  shell: "export PATH=/opt/exabyte-benchmarks-suite:${PATH} && python /opt/exabyte-benchmarks-suite/exabench --execute"
+#  args:
+#    chdir: "{{ git_repo_dest }}"

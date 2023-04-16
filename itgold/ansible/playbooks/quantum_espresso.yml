@@ -1,0 +1,11 @@
+---
+- name: Install Quantum ESPRESSO
+  hosts: all
+  become: true
+  vars:
+    qe_version: 6.6
+    qe_fc: gfortran
+    qe_fflags: -02
+
+  roles:
+    - quantum_espresso

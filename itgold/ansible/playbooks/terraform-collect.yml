@@ -1,0 +1,9 @@
+---
+- name: Apply Terraform changes infrastructure updates
+  hosts: localhost
+  become: true
+  vars_files:
+    - ../../scripts/.env
+
+  roles:
+    - terraform-collect
