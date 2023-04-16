@@ -28,7 +28,8 @@ As a user of this CI/CD pipeline I can:
 - AWS infrastructure configuration is not the most secure. Some work needs to be done to make it better on that front
 - The pipeline just builds and Quantum Espresso on all declared instances
 - Pipeline builds Exabyte Test Suite but is not running it due to some libraries compatibility errors
-- EC2 instance templates should be moved to configuration going forward 
+- EC2 instance templates should be moved to configuration going forward
+- Instance types and count is configured in the GitHub actions file itself. Needs to be moved to configuration
 
 # Project structure
 
@@ -41,7 +42,10 @@ _terraform_ - terraform scripts. Terraform is used to initialize AWS infrastruct
 _access_ - private/public keys to access EC2 instances
 
 # Initialization
-Deployment pipeline can be executed from GitHub Actions workflow as well as from the local environment command line
+Deployment pipeline can be executed from GitHub Actions workflow as well as from the local environment command line. GitHub Actions will use default configuration 
+for deciding what type of instances to use and how many instances to run. It can be changed by updating the actions file itself.
+Running locally gives user more control over instances configuration. Also, GitHub workflow will run destroy infrastructure immediately after all initialization steps.
+Running the flow locally can be executed in 2 separate steps.
 
 To run application from github there are 2 **Repository secrets** required to be initialized:
 
