@@ -1,7 +1,10 @@
 import React from 'react';
 import Switch from 'react-switch';
+import { useDarkMode } from './DarkModeContext';
 
-const DarkModeSwitch = ({ isDarkMode, toggleDarkMode }) => {
+const DarkModeSwitch = () => {
+    const { isDarkMode, toggleDarkMode } = useDarkMode();
+    
     return (
         <Switch
             checked={isDarkMode}

@@ -1,23 +1,18 @@
 import React from 'react';
 import DraggableButton from '../reusable/DraggableButton';
+import { useDarkMode } from '../reusable/DarkModeContext';
 
 const NodeButtons = ({
     handleDragStart,
-    isDarkMode,
     clearFlowchart,
     clearFlows,
 }) => {
-    // Darkmode style toggling
-    const buttonsPanelStyle = {
-        backgroundColor: isDarkMode
-            ? 'rgba(0, 0, 0, 0.5)'
-            : 'rgba(51, 51, 51, 0.3)',
-    };
+    const { isDarkMode } = useDarkMode();
 
     return (
         <div
-            className='buttons-panel'
-            style={{ ...buttonsPanelStyle, width: '100%' }}
+            className={'buttons-panel'+ (isDarkMode ? " dark-mode" : "")}
+            style={{ width: '100%' }}
         >
             <DraggableButton
                 label='in'

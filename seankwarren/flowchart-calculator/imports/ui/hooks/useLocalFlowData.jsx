@@ -65,18 +65,20 @@ const useLocalFlowData = (initial = {}) => {
     };
 
     // Function to handle connecting nodes
-    const handleConnect = (params) => {
+    const handleConnect = useCallback((params, customEdges) => {
+        console.log(params)
         const { source, sourceHandle, target, targetHandle } = params;
+        const currentEdges = customEdges || edges;
 
         // Check if an edge with the same source and target already exists
-        const existingEdge = edges.find(
+        const existingEdge = currentEdges.find(
             (edge) =>
                 edge.source === sourceHandle && edge.target === targetHandle
         );
         if (existingEdge) return;
 
         // Check if there is already an edge connected to the target handle
-        const existingEdgeWithSameTargetHandle = edges.find(
+        const existingEdgeWithSameTargetHandle = currentEdges.find(
             (edge) => edge.targetHandle === targetHandle
         );
         if (existingEdgeWithSameTargetHandle) return;
@@ -93,12 +95,15 @@ const useLocalFlowData = (initial = {}) => {
             interactionWidth: 40,
         };
 
-        const newEdges = [...edges, newEdge];
+        const newEdges = [...currentEdges, newEdge];
+
         setEdges(newEdges);
+
+        console.log(newEdges)
 
         // If the target node is an output node, calculate its value and update its state
         updateOutputNodes();
-    };
+    }, [edges, setEdges]);
 
     return {
         reactFlowInstance,

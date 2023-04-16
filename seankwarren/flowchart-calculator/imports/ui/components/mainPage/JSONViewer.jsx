@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';
+import { useDarkMode } from '../reusable/DarkModeContext';
 
 const JSONViewer = ({
     children,
@@ -8,33 +9,27 @@ const JSONViewer = ({
     edges,
     flows,
     loadFlowchart,
-    isDarkMode,
     onSave,
     flowName,
     updateFlowName,
 }) => {
-    // Darkmode style toggling
-    const jsonViewerStyle = {
-        backgroundColor: isDarkMode
-            ? 'rgba(30, 30, 30, 1)'
-            : 'rgba(255, 255, 255, 1)',
-        color: isDarkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)',
-    };
 
-    useEffect(() => {
-        hljs.highlightAll();
-    }, [nodes, edges]);
+    const { isDarkMode } = useDarkMode();
 
     useEffect(() => {
         hljs.registerLanguage('json', json);
     }, [])
     
+    useEffect(() => {
+        hljs.highlightAll();
+    }, [nodes, edges]);
+    
 
     // TODO: move save/load controls to seperate component
     return (
         <div
-            className='json-viewer'
-            style={{ ...jsonViewerStyle, height: '100vh' }}
+            className={'json-viewer'+ (isDarkMode ? " dark-mode" : "")}
+            style={{ height: '100vh' }}
         >
             {children}
             <div className='save-control-panel'>

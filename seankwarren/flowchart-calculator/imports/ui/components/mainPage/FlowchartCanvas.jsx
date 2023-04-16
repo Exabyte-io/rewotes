@@ -4,6 +4,7 @@ import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
 import nodeTypesConfig from '../customNodes/nodeTypes';
 import usePrevious from '../../hooks/usePrevious';
 import getNodeColor from '../../utils/getNodeColor';
+import { useDarkMode } from '../reusable/DarkModeContext';
 
 const FlowchartCanvas = ({
     setReactFlowInstance,
@@ -15,23 +16,26 @@ const FlowchartCanvas = ({
     handleDragOver,
     handleDrop,
     updateOutputNodes,
-    isDarkMode,
+    // isDarkMode,
 }) => {
+    const { isDarkMode } = useDarkMode();
     // store previous nodes and edges as state
     const prevNodes = usePrevious(nodes);
     const prevEdges = usePrevious(edges);
-
-    // Darkmode style toggling
-    const reactFlowStyle = {
-        backgroundColor: isDarkMode
-            ? 'rgba(40, 40, 40, 1)'
-            : 'rgba(255, 255, 255, 1)',
-    };
 
     // Define custom node types
     const nodeTypes = useMemo(() => {
         return nodeTypesConfig;
     }, []);
+
+    useEffect(() => {
+        window.handleConnect = handleConnect;
+        window.edges = edges;
+        return () => {
+            window.handleConnect = null;
+            window.edges = null;
+        };
+    }, [handleConnect, edges]);
 
     useEffect(() => {
         // TODO: use lodash to evaluate equality?
@@ -55,19 +59,18 @@ const FlowchartCanvas = ({
             snapToGrid
             onDrop={handleDrop}
             onDragOver={handleDragOver}
-            style={reactFlowStyle}
             proOptions={{ hideAttribution: true }}
+            className={isDarkMode ? "dark-mode" : ""}
         >
             <MiniMap nodeColor={getNodeColor} />
             <Controls />
-            <Background
+            <Background className={isDarkMode ? "dark-mode" : ""}
                 gap={16}
                 color={
                     isDarkMode
                         ? 'rgba(255, 255, 255, 1)'
                         : 'rgba(100, 100, 100, 1)'
                 }
-                isDarkMode={isDarkMode}
             />
         </ReactFlow>
     );

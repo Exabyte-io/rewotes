@@ -8,9 +8,9 @@ const BinaryNode = ({ id, data }) => {
     };
 
     return (
-        <div className='node binary round'>
+        <div className='node binary round' data-testid='binary-node'>
             <Handle
-                className='handle input'
+                className='handle input top'
                 type='target'
                 position='left'
                 id={`${id}-left-top`}
@@ -19,7 +19,7 @@ const BinaryNode = ({ id, data }) => {
                 }}
             />
             <Handle
-                className='handle input'
+                className='handle input bottom'
                 type='target'
                 position='left'
                 id={`${id}-left-bottom`}

@@ -40,11 +40,13 @@ body {
     top: 0;
     z-index: 10;
     justify-content: left;
-    /* padding-left: var(--small-padding); */
     align-items: center;
-    background-color: var(--gray);
+    background-color: rgba(51, 51, 51, 0.3);
     display: flex;
-    /* height: fit-content; */
+}
+
+.buttons-panel.dark-mode {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .clear {
@@ -68,6 +70,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    color: black;
 }
 
 .node.button {
@@ -230,4 +233,13 @@ input {
     /* background-color: var(--input-color); */
     border: 1px solid #000;
     color: #000;
+}
+
+.dark-mode {
+    background-color: rgba(30, 30, 30, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
+.react-flow.dark-mode {
+    background-color: rgba(40, 40, 40, 1);
 }
