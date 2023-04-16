@@ -8,13 +8,15 @@ import { EditMenu } from '../menu/edit_menu/EditMenu';
 import { ViewMenu } from '../menu/view_menu/ViewMenu';
 import { HelpMenu } from '../menu/help_menu/HelpMenu';
 import MenuPopover from '../menu/MenuPopover';
+import { parsePOSCAR } from '../../actions/parsePoscar';
+import { getFileType } from '../../actions/getFileType';
 
 interface ToolbarProps {
   toggleSettings: () => void,
 }
 
 const Toolbar = ({toggleSettings}: ToolbarProps) => {
-  const { importSource, setSourceName } = useSourceContext();
+  const { importSource, setSourceName, setSource } = useSourceContext();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const theme = useSettings().settings.theme;
   const [isFileShown, setFileShown] = useState(false);
@@ -31,11 +33,11 @@ const Toolbar = ({toggleSettings}: ToolbarProps) => {
   };
 
   const handleUndo = () => {
-    console.log('You can`t undo what has been done...');
+    console.log('Clicked Undo');
   }
 
   const handleRedo = () => {
-    console.log('You can`t redo it either...');
+    console.log('Clicked Redo');
   }
 
   return (

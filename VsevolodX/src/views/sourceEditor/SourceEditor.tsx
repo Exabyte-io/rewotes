@@ -6,6 +6,7 @@ import { useAtomsContext, Atom } from '../../context/AtomsContext';
 import VStack from '../../components/utils/VStack';
 import ViewHeading from '../../components/view_heading/ViewHeading';
 import { Vector3 } from 'three';
+import { poscarToXYZ } from '../../actions/poscarToXyz';
 
 function SourceEditor() {
   const { source, setSource, sourceName, isValidXYZFormat, setIsValidXYZFormat } = useSourceContext();
@@ -77,8 +78,9 @@ function SourceEditor() {
     else console.log('problem at handle change');
   };
 
-  const handleSave = () => {
-    //TODO: save to local storage 
+  const handleConvert = () => {
+    const data = poscarToXYZ(source);
+    if (data && !isValidXYZFormat) setSource(data); 
   }
 
   return (
@@ -89,7 +91,7 @@ function SourceEditor() {
         </ViewHeading>
 
         <ControlGroup data-testid='control-group'>
-          <InputGroup readOnly={true} value={sourceName} fill={true} rightElement={<Button text='Save' onClick={handleSave} />} />
+          <InputGroup readOnly={true} value={sourceName} fill={true} rightElement={<Button text='Convert' onClick={handleConvert} />} />
           <Tag
             data-testid='xyz-validity-tag'
             style={{ width: '30%' }}

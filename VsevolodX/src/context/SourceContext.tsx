@@ -1,4 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { parsePOSCAR } from '../actions/parsePoscar';
+import { getFileType } from '../actions/getFileType';
+import { poscarToXYZ } from '../actions/poscarToXyz';
 
 type SourceContextType = {
   source: string;
@@ -73,12 +76,15 @@ export const SourceProvider: React.FC<SourceProviderProps> = ({ children, initia
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
       if (typeof e.target?.result === 'string') {
-        setSource(e.target.result);
+        let contents = e.target.result;
+        setSource(contents);
+        saveSourceNameToLocalStorage(file.name);
       }
     };
     fileReader.readAsText(file);
     setSourceName(file.name);
-  };
+  };  
+  
 
   return (
     <SourceContext.Provider value={{ source, setSource, importSource, sourceName, setSourceName, saveSourceToLocalStorage, isValidXYZFormat, setIsValidXYZFormat  }}>
