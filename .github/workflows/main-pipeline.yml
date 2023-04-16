@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - itgold
+  workflow_dispatch:
+    inputs:
+      instance_count:
+        description: 'Instance count (how many instances to create. Default - 1)'
+        required: false
+        default: '1'
+      instance_template_index:
+        description: 'Instance template index (what types of ec2 instances to use. Default - 1)'
+        required: false
+        default: '1'
 
 jobs:
   deploy:
@@ -55,7 +65,7 @@ jobs:
       - name: Deploy Infrastructure
         run: |
           cd itgold/scripts
-          ./init.sh ${{ steps.user-input.outputs.instance_template_index }} ${{ steps.user-input.outputs.instance_count }}
+          ./init.sh ${{ github.event.inputs.instance_template_index }} ${{ github.event.inputs.instance_count }}
 
       - name: Confirm Destroy Infrastructure
         id: confirm-destroy
