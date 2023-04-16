@@ -102,8 +102,8 @@ Run tests with `npm run cypress:open`
 - [x] As a development user, I should be able to automatically test all of the binary, unary, and comparison operations using cypress.
 - [x] As a development user, I should be able to automatically test all basic user interactions, including toggling darkmode, __resizing the pane__, clearing the flowchart, dragging and dropping nodes, and drawing edges using cypress.
 - [x] As a development user, I should be able to automatically test the save and load procedure using cypress.
+- [x] As a development user, I should be able to automatically test a complex flowchart like the tanh() function using cypress.
 
 ### TODO User Stories:
-- [ ] As a development user, I should be able to automatically test a complex flowchart like the tanh() function using cypress.
 - [ ] As a development user, I should be able to automatically test that the rendered JSON is updated on change, and accurate using cypress.
 - [ ] As a development user, I should be able to unit test each react component and hook using jest.
