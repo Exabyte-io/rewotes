@@ -1,0 +1,22 @@
+Region: us-west-1
+Image:
+  Os: ubuntu2004
+HeadNode:
+  InstanceType: t2.micro
+  Networking:
+    SubnetId: subnet-0b07a91d85deb0cb3
+  Ssh:
+    KeyName: Reification10_Ubuntu
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+  - Name: queue1
+    ComputeResources:
+    - Name: t2micro
+      Instances:
+      - InstanceType: t2.micro
+      MinCount: 0
+      MaxCount: 16
+    Networking:
+      SubnetIds:
+      - subnet-0e15af99ba3c799e0
