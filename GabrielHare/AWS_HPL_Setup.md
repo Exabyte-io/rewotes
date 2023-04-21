@@ -1,6 +1,8 @@
 # AWS Parallel Cluster Setup
 [Following general Setup instructions from AWS docs](https://docs.aws.amazon.com/parallelcluster/latest/ug/install-v3-virtual-environment.html)
+
 Local Platform Only
+
 Ubuntu 20.04 (Focal Fossa)
 
 NOTE: Performance improvement option:  
@@ -10,7 +12,9 @@ NOTE: Logging option:
 [https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html)
 
 NOTE: Relevant example use-cases:
+
 [https://sunhwan.github.io/blog/2021/04/17/Run-Molecular-Dynamics-Simulation-on-AWS-Cluster.html](https://sunhwan.github.io/blog/2021/04/17/Run-Molecular-Dynamics-Simulation-on-AWS-Cluster.html)  
+
 [https://aws.amazon.com/blogs/hpc/running-20k-simulations-in-3-days-with-aws-batch/](https://aws.amazon.com/blogs/hpc/running-20k-simulations-in-3-days-with-aws-batch/)  
 
 ## Install
@@ -51,6 +55,7 @@ Verify:
     $ pcluster configure --config [your cluster config].yaml
 
 This will start a command line interface to specify the cluster configuration.
+
 EXAMPLE:
  - One queue, named "queue1"
  - Nodes at t2.micro instances
@@ -298,26 +303,27 @@ Execute the tests (will launch EC2 node instances)
 
     $ ./exabench --execute --type hpl
 
-Wait for queue to empty
+Wait for queue to empty and [watch job status progression](https://slurm.schedmd.com/squeue.html#lbAG)
 
     $ watch -n 10 squeue
+
+NOTE: Node instances will appear in EC2 to handle each job, up to the cluster maximum.
 
 Collect results when the queue is empty so all benchmark test configurations have executed.
 
     $ ./exabench --results --type hpl  
 
-Results are appended to the results/result.json file, which is 
+Results are appended to the results/result.json file, which is managed by LFS.
 
     $ git config diff.lfs.textconv cat  
     $ git diff results/results.json
 
 In the default configuration EC2 node instances will terminate after 10 minutes without activity.
 
-NOTE: Node instances will appear in EC2 to handle each job, up to the cluster maximum.
-NOTE: Standard and error outputs will appear in a log file adjacent to the HPL.dat for each benchmark
-NOTE: [SLURM squeue job status](https://slurm.schedmd.com/squeue.html#lbAG)
 NOTE: [Additional diagnostics using sacctmgr](https://stackoverflow.com/questions/29928925/how-can-i-get-detailed-job-run-info-from-slurm-e-g-like-that-produced-for-sta)
+
 NOTE: [Additional node boot failure information](https://stackoverflow.com/questions/59074208/obtain-the-boot-and-failure-history-of-nodes-in-a-slurm-cluster)
+
 NOTE: The following is a *rare* job failure, and can be resolved simply be retrying the failed job:
 ```
 --------------------------------------------------------------------------  
