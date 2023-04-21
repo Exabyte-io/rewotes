@@ -8,8 +8,6 @@ import { EditMenu } from '../menu/edit_menu/EditMenu';
 import { ViewMenu } from '../menu/view_menu/ViewMenu';
 import { HelpMenu } from '../menu/help_menu/HelpMenu';
 import MenuPopover from '../menu/MenuPopover';
-import { parsePOSCAR } from '../../actions/parsePoscar';
-import { getFileType } from '../../actions/getFileType';
 
 interface ToolbarProps {
   toggleSettings: () => void,

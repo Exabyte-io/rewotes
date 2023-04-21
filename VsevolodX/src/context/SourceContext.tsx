@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { parsePOSCAR } from '../actions/parsePoscar';
 import { getFileType } from '../actions/getFileType';
 import { poscarToXYZ } from '../actions/poscarToXyz';
 

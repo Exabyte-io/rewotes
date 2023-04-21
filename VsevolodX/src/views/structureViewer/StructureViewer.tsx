@@ -54,6 +54,7 @@ interface DraggableSphereProps {
   onAtomMove: (atom: Atom, newPosition: Vector3) => void;
   editEnabled?: boolean;
   shiftPressed?: boolean;
+  title?: string;
 };
 
 const DraggableSphere: React.FC<DraggableSphereProps> = (props) => {
@@ -167,6 +168,7 @@ const StructureViewer: React.FC = () => {
             const defaultColor = settings.settings.defaultAtomColor;
             const materialColor = colorObj ? colorObj.color : defaultColor;
             return <DraggableSphere 
+              title={'atom-' + atom.id}
               atom={atom} 
               materialColor={materialColor} 
               key={atom.id} 

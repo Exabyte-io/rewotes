@@ -27,7 +27,7 @@ describe('StructureViewer', () => {
       setSource,
     }));
 
-    const draggableSphere = screen.getByTitle('draggable-sphere-0');
+    const draggableSphere = screen.getByTitle('atom-0');
     fireEvent.mouseDown(draggableSphere);
     fireEvent.mouseMove(draggableSphere, { clientX: 100, clientY: 100 });
     fireEvent.mouseUp(draggableSphere);
