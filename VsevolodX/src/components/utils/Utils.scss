@@ -1,0 +1,22 @@
+.HStack {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+  
+.HStack > * {
+  margin: 0 0.25rem;
+  height: 100%;
+}
+
+.VStack {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.VStack > * {
+  margin: 0.25rem 0;
+}

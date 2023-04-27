@@ -1,0 +1,19 @@
+.StructureViewer {
+    width: 60%;
+    min-width: 40%;
+}
+
+.Canvas {
+    height: 60%;
+    width: 100%;
+    max-height: 70vh;
+    background: grey;
+}
+
+.Canvas.light {
+    background-color: gray !important;
+}
+
+.Canvas.dark {
+    background: black !important;
+}

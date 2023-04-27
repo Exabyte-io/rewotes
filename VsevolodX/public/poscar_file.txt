@@ -1,0 +1,11 @@
+Al_FCC # comment line
+1 # universal scaling factor
+4.00 0.00 0.00 # first Bravais lattice vector
+0.00 4.00 0.00 # second Bravais lattice vector
+0.00 0.00 4.00 # third Bravais lattice vector
+4 # number of atoms per species, be consistent:
+direct or cartesian, only first letter is significant
+0.00000000 0.00000000 0.0000000 positions
+0.50000000 0.00000000 0.5000000
+0.50000000 0.50000000 0.0000000
+0.00000000 0.50000000 0.5000000

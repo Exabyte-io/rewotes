@@ -1,0 +1,18 @@
+.SourceEditor {
+    height: 100%;
+    width: 40%;
+}
+
+.TextEditor {
+    height: 80%;
+    width: 100%;
+    min-height: 30vh;
+    max-height: 70vh;
+    flex: 1;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow: visible;
+    resize: none;
+}
+
+
