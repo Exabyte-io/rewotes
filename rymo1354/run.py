@@ -2,10 +2,7 @@ from ase.calculators.vasp import Vasp
 from ase.io import read 
 from convergence.tracker import ConvergenceHandler
 import argparse
-from copy import deepcopy
-import sys
 import os
-import numpy as np
 
 def argument_parser():
     parser = argparse.ArgumentParser()
@@ -16,15 +13,15 @@ def argument_parser():
     args = parser.parse_args()
     return args
 
+
 if __name__ == '__main__':
-    ### My VASP submission details, change/alter for your specific setup ###
+    # My VASP submission details, change/alter for your specific setup 
     executable_path = '/home/rtrottie/programs/vasp/5.4.4.2019/bin/vasp_std'
     time = '1:00:00'
     partition = 'debug'
     nodes = 1
     account = 'custws'
     run_command = 'srun --time %s --partition %s --nodes %s --account %s %s' % (time, partition, str(nodes), account, executable_path)
-    ###
 
     args = argument_parser()
     ase_atoms = read(os.path.join(args.directory, 'POSCAR'))
