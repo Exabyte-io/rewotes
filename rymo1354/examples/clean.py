@@ -14,9 +14,5 @@ for root, dirs, files in os.walk(directory, topdown=False):
                 pass
             elif f == 'KPOINTS': 
                 pass
-            elif f == 'submit.sh':
-                pass
-            elif f == 'run.py': 
-                pass
             else:
                 os.remove(filepath) 

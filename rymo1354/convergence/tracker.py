@@ -8,7 +8,7 @@ class GenerateKpoints(object):
     def __init__(self):
         pass
 
-    def my_ceil(self, value, precision=0):
+    def my_ceil(self, value, precision=6):
         ''' Deals with floating point uncertainty '''
         return np.true_divide(np.ceil(value * 10**precision), 10**precision)
 
@@ -19,9 +19,9 @@ class GenerateKpoints(object):
         return np.max([1, int(np.ceil(np.linalg.norm(reciprocal_vector)*((2*np.pi)/kspacing)))])
 
     def calc_new_division(self, reciprocal_lattice, old_division):
-        increase_kspacings = [self.my_ceil(self.calc_Kspacing(reciprocal_lattice[0], old_division[0] + 1), 6), 
-                              self.my_ceil(self.calc_Kspacing(reciprocal_lattice[1], old_division[1] + 1), 6), 
-                              self.my_ceil(self.calc_Kspacing(reciprocal_lattice[2], old_division[2] + 1), 6)]
+        increase_kspacings = [self.my_ceil(self.calc_Kspacing(reciprocal_lattice[0], old_division[0] + 1)), 
+                              self.my_ceil(self.calc_Kspacing(reciprocal_lattice[1], old_division[1] + 1)), 
+                              self.my_ceil(self.calc_Kspacing(reciprocal_lattice[2], old_division[2] + 1))]
         new_kspacing = np.max(increase_kspacings) # Largest kspacing that induces a change in kpts
         new_division = [self.calc_N(reciprocal_lattice[0], new_kspacing), 
                         self.calc_N(reciprocal_lattice[1], new_kspacing),
@@ -32,6 +32,13 @@ class ConvergenceHandler(object):
     def __init__(self, atoms, calculator, kpoints, threshold, condition='subsequent', prop='total energy'):
         self.atoms = atoms
         self.calculator = calculator
+        if 'ediffg' in self.calculator.asdict()['inputs']:
+            if np.sign(self.calculator.asdict()['inputs']['ediffg']) == -1:
+                self.fmax = np.absolute(self.calculator.asdict()['inputs']['ediffg'])
+            else:
+                self.fmax = 1000 # Only total energy converged 
+        else:
+            self.fmax = 1000 # Only total energy converged
         self.starting_kpoints = kpoints
         self.threshold = threshold
         self.condition = condition
@@ -76,10 +83,14 @@ class ConvergenceHandler(object):
             self.calculator.set(kpts=kpoints)
             opt_atoms = deepcopy(self.atoms)
             opt_atoms.set_calculator(self.calculator)
-            print('Running with %s KPOINTS' % str(kpoints))
+
+            kspacing = np.min(self.generate_kpoints.calc_Kspacing(self.atoms.get_reciprocal_cell(), kpoints))
+            r_kspacing = self.generate_kpoints.my_ceil(kspacing)
+
+            print('Running with %s KPOINTS using KSPACING = %s Angstroms-1' % (str(kpoints), str(r_kspacing)))
             try:
                 optimizer = QuasiNewton(opt_atoms)
-                optimizer.run()
+                optimizer.run(fmax=self.fmax)
                 all_kpoints.append(kpoints)
                 all_props.append(opt_atoms.get_potential_energy())
                 try:
@@ -90,7 +101,7 @@ class ConvergenceHandler(object):
                 # Can occur if too few KPOINTS for tetrahedron method
                 print('Bad calculation, check input files')
             kpoints = self.generate_kpoints.calc_new_division(self.atoms.get_reciprocal_cell(), kpoints) 
-        
+ 
         final_kpoints = str(all_kpoints[-2])
         convergence_table = self.make_table(all_kpoints, all_props, all_diffs)
         
