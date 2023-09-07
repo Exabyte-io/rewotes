@@ -11,7 +11,7 @@
 
 # Convergence
 * Begins all convergence calculations at [1, 1, 1].
-* Finds the largest KSPACING value that increases the number of kpoint divisions along a reciprocal lattice vector by 1: $$max([KSPACING_{1}, KSPACING_{2}, KSPACING_{3}])$$
+* Finds the largest KSPACING value that increases the number of kpoint divisions along each reciprocal lattice vector by 1: $$max([KSPACING_{1}, KSPACING_{2}, KSPACING_{3}])$$
   and calculates the number of divisions according to this value.
 * Iteratively decreases the KSPACING value used for each calculation regardless of the reciprocal lattice geometry, as recommended by VaspWiki, until the convergence threshold is reached. 
 
