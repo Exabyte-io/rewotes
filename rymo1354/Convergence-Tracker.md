@@ -11,8 +11,9 @@
 
 # Convergence
 * Begins all convergence calculations at [1, 1, 1].
-* Finds the largest KSPACING value that increases the number of kpoint divisions along each reciprocal lattice vector, and changes the number of divisions according to this value.
-* Keeps a constant KSPACING value for each calculation, as recommended by VaspWiki. 
+* Finds the largest KSPACING value that increases the number of kpoint divisions along a reciprocal lattice vector by 1: $$max([KSPACING_{1}, KSPACING_{2}, KSPACING_{3}])$$
+  and calculates the number of divisions according to this value.
+* Iteratively decreases the KSPACING value used for each calculation regardless of the reciprocal lattice geometry, as recommended by VaspWiki, until the convergence threshold is reached. 
 
 # Example (Si2)
 ![Screen Shot 2023-09-05 at 5 09 27 PM](https://github.com/rymo1354/rewotes/assets/52838869/f4ca1bbf-64f7-48c5-a14e-5a880a539630)
