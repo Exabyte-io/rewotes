@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "basistron"
+version = "0.1.0"
+description = "The basis set selector"
+authors = ["codeliciousness <exabytecandidate@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "1.8.2"
+requests = "2.20.1"
+exabyte-api-client = {git = "https://github.com/exabyte-io/api-client", rev = "2021.06.25"}
+beautifulsoup4 = "^4.10.0"
+pandas = "^1.3.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+black = "^21.9b0"
+pytest-cov = "^3.0.0"
+isort = "^5.9.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
