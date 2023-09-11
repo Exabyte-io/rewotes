@@ -1,3 +1,9 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "next", "prettier"],
+  "rules": {
+    "@next/next/no-html-link-for-pages": "off",
+    "react/jsx-key": "off",
+    "prefer-arrow-callback": 1,
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
 }
