@@ -2,6 +2,7 @@ INCAR created by Atomic Simulation Environment
  ENCUT = 520.000000
  SIGMA = 0.050000
  EDIFF = 2.00e-04
+ EDIFFG = -1.00e-02
  ALGO = Fast
  PREC = Accurate
  IBRION = 2
