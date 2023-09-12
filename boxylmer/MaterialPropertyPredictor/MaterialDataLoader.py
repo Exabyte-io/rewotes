@@ -1,8 +1,12 @@
 from mp_api.client import MPRester 
 from abc import ABC, abstractmethod
 import numpy as np
+from sklearn.model_selection import train_test_split
+
+RSEED = 1996
 
 class AbstractDataLoader(ABC):
+    test_size = 0.2
     def __init__(self):
         self.structures = None
 
@@ -31,6 +35,9 @@ class AbstractDataLoader(ABC):
         self.coulomb_matrix_eigenvalues = None
 
         self.input_length = None
+
+
+        self.input_cache = None
 
     @abstractmethod
     def load_data(self):
@@ -120,26 +127,27 @@ class AbstractDataLoader(ABC):
         Returns:
         - padded_feature_vectors (np.array): Padded inputs of shape (Sample, Feature)
         """
+        if self.input_cache is None: 
+            num_structures = len(self.structures)
+            padded_feature_vectors = np.full((num_structures, self.input_length), padding_value, dtype=np.float32)
 
-        num_structures = len(self.structures)
-        padded_feature_vectors = np.full((num_structures, self.input_length), padding_value, dtype=np.float32)
+            for i in range(num_structures):
+                feature_vector = np.hstack(
+                    (self.volumes[i], 
+                    self.lattice_vectors[i],
+                    self.lattice_angles[i], 
+                    self.coulomb_matrix_eigenvalues[i]), dtype=np.float32)
 
-        for i in range(num_structures):
-            feature_vector = np.hstack(
-                (self.volumes[i], 
-                 self.lattice_vectors[i],
-                 self.lattice_angles[i], 
-                 self.coulomb_matrix_eigenvalues[i]), dtype=np.float32)
+                padding_size = self.input_length - len(feature_vector)
 
-            padding_size = self.input_length - len(feature_vector)
+                if padding_size >= 0:
+                    padded_feature_vectors[i, :len(feature_vector)] = feature_vector
+                else:
+                    raise ValueError("Input feature vector size exceeded the available input size.")
+            self.input_cache = padded_feature_vectors
 
-            if padding_size >= 0:
-                padded_feature_vectors[i, :len(feature_vector)] = feature_vector
-            else:
-                raise ValueError("Input feature vector size exceeded the available input size.")
-
-        return padded_feature_vectors
-
+        return self.input_cache
+    
     def get_model_outputs(self):
         """
         Acquire the model ouptut data as a procured single dimensional ndarray. 
@@ -148,6 +156,19 @@ class AbstractDataLoader(ABC):
         - outputs (np.array): Onputs of shape (Float32)
         """
         return self.band_gaps
+
+    def get_train_data(self, train_size=1-test_size, seed=RSEED):
+        # these data sets are typically small, calling the function like this is not likely to bottleneck
+        inputs = self.get_model_inputs()
+        outputs = self.get_model_outputs()
+        train_x, _, train_y, _ = train_test_split(inputs, outputs, train_size=train_size, random_state=seed)
+        return train_x, train_y
+
+    def get_test_data(self, test_size=test_size, seed=RSEED):
+        inputs = self.get_model_inputs()
+        outputs = self.get_model_outputs()
+        _, test_x, _, test_y = train_test_split(inputs, outputs, test_size=test_size, random_state=seed)
+        return test_x, test_y
 
     def get_input_length(self):
         return self.input_length

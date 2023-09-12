@@ -3,6 +3,7 @@
 
 # The Plan
 ## Monday (primarily planning, familiarize with literature and MPRester)
+### Day plan
 - Create package structure
 - Outline classes and necessary abstractions
     - Abstract class to load / curate data (DataLoader)
@@ -19,6 +20,7 @@
 - Will leave relevant and useful literature sources as comments for reference later.
 
 ## Tuesday (Finish up data loader, begin model class)
+### Day plan
 - Identify appropriate structure for models and fill out the BandGapPredictor
     - in this limited case the input will be flat, but a 3D structure such as graphs will be more complicated and likely require a different representation or accessor method
     - The loader should hold onto the structure objects, so graph construction is still possible without weird methods / a class rewrite.
@@ -27,10 +29,23 @@
 - Possibly, we could use an autoencoder to get over possible padding issues, if the tree based methods don't like the zero padding. 
     - Pros: Faster tree inputs, reduced input space, likely better performance
     - Cons: Can't find the importance of each input (random forest), training the AE could be super expensive and lag out everything
-    - This might be a more realistic reach goal than GNNs, lets try this first if there's time.   
+    - This might be a more realistic reach goal than GNNs, lets try this first if there's time. 
+
+
+### Notes and issues - Tuesday
+- It's a simple design problem, but should we have the model be dependent on the dataloader directly, or some direct representation of its data? 
+    - Making it dependent on abstract data loaders make it harder to get fine-grained control of what data we're using, so train-test-validate splits are less clear. 
+    - The direct meaning of a flat input vector is basically useless to anyone trying to use this package, as the meaning of the vector changes depending on what features you're using for the model.
+    - The latter point is- probably -more important in an industry setting, though I don't have much experience here. I'm guessing this is the case: it's more important to have it be readable than to expose fine grain control over training and testing. Therefore: We will add train/test/validate accessors with rng seeds to the dataloader class and implement reasonable defaults. 
+
+- It may be useful to implement predict_pymatgen(pymatgen_structure, extras={}) to facilitate easy prediction with custom structures, but this may be out of scope for now. **Future design will need to consider how exactly novel predictions are going to be made and where from / in what format that data will arrive in.**  
 
 ## Wednesday (Finish up model, test model for goals (realistic band gap values, parity, etc))
+### Day plan
 
 ## Thursday (Visualization of results + deal with possible issues or hangups that may have happened Mon-Wed)
+### Day plan
 
 ## Friday (last day: wrap up and write comments and instructions.)
+### Day plan
+

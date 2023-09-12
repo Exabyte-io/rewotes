@@ -19,3 +19,15 @@ def test_loading():
 
 def test_input_and_output_len():
     assert len(loader.get_model_inputs()) == len(loader.get_model_outputs())
+
+def test_training_and_testing_splits():
+    # test_size = 0.3
+    train_x, train_y = loader.get_train_data()
+    assert len(train_x) == len(train_y)
+
+    test_x, test_y = loader.get_test_data()
+    assert len(test_x) == len(test_y)
+
+    training_length = len(train_x)
+    testing_length = len(test_x)
+    assert training_length > testing_length
