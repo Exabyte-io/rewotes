@@ -11,7 +11,7 @@ export const Cuboid = () => {
   return (
     <mesh castShadow ref={mesh}>
       <boxBufferGeometry attach="geometry" args={[1, 2, 1]} />
-      <MeshWobbleMaterial attach="material" distort={0.5} color="red" />
+      <MeshWobbleMaterial attach="material" color="red" />
     </mesh>
   )
 }
