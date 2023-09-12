@@ -24,7 +24,10 @@
     - The loader should hold onto the structure objects, so graph construction is still possible without weird methods / a class rewrite.
 - Models: RandomForest (doable), GradientBoosting (doable), Graph Convolution (reach, likely won't have enough time this week)
 - Padding -> Decide how to allocate it, how will the max size be determined and stored?
-- 
+- Possibly, we could use an autoencoder to get over possible padding issues, if the tree based methods don't like the zero padding. 
+    - Pros: Faster tree inputs, reduced input space, likely better performance
+    - Cons: Can't find the importance of each input (random forest), training the AE could be super expensive and lag out everything
+    - This might be a more realistic reach goal than GNNs, lets try this first if there's time.   
 
 ## Wednesday (Finish up model, test model for goals (realistic band gap values, parity, etc))
 
