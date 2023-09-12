@@ -1,18 +1,18 @@
 "use client"
-import { Canvas } from "@react-three/fiber"
-import { useRef, FC } from "react"
-import { Mesh } from "three"
 import { OrbitControls } from "@react-three/drei"
+import { Canvas, Vector3 } from "@react-three/fiber"
+import { FC, useRef } from "react"
+import { Mesh } from "three"
 // import { Cuboid } from "@components"
 import Box from "./Box"
 
-const parseInput = (input: string): GLfloat[][] => {
-  const lines = input.split('\n')
-  const tokens = lines.map((s) => s.split(','))
-  const cleanedTokens = tokens.map((line) => line.map((token) => parseFloat(token.trim())))
-  console.log('lines', lines)
-  console.log('tokens', tokens)
-  console.log('cleanedTokens', cleanedTokens)
+const parseInput = (input: string): Vector3[] => {
+  const lines = input.split("\n")
+  const tokens = lines.map((s) => s.split(","))
+  const cleanedTokens = tokens.map((line) => line.map((token) => parseFloat(token.trim())) as Vector3)
+  console.log("lines", lines)
+  console.log("tokens", tokens)
+  console.log("cleanedTokens", cleanedTokens)
   return cleanedTokens
 }
 
