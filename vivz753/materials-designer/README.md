@@ -3,6 +3,7 @@
 - [ ] import POSCAR & XYZ files
 - [ ] figure out how to do custom geometry
 - [ ] figure out what to render on explorer
+- [ ] submit [app](https://wellfound.com/jobs/1807964-lead-frontend-engineer-react)
 
 # Materials Designer (Frontend/UX)
 
