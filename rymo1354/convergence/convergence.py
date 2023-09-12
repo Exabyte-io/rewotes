@@ -30,7 +30,7 @@ class KptsOperator:
 
     def calc_used_spacing(self, atoms, division):
         reciprocal_lattice = atoms.get_reciprocal_cell()
-        used_spacing = np.min([self.my_ceil(self.calc_Kspacing(reciprocal_lattice[i],
+        used_spacing = np.max([self.my_ceil(self.calc_Kspacing(reciprocal_lattice[i],
                                division[i])) for i in range(len(reciprocal_lattice))])
         return used_spacing
 
@@ -89,7 +89,7 @@ class KptsConvergenceTracker():
 
     def run(self, calculation_type, directory, **kwargs):
         atoms, calculator, fmax, get_Kpts = self.__initialize_run(calculation_type, directory, **kwargs)
-        self.__converge(atoms, calculator, get_Kpts, fmax, kpoints=[1, 1, 1])
+        self.__converge_kpts(atoms, calculator, get_Kpts, fmax, kpoints=[1, 1, 1])
         final_kpoints = str(self.all_kpts[-2])
         convergence_table = self.__make_table()
         return final_kpoints, convergence_table
