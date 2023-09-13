@@ -1,8 +1,8 @@
 "use client"
 
-import { FC, ChangeEventHandler } from "react"
+import { ChangeEventHandler, FC } from "react"
 
-export const SourceEditor: FC<{ handleEditor: (input: string) => void }> = ({ handleEditor }) => {
+export const SourceEditor: FC<{ handleEditor: (input: string) => void; input: string }> = ({ handleEditor, input }) => {
   const handleChange: ChangeEventHandler<HTMLTextAreaElement> = async (event) => {
     console.log(event.target.value)
     handleEditor(event.target.value)
@@ -14,7 +14,11 @@ export const SourceEditor: FC<{ handleEditor: (input: string) => void }> = ({ ha
         <p className="text-sm">{`Try adding 3D vectors, comma separated, to generate additional cubes. One line per cube to set the following properties: Position<x, y, z>`}</p>
       </div>
       {/* TODO: try monaco editor w/ custom language */}
-      <textarea onChange={handleChange} className="rounded-sm focus:outline-purple-400 flex grow p-2 font-mono text-sm"></textarea>
+      <textarea
+        value={input}
+        onChange={handleChange}
+        className="flex grow rounded-sm p-2 font-mono text-sm focus:outline-purple-400"
+      ></textarea>
     </div>
   )
 }

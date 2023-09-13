@@ -1,15 +1,15 @@
 "use client"
-import { OrbitControls } from "@react-three/drei"
-import { Canvas, Vector3 } from "@react-three/fiber"
-import { FC, useRef } from "react"
-import { Mesh } from "three"
-// import { Cuboid } from "@components"
+import { Line } from "@components"
+import { TrackballControls } from "@react-three/drei"
+import { Canvas } from "@react-three/fiber"
+import { FC } from "react"
+import { Vector3 } from "three"
 import Box from "./Box"
 
 const parseInput = (input: string): Vector3[] => {
   const lines = input.split("\n")
   const tokens = lines.map((s) => s.split(","))
-  const cleanedTokens = tokens.map((line) => line.map((token) => parseFloat(token.trim())) as Vector3)
+  const cleanedTokens = tokens.map((line) => new Vector3(parseFloat(line[0]), parseFloat(line[1]), parseFloat(line[2])))
   console.log("lines", lines)
   console.log("tokens", tokens)
   console.log("cleanedTokens", cleanedTokens)
@@ -23,28 +23,16 @@ export const Visualizer: FC<{ input: string }> = ({ input }) => {
     <div className="flex h-full w-full grow flex-col justify-center">
       <p className="text-center text-xl">Visualizer</p>
       <Canvas className="h-full w-full bg-pink-200">
-        <OrbitControls enableZoom={false} />
+        <TrackballControls />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
         {vectors.map((vector, i) => (
           <Box key={i} position={vector} />
         ))}
-        <Box position={[-1.2, 0, 0]} />
-        <Box position={[1.2, 0, 0]} />
-        {/* <Cuboid /> */}
-        {/* <Sphere /> */}
+        <Line vectors={vectors} />
+        {/* <Box position={[-1.2, 0, 0]} /> */}
+        {/* <Box position={[1.2, 0, 0]} /> */}
       </Canvas>
     </div>
-  )
-}
-
-const Sphere = () => {
-  const meshRef = useRef<Mesh>(null!)
-  return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[2, 32, 16]} />
-      {/* <meshStandardMaterial color="blue" /> */}
-      <meshBasicMaterial color="orange" />
-    </mesh>
   )
 }
