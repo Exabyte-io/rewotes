@@ -6,7 +6,6 @@ from sklearn import metrics
 
 import os
 import matplotlib.pyplot as plt
-import pytest
 
 def output_directory():
     script_dir = os.path.dirname(os.path.abspath(__file__))  
@@ -48,16 +47,29 @@ def test_loading():
     warnings.filterwarnings("ignore", category=UserWarning)
     with open(api_key_file, "r") as f:
         api_key = f.read().strip()
-        loader = MPRLoader()
-        loader.load_data(
-            api_key, 
-            distance_method='fast',
-            elements=["Si", "Ge"],
-            chemsys=["Si-Ge"]
-        )
+
+    loader = MPRLoader()
+    loader.load_data(
+        api_key, 
+        distance_method='fast',
+        elements=["Si", "Ge"],
+        chemsys=["Si-Ge"]
+    )
     assert len(loader) > 0
     assert len(loader) == len(loader.get_model_inputs())
     assert len(loader) == len(loader.formulas)
+
+    truncated_eigenval_loader = MPRLoader()
+    truncated_eigenval_loader.load_data(
+        api_key, 
+        distance_method='fast',
+        elements=["Si", "Ge"],
+        chemsys=["Si-Ge"]
+    )
+    assert len(loader) == len(truncated_eigenval_loader)
+    inputs = loader.get_model_inputs()
+    input_len = len(inputs[0])
+    assert all(len(item) == input_len for item in inputs)
 
 def test_loading_accurate_distances():
     with open(api_key_file, "r") as f:

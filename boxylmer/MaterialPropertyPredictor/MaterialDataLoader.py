@@ -7,7 +7,7 @@ RSEED = 1996
 
 class AbstractDataLoader(ABC):
     test_size = 0.2
-    def __init__(self):
+    def __init__(self, n_eigenvals=None):
         self.structures = None
 
         # cached data in self.structures. It's possible to lump this all into a dict or just to use it on the fly, 
@@ -35,6 +35,7 @@ class AbstractDataLoader(ABC):
         self.coulomb_matrix_eigenvalues = None
         self.input_length = None
         self.input_cache = None
+        self.n_eigenvals = n_eigenvals
 
     @abstractmethod
     def load_data(self):
@@ -97,7 +98,10 @@ class AbstractDataLoader(ABC):
         vol = 1
         abc = 3
         angles = 3
-        eigenvals_len = max([len(s) for s in self.structures])
+        if self.n_eigenvals is None:
+            eigenvals_len = max([len(s) for s in self.structures])
+        else:
+            eigenvals_len = self.n_eigenvals
         extras_len = len(self.extra_data)
         return vol + abc + angles + eigenvals_len + extras_len
     
@@ -128,6 +132,15 @@ class AbstractDataLoader(ABC):
         self.input_length = self.calculate_max_input_size()
         self._validate()
 
+    def resize_eigenvals(arr, new_length):
+        current_length = len(arr)
+        if current_length > new_length:
+            return arr[:new_length]
+        elif current_length < new_length:
+            return np.pad(arr, (0, new_length - current_length), 'constant', constant_values=0)
+        else:
+            return arr
+
     def get_model_inputs(self, padding_value=0):
         """
         Acquire the model input data as a procured ndarray of values in a standard (Sample, Feature) format. 
@@ -141,14 +154,21 @@ class AbstractDataLoader(ABC):
         if self.input_cache is None: 
             num_structures = len(self.structures)
             padded_feature_vectors = np.full((num_structures, self.input_length), padding_value, dtype=np.float32)
-
+            
             for i in range(num_structures):
+
+                if self.n_eigenvals is None:
+                    coulomb_matrix_eigenvalues = self.coulomb_matrix_eigenvalues[i]
+                else:
+                    coulomb_matrix_eigenvalues = self.resize_eigenvals(self.coulomb_matrix_eigenvalues[i], self.n_eigenvals)
+
+
                 feature_vector = np.hstack(
                     (
                         self.volumes[i], 
                         self.lattice_vectors[i],
                         self.lattice_angles[i], 
-                        self.coulomb_matrix_eigenvalues[i]
+                        coulomb_matrix_eigenvalues
                         # np.array([atom.specie.Z for atom in self.structures[i]], dtype=np.float32) # what if we use only the atoms? 
                     ), 
                     dtype=np.float32
@@ -193,8 +213,8 @@ class AbstractDataLoader(ABC):
         return len(self.structures)
 
 class MPRLoader(AbstractDataLoader):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def load_data(self, api_key, distance_method='fast', **kwargs):
         with MPRester(api_key) as mpr:
