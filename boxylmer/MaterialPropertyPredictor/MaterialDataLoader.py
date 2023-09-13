@@ -148,8 +148,8 @@ class AbstractDataLoader(ABC):
                         self.volumes[i], 
                         self.lattice_vectors[i],
                         self.lattice_angles[i], 
-                        # self.coulomb_matrix_eigenvalues[i]
-                        np.array([atom.specie.Z for atom in self.structures[i]], dtype=np.float32) # what if we use only the atoms? 
+                        self.coulomb_matrix_eigenvalues[i]
+                        # np.array([atom.specie.Z for atom in self.structures[i]], dtype=np.float32) # what if we use only the atoms? 
                     ), 
                     dtype=np.float32
                 )

@@ -43,15 +43,16 @@ class AbstractBandGapModel(ABC):
         pass
 
 class RandomForestBandGapModel(AbstractBandGapModel):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.model = RandomForestRegressor(
             n_estimators=50, 
             min_samples_split=4, 
             min_samples_leaf=2, 
             max_depth=30, 
-            bootstrap=True
-            )
+            bootstrap=True,
+            **kwargs
+        )
 
         
     def fit(self, material_data_loader):
@@ -93,14 +94,15 @@ class RandomForestBandGapModel(AbstractBandGapModel):
 #   which is fundamentally the same but can be parallelized easily and may even have better optimization methods
 # more info: https://stats.stackexchange.com/questions/282459/xgboost-vs-python-sklearn-gradient-boosted-trees
 class GradientBoostingBandGapModel(AbstractBandGapModel):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.model = GradientBoostingRegressor(
             n_estimators=170, 
             min_samples_split=4, 
             min_samples_leaf=6, 
             max_depth=4, 
-            learning_rate=0.1
+            learning_rate=0.1,
+            **kwargs,
         )
         
 
