@@ -58,6 +58,22 @@
 
 ## Wednesday (~~Finish up model, test model for goals (realistic band gap values, parity, etc)~~ -> Document what exists now, begin understanding more about why the current set of features fail to adequately predict band gap, and begin improving the results.)
 ### Day plan
+- We have a model that overfits/memorizes with larger sizes. Yesterday, I determined that the coulomb matrix eigenvalues, while good descriptors, are too noisy and too ubiquitous to provide the model with generalizable information. Instead, I've come up with a number of options that may avoid this. 
+    - Truncating the eigenvalue descriptors to the top N values, possibly cutting out unimportant noise
+    - Switching to other (limited) structural information, such as scoring aggregates for the atoms in the lattice + some lattice parameters that are already there
+    - Autoencoder representation of the model input (reach, out of time)
+    - Graph representation of the model input (very much a reach, but it's here to be a future option)
+
+    ___
+    - The first option, truncating the eigenvalues, is the most likely to result in success. The overfitting in the context of the large number of descriptors, as well as the large amount of needed padding, likely happens as the descriptors become "fingerprints" rather than generalizable information. Reducing descriptors therefore is promising.
+    
+
+- The classes and function need documentation, namely each model / especially each object that will be exposed in a theoretical API 
+- The scripts that provide plots need to be separated from the (rather unorganized) tests, as they're a demonstration rather than tests
+- A readme needs to be written to provide instructions on installing and running the PoC
+
+### Notes and issues
+
 
 ## Thursday (Visualization of results + deal with possible issues or hangups that may have happened Mon-Wed)
 ### Day plan
