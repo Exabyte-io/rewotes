@@ -9,9 +9,12 @@ import matplotlib.pyplot as plt
 import pytest
 
 def output_directory():
-    output_dir = "test_output"
+    script_dir = os.path.dirname(os.path.abspath(__file__))  
+    output_dir = os.path.join(script_dir, "test_output") 
+
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
     return output_dir
 
 def generate_parity_plot(y, pred, filename):
@@ -49,7 +52,8 @@ def test_loading():
         loader.load_data(
             api_key, 
             distance_method='fast',
-            elements=["O", "Si", "Ge"]
+            elements=["Si", "Ge"],
+            chemsys=["Si-Ge"]
         )
     assert len(loader) > 0
     assert len(loader) == len(loader.get_model_inputs())
@@ -62,7 +66,7 @@ def test_loading_accurate_distances():
         accurate_loader.load_data(
             api_key, 
             distance_method='accurate',
-            chemsys=["Si-Ge"],
+            chemsys=["Si-Ge"], # should pull little data, making tests faster
         )
     assert len(accurate_loader) > 1
 
@@ -96,10 +100,6 @@ def test_random_forest_bandgap_model():
     assert len(y) == len(pred)
     generate_parity_plot(y, pred, "random forest parity - all data")
 
-    # # Run this to identify better hyperparams
-    # randomforest_model.fit_hyperparameters(loader)
-    # y, pred = randomforest_model.parity(loader)
-    # generate_parity_plot(y, pred, "gradient boosting parity - tuned hyperparameters")
 
 
 gradientboosting_model = None
@@ -116,6 +116,3 @@ def test_gradient_boosting_bandgap_model():
     assert len(y) == len(pred)
     generate_parity_plot(y, pred, "gradient boosting parity - all data")
 
-    # gradientboosting_model.fit_hyperparameters(loader)
-    # y, pred = gradientboosting_model.parity(loader)
-    # generate_parity_plot(y, pred, "gradient boosting parity - tuned hyperparameters")
