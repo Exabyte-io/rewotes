@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.smooth-transition {
+  @apply transition duration-200 ease-in-out;
+}
+
+.smooth-transition-all {
+  @apply transition-all duration-200 ease-out;
+}

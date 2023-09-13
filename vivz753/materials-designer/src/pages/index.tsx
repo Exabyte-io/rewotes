@@ -15,12 +15,16 @@ export default function Home() {
     setInput(input)
   }
 
+  const [hideExplorer, setHideExplorer] = useState<boolean>(false)
+
   return (
     <div className="flex min-h-screen w-full bg-blue-100 pt-20">
       <div className="flex w-full flex-row">
-        <Explorer />
-        <SourceEditor handleEditor={handleEditor} input={input} />
-        <Visualizer input={input} />
+        <Explorer hide={hideExplorer} setHide={setHideExplorer} />
+        <div className="smooth-transition-all flex w-full flex-col lg:flex-row">
+          <SourceEditor handleEditor={handleEditor} input={input} />
+          <Visualizer input={input} />
+        </div>
       </div>
     </div>
   )

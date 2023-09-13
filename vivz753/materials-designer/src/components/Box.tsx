@@ -48,8 +48,8 @@ function Box(props: MeshProps) {
         {/* <bufferGeometry>
         <bufferAttribute attach="attributes-position" count={vertices.length / 3}  array={vertices} itemSize={3} />
       </bufferGeometry> */}
-        {/* <boxGeometry args={[1, 1, 1]} /> */}
-        <sphereGeometry args={[0.05, 32, 16]} />
+        <boxGeometry args={[1, 1, 1]} />
+        {/* <sphereGeometry args={[0.05, 32, 16]} /> */}
         <meshStandardMaterial color={hovered ? "yellow" : "blue"} />
       </mesh>
     </>

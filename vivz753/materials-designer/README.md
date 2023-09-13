@@ -1,8 +1,10 @@
 # TODO
 
 - [ ] import POSCAR & XYZ files
-- [ ] figure out how to do custom geometry
-- [ ] figure out what to render on explorer
+- [x] figure out how to do custom geometry
+- [x] figure out what to render on explorer
+- [ ] add angle + segment inputs
+- [ ] add focus to interactive elements
 - [ ] submit [app](https://wellfound.com/jobs/1807964-lead-frontend-engineer-react)
 
 # Materials Designer (Frontend/UX)

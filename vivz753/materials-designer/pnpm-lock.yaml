@@ -21,6 +21,7 @@ specifiers:
   tailwindcss: 3.3.3
   three: ^0.156.1
   typescript: 5.2.2
+  uuid: ^9.0.1
 
 dependencies:
   '@react-three/drei': 9.83.9_zuzqwt5pjgtxfbnlhrmjiccg7m
@@ -36,6 +37,7 @@ dependencies:
   tailwindcss: 3.3.3
   three: 0.156.1
   typescript: 5.2.2
+  uuid: 9.0.1
 
 devDependencies:
   '@types/three': 0.156.0
@@ -2956,6 +2958,11 @@ packages:
   /utility-types/3.10.0:
     resolution: {integrity: sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==}
     engines: {node: '>= 4'}
+    dev: false
+
+  /uuid/9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
     dev: false
 
   /watchpack/2.4.0:
