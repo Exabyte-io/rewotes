@@ -13,8 +13,8 @@ const parseInput = (input: string): Vector3[] => {
   return cleanedTokens
 }
 
-export const Visualizer: FC<{ input: string }> = ({ input }) => {
-  const vectors = parseInput(input)
+export const Visualizer: FC<{ input: Record<string, string | number> }> = ({ input }) => {
+  const vectors = parseInput(input.crystalBasis as string)
 
   return (
     <div className="flex h-full w-full flex-col justify-center">

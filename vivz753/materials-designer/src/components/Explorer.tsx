@@ -41,8 +41,8 @@ export const Explorer: FC<{ hide: boolean; setHide: (hide: boolean) => void }> =
   return (
     <div
       className={clsx(
-        hide ? "lg:w-0" : "lg:w-96",
-        "smooth-transition-all absolute left-0 top-0 z-10 h-full w-1/2 pt-20 lg:relative lg:flex lg:pt-0"
+        hide ? "w-0" : "w-1/2 lg:w-96",
+        "smooth-transition-all absolute left-0 top-0 z-10 h-full pt-20 lg:relative lg:flex lg:pt-0"
       )}
     >
       <button
