@@ -47,18 +47,18 @@ export const Explorer: FC<{ hide: boolean; setHide: (hide: boolean) => void }> =
     >
       <button
         onClick={() => setHide(!hide)}
-        className="absolute left-0 top-0 z-20 m-2 mt-20 rounded-md bg-red-500 p-1 text-white lg:mt-0"
+        className="absolute left-0 top-0 z-20 m-2 mt-24 rounded-md bg-blue-500 px-2 py-1 lg:mt-0"
       >
         {hide ? `>>` : `<<`}
       </button>
       <div
         className={clsx(
           hide ? "-translate-x-full" : "translate-x-0",
-          "smooth-transition flex h-full w-full transform flex-col gap-5 overflow-auto whitespace-nowrap rounded-md border border-black bg-blue-200 px-2"
+          "smooth-transition flex h-full w-full transform flex-col gap-5 overflow-auto whitespace-nowrap rounded-md border border-white bg-blue-200 px-2"
         )}
       >
         {/* TODO: add form that takes in element name & symbol */}
-        <button onClick={() => createMaterial("Lead", "Pb")} className="ml-auto h-8 w-8 rounded-full bg-green-500">
+        <button onClick={() => createMaterial("Lead", "Pb")} className="ml-auto mt-4 h-8 w-8 rounded-full bg-green-500">
           +
         </button>
         <p className="text-center text-xl">Explorer</p>
