@@ -40,7 +40,23 @@
 
 - It may be useful to implement predict_pymatgen(pymatgen_structure, extras={}) to facilitate easy prediction with custom structures, but this may be out of scope for now. **Future design will need to consider how exactly novel predictions are going to be made and where from / in what format that data will arrive in.**  
 
-## Wednesday (Finish up model, test model for goals (realistic band gap values, parity, etc))
+- Clearly, based on parity plots alone we are not predicting well. Though we technically satisfy the "reasonable value" property set forth by the original request (that is, values are in the right ballpark and will interpolate between pure systems), these techniques are a far stretch from being usable in a real environment. We have a number of options and conclusions as of today.
+    - Random forest slightly out-performs gradient boosting using these features for large datasets and likely all sizes as well. 
+    - Foregoing coulomb matrix methods and attempting more direct- but less informative -features such as simply a list of atomic numbers might assist with these models.
+    - Time permitting, an autoencoder would be very interesting to pursue, as it would fix two issues at once: High dimensionality and variable input sizes (necessitating padding).
+
+    - We can check the model for memorization by plotting training parity as well: Thus far memorization does not appear to be occurring with fewer than 100 estimators. This is consistent for smaller datasets. (see below)
+
+    - Since we're padding with zeros and eigenvalues encode structural information, maybe we should ensure the sorting is *descending* and not *ascending*? 
+        - Yep! This slightly improves the testing results in both models, almost certainly because larger EVs represent more prevalent informaiton. ]
+    
+    - I'll go ahead and implement something to find the best hyperparameters and move on from this, as it's a proof of concept. Fixing the descriptor with an autoencoder or another better featurization is likely the core issue, everything else is just slapping band-aids on the problem. 
+
+    - Optimizing hyperparameters definitely doesn't avoid memorization to any degree, and possibly worsens it. 
+
+- Overall conclusion: **Switching from eigenvalues to atomic numbers improves both models RMSE by almost exaclty 0.02, suggesting that the models are struggling to learn to represent these features. As a result, autoencoders present the most viable way to improve these predictions, but implementing them may be out of scope within the time limits of this project**
+
+## Wednesday (~~Finish up model, test model for goals (realistic band gap values, parity, etc)~~ -> Document what exists now, begin understanding more about why the current set of features fail to adequately predict band gap, and begin improving the results.)
 ### Day plan
 
 ## Thursday (Visualization of results + deal with possible issues or hangups that may have happened Mon-Wed)

@@ -33,10 +33,7 @@ class AbstractDataLoader(ABC):
         #   Very good primer on why the sorted eigenvalues are both useful and computationally efficient.
         #   Still not as good as a graph representation, but this is much faster to implement given I still have papers to grade :(.
         self.coulomb_matrix_eigenvalues = None
-
         self.input_length = None
-
-
         self.input_cache = None
 
     @abstractmethod
@@ -61,7 +58,6 @@ class AbstractDataLoader(ABC):
     def calculate_distances_accurate(cls, structure):
         n = len(structure)
         distances = np.zeros((n, n))
-        
         for i in range(n):
             for j in range(i+1, n):
                 dist = structure.get_distance(i, j)
@@ -72,7 +68,7 @@ class AbstractDataLoader(ABC):
 
     # coulomb matrix implemented from https://singroup.github.io/dscribe/0.3.x/tutorials/coulomb_matrix.html
     @classmethod
-    def calculate_coulomb_matrix(cls, structure, distance_method='fast'):
+    def calculate_coulomb_matrix(cls, structure, distance_method):
         n = len(structure)
         mat = np.zeros((n, n))
         z = np.array([atom.specie.Z for atom in structure]) # docs: https://pymatgen.org/pymatgen.core.html#pymatgen.core.periodic_table.Element
@@ -93,9 +89,9 @@ class AbstractDataLoader(ABC):
     @classmethod 
     def calculate_eigenvalues(cls, coulomb_matrix):
         eigenvalues, _ = np.linalg.eigh(coulomb_matrix)
-        sorted_evs = np.sort(eigenvalues)
+        sorted_evs = np.sort(eigenvalues)[::-1]
         return sorted_evs
-
+    
     def calculate_max_input_size(self):
         # later we may modify these descriptors, so lets tabulate them. We also have extras!
         vol = 1
@@ -111,8 +107,23 @@ class AbstractDataLoader(ABC):
             assert len(self.extra_data[key] == ndata)
         # given more constraints later on, this may be expanded if the types of input data structures widen
 
-    def _process_parsed_data(self):
-        self.coulomb_matrices = [self.calculate_coulomb_matrix(s) for s in self.structures]
+    def _process_parsed_data(self, distance_method):
+        # self.coulomb_matrices = [self.calculate_coulomb_matrix(s, distance_method='accurate') for s in self.structures]
+        if distance_method == 'accurate':
+            print("Distance method is accurate rather than fast, this may take some time.")
+        self.coulomb_matrices = []
+        total_iterations = len(self.structures) 
+        percent_complete = 0
+        for i, s in enumerate(self.structures):
+            if distance_method == 'accurate':
+                new_percent_complete = (i * 100) // total_iterations 
+                if new_percent_complete > percent_complete: 
+                    percent_complete = new_percent_complete
+                    print(f"Coulomb Matrix Progress: {percent_complete}%", end='\r')
+            self.coulomb_matrices.append(
+                self.calculate_coulomb_matrix(s, distance_method)
+            )
+
         self.coulomb_matrix_eigenvalues = [self.calculate_eigenvalues(cmat) for cmat in self.coulomb_matrices]
         self.input_length = self.calculate_max_input_size()
         self._validate()
@@ -133,10 +144,15 @@ class AbstractDataLoader(ABC):
 
             for i in range(num_structures):
                 feature_vector = np.hstack(
-                    (self.volumes[i], 
-                    self.lattice_vectors[i],
-                    self.lattice_angles[i], 
-                    self.coulomb_matrix_eigenvalues[i]), dtype=np.float32)
+                    (
+                        self.volumes[i], 
+                        self.lattice_vectors[i],
+                        self.lattice_angles[i], 
+                        # self.coulomb_matrix_eigenvalues[i]
+                        np.array([atom.specie.Z for atom in self.structures[i]], dtype=np.float32) # what if we use only the atoms? 
+                    ), 
+                    dtype=np.float32
+                )
 
                 padding_size = self.input_length - len(feature_vector)
 
@@ -180,7 +196,7 @@ class MPRLoader(AbstractDataLoader):
     def __init__(self):
         super().__init__()
 
-    def load_data(self, api_key, **kwargs):
+    def load_data(self, api_key, distance_method='fast', **kwargs):
         with MPRester(api_key) as mpr:
             data = mpr.materials.summary.search(
                 fields=[
@@ -204,4 +220,4 @@ class MPRLoader(AbstractDataLoader):
         # thus for this concrete class, extras are moot (but we could fill them out later, or just lump all our parsed data into a dict)
         self.extra_data = {} 
 
-        self._process_parsed_data()
+        self._process_parsed_data(distance_method=distance_method)

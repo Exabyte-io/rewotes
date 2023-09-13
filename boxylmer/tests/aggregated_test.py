@@ -2,7 +2,7 @@ import warnings
 from MaterialPropertyPredictor import MPRLoader
 from MaterialPropertyPredictor import RandomForestBandGapModel
 from MaterialPropertyPredictor import GradientBoostingBandGapModel
-
+from sklearn import metrics
 
 import os
 import matplotlib.pyplot as plt
@@ -15,10 +15,13 @@ def output_directory():
     return output_dir
 
 def generate_parity_plot(y, pred, filename):
+
+    rmse = metrics.mean_absolute_error(y, pred)  
+    rmse = round(rmse, 2)
     plt.figure(figsize=(6, 6)) 
     plt.plot(y, pred, 'ro', markersize=8, markerfacecolor='red')
     max_value = max(max(y), max(pred))
-    plt.plot([0, max_value], [0, max_value], 'k-', lw=2, label='Parity Line')
+    plt.plot([0, max_value], [0, max_value], 'k-', lw=2)
 
     plt.xlabel('y')
     plt.ylabel('pred')
@@ -27,7 +30,7 @@ def generate_parity_plot(y, pred, filename):
     plt.gca().set_aspect('equal', adjustable='box') 
     plt.box(True)
     plt.grid(False) 
-    plt.title(filename)
+    plt.title(filename + " RMSE: " + str(rmse))
     
     plot_filename = os.path.join(output_directory(), filename + ".png")
     plt.savefig(plot_filename)
@@ -35,22 +38,33 @@ def generate_parity_plot(y, pred, filename):
     assert os.path.isfile(plot_filename)
 
 
+api_key_file = "api_key.txt"
 loader = None
 def test_loading():
     global loader
     warnings.filterwarnings("ignore", category=UserWarning)
-    api_key_file = "api_key.txt"
     with open(api_key_file, "r") as f:
         api_key = f.read().strip()
         loader = MPRLoader()
         loader.load_data(
             api_key, 
+            distance_method='fast',
             elements=["O", "Si", "Ge"]
-            # chemsys=["Si", "Si-Ge", "Ge-Si", "Ge"],
         )
     assert len(loader) > 0
     assert len(loader) == len(loader.get_model_inputs())
     assert len(loader) == len(loader.formulas)
+
+def test_loading_accurate_distances():
+    with open(api_key_file, "r") as f:
+        api_key = f.read().strip()
+        accurate_loader = MPRLoader()
+        accurate_loader.load_data(
+            api_key, 
+            distance_method='accurate',
+            chemsys=["Si-Ge"],
+        )
+    assert len(accurate_loader) > 1
 
 def test_input_and_output_len():
     assert len(loader) > 1
@@ -76,8 +90,17 @@ def test_random_forest_bandgap_model():
     randomforest_model.predict(loader)
     y, pred = randomforest_model.parity(loader)
     assert len(y) == len(pred)
-
     generate_parity_plot(y, pred, "random forest parity")
+
+    y, pred = randomforest_model.parity(loader, test_data_only=False)
+    assert len(y) == len(pred)
+    generate_parity_plot(y, pred, "random forest parity - all data")
+
+    # # Run this to identify better hyperparams
+    # randomforest_model.fit_hyperparameters(loader)
+    # y, pred = randomforest_model.parity(loader)
+    # generate_parity_plot(y, pred, "gradient boosting parity - tuned hyperparameters")
+
 
 gradientboosting_model = None
 def test_gradient_boosting_bandgap_model():
@@ -87,5 +110,12 @@ def test_gradient_boosting_bandgap_model():
     gradientboosting_model.predict(loader)
     y, pred = gradientboosting_model.parity(loader)
     assert len(y) == len(pred)
-
     generate_parity_plot(y, pred, "gradient boosting parity")
+
+    y, pred = gradientboosting_model.parity(loader, test_data_only=False)
+    assert len(y) == len(pred)
+    generate_parity_plot(y, pred, "gradient boosting parity - all data")
+
+    # gradientboosting_model.fit_hyperparameters(loader)
+    # y, pred = gradientboosting_model.parity(loader)
+    # generate_parity_plot(y, pred, "gradient boosting parity - tuned hyperparameters")
