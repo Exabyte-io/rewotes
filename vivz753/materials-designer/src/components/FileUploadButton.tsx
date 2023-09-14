@@ -1,4 +1,4 @@
-import { FC, useRef, ChangeEvent, MouseEventHandler } from "react"
+import { ChangeEvent, FC, MouseEventHandler, useRef } from "react"
 
 export const FileUploadButton: FC<{ handleFile?: (file: any) => void }> = ({ handleFile }) => {
   const fileInput = useRef<HTMLInputElement>(null)
@@ -17,12 +17,12 @@ export const FileUploadButton: FC<{ handleFile?: (file: any) => void }> = ({ han
 
   return (
     <button
-      className="flex items-center justify-center rounded-xl bg-black px-4 py-2 text-orange-500 ring ring-orange-500"
+      className="flex items-center justify-center rounded-md bg-accent px-2 py-0.5 font-mozart text-xl uppercase tracking-widest text-light focus:outline-light"
       onClick={handleClick}
     >
       Import
       {/* TODO: accept specific file type only */}
-      <input ref={fileInput} onChange={handleUpload} type="file" accept="" className="hidden" />
+      <input ref={fileInput} onChange={handleUpload} type="file" accept=".xyz,.poscar,.txt" className="hidden" />
     </button>
   )
 }

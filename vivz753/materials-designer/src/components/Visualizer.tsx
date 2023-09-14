@@ -5,21 +5,27 @@ import { Canvas } from "@react-three/fiber"
 import { FC } from "react"
 import { Vector3 } from "three"
 
-const colors = ["red", "yellow", "green", "purple"]
+const colors = ["red", "yellow", "green", "purple", "blue"]
 
-export const Visualizer: FC<{ vectors: Vector3[] }> = ({ vectors }) => {
+export const Visualizer: FC<{ latticeVectors: Vector3[]; pointVectors: Vector3[] }> = ({
+  latticeVectors,
+  pointVectors,
+}) => {
   return (
-    <div className="flex h-full w-full flex-col justify-center">
-      <p className="text-center text-xl">Visualizer</p>
-      <Canvas className="h-full w-full bg-pink-200">
+    <div className="relative flex h-full w-full flex-col justify-center rounded-sm border border-dark1">
+      <Canvas className="h-full w-full bg-dark2">
         <TrackballControls />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        {vectors.map((vector, i) => (
-          <Sphere key={i} position={vector} color={colors[i - 1 % (colors.length - 1)]} />
-        ))}
-        <Line vectors={vectors} />
+        {pointVectors.map((vector, i) => {
+          const index = i % colors.length
+          return <Sphere key={i} position={vector} color={colors[index]} />
+        })}
+        <Line vectors={latticeVectors} />
       </Canvas>
+      <p className="absolute top-0 mt-10 bg-dark2 px-10 text-center font-mozart text-xl uppercase tracking-widest text-light">
+        Visualizer
+      </p>
     </div>
   )
 }

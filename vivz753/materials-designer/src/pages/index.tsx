@@ -6,20 +6,31 @@ import { Vector3 } from "three"
 
 const inter = Inter({ subsets: ["latin"] })
 
-const crystalTypes: Record<string, string> = {
+const latticeTypes: Record<string, string> = {
   cube: `1,-1,1\n1,1,1\n-1,1,1\n-1,-1,1\n1,-1,1\n\n1,-1,-1\n1,1,-1\n-1,1,-1\n-1,-1,-1\n1,-1,-1\n\n1,-1,1\n1,-1,-1\n\n1,1,1\n1,1,-1\n\n-1,1,1\n-1,1,-1\n\n-1,-1,1\n-1,-1,-1\n\n1,-1,1\n1,-1,-1`,
 }
 
-const parseInput = (input: string): Vector3[] => {
+// TODO: move to helper functions file
+const parseCommaInput = (input: string): Vector3[] => {
   const lines = input.split("\n")
   const tokens = lines.map((s) => s.split(","))
-  const cleanedTokens = tokens.map((line) => new Vector3(parseFloat(line[0]), parseFloat(line[1]), parseFloat(line[2])))
-  return cleanedTokens
+  const vectors = tokens.map((line) => new Vector3(parseFloat(line[0]), parseFloat(line[1]), parseFloat(line[2])))
+  return vectors
 }
+
+const parseXYZInput = (input: string): Array<string[] | Vector3[]> => {
+  const lines = input.split("\n")
+  const tokens = lines.map((s) => s.split(" "))
+  const vectors = tokens.map((line) => new Vector3(parseFloat(line[1]), parseFloat(line[2]), parseFloat(line[3])))
+  const symbols = tokens.map((line) => line[0])
+  return [symbols, vectors]
+}
+
+const baseLatticeVectors = parseCommaInput(latticeTypes.cube)
 
 export default function Home() {
   const [input, setInput] = useState<CrystalInput>({
-    crystalBasis: crystalTypes["cube"],
+    crystalBasis: "C 0 0 0",
     a: 2,
     b: 2,
     c: 2,
@@ -27,9 +38,8 @@ export default function Home() {
     AC: 90,
     AB: 90,
   })
-  console.log("redner")
 
-  const vectorInput = parseInput(input.crystalBasis)
+  const pointVectors = parseXYZInput(input.crystalBasis)[1] as Vector3[]
 
   const { a, b, c } = input
   const xCoord = a > 0 ? a / 2 : 0
@@ -41,7 +51,7 @@ export default function Home() {
   const min = new Vector3(-xCoord, -yCoord, -zCoord)
   const max = new Vector3(xCoord, yCoord, zCoord)
 
-  const vectors = vectorInput.map((v) => {
+  const latticeVectors = baseLatticeVectors.map((v) => {
     const exaggeratedV = v.multiply(max) // required for clamp function to work as intended
     return exaggeratedV.clamp(min, max)
   })
@@ -70,12 +80,12 @@ export default function Home() {
   const [hideExplorer, setHideExplorer] = useState<boolean>(false)
 
   return (
-    <div className="flex min-h-screen w-full bg-blue-100 pt-20">
+    <div className="flex min-h-screen w-full bg-dark2 pt-20">
       <div className="flex w-full flex-row">
         <Explorer hide={hideExplorer} setHide={setHideExplorer} />
         <div className="smooth-transition-all flex w-full flex-col lg:flex-row">
           <SourceEditor handleEditor={handleEditor} input={input} />
-          <Visualizer vectors={vectors} />
+          <Visualizer latticeVectors={latticeVectors} pointVectors={pointVectors} />
         </div>
       </div>
     </div>
