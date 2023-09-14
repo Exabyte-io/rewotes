@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, MouseEventHandler, useRef } from "react"
 
-export const FileUploadButton: FC<{ handleFile?: (file: any) => void }> = ({ handleFile }) => {
+export const FileUploadButton: FC<{ handleFile: (input: string) => void }> = ({ handleFile }) => {
   const fileInput = useRef<HTMLInputElement>(null)
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -8,11 +8,18 @@ export const FileUploadButton: FC<{ handleFile?: (file: any) => void }> = ({ han
     console.log()
   }
 
-  const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const fileUploaded = event.target.files && event.target.files[0]
-    handleFile && handleFile(fileUploaded)
-    // TODO: handle the file somehow
-    console.log(fileUploaded)
+  const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileUploaded = e.target.files && e.target.files[0]
+
+    if (fileUploaded) {
+      const reader = new FileReader()
+      reader.readAsText(fileUploaded, "UTF-8")
+      reader.onloadend = (readerEvent: ProgressEvent<FileReader>) => {
+        if (readerEvent?.target?.result) {
+          handleFile(readerEvent.target.result.toString())
+        }
+      }
+    }
   }
 
   return (
@@ -21,7 +28,6 @@ export const FileUploadButton: FC<{ handleFile?: (file: any) => void }> = ({ han
       onClick={handleClick}
     >
       Import
-      {/* TODO: accept specific file type only */}
       <input ref={fileInput} onChange={handleUpload} type="file" accept=".xyz,.poscar,.txt" className="hidden" />
     </button>
   )

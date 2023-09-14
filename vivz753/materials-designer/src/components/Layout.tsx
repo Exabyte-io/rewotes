@@ -1,4 +1,3 @@
-import { Toolbar } from "@components"
 import Head from "next/head"
 import React, { FC } from "react"
 
@@ -12,10 +11,7 @@ export const Layout: FC<React.PropsWithChildren> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div className="relative flex w-full flex-col overflow-auto bg-red-100">
-          <Toolbar />
-          {children}
-        </div>
+        <div className="relative flex w-full flex-col overflow-auto bg-red-100">{children}</div>
       </main>
     </>
   )

@@ -14,7 +14,7 @@ export const Line: FC<{ vectors: Vector3[]; color?: string }> = ({ vectors, colo
   return (
     <line>
       <bufferGeometry attach="geometry" ref={ref} />
-      <lineBasicMaterial color={color || "#9c88ff"} linewidth={10} linecap={"round"} linejoin={"round"} />
+      <lineBasicMaterial color={color || "#90c641"} linewidth={10} linecap={"round"} linejoin={"round"} />
     </line>
   )
 }

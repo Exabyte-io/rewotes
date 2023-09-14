@@ -1,14 +1,17 @@
 # TODO
 
-- [ ] import POSCAR & XYZ files
-- [x] figure out how to do custom geometry
-- [x] figure out what to render on explorer
+- [x] import .xyz & .txt files
+- [x] import .poscar files
+- [x] render custom cube geometry
+- [x] render cube on explorer
 - [x] add angle + segment inputs
 - [x] mobile view
 - [x] add response to abc length inputs
+- [ ] add response to angle inputs
 - [ ] add geometries for diff lattice structures
-- [ ] polish colors, padding, font sizes
+- [x] polish colors, padding, font sizes
 - [ ] submit [app](https://wellfound.com/jobs/1807964-lead-frontend-engineer-react)
+- [ ] write tests
 
 # Materials Designer (Frontend/UX)
 
