@@ -10,7 +10,9 @@
 - [ ] add response to angle inputs
 - [ ] add geometries for diff lattice structures
 - [x] polish colors, padding, font sizes
+- [ ] add modal for adding material
 - [ ] submit [app](https://wellfound.com/jobs/1807964-lead-frontend-engineer-react)
+- [ ] add info dialog when hovering over sphere
 - [ ] write tests
 
 # Materials Designer (Frontend/UX)

@@ -41,7 +41,7 @@ export const Explorer: FC<{ hide: boolean; setHide: (hide: boolean) => void }> =
     <div
       className={clsx(
         hide ? "w-0" : "w-72 lg:w-96",
-        "smooth-transition-all absolute left-0 top-0 z-[1] h-[calc(100vh-80px)] grow-0 text-light lg:relative lg:flex lg:pt-0"
+        "smooth-transition-all absolute left-0 top-0 z-[1] h-full grow-0 pt-20 text-light lg:relative lg:flex lg:h-[calc(100vh-80px)] lg:pt-0"
       )}
     >
       <button
@@ -53,7 +53,7 @@ export const Explorer: FC<{ hide: boolean; setHide: (hide: boolean) => void }> =
       <div
         className={clsx(
           hide ? "-translate-x-full" : "translate-x-0",
-          "smooth-transition flex w-full transform flex-col gap-5 overflow-auto whitespace-nowrap rounded-sm border border-dark1 bg-dark2 px-2 py-10 focus-within:border-accent"
+          "smooth-transition flex h-full w-full transform flex-col gap-5 overflow-auto whitespace-nowrap rounded-sm border border-dark1 bg-dark2 px-2 py-10 focus-within:border-accent"
         )}
       >
         {/* TODO: add form that takes in element name & symbol */}

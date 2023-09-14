@@ -20,19 +20,20 @@ export const SourceEditor: FC<{
 
   // orthorhombic, tetragonal, cubic -- can NOT edit angles
 
-  return (    <div
+  return (
+    <div
       className={clsx(
-        "relative flex w-full flex-col gap-10 rounded-sm border border-dark1 bg-dark2 px-5 py-10 font-neoeuler text-light focus-within:border focus-within:border-accent lg:px-10 lg:py-10",
+        "relative flex w-full flex-col gap-10 rounded-sm border border-dark1 bg-dark2 px-5 py-10 font-mono text-light focus-within:border focus-within:border-accent lg:px-10 lg:py-10",
         // TODO: fix collpase function
         collapseExplorer ? "h-48" : "h-full"
       )}
     >
-      <button
+      {/* <button
         onClick={toggleEditor}
         className="absolute right-0 top-0 m-4 flex h-6 w-6 items-center justify-center rounded-full bg-accent lg:hidden"
       >
         v
-      </button>
+      </button> */}
       <p className="font-mozart text-xl uppercase tracking-widest">Editor</p>
       <div className={clsx("flex w-full flex-col gap-5", collapseExplorer && "hidden")}>
         <p className="whitespace-nowrap text-xl">Crystal Lattice</p>
@@ -42,6 +43,7 @@ export const SourceEditor: FC<{
             <div className="my-2 flex w-1/3 flex-col items-start">
               <label className="mx-1 mb-0.5 font-light">{id}</label>
               <input
+                disabled={id !== "a" && id !== "b" && id !== "c"}
                 id={id}
                 value={input[id as keyof CrystalInput]}
                 onChange={handleChange}

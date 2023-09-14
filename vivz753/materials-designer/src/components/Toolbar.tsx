@@ -12,7 +12,8 @@ export const Toolbar: FC<{ setInput: (value: SetStateAction<CrystalInput>) => vo
   }
 
   return (
-    <div className="absolute top-0 z-30 flex h-20 max-h-20 w-full flex-row items-center justify-start gap-5 bg-dark2 px-20">
+    <div className="absolute top-0 z-30 flex h-20 max-h-20 w-full flex-row items-center justify-between gap-5 bg-dark2 px-10 lg:px-20">
+      <p className="whitespace-nowrap font-mozart text-3xl uppercase tracking-widest text-light">Materials Designer</p>
       <FileUploadButton handleFile={handleFile} />
     </div>
   )
