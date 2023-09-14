@@ -3,8 +3,11 @@
 - [ ] import POSCAR & XYZ files
 - [x] figure out how to do custom geometry
 - [x] figure out what to render on explorer
-- [ ] add angle + segment inputs
-- [ ] add focus to interactive elements
+- [x] add angle + segment inputs
+- [x] mobile view
+- [x] add response to abc length inputs
+- [ ] add geometries for diff lattice structures
+- [ ] polish colors, padding, font sizes
 - [ ] submit [app](https://wellfound.com/jobs/1807964-lead-frontend-engineer-react)
 
 # Materials Designer (Frontend/UX)
