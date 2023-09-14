@@ -53,7 +53,7 @@ export function Sphere(props: MeshProps & SphereProps) {
         <bufferAttribute attach="attributes-position" count={vertices.length / 3}  array={vertices} itemSize={3} />
       </bufferGeometry> */}
         {/* <boxGeometry args={[1, 1, 1]} /> */}
-        <sphereGeometry args={[0.1, 32, 16]} />
+        <sphereGeometry args={[0.15, 32, 16]} />
         <meshStandardMaterial color={hovered ? "white" : props.color} />
       </mesh>
     </>

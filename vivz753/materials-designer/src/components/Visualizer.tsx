@@ -7,7 +7,7 @@ import { Vector3 } from "three"
 
 const colors = ["red", "yellow", "green", "purple", "blue"]
 
-export const Visualizer: FC<{ latticeVectors: Vector3[]; pointVectors: Vector3[] }> = ({
+export const Visualizer: FC<{ latticeVectors: Vector3[][]; pointVectors: Vector3[] }> = ({
   latticeVectors,
   pointVectors,
 }) => {
@@ -21,7 +21,9 @@ export const Visualizer: FC<{ latticeVectors: Vector3[]; pointVectors: Vector3[]
           const index = i % colors.length
           return <Sphere key={i} position={vector} color={colors[index]} />
         })}
-        <Line vectors={latticeVectors} />
+        {latticeVectors.map((line) => (
+          <Line vectors={line} />
+        ))}
       </Canvas>
       <p className="absolute top-0 mt-10 bg-dark2 px-10 text-center font-mozart text-xl uppercase tracking-widest text-light">
         Visualizer

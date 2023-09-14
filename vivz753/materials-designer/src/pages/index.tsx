@@ -2,7 +2,7 @@ import { parseCSV, parseXYZ } from "@/helpers"
 import { Explorer, SourceEditor, Toolbar, Visualizer } from "@components"
 import { CrystalInput } from "@types"
 import { Inter } from "next/font/google"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Vector3 } from "three"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -26,30 +26,25 @@ export default function Home() {
   })
 
   const pointVectors = parseXYZ(input.crystalBasis)[1] as Vector3[]
+  console.log('pointVectors', pointVectors)
 
   const { a, b, c } = input
-  const xCoord = a > 0 ? a / 2 : 0
-  const yCoord = b > 0 ? b / 2 : 0
-  const zCoord = c > 0 ? c / 2 : 0
+  const xCoord = a > 0 ? a / 2 : 0.1
+  const yCoord = b > 0 ? b / 2 : 0.1
+  const zCoord = c > 0 ? c / 2 : 0.1
 
   // set the input somehow when this changes
 
   const min = new Vector3(-xCoord, -yCoord, -zCoord)
   const max = new Vector3(xCoord, yCoord, zCoord)
-
-  const latticeVectors = baseLatticeVectors.map((v) => {
-    const exaggeratedV = v.multiply(max) // required for clamp function to work as intended
-    return exaggeratedV.clamp(min, max)
-  })
-
+  
   // TODO: is useMemo even optimizing performance here?
-  // const vectors = useMemo(() => {
-  //   console.log('useMemo')
-  //   return vectorInput.map((v) => {
-  //     const exaggeratedV = v.multiply(max) // required for clamp function to work as intended
-  //     return exaggeratedV.clamp(min, max)
-  //   })
-  // }, [min, max])
+  const latticeVectors = useMemo(() => {
+    return baseLatticeVectors.map((segment) => {
+      // multiply required for clamp function to work as intended
+      return segment.map((vector) => vector.multiply(new Vector3(99999, 99999, 99999)).clamp(min,max))
+    })
+  }, [min, max])
 
   const handleEditor = (id: keyof CrystalInput, input: string | number) => {
     setInput((prev) => {

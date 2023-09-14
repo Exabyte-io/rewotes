@@ -20,11 +20,10 @@ export const SourceEditor: FC<{
 
   // orthorhombic, tetragonal, cubic -- can NOT edit angles
 
-  return (
-    <div
+  return (    <div
       className={clsx(
         "relative flex w-full flex-col gap-10 rounded-sm border border-dark1 bg-dark2 px-5 py-10 font-neoeuler text-light focus-within:border focus-within:border-accent lg:px-10 lg:py-10",
-        // TODO: fix
+        // TODO: fix collpase function
         collapseExplorer ? "h-48" : "h-full"
       )}
     >
