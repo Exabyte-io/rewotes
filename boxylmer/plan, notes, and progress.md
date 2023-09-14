@@ -72,12 +72,36 @@
 - The scripts that provide plots need to be separated from the (rather unorganized) tests, as they're a demonstration rather than tests
 - A readme needs to be written to provide instructions on installing and running the PoC
 
-### Notes and issues
 
 
 ## Thursday (Visualization of results + deal with possible issues or hangups that may have happened Mon-Wed)
 ### Day plan
+- Finish up changed needed to better reduce overfitting
+- Document everything in MaterialDataLoader.py
+- Implement some more ideas I had
+    - Coordination numbers for structural proxies, at various radius
+    - Element vectors
+    - Dimensionless element vectors
+
+
+### Notes and issues
+- The coulomb matrix is proving to provide no feature importance and is acting more as a fingerprint, as suspected. 
+- Instead, we can feed in a list of atomic numbers and some aggregate for connectivity in lieu of a graph
+- I think right now we could just get get average coordination numbers using a variety of radii, and also the stdev to tell the model how "spread out" the packing is. 
+- Clearly more useful descriptors are needed. The model really cares about mass (not atomic) density. I expected the latter and have not yet found literature to back this. 
+- Supplying composition by elemental fractional composition would fix the padding issues 
+    - I don't think it would make sense to supply elements that the dataset hasn't previoulsy seen, so we will need to bring attention to the limitation this introduces, lets see if it's worth including. Since chemsys searches are exclusive, they should work better as they have lower atom diversity. 
+        - This also needs to be communicated, as if true, it be very important for this models correct usage. 
+
+### Results thus far
+- Wow! RMSE 0.44 -> 0.29 with the new descriptors and ways of including structure. This works, but the parity is still indicating overfitting.  
+- As expected, limiting the search to a smaller number of atoms (but similarly sized datasets) greatly reduces memorization and RMSE decreases to ~0.08.
+- Coulomb eigenvalues significantly harm performance for small datasets as they act like fingerprints, encouraging memorization rather than generalization.
+    - CMEs still provide useful information, but more work will need to be done on finding the optimal number of top N eigenvalues to include (hyperparameter tuning problem)
+    - I expect the bigger the dataset, the more eigenvalues can be included.
 
 ## Friday (last day: wrap up and write comments and instructions.)
 ### Day plan
-
+- Document PredictorModel.py
+- Write an installation readme and point to the demo file. 
+- Finish up conclusions in the writeup mdfile. 

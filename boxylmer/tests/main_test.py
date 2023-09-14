@@ -59,7 +59,7 @@ def test_loading():
     assert len(loader) == len(loader.get_model_inputs())
     assert len(loader) == len(loader.formulas)
 
-    truncated_eigenval_loader = MPRLoader()
+    truncated_eigenval_loader = MPRLoader(n_eigenvals=20)
     truncated_eigenval_loader.load_data(
         api_key, 
         distance_method='fast',
@@ -67,8 +67,10 @@ def test_loading():
         chemsys=["Si-Ge"]
     )
     assert len(loader) == len(truncated_eigenval_loader)
-    inputs = loader.get_model_inputs()
+    inputs = truncated_eigenval_loader.get_model_inputs()
     input_len = len(inputs[0])
+    expected_len = truncated_eigenval_loader.calculate_max_input_size()
+    assert input_len == expected_len
     assert all(len(item) == input_len for item in inputs)
 
 def test_loading_accurate_distances():

@@ -46,10 +46,10 @@ class RandomForestBandGapModel(AbstractBandGapModel):
     def __init__(self, **kwargs):
         super().__init__()
         self.model = RandomForestRegressor(
-            n_estimators=50, 
+            n_estimators=160, 
             min_samples_split=4, 
-            min_samples_leaf=2, 
-            max_depth=30, 
+            min_samples_leaf=1, 
+            max_depth=None, 
             bootstrap=True,
             **kwargs
         )
@@ -97,10 +97,10 @@ class GradientBoostingBandGapModel(AbstractBandGapModel):
     def __init__(self, **kwargs):
         super().__init__()
         self.model = GradientBoostingRegressor(
-            n_estimators=170, 
-            min_samples_split=4, 
-            min_samples_leaf=6, 
-            max_depth=4, 
+            n_estimators=180, 
+            min_samples_split=3, 
+            min_samples_leaf=8, 
+            max_depth=3, 
             learning_rate=0.1,
             **kwargs,
         )
