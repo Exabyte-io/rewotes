@@ -8,14 +8,39 @@ from sklearn.model_selection import RandomizedSearchCV
 class AbstractBandGapModel(ABC):
     
     def __init__(self):
+        """
+        Abstract band gap prediction model.
+        
+        Defines the interface and some common functionality for Band Gap prediction.
+
+        Accepts a generic MaterialDataLoader, which will predict using however many features that data loader provides.
+        """
         self.model = None
         pass
     
     @abstractmethod
     def fit(self, material_data_loader):
+        """
+        Fit the model to the training data in the data loader.
+        Optionally, a printed progress bar may be supplied.
+
+        Args:
+            material_data_loader (AbstractDataLoader): Data loader object containing training and testing data.
+        """
         pass
 
     def predict(self, material_data_loader, test_data_only=True):
+        """
+        Predict band gap based on existing test data within the loader. Optionally predict using ALL data if test_data_only is false. 
+        - By default, a seed is used, so data should be the same at every call. 
+
+        Args:
+            material_data_loader (AbstractDataLoader): Data loader object containing material data.
+            test_data_only (bool): If True (default), use only test data for predictions.
+
+        Returns:
+            numpy.ndarray: Predicted band gap values.
+        """
         if test_data_only:
             x, _ = material_data_loader.get_test_data()
         else:
@@ -28,6 +53,16 @@ class AbstractBandGapModel(ABC):
         pass
 
     def parity(self, material_data_loader, test_data_only=True):
+        """
+        Get predicted and actual band gap values for the data loader's test data or all data.
+        
+        Args:
+            material_data_loader (AbstractDataLoader): data loader object.
+            test_data_only (bool): If True, use only previously unseen test data.
+            
+        Returns:
+            tuple: (Actual band gap values, predicted band gap values)
+        """
         if test_data_only:
             x, y = material_data_loader.get_test_data()
         else:
@@ -40,9 +75,19 @@ class AbstractBandGapModel(ABC):
     
     @abstractmethod
     def fit_hyperparameters(self, material_data_loader):
+        """
+        Fit hyperparameters of the model using training data, then train the model on the optimized hyperparameters, which are also printed to console. 
+        
+        Args:
+            material_data_loader (AbstractDataLoader): Data loader object.
+
+        Returns: 
+            None
+        """
         pass
 
 class RandomForestBandGapModel(AbstractBandGapModel):
+    """Predict band gap using random forest regression."""
     def __init__(self, **kwargs):
         super().__init__()
         self.model = RandomForestRegressor(
@@ -94,6 +139,7 @@ class RandomForestBandGapModel(AbstractBandGapModel):
 #   which is fundamentally the same but can be parallelized easily and may even have better optimization methods
 # more info: https://stats.stackexchange.com/questions/282459/xgboost-vs-python-sklearn-gradient-boosted-trees
 class GradientBoostingBandGapModel(AbstractBandGapModel):
+    """Predict band gap using gradient boosted trees."""
     def __init__(self, **kwargs):
         super().__init__()
         self.model = GradientBoostingRegressor(
@@ -139,3 +185,5 @@ class GradientBoostingBandGapModel(AbstractBandGapModel):
         self.model = random_search.best_estimator_
 
         print(f"Best hyperparameters found: {random_search.best_params_} at RMSE = {-random_search.best_score_}")
+        
+        return None
