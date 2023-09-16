@@ -19,6 +19,7 @@ see the [plan, notes, and progress](./plan,%20notes,%20and%20progress.md) for a 
 
 ## Setup
 No GPU-acceleration is used. Simply install requirements.txt
+
 An API key is needed to use MPRester. The demo and tests will search for the key in a file called "api_key.txt" in the root git folder (i.e., alongside `./boxylmer`). Before running, create that file and put the key in there.
 
 ## Running tests
