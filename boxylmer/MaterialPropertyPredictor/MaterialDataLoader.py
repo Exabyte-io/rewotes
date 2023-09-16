@@ -9,52 +9,80 @@ RSEED = 1996
 
 class AbstractDataLoader(ABC):
     test_size = 0.2
-    def __init__(self, n_eigenvals=None):
-        self.structures = None
-
-        # cached data in self.structures. It's possible to lump this all into a dict or just to use it on the fly, 
-        #   but for now, explicitly referencing them will assist when we're unsure what the best descriptors are for the target property.  
-        self.lattice_vectors = None
-        self.lattice_angles = None
-        self.volumes = None
-        self.densities = None
-        self.atomic_densities = None
-        self.is_metal = None
-        self.natoms = None
-        self.energies_per_atom = None
-
-        self.extra_data = None
-
-        self.band_gaps = None
-
-        self.formulas = None
-
-        # hmm... https://journals.aps.org/prb/abstract/10.1103/PhysRevB.89.205118 
-        #   suggests there are better ways to represent a crystal lattice than coulomb matrices.
-        #   This could be a good idea to explore in the future for more complex properties
-        #   This paper ALSO tells me that coulomb matrices are a previous industry standard, 
-        #   So it stands to reason there should be some libraries to speed this up out there. 
-        #   For now, though, this method is slow when doing lattice-consistent distances and needs optimization.
-        self.coulomb_matrices = None
+    def __init__(self):
+        """
+        # todo
+        """
+        self.n_features = None
+        self.n_samples = None
         
-        # https://par.nsf.gov/servlets/purl/10187380#:~:text=Coulomb%20Matrix%20Eigenvalues%20(CME)%20are,searches%2C%20and%20interpret%20rotational%20spectra.
-        #   Very good primer on why the sorted eigenvalues are both useful and computationally efficient.
-        #   Still not as good as a graph representation, but this is much faster to implement given I still have papers to grade :(.
-        self.coulomb_matrix_eigenvalues = None
-        self.input_length = None
-        self.input_cache = None
-        self.n_eigenvals = n_eigenvals
-
+    #
+    #  Required abstractions
+    #
+    
     @abstractmethod
     def load_data(self):
         """
         This method fetches materials data / parses it. Implementation arguments will change.
         """
-
         pass
 
+    @abstractmethod
+    def _process_parsed_data(self):
+        """
+        This should be called at the end of load_data().
+        Take the loading data and perform post-loading analysis and featurization. 
+        Should prepare and cache data as needed.
+
+        Returns: None
+        """
+
+    @abstractmethod
+    def _validate(self):
+        """
+        This should be called at the end of _process_parsed_data().
+        Determine if the resulting loaded data is valid and will not cause errors. 
+
+        Returns: None
+        """
+        pass
+
+    @abstractmethod
+    def calculate_max_input_size(self):  
+        """Calculate the expected total size of the input feature vector for each sample."""
+        pass
+
+    @abstractmethod
+    def get_model_inputs(self, padding_value=0):
+        """
+        Acquire the model input data as a procured ndarray of values in a standard (Sample, Feature) format. 
+        Standard practice for this abstraction is to calculate the inputs and cache them in self.input_cache if the calculations are heavy.
+
+        Parameters:
+        - padding_value (float, optional): Padding. Default is 0.
+
+        Returns:
+        - padded_feature_vectors (np.array): Padded inputs of shape (Sample, Feature)
+        """
+        pass
+
+    @abstractmethod
+    def get_model_outputs(self):
+        """
+        Acquire the model ouptut data as a procured single dimensional ndarray. 
+
+        Returns:
+        - outputs (np.array): Outputs of shape (Float32)
+        """
+        pass
+
+
+    #
+    #  General-ish helper functions used to featurize or make life easier for implemented dataloaders.
+    #
+
     @classmethod
-    def _calculate_distances_fast(cls, structure):
+    def _calculate_structure_atom_distances_fast(cls, structure):
         coords = np.array([site.coords for site in structure.sites])
         n = len(coords)
         distances = np.zeros((n, n))
@@ -68,7 +96,7 @@ class AbstractDataLoader(ABC):
         return distances
 
     @classmethod
-    def _calculate_distances_accurate(cls, structure):
+    def _calculate_structure_atom_distances_accurate(cls, structure):
         n = len(structure)
         distances = np.zeros((n, n))
         for i in range(n):
@@ -81,7 +109,7 @@ class AbstractDataLoader(ABC):
 
     # coulomb matrix implemented from https://singroup.github.io/dscribe/0.3.x/tutorials/coulomb_matrix.html
     @classmethod
-    def calculate_coulomb_matrix(cls, structure, distance_method):
+    def calculate_structure_coulomb_matrix(cls, structure, distance_method):
         """
         Calculates the Coulomb matrix for a given atomic structure using either a 'fast' 
         or 'accurate' distance calculation method.
@@ -107,9 +135,9 @@ class AbstractDataLoader(ABC):
         mat = np.zeros((n, n))
         z = np.array([atom.specie.Z for atom in structure]) # docs: https://pymatgen.org/pymatgen.core.html#pymatgen.core.periodic_table.Element
         if distance_method == 'fast':
-            distances = AbstractDataLoader._calculate_distances_fast(structure)
+            distances = AbstractDataLoader._calculate_structure_atom_distances_fast(structure)
         elif distance_method == 'accurate':
-            distances = AbstractDataLoader._calculate_distances_accurate(structure)
+            distances = AbstractDataLoader._calculate_structure_atom_distances_accurate(structure)
         else:
             raise ValueError("Invalid distance calculation method. Use \'fast\' or \'accurate\'.")
         
@@ -217,63 +245,6 @@ class AbstractDataLoader(ABC):
         element_vector /= total_atoms
         return element_vector
 
-    # todo this should actually be parametrized; a loader should have options as to what information is being collected ideally.
-    def calculate_max_input_size(self):  
-        "Calculate the expected total size of the input feature vector for each sample."
-        # later we may modify these descriptors, so lets tabulate them. We also have extras!
-        vol = 1
-        abc = 3
-        angles = 3
-        density = 1
-        atomic_density = 1
-        is_metal = 1
-        natoms = 1
-        energy_per_atom = 1
-        coordination_stats = 2 * 3
-        if self.n_eigenvals is None:
-            eigenvals_len = max([len(s) for s in self.structures])
-        else:
-            eigenvals_len = self.n_eigenvals
-        elemental_composition_length = len(self.elemental_composition_map)
-        
-        extras_len = len(self.extra_data)
-
-
-        n = vol + abc + angles + density + atomic_density + is_metal + natoms + energy_per_atom + coordination_stats + elemental_composition_length + eigenvals_len + extras_len 
-
-        return n
-    
-    def _validate(self):
-        ndata = len(self.structures)
-        for key in self.extra_data:
-            assert len(self.extra_data[key] == ndata)
-        # given more constraints later on, this may be expanded if the types of input data structures widen
-
-    def _process_parsed_data(self, distance_method):
-        if distance_method == 'accurate':
-            print("Distance method is accurate rather than fast, this may take some time.")
-        self.coulomb_matrices = []
-        total_iterations = len(self.structures) 
-        percent_complete = 0
-        for i, s in enumerate(self.structures):
-            if distance_method == 'accurate':
-                new_percent_complete = (i * 100) // total_iterations 
-                if new_percent_complete > percent_complete: 
-                    percent_complete = new_percent_complete
-                    print(f"Coulomb Matrix Progress: {percent_complete}%", end='\r')
-            self.coulomb_matrices.append(
-                self.calculate_coulomb_matrix(s, distance_method)
-            )
-        if distance_method == 'accurate': 
-            print("Coulomb Matrix Progress: Complete")
-        
-        self.coulomb_matrix_eigenvalues = [self.calculate_eigenvalues(cmat) for cmat in self.coulomb_matrices]
-        self.elemental_composition_map = self.create_element_position_map(self.structures)
-        self.elemental_fraction_vectors = [self.create_element_fraction_vector(s, self.elemental_composition_map) for s in self.structures]
-
-        self.input_length = self.calculate_max_input_size()
-        self._validate()
-
     @classmethod
     def resize_eigenvals(cls, arr, new_length):
         "Pad the eigenvalue vector with zeros to a total length."
@@ -285,65 +256,9 @@ class AbstractDataLoader(ABC):
         else:
             return arr
 
-    def get_model_inputs(self, padding_value=0):
-        """
-        Acquire the model input data as a procured ndarray of values in a standard (Sample, Feature) format. 
-
-        Parameters:
-        - padding_value (float, optional): Padding. Default is 0.
-
-        Returns:
-        - padded_feature_vectors (np.array): Padded inputs of shape (Sample, Feature)
-        """
-        if self.input_cache is None: 
-            num_structures = len(self.structures)
-            padded_feature_vectors = np.full((num_structures, self.input_length), padding_value, dtype=np.float32)
-            
-            for i in range(num_structures):
-
-                if self.n_eigenvals is None:
-                    coulomb_matrix_eigenvalues = self.coulomb_matrix_eigenvalues[i]
-                else:
-                    coulomb_matrix_eigenvalues = self.resize_eigenvals(self.coulomb_matrix_eigenvalues[i], self.n_eigenvals)
-
-                
-                feature_vector = np.hstack(
-                    (
-                        self.volumes[i], 
-                        self.lattice_vectors[i],
-                        self.lattice_angles[i], 
-                        self.densities[i],
-                        self.atomic_densities[i],
-                        self.is_metal[i],
-                        self.natoms[i],
-                        self.energies_per_atom[i],
-                        self.calculate_coordination_stats(self.structures[i], 3),
-                        self.calculate_coordination_stats(self.structures[i], 2),
-                        self.calculate_coordination_stats(self.structures[i], 1),
-                        self.elemental_fraction_vectors[i],
-                        coulomb_matrix_eigenvalues,
-                    ), 
-                    dtype=np.float32
-                )
-
-                padding_size = self.input_length - len(feature_vector)
-
-                if padding_size >= 0:
-                    padded_feature_vectors[i, :len(feature_vector)] = feature_vector
-                else:
-                    raise ValueError("Input feature vector size exceeded the available input size.")
-            self.input_cache = padded_feature_vectors
-
-        return self.input_cache
-    
-    def get_model_outputs(self):
-        """
-        Acquire the model ouptut data as a procured single dimensional ndarray. 
-
-        Returns:
-        - outputs (np.array): Outputs of shape (Float32)
-        """
-        return self.band_gaps
+    #
+    #  Directly implemented functions
+    #
 
     def get_train_data(self, train_size=1-test_size, seed=RSEED):
         """
@@ -384,13 +299,65 @@ class AbstractDataLoader(ABC):
         return test_x, test_y
 
     def get_input_length(self):
-        return self.input_length
+        return self.n_features
 
     def __len__(self):
         return len(self.structures)
 
 class MPRLoader(AbstractDataLoader):
-    def __init__(self, **kwargs):
+    def __init__(self, n_eigenvals=None, **kwargs):
+        """
+        Initialize the MPRLoader class for loading and pre-processing materials data.
+
+        Parameters:
+            n_eigenvals (int, optional): The number of eigenvalues to consider when calculating the 
+                                        Coulomb Matrix Eigenvalues. If None, all eigenvalues are used.
+            **kwargs: Additional keyword arguments to be passed to the superclass constructor.
+            Attributes contain all data, data is randomized with the same seed (by default) at every call. 
+                Thus, accessing attributes directly for the purpose of testing or model validation is unadvised. 
+        Attributes:
+            structures (list): Pymatgen Structure objects from loaded data.
+            lattice_vectors (ndarray): Lattice vectors of the pymatgen Structures.
+            lattice_angles (ndarray): Lattice angles of the pymatgen Structures.
+            volumes (ndarray): Lattice cell volumes.
+            densities (ndarray): Mass densities of the materials.
+            atomic_densities (ndarray): Atom densities of the materials.
+            is_metal (ndarray): Whether the material is metallic (1-> True, 0 -> False).
+            natoms (ndarray): Number of atoms in each sample.
+            energies_per_atom (ndarray): Energy per atom for the cell per sample.
+            coulomb_matrices (list): Calculated coulomb matrices for each sample.
+            coulomb_matrix_eigenvalues (list): Solved eigenvalues for each sample's coulomb matrix, in descending order.
+            n_eigenvals (int, optional): The number of eigenvalues to be considered. 
+                None (default) -> Pad zeros up to the largest sample in the dataset and use this many values in the feature vector for eigenvalues.
+            input_cache (ndarray): Cached model inputs.
+        """
+
+        self.structures = None
+        # cached data in self.structures. It's possible to lump this all into a dict or just to use it on the fly, 
+        #   but for now, explicitly referencing them will assist when we're unsure what the best descriptors are for the target property.  
+        self.lattice_vectors = None
+        self.lattice_angles = None
+        self.volumes = None
+        self.densities = None
+        self.atomic_densities = None
+        self.is_metal = None
+        self.natoms = None
+        self.energies_per_atom = None
+        # hmm... https://journals.aps.org/prb/abstract/10.1103/PhysRevB.89.205118 
+        #   suggests there are better ways to represent a crystal lattice than coulomb matrices.
+        #   This could be a good idea to explore in the future for more complex properties
+        #   This paper ALSO tells me that coulomb matrices are a previous industry standard, 
+        #   So it stands to reason there should be some libraries to speed this up out there. 
+        #   For now, though, this method is slow when doing lattice-consistent distances and needs optimization.
+        self.coulomb_matrices = None
+        
+        # https://par.nsf.gov/servlets/purl/10187380#:~:text=Coulomb%20Matrix%20Eigenvalues%20(CME)%20are,searches%2C%20and%20interpret%20rotational%20spectra.
+        #   Very good primer on why the sorted eigenvalues are both useful and computationally efficient.
+        #   Still not as good as a graph representation, but this is much faster to implement and I still have papers to grade :(.
+        self.coulomb_matrix_eigenvalues = None
+        self.n_eigenvals = n_eigenvals 
+
+        self.input_cache = None # will be filled when get_model_inputs is called. 
         super().__init__(**kwargs)
 
     def load_data(self, api_key, distance_method='fast', **kwargs):
@@ -444,3 +411,109 @@ class MPRLoader(AbstractDataLoader):
         self._process_parsed_data(distance_method=distance_method)
         
         return None
+
+    def _process_parsed_data(self, distance_method):
+        """Implementation for AbstractDataLoader._process_parsed_data. See aforementioned function and MPRloader.load_data."""
+        if distance_method == 'accurate':
+            print("Distance method is accurate rather than fast, this may take some time.")
+        self.coulomb_matrices = []
+        total_iterations = len(self.structures) 
+        percent_complete = 0
+        for i, s in enumerate(self.structures):
+            if distance_method == 'accurate':
+                new_percent_complete = (i * 100) // total_iterations 
+                if new_percent_complete > percent_complete: 
+                    percent_complete = new_percent_complete
+                    print(f"Coulomb Matrix Progress: {percent_complete}%", end='\r')
+            self.coulomb_matrices.append(
+                self.calculate_structure_coulomb_matrix(s, distance_method)
+            )
+        if distance_method == 'accurate': 
+            print("Coulomb Matrix Progress: Complete")
+        
+        self.coulomb_matrix_eigenvalues = [self.calculate_eigenvalues(cmat) for cmat in self.coulomb_matrices]
+        self.elemental_composition_map = self.create_element_position_map(self.structures)
+        self.elemental_fraction_vectors = [self.create_element_fraction_vector(s, self.elemental_composition_map) for s in self.structures]
+
+        self.n_features = self.calculate_max_input_size()
+        self.n_samples = len(self.structures)
+        self._validate()
+
+    def _validate(self):
+        ndata = self.n_samples
+        for key in self.extra_data:
+            assert len(self.extra_data[key] == ndata)
+        # given more constraints later on, this may be expanded if the types of input data structures widen
+
+    def get_model_inputs(self, padding_value=0):
+        """See AbstractDataLoader.get_model_inputs"""
+        if self.input_cache is None: 
+            num_structures = len(self.structures)
+            padded_feature_vectors = np.full((num_structures, self.n_features), padding_value, dtype=np.float32)
+            
+            for i in range(num_structures):
+
+                if self.n_eigenvals is None:
+                    coulomb_matrix_eigenvalues = self.coulomb_matrix_eigenvalues[i]
+                else:
+                    coulomb_matrix_eigenvalues = self.resize_eigenvals(self.coulomb_matrix_eigenvalues[i], self.n_eigenvals)
+
+                
+                feature_vector = np.hstack(
+                    (
+                        self.volumes[i], 
+                        self.lattice_vectors[i],
+                        self.lattice_angles[i], 
+                        self.densities[i],
+                        self.atomic_densities[i],
+                        self.is_metal[i],
+                        self.natoms[i],
+                        self.energies_per_atom[i],
+                        self.calculate_coordination_stats(self.structures[i], 3),
+                        self.calculate_coordination_stats(self.structures[i], 2),
+                        self.calculate_coordination_stats(self.structures[i], 1),
+                        self.elemental_fraction_vectors[i],
+                        coulomb_matrix_eigenvalues,
+                    ), 
+                    dtype=np.float32
+                )
+
+                padding_size = self.n_features - len(feature_vector)
+
+                if padding_size >= 0:
+                    padded_feature_vectors[i, :len(feature_vector)] = feature_vector
+                else:
+                    raise ValueError("Input feature vector size exceeded the available input size.")
+            self.input_cache = padded_feature_vectors
+
+        return self.input_cache
+    
+    def get_model_outputs(self):
+        """See AbstractDataLoader.get_model_outputs."""
+        return self.band_gaps
+
+    def calculate_max_input_size(self):  
+        # later we may modify these descriptors, so lets tabulate them. We also have extras!
+        vol = 1
+        abc = 3
+        angles = 3
+        density = 1
+        atomic_density = 1
+        is_metal = 1
+        natoms = 1
+        energy_per_atom = 1
+        coordination_stats = 2 * 3
+        if self.n_eigenvals is None:
+            eigenvals_len = max([len(s) for s in self.structures])
+        else:
+            eigenvals_len = self.n_eigenvals
+        elemental_composition_length = len(self.elemental_composition_map)
+        
+        extras_len = len(self.extra_data)
+
+
+        n = vol + abc + angles + density + atomic_density + is_metal + natoms + energy_per_atom + coordination_stats + elemental_composition_length + eigenvals_len + extras_len 
+
+        return n
+
+
