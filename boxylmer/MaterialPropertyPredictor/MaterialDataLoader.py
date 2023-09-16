@@ -11,7 +11,29 @@ class AbstractDataLoader(ABC):
     test_size = 0.2
     def __init__(self):
         """
-        # todo
+        Abstract class for data loaders that fetch and preprocess data from various sources (really just MPRester right now).
+
+        Defines an interface for data loaders, implementations should provide methods to load and preprocess 
+        data (see below), get model inputs, get model outputs, etc.
+
+        Required methods (more details in each abstract function)
+        -------
+            load_data(*args, **kwargs):
+                Fetches the data from a specific source. 
+
+            _process_parsed_data(*args, **kwargs):
+                Processes the fetched data to generate features and labels. Must be called once load_data is complete.
+
+            _validate():
+                Validates that the data loaded and processed are consistent and ready for modeling. Must be called once _process_parsed_data is complete.
+
+            get_model_inputs():
+                Return the preprocessed features for the model using it. Caching may be necessary. 
+
+            get_model_outputs():
+                Returns the expected outputs for the input data. 
+
+        In addition to this, _process_parsed_data must set self.n_features and self.n_samples. (see below)
         """
         self.n_features = None
         self.n_samples = None
@@ -130,7 +152,7 @@ class AbstractDataLoader(ABC):
 
         Raises:
             ValueError: If an invalid distance calculation method is provided. 
-        """ # todo should I raise ValueError or some other? 
+        """ 
         n = len(structure)
         mat = np.zeros((n, n))
         z = np.array([atom.specie.Z for atom in structure]) # docs: https://pymatgen.org/pymatgen.core.html#pymatgen.core.periodic_table.Element
@@ -169,7 +191,7 @@ class AbstractDataLoader(ABC):
         Returns:
             tuple: (average, standard deviation) of coordination numbers.
 
-        # todo I have not been able to back this strategy from the literature yet: Search for better ways to encode constant-size structural info. 
+        I have not been able to back this strategy from the literature yet: Eventually, we should search for better ways to encode variable-size -> constant-size structural info. 
         """
         total_coordination = 0
         coordination_sqr = 0

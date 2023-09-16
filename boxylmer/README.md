@@ -8,7 +8,7 @@ Two tree based models, that is, random forest and gradient boosting, were chosen
 - There are *far* more hyperparameters to worry about. 
 - My previous work regarding graph-based approaches were implemented in Julia, not Python, and there would have been about a day or so lost to finding the relevant libraries (which I later found were NetworkX, DGL, Pytorch Geometric, and some others anyway) and learning how to use them appropriately.
 
-The resuling RMSE when using datasets with a smaller (3-9) number of atoms (which is a limitation of the featurization choices used in the data preparation) ranges from 0.25 to 0.3, which I'm happy with considering SOTA literature models report around 0.14 to 0.2 as [the current best (2018)](https://pubs.acs.org/doi/10.1021/acs.chemmater.8b00686).
+The resulting RMSE when using datasets with a smaller (3-9) number of atoms (which is a limitation of the featurization choices used in the data preparation) ranges from 0.25 to 0.3, which I'm happy with considering SOTA literature models report around 0.14 to 0.2 as [the current best (2018)](https://pubs.acs.org/doi/10.1021/acs.chemmater.8b00686).
 
 see the [plan, notes, and progress](./plan,%20notes,%20and%20progress.md) for a more detailed log of what I struggled with, found success in, and what I would pursue given more time.
 
