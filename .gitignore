@@ -1,0 +1,5 @@
+api_key.txt
+boxylmer/tests/__pycache__/*
+boxylmer/tests/test_output/*
+boxylmer/MaterialPropertyPredictor/__pycache__/*
+
