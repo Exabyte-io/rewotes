@@ -31,7 +31,7 @@ export const Visualizer: FC<{ latticeVectors: Vector3[][]; pointVectors: Vector3
       <p className="absolute top-0 mt-10 px-10 text-center font-mozart text-xl uppercase tracking-widest text-light">
         Visualizer
       </p>
-      <div className="absolute right-0 top-0 m-10 border border-dark1 p-5 font-mozart text-xl uppercase tracking-widest text-light">
+      <div className="absolute bottom-0 right-0 m-2 border border-dark1 p-2 font-mozart text-xl uppercase tracking-widest text-light lg:top-0 lg:m-10 lg:p-5">
         <div className="flex flex-col">
           <p>Legend</p>
           <div className="flex flex-row items-center gap-2">

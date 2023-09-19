@@ -23,7 +23,7 @@ export const SourceEditor: FC<{
   return (
     <div
       className={clsx(
-        "relative flex w-full flex-col gap-10 rounded-sm border border-dark1 bg-dark2 px-5 py-10 font-mono text-light focus-within:border focus-within:border-accent lg:px-10 lg:py-10",
+        "relative flex w-full flex-col gap-8 rounded-sm border border-dark1 bg-dark2 px-5 py-8 font-mono text-light focus-within:border focus-within:border-accent lg:px-10 lg:py-10",
         // TODO: fix collpase function
         collapseExplorer ? "h-48" : "h-full"
       )}
@@ -35,12 +35,12 @@ export const SourceEditor: FC<{
         v
       </button> */}
       <p className="font-mozart text-xl uppercase tracking-widest">Editor</p>
-      <div className={clsx("flex w-full flex-col gap-5", collapseExplorer && "hidden")}>
+      <div className={clsx("flex w-full flex-col gap-2", collapseExplorer && "hidden")}>
         <p className="whitespace-nowrap text-xl">Crystal Lattice</p>
         {/* TODO: add input dropdown w/ types for crystal structures */}
         <div className="flex flex-wrap">
           {inputIds.map((id) => (
-            <div className="my-2 flex w-1/3 flex-col items-start">
+            <div className="my-1 flex w-1/3 flex-col items-start lg:my-2">
               <label className="mx-1 mb-0.5 font-light">{id}</label>
               <input
                 disabled={id !== "a" && id !== "b" && id !== "c"}
