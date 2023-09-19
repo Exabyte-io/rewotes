@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber"
 import { FC } from "react"
 import { Vector3 } from "three"
 
-const colors = ["red", "yellow", "green", "purple", "blue"]
+const colors = ["orange"]
 
 export const Visualizer: FC<{ latticeVectors: Vector3[][]; pointVectors: Vector3[] }> = ({
   latticeVectors,
@@ -24,10 +24,38 @@ export const Visualizer: FC<{ latticeVectors: Vector3[][]; pointVectors: Vector3
         {latticeVectors.map((line) => (
           <Line vectors={line} />
         ))}
+        <Line color="red" vectors={[new Vector3(0, 0, 0), new Vector3(0.5, 0, 0)]} />
+        <Line color="yellow" vectors={[new Vector3(0, 0, 0), new Vector3(0, 0.5, 0)]} />
+        <Line color="purple" vectors={[new Vector3(0, 0, 0), new Vector3(0, 0, 0.5)]} />
       </Canvas>
-      <p className="absolute top-0 mt-10 bg-dark2 px-10 text-center font-mozart text-xl uppercase tracking-widest text-light">
+      <p className="absolute top-0 mt-10 px-10 text-center font-mozart text-xl uppercase tracking-widest text-light">
         Visualizer
       </p>
+      <div className="absolute right-0 top-0 m-10 border border-dark1 p-5 font-mozart text-xl uppercase tracking-widest text-light">
+        <div className="flex flex-col">
+          <p>Legend</p>
+          <div className="flex flex-row items-center gap-2">
+            <span className="h-2 w-2 bg-red-500" />
+            <p>x</p>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <span className="h-2 w-2 bg-yellow-500" />
+            <p>y</p>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <span className="h-2 w-2 bg-purple-500" />
+            <p>z</p>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <span className="h-[1px] w-2 bg-accent" />
+            <p>lattice</p>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-orange-500" />
+            <p>atom</p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
