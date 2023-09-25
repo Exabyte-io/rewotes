@@ -35,4 +35,10 @@ We leave exact timing to the candidate. Must fit Within 5 days total.
 
 # Examples
 
-To view examples or discuss this task more in details, please [contact us](README.md).
+We recommend reviewing the following:
+
+- Introduction to Flowcharts: https://www.geeksforgeeks.org/an-introduction-to-flowcharts/
+- An example convergence workflow: https://docs.mat3ra.com/models/auxiliary-concepts/reciprocal-space/convergence/
+- ReactFlow library examples: https://reactflow.dev/docs/examples/overview/ and https://pro.reactflow.dev/pro-examples
+
+To discuss this task more in details, please [contact us](README.md).

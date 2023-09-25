@@ -4,9 +4,9 @@
 
 # Overview
 
-Create a skeleton IDE (integrated development environment) for materials design. Close to Adobe Dreamweaver (or any other IDE) - when you can change html-markup and simultaneously see the result in another tab. We edit material in XYZ format and view result in 3D.
+Create a skeleton IDE (integrated development environment) for materials design, where one can change text and simultaneously see the visual result in another tab. We edit material in XYZ format and view result in 3D.
 
-Front-end developers: use Meteor and React.js and minimalistic UX/UI.
+Front-end developers: use React.js and minimalistic UX/UI.
 
 Pure UI/UX designers: create high fidelity mockups. 
 
