@@ -4,9 +4,9 @@ REal WOrld TEstS
 
 ## Overview
 
-This repository contains example test assignments used during our hiring process.
+This repository contains example test assignments used during our hiring process at Mat3ra.com.
 
-We find that regular job interview questions can often be misleading and so use more engaged "real-world" examples instead.
+We find that regular job interview questions can often be misleading and so use the "real-world" examples instead.
 
 Each file represents an assignment similar to what one would get when hired.
 
@@ -63,4 +63,4 @@ TOTAL: ~2 weeks tentative.
 
 With any questions about this repository or our hiring process please contact us at info@mat3ra.com.
 
-© 2022 Exabyte Inc.
+© 2023 Exabyte Inc. / Mat3ra.com
