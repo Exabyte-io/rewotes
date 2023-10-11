@@ -20,5 +20,10 @@ After more thought, using explicit pw.in files offers the most flexibility to th
 end user. To do this, I will replace 'content' in the default workflow with the desired
 pw.in. This failed. Jobs gave an error, but could not access error info on the web app! Makes debugging very difficult...maybe there's an API? Submitted again through the web interface, error information this time was available...weird. Calculation is failing is strange ways, no pseudopotential files are generated on AWS. Hm.
 
-The error was actually in my pw.in file. This file is a template, therefore the directory
+The error was in my pw.in file. This file is a template, therefore the directory
 parameters should have been surrounded by {% raw %} tags. Fixing this, I can now run calculations with a (nearly) explicit pw.in file.
+
+So far, all jobs have contained a material. With an explicit pw.in file, there is no guarantee that the material is in Mat3ra. For now, I'll try running a job without an associated material. The job is successful, though the web interface seems to break? Still, using the API, I can extract an energy.
+
+I can now run quantum espresso calculations on Mat3ra based on a template pw.in file. to make this work, I create a workflow for each pw.in template. This is not ideal - perhaps there's a way to create a workflow that uses a pw.in file as an input. However, for the purposes of creating a working prototype, I'm happy enough with this solution.
+
