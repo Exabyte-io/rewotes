@@ -13,52 +13,74 @@
 #  The program should print status messages, detailing status of submitted jobs, 
 #  verifying job success, giving updates on the convergence, and finally
 #  returning the result.
-#  
-#  """Running jobs."""
-#  If I use VASP, the easiest, most flexible option for me (albeit requring lots of
-#  user interaction) is to directly copy the VASP input files over to mat3ra, then running
-#  the job. Not sure if this is possible (research needed). 
-#  Pros of this approach:
-#      - complete, explicit control of DFT parameters by the user
-#      - great for someone familiar with VASP but not familiar with mat3ra
-#  Cons of this approach:
-#      - bad for users just starting out with VASP who are not yet familiar with the
-#        huge selection of parameters available
 
+import sys
+
+from exabyte_api_client.endpoints.jobs import JobEndpoints
+from exabyte_api_client.endpoints.materials import MaterialEndpoints
+from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
+from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
+from exabyte_api_client.endpoints.raw_properties import RawPropertiesEndpoints 
 
 """Class structure."""
 
-def run_vasp_job(input_file_dir, kpoints):
-    """ Utility function. Runs a job with vasp.
-        Returns...some sort of mat3ra object with all the info?
+def run_qe_job(input_file_path, kpoints):
+    """ 
+    Constructs and runs a qe job on Mat3ra.
+    
+    Args:
+        input_file_path (str): path to a pw.in input file (directories templated)
+        kpoints (tuple): 3-tuple with k-point grid
+
+    Returns:
+        dict: the job
     """
 
-"""Superclass defining KConverger."""
 class KConverger:
-    def __init__(self,input_file_dir, initial_kpoints, threshold):
-        """ Constructor.
+    """
+    Superclass for k-point convergers.
+    
+    Args:
+        input_file_dir (str): path to directory containing a pw.in file
+        initial_kpoints (tuple): 3-tuple with initial k-point grid
+        threshold (float): some positive threshold for convergence
 
-        """
+    """
+
+    def __init__(self,input_file_dir, initial_kpoints, threshold):
         self.input_file_dir = input_file_dir
         self.initial_kpoints = initial_kpoints
         self.threshold = threshold
 
     def execute(self):
-        """ Executes the convergence test."""
+        """ 
+        Executes the convergence test.
+        """
 
-    def is_converged(self,calculation,ref_calculation)
-        """ Returns True if less_accurate_calculation is converged based on results of
-            more_accurate_calculation. Must be implemented in subclasses.
+    def is_converged(self,job,ref_job)
+        """ 
+        Tests whether or not a job is converged.
+
+        Args:
+            job (dict): Mat3ra job
+            ref_job (dict): reference Mat3ra job (should be more accurate than job)
+
+        Returns:
+            bool
         """
         raise NotImplementedError
 
-"""Subclass defining KEnergyConverger."""
 class KEnergyConverger:
+    """
+    Converges k-points with respect to total energy.
+    """
     def __init__(self,input_file_dir,initial_kpoints,threshold):
         super().__init__(input_file_dir,initial_kpoints,threshold)
     
     def is_converged(self,calculation,ref_calculation):
-        raise NotImplementedError 
+        raise NotImplementedError
+
+# Below, we define the code 
 
 
                         
