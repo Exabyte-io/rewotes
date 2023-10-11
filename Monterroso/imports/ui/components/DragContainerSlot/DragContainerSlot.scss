@@ -1,0 +1,10 @@
+@import "../../style/Colors.scss";
+
+.drag-container-item {
+  padding: 1rem;
+}
+
+.drag-hovered {
+  background-color: $highlight-blue;
+  padding: 3rem;
+}

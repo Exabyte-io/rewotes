@@ -1,0 +1,14 @@
+@import "../../style/Colors.scss";
+
+.speed-button {
+  padding: 0.25rem 1rem;
+  display: inline-block;
+  border-radius: 25px;
+  background-color: $default-blue;
+  &:hover {
+    background-color: $highlight-blue;
+  }
+  &:active {
+    background-color: $selected-blue;
+  }
+}

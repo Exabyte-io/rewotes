@@ -1,0 +1,39 @@
+{
+  "name": "flowchart",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.14.6",
+    "@testing-library/react": "^12.0.0",
+    "classnames": "^2.3.1",
+    "expect": "^27.0.6",
+    "history": "^5.0.0",
+    "lodash": "^4.17.21",
+    "meteor-node-stubs": "^1.0.3",
+    "react": "^17.0.2",
+    "react-dnd": "^14.0.2",
+    "react-dnd-html5-backend": "^14.0.0",
+    "react-dnd-test-utils": "^14.0.0",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "uuid": "^8.3.2"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.jsx",
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "css-loader": "^6.2.0",
+    "react-dnd-test-backend": "^14.0.0",
+    "style-loader": "^3.2.1"
+  }
+}
