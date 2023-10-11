@@ -1,0 +1,24 @@
+October 10th
+
+Forked repo, set up directories.
+Established rough architecture.
+Familiarized myself with running calculations on mat3ra using a Jupyter notebook.
+- Use of the RESTful API is taking some getting used to, as is running calculations
+  through a platform, rather than directly on a HPC system.
+- Managed to get an energy for Si2.
+- Managed to adapt code to run TiO2.
+? Still unclear how exactly k-point grids are chosen using the current workflow. 
+  I suspect is has something to do with context.
+? I am still debating using explicit pw.in files to run jobs. This may not really
+  make much sense, as context is important (e.g. JOB_WORK_DIR)
+? Encountering some strange behavior on mat3ra.com When applying a workflow
+  to a new material, the old material (and pw.in) is displayed for some time...
+
+October 11th
+
+After more thought, using explicit pw.in files offers the most flexibility to the 
+end user. To do this, I will replace 'content' in the default workflow with the desired
+pw.in. This failed. Jobs gave an error, but could not access error info on the web app! Makes debugging very difficult...maybe there's an API? Submitted again through the web interface, error information this time was available...weird. Calculation is failing is strange ways, no pseudopotential files are generated on AWS. Hm.
+
+The error was actually in my pw.in file. This file is a template, therefore the directory
+parameters should have been surrounded by {% raw %} tags. Fixing this, I can now run calculations with a (nearly) explicit pw.in file.
