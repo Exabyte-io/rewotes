@@ -14,18 +14,51 @@
 import sys
 import json
 import argparse
+import time
 
 import numpy as np
 
 from utils.settings import ENDPOINT_ARGS, ACCOUNT_ID
-from utils.generic import wait_for_jobs_to_finish
+from utils.generic import get_jobs_statuses_by_ids
 from exabyte_api_client.endpoints.jobs import JobEndpoints
 from exabyte_api_client.endpoints.materials import MaterialEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
 from exabyte_api_client.endpoints.raw_properties import RawPropertiesEndpoints 
 
-# Hacky: get api keys 
+def wait_for_jobs_to_finish(endpoint: JobEndpoints, job_ids: list, poll_interval: int = 10):
+    """
+    Waits for jobs to finish and prints their statuses.
+    A job is considered finished if it is not in "pre-submission", "submitted", or, "active" status.
+
+    Args:
+        job_endpoint (JobEndpoints): Job endpoint object from the Exabyte API Client
+        job_ids (list): list of job IDs to wait for
+        poll_interval (int): poll interval for job information in seconds. Defaults to 10.
+    """
+    def spinning_cursor():
+        while True:
+            for cursor in '|/-\\':
+                yield cursor
+    cursor = spinning_cursor()
+    
+    counter = 0 
+    statuses = get_jobs_statuses_by_ids(endpoint, job_ids)
+    while True:
+        if counter > poll_interval:
+            counter = 0
+            statuses = get_jobs_statuses_by_ids(endpoint, job_ids)
+        errored_jobs   = len([status for status in statuses if status == "error"])
+        active_jobs    = len([status for status in statuses if status == "active"])
+        finished_jobs  = len([status for status in statuses if status == "finished"])
+        submitted_jobs = len([status for status in statuses if status == "submitted"])
+        print(f"{next(cursor)} [Mat3ra Jobs] Active:{active_jobs} Submitted:{submitted_jobs} Finished:{finished_jobs} Errored:{errored_jobs} (updates every {poll_interval} s)",
+               end = '\r')
+        time.sleep(0.5)
+        counter += 0.5
+        
+        if all([status not in ["pre-submission", "submitted", "active"] for status in statuses]):
+            break 
 
 def modify_pw_kpoints(pw_in_file, kpoints):
     """
@@ -100,7 +133,7 @@ def gen_qe_job(input_file_path, kpoints):
         "workflow": {"_id": workflow["_id"]},
         "name"    : name,
         "compute" : job_endpoints.get_compute(cluster = 'master-production-20160630-cluster-001.exabyte.io',
-                                              ppn=1,queue='SR')
+                                              ppn=8,queue='R')
     }
 
     job = job_endpoints.create(config)
@@ -134,10 +167,19 @@ def print_job_info(kpoints, workflow, job):
     """
     Prints some info about a job.
     """
-    print(f'Running job...')
+    print(f'Submitting job...')
     print(f"           k-point grid: {kpoints[0]}x{kpoints[1]}x{kpoints[2]}")
     print(f"          Mat3ra job id: {job['_id']}")
     print(f"    Mat3ra flowchart id: {workflow['subworkflows'][0]['units'][0]['flowchartId']}")
+
+def print_results(kpoints, energy, ref_kpoints, ref_energy):
+    """
+    Prints some info about a job.
+    """
+    print(f'Jobs complete.')
+    print(f"    {energy} eV - {kpoints[0]}x{kpoints[1]}x{kpoints[2]}  VS")
+    print(f"    {ref_energy} eV - {ref_kpoints[0]}x{ref_kpoints[1]}x{ref_kpoints[2]}")
+    print(f"    Energy difference: {np.abs(energy-ref_energy)} eV")
 
 class KConverger:
     """
@@ -167,7 +209,6 @@ class KConverger:
         all_jobs = []
         job_endpoints = JobEndpoints(*ENDPOINT_ARGS)
 
-        print(f"=" * 80)
         print(f"Running initial calculations...")
         # Generate initial two datapoints
         for kpoints in [self.initial_kpoints, find_next_kpoints(self.initial_kpoints)]:
@@ -181,11 +222,34 @@ class KConverger:
 
         # Test for initial convergence
         
-        wait_for_jobs_to_finish(job_endpoints, [j['_id'] for j in all_jobs], 20)
+        wait_for_jobs_to_finish(job_endpoints, [j['_id'] for j in all_jobs], 10)
         converged, energy, ref_energy = self.check_convergence(all_workflows[-2], all_jobs[-2],
                                                                all_workflows[-1], all_jobs[-1])
+        converged = False; energy = 0; ref_energy = 1
+        print_results(all_kpoints[-2], energy, all_kpoints[-1], ref_energy)
         if converged:
-            print('converged!', energy, 'vs', ref_energy)
+            print('Convergence reached.')
+        else:
+            while not converged:
+                print(f"-" * 80)
+                kpoints = find_next_kpoints(kpoints)
+                workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', 
+                                           kpoints)
+
+                job_endpoints.submit(job["_id"])
+                print_job_info(kpoints, workflow, job)
+
+                all_kpoints.append(kpoints)
+                all_workflows.append(workflow)
+                all_jobs.append(job)
+                wait_for_jobs_to_finish(job_endpoints, [j['_id'] for j in all_jobs], 10)
+
+                converged, energy, ref_energy = self.check_convergence(all_workflows[-2], all_jobs[-2],
+                                                               all_workflows[-1], all_jobs[-1])
+                converged = False; energy = 0; ref_energy = 1
+                print_results(all_kpoints[-2], energy, all_kpoints[-1], ref_energy)
+                if converged:
+                    print('Convergence reached.')
 
         #if not :
         #    while np.max(kpoints[-1]) < 2: # simple sanity check
@@ -253,7 +317,7 @@ def main(argv):
     
     # Default arguments:
     if args.initialk is None:
-        args.initialk = [1,1,1]
+        args.initialk = (1,1,1)
     
     print(f"=" * 80)
     print(f"CONVERGENCE TRACKER - by Willis O'Leary")

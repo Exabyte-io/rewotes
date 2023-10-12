@@ -29,5 +29,5 @@ I can now run quantum espresso calculations on Mat3ra based on a template pw.in 
 
 October 12th
 
-Started implementation. 
+Started implementation. Going well so far. Wait times for calculations increased (maybe under maintenance), so will return tomorrow.
 
