@@ -19,7 +19,8 @@ use_interactive_JSON_viewer = True
 
 # Load variables from the settings.json file
 
-absolute_path_to_settings_json_file = os.path.join(os.path.dirname(__file__), "settings.json")
+# Willis: Load in API settings (hacky)
+absolute_path_to_settings_json_file = "/Users/willis/Desktop/settings.json"
 assert absolute_path_to_settings_json_file
 with open(absolute_path_to_settings_json_file) as settings_json_file:
     settings_json_config = json.load(settings_json_file)

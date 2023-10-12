@@ -27,3 +27,7 @@ So far, all jobs have contained a material. With an explicit pw.in file, there i
 
 I can now run quantum espresso calculations on Mat3ra based on a template pw.in file. to make this work, I create a workflow for each pw.in template. This is not ideal - perhaps there's a way to create a workflow that uses a pw.in file as an input. However, for the purposes of creating a working prototype, I'm happy enough with this solution.
 
+October 12th
+
+Started implementation. 
+
