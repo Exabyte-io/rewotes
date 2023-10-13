@@ -1,0 +1,55 @@
+&CONTROL
+    calculation = 'scf'
+    title = ''
+    verbosity = 'low'
+    restart_mode = 'from_scratch'
+    wf_collect = .true.
+    tstress = .true.
+    tprnfor = .true.
+    outdir = {% raw %}'{{ JOB_WORK_DIR }}/outdir'{% endraw %}
+    wfcdir = {% raw %}'{{ JOB_WORK_DIR }}/outdir'{% endraw %}
+    prefix = '__prefix__'
+    pseudo_dir = {% raw %}'{{ JOB_WORK_DIR }}/pseudo'{% endraw %}
+/
+&SYSTEM
+    ibrav = 0
+    nat = 10
+    ntyp = 4
+    ecutwfc = 40
+    ecutrho = 200
+    occupations = 'smearing'
+    degauss = 0.005
+/
+&ELECTRONS
+    diagonalization = 'david'
+    diago_david_ndim = 4
+    diago_full_acc = .true.
+    mixing_beta = 0.3
+    startingwfc = 'atomic+random'
+/
+&IONS
+/
+&CELL
+/
+ATOMIC_SPECIES
+Zn 65.39 zn_pbe_gbrv_1.0.upf
+Cu 63.546 cu_pbe_gbrv_1.2.upf
+Sn 118.71 sn_pbe_gbrv_1.4.upf
+Se 78.96 se_pbe_gbrv_1.0.upf
+ATOMIC_POSITIONS crystal
+Zn  0.750000000 0.250000000 0.500000000 
+Zn  0.250000000 0.750000000 0.500000000 
+Cu  0.000000000 0.000000000 0.000000000 
+Cu  0.750000000 0.250000000 0.500000000 
+Cu  0.250000000 0.750000000 0.500000000 
+Sn  0.500000000 0.500000000 0.000000000 
+Se  0.370060000 0.887560000 0.000000000 
+Se  0.887560000 0.370060000 0.000000000 
+Se  0.112440000 0.112440000 0.482500000 
+Se  0.629940000 0.629940000 0.517500000 
+CELL_PARAMETERS angstrom
+5.196872414 0.000000000 -4.622001811
+-1.047223108 5.090265873 -4.622001811
+0.000000000 0.000000000 6.954882000
+K_POINTS automatic
+1 1 2 0 0 0 

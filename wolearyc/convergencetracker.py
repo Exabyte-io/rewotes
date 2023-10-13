@@ -26,9 +26,9 @@ from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
 from exabyte_api_client.endpoints.raw_properties import RawPropertiesEndpoints 
 
-def wait_for_jobs_to_finish(endpoint: JobEndpoints, job_ids: list, poll_interval: int = 10):
+def wait_for_jobs_to_finish(endpoint: JobEndpoints, job_ids: list[str], poll_interval: int = 20):
     """
-    Waits for jobs to finish and prints their statuses.
+    Waits for jobs to finish and prints their statuses (adapted from Mat3ra API examples).
     A job is considered finished if it is not in "pre-submission", "submitted", or, "active" status.
 
     Args:
@@ -47,7 +47,11 @@ def wait_for_jobs_to_finish(endpoint: JobEndpoints, job_ids: list, poll_interval
     while True:
         if counter > poll_interval:
             counter = 0
-            statuses = get_jobs_statuses_by_ids(endpoint, job_ids)
+            try:
+                statuses = get_jobs_statuses_by_ids(endpoint, job_ids)
+            except:
+                # sometime the query fails. 
+                continue
         errored_jobs   = len([status for status in statuses if status == "error"])
         active_jobs    = len([status for status in statuses if status == "active"])
         finished_jobs  = len([status for status in statuses if status == "finished"])
@@ -61,12 +65,12 @@ def wait_for_jobs_to_finish(endpoint: JobEndpoints, job_ids: list, poll_interval
             print()
             break 
 
-def modify_pw_kpoints(pw_in_file, kpoints):
+def modify_pw_kpoints(pw_in_lines: list[str], kpoints: tuple[int,int,int]):
     """
     Modifies the kpoint specificiation in a pw.in.
 
     Args:
-        pw_in (list): contents of a pw.in file
+        pw_in_lines (list): contents of a pw.in file
         kpoints (tuple): 3-tuple with k-point grid
 
     Returns:
@@ -74,7 +78,7 @@ def modify_pw_kpoints(pw_in_file, kpoints):
     """
     result = ''
     kpoints_flag = False
-    for line in pw_in_file:
+    for line in pw_in_lines:
         if kpoints_flag == False:
             result += line
         else:
@@ -86,7 +90,7 @@ def modify_pw_kpoints(pw_in_file, kpoints):
 
     return(result)
 
-def gen_qe_workflow(input_file_path, kpoints, name):
+def gen_qe_workflow(input_file_path: str, kpoints: tuple[int,int,int], name: str):
     """
     Constructs and uploades a qe Mat3ra workflow using a pw.in file.
 
@@ -110,7 +114,7 @@ def gen_qe_workflow(input_file_path, kpoints, name):
     return(workflow)
 
 
-def gen_qe_job(input_file_path, kpoints, material):
+def gen_qe_job(input_file_path: str, kpoints: tuple[int,int,int], material: dict, cores: int):
     """ 
     Constructs and runs a qe job on Mat3ra.
     
@@ -118,6 +122,7 @@ def gen_qe_job(input_file_path, kpoints, material):
         input_file_path (str): path to a pw.in input file (directories templated)
         kpoints (tuple): 3-tuple with k-point grid
         material (dict): Mat3ra material
+        cores (int): number of CPU cores to use
 
     Returns:
         (dict,dict): the workflow and job
@@ -135,13 +140,13 @@ def gen_qe_job(input_file_path, kpoints, material):
         "_material": {"_id": material["_id"]},
         "name"    : name,
         "compute" : job_endpoints.get_compute(cluster = 'master-production-20160630-cluster-001.exabyte.io',
-                                              ppn=1,queue='OR')
+                                              ppn=cores,queue='OR')
     }
 
     job = job_endpoints.create(config)
     return(workflow, job)
 
-def find_next_kpoints(kpoints):
+def find_next_kpoints(kpoints: tuple[int,int,int]):
     """
     Returns a larger kpoint grid with the same kpoint ratios.
 
@@ -165,12 +170,12 @@ def find_next_kpoints(kpoints):
         
     return tuple([int(i) for i in trial_kpoints])
 
-def get_structure(pw_in_file):
+def get_structure(pw_in_lines: list[str]):
     """
     Gets the structure from a pw_in string
     
     Args:
-        pw_in_file (list): contents of a pw.in file
+        pw_in_lines (list): contents of a pw.in file
     """
     elements = []; coordinates = []; cell_vectors = []
 
@@ -179,7 +184,7 @@ def get_structure(pw_in_file):
     # WILL lead to problems.
     reading_atomic_positions = False
     reading_cell_parameters = False
-    for i,line in enumerate(pw_in_file):        
+    for i,line in enumerate(pw_in_lines):        
         if 'ATOMIC_POSITIONS' in line:
             reading_atomic_positions = True
             continue
@@ -198,7 +203,7 @@ def get_structure(pw_in_file):
         
     return(elements, coordinates, cell_vectors)
 
-def get_cell_parameters(cell_vectors):
+def get_cell_parameters(cell_vectors: list[list]):
     """Calculates cell parameters from a set of cell vectors"""
     
     a = np.linalg.norm(cell_vectors[0])
@@ -214,18 +219,18 @@ def get_cell_parameters(cell_vectors):
 
     return a, b, c, alpha, beta, gamma
 
-def gen_material(pw_in_path):
+def gen_material(pw_in_path: str):
     """
     Generates a Mat3ra material for the structure contained in a pw.in file
 
     Args:
         pw_in_path (str): path to pw.in file
     """
-    pw_in_file = None
+    pw_in_lines = None
     with open(pw_in_path, 'r') as f:
-        pw_in_file = f.readlines()
+        pw_in_lines = f.readlines()
 
-    elements, coordinates, cell_vectors = get_structure(pw_in_file)
+    elements, coordinates, cell_vectors = get_structure(pw_in_lines)
     a, b, c, alpha, beta, gamma = get_cell_parameters(cell_vectors)
     
     config = {
@@ -254,7 +259,7 @@ def gen_material(pw_in_path):
     print(f"    Mat3ra material id: {material['_id']}")
     return material
 
-def print_job_info(kpoints, workflow, job):
+def print_job_info(kpoints: tuple[int,int,int], workflow: dict, job: dict):
     """
     Prints some info about a job.
     """
@@ -262,7 +267,8 @@ def print_job_info(kpoints, workflow, job):
     print(f"          Mat3ra job id: {job['_id']}")
     print(f"    Mat3ra flowchart id: {workflow['subworkflows'][0]['units'][0]['flowchartId']}")
 
-def print_results(kpoints, energy, ref_kpoints, ref_energy):
+def print_results(kpoints: tuple[int,int,int], energy: float, 
+                  ref_kpoints: tuple[int,int,int], ref_energy: float):
     """
     Prints some info about a job.
     """
@@ -282,7 +288,7 @@ class KConverger:
 
     """
 
-    def __init__(self,input_file_dir, threshold, initial_kpoints):
+    def __init__(self,input_file_dir: str, threshold: float, initial_kpoints: tuple[int,int,int]):
         self.input_file_dir = input_file_dir
         self.initial_kpoints = initial_kpoints
         self.threshold = threshold
@@ -291,9 +297,12 @@ class KConverger:
         self.jobs = []
         self.material = None
 
-    def execute(self):
+    def execute(self, cores: int):
         """ 
         Executes the convergence test.
+
+        Args:
+            cores(int): number of cores to use in calculations
         """
         all_kpoints = []
         all_workflows = []
@@ -309,7 +318,7 @@ class KConverger:
         # Generate initial two datapoints
         for kpoints in [self.initial_kpoints, find_next_kpoints(self.initial_kpoints)]:
             print(f'Generating and submitting job...')
-            workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints, self.material)
+            workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints, self.material, cores)
             job_endpoints.submit(job["_id"])
             print_job_info(kpoints, workflow, job)
 
@@ -330,7 +339,7 @@ class KConverger:
 
                 print(f'Generating and submitting job...')
                 workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', 
-                                           kpoints, self.material)
+                                           kpoints, self.material, cores)
 
                 job_endpoints.submit(job["_id"])
                 print_job_info(kpoints, workflow, job)
@@ -351,7 +360,7 @@ class KConverger:
         self.workflows = all_workflows
         self.jobs      = all_jobs
 
-    def check_convergence(self,workflow,job,ref_workflow,ref_job):
+    def check_convergence(self,workflow: dict, job: dict, ref_workflow: dict, ref_job: dict):
         """ 
         Tests whether or not a job is converged.
 
@@ -369,10 +378,10 @@ class KEnergyConverger(KConverger):
     """
     Converges k-points with respect to total energy.
     """
-    def __init__(self,input_file_dir,threshold,initial_kpoints):
+    def __init__(self,input_file_dir: str, threshold: float, initial_kpoints: tuple[int,int,int]):
         super().__init__(input_file_dir,threshold,initial_kpoints)
     
-    def check_convergence(self,workflow,job,ref_workflow,ref_job):
+    def check_convergence(self, workflow: dict, job: dict, ref_workflow: dict, ref_job: dict):
         """ 
         Checks for total convergence.
         """
@@ -390,7 +399,7 @@ class KEnergyConverger(KConverger):
         converged = np.abs(ref_energy - energy) < self.threshold
         return converged, energy, ref_energy 
 
-def main(argv):
+def main(argv: list[str]):
     # Parse command line arguments
     parser = argparse.ArgumentParser(
                      prog='convergencetracker',
@@ -402,6 +411,8 @@ def main(argv):
                         help='convergence threshold (in eV)')
     parser.add_argument('-i', '--initialk', metavar = 'K', type=int, nargs = 3,
                         help='initial k-point grid')
+    parser.add_argument('-c', '--cores', type = int, 
+                        help='number of cores to use in calculations')
     args = parser.parse_args(argv)
     
     # Default arguments:
@@ -409,6 +420,8 @@ def main(argv):
         args.initialk = (1,1,1)
     else:
         args.initialk = tuple(args.initialk)
+    if args.cores is None:
+        args.cores = 1
     
     # Print header
     print(f"=" * 80)
@@ -417,12 +430,13 @@ def main(argv):
     print(f"           Directory: {args.input_file_dir}")
     print(f"           Threshold: {args.threshold} eV")
     print(f"Initial k-point grid: {args.initialk[0]}x{args.initialk[1]}x{args.initialk[2]}")
+    print(f"               Cores: {args.cores}")
     print(f"=" * 80)
 
     # Initialize and execute converger
     converger = KEnergyConverger(args.input_file_dir, args.threshold, 
                                  args.initialk)
-    converger.execute()
+    converger.execute(args.cores)
 
     result_kpoints = converger.kpoints[-2]
 

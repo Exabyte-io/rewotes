@@ -1,0 +1,51 @@
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: SrTiO3
+           Threshold: 0.01 eV
+Initial k-point grid: 3x3x3
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: FbcnMhxWDaaB4hFbj
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 3x3x3
+          Mat3ra job id: 6PwZ7kQahchPSxCMp
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: NwziWQveMA3Mzngvs
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -3904.870140759246 eV - 3x3x3  VS
+    -3904.957400494094 eV - 4x4x4
+    Energy difference: 0.08725973484797578 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 5x5x5
+          Mat3ra job id: ECo4pArzKmDyXYr76
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -3904.957400494094 eV - 4x4x4  VS
+    -3904.971929202462 eV - 5x5x5
+    Energy difference: 0.014528708367834042 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 6x6x6
+          Mat3ra job id: pgHfDRwCYuohTDfGR
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:4 Errored:0 (updates every 10 s)
+Jobs complete.
+    -3904.971929202462 eV - 5x5x5  VS
+    -3904.9746559203636 eV - 6x6x6
+    Energy difference: 0.0027267179016234877 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 5x5x5 k-point grid is converged within 0.01 eV
+    Required jobs: 4
+Finishing...
+================================================================================
