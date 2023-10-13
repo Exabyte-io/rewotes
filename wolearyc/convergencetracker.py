@@ -66,7 +66,7 @@ def modify_pw_kpoints(pw_in_file, kpoints):
     Modifies the kpoint specificiation in a pw.in.
 
     Args:
-        pw_in (str): contents of a pw.in file
+        pw_in (list): contents of a pw.in file
         kpoints (tuple): 3-tuple with k-point grid
 
     Returns:
@@ -110,13 +110,14 @@ def gen_qe_workflow(input_file_path, kpoints, name):
     return(workflow)
 
 
-def gen_qe_job(input_file_path, kpoints):
+def gen_qe_job(input_file_path, kpoints, material):
     """ 
     Constructs and runs a qe job on Mat3ra.
     
     Args:
         input_file_path (str): path to a pw.in input file (directories templated)
         kpoints (tuple): 3-tuple with k-point grid
+        material (dict): Mat3ra material
 
     Returns:
         (dict,dict): the workflow and job
@@ -131,6 +132,7 @@ def gen_qe_job(input_file_path, kpoints):
     config = {
         "owner"   : {"_id": ACCOUNT_ID},
         "workflow": {"_id": workflow["_id"]},
+        "_material": {"_id": material["_id"]},
         "name"    : name,
         "compute" : job_endpoints.get_compute(cluster = 'master-production-20160630-cluster-001.exabyte.io',
                                               ppn=1,queue='OR')
@@ -162,6 +164,95 @@ def find_next_kpoints(kpoints):
             break
         
     return tuple([int(i) for i in trial_kpoints])
+
+def get_structure(pw_in_file):
+    """
+    Gets the structure from a pw_in string
+    
+    Args:
+        pw_in_file (list): contents of a pw.in file
+    """
+    elements = []; coordinates = []; cell_vectors = []
+
+    # Hacky way of reading in atomic positions from pw.in
+    # Unexpected spaces between ATOMIC_POSITIONS, CELL_PARAMETERS, and KPOINTS block
+    # WILL lead to problems.
+    reading_atomic_positions = False
+    reading_cell_parameters = False
+    for i,line in enumerate(pw_in_file):        
+        if 'ATOMIC_POSITIONS' in line:
+            reading_atomic_positions = True
+            continue
+        elif 'CELL_PARAMETERS'in line:
+            reading_atomic_positions = False
+            reading_cell_parameters = True
+            continue
+        elif 'K_POINTS' in line:
+            break
+
+        if reading_atomic_positions:
+            elements.append(line.split()[0])
+            coordinates.append([float(n) for n in line.split()[1:]])
+        elif reading_cell_parameters:
+            cell_vectors.append([float(n) for n in line.split()])
+        
+    return(elements, coordinates, cell_vectors)
+
+def get_cell_parameters(cell_vectors):
+    """Calculates cell parameters from a set of cell vectors"""
+    
+    a = np.linalg.norm(cell_vectors[0])
+    b = np.linalg.norm(cell_vectors[1])
+    c = np.linalg.norm(cell_vectors[2])
+
+    alpha = np.arccos(np.dot(cell_vectors[1], cell_vectors[2]) / (b * c))
+    beta = np.arccos(np.dot(cell_vectors[0], cell_vectors[2]) / (a * c))
+    gamma = np.arccos(np.dot(cell_vectors[0], cell_vectors[1]) / (a * b))
+    alpha = np.degrees(alpha)
+    beta = np.degrees(beta)
+    gamma = np.degrees(gamma)
+
+    return a, b, c, alpha, beta, gamma
+
+def gen_material(pw_in_path):
+    """
+    Generates a Mat3ra material for the structure contained in a pw.in file
+
+    Args:
+        pw_in_path (str): path to pw.in file
+    """
+    pw_in_file = None
+    with open(pw_in_path, 'r') as f:
+        pw_in_file = f.readlines()
+
+    elements, coordinates, cell_vectors = get_structure(pw_in_file)
+    a, b, c, alpha, beta, gamma = get_cell_parameters(cell_vectors)
+    
+    config = {
+        "name": pw_in_path.split('/')[-2],
+        "basis": {
+            "elements": [{"id":i+1, "value":element} for i,element in enumerate(elements)],
+            "coordinates": [{"id":i+1, "value":vector} for i,vector in enumerate(coordinates)],
+            "units": "crystal",
+            "name": "basis",
+            "cell" : cell_vectors,
+        },
+        "lattice": {
+            "a": a,
+            "b": b,
+            "c": c,
+            "alpha": alpha,
+            "beta": beta,
+            "gamma": gamma,
+            "units": {"length": "angstrom", "angle": "degree"},
+        },
+        "tags": ["REST API"],
+    }
+
+    endpoint = MaterialEndpoints(*ENDPOINT_ARGS)
+    material = endpoint.create(config)
+    print(f"    Mat3ra material id: {material['_id']}")
+    return material
 
 def print_job_info(kpoints, workflow, job):
     """
@@ -198,6 +289,7 @@ class KConverger:
         self.kpoints = []
         self.workflows = []
         self.jobs = []
+        self.material = None
 
     def execute(self):
         """ 
@@ -208,11 +300,16 @@ class KConverger:
         all_jobs = []
         job_endpoints = JobEndpoints(*ENDPOINT_ARGS)
 
+        # Generate a material from the pw.in file
+        print(f"Generating and uploading material...")
+        self.material = gen_material(f"{self.input_file_dir}/pw.in")
+        print(f"-" * 80)
+
         print(f"Running initial calculations...")
         # Generate initial two datapoints
         for kpoints in [self.initial_kpoints, find_next_kpoints(self.initial_kpoints)]:
             print(f'Generating and submitting job...')
-            workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints)
+            workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints, self.material)
             job_endpoints.submit(job["_id"])
             print_job_info(kpoints, workflow, job)
 
@@ -233,7 +330,7 @@ class KConverger:
 
                 print(f'Generating and submitting job...')
                 workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', 
-                                           kpoints)
+                                           kpoints, self.material)
 
                 job_endpoints.submit(job["_id"])
                 print_job_info(kpoints, workflow, job)
@@ -248,12 +345,6 @@ class KConverger:
                 print_results(all_kpoints[-2], energy, all_kpoints[-1], ref_energy)
                 if converged:
                     print('Convergence reached.')
-
-        #if not :
-        #    while np.max(kpoints[-1]) < 2: # simple sanity check
-        #        #workflow, job = gen_qe_job('Si/pw.in', kpoints[0])
-        #        kpoints.append(find_next_kpoints(kpoints[-1]))
-        #        energies.
 
         # Store data in the object
         self.kpoints   = all_kpoints
