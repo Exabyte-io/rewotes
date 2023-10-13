@@ -1,0 +1,44 @@
+================================================================================
+willis@edna wolearyc % python3 convergencetracker.py Li16Co2O12 0.01 -i 2 2 1 -c 8
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: Li16Co2O12
+           Threshold: 0.01 eV
+Initial k-point grid: 2x2x1
+               Cores: 8
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: Y5pLxWRTikbiCtomv
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 2x2x1
+          Mat3ra job id: qjBwg2M3hNyEyomdx
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 4x4x2
+          Mat3ra job id: pyhPPqroi2naAcrDG
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+| [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -16571.945952910686 eV - 2x2x1  VS
+    -16571.902167462107 eV - 4x4x2
+    Energy difference: 0.04378544857900124 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 6x6x3
+          Mat3ra job id: AajMvqjQxqpWnYPZk
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -16571.902167462107 eV - 4x4x2  VS
+    -16571.901453435083 eV - 6x6x3
+    Energy difference: 0.0007140270245145075 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 4x4x2 k-point grid is converged within 0.01 eV
+    Required jobs: 3
+Finishing...
+================================================================================

@@ -1,0 +1,62 @@
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: GaP
+           Threshold: 0.01 eV
+Initial k-point grid: 3x3x3
+               Cores: 1
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: o32b9MiQPRupagera
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 3x3x3
+          Mat3ra job id: CBKw7d8cMXgwsYwNp
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: mdYP2WkksgJ5QZ4xP
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+\ [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -5862.494343812674 eV - 3x3x3  VS
+    -5862.845933684349 eV - 4x4x4
+    Energy difference: 0.35158987167505984 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 5x5x5
+          Mat3ra job id: jTMERFdE48Wsjyj7y
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+\ [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -5862.845933684349 eV - 4x4x4  VS
+    -5862.93950727933 eV - 5x5x5
+    Energy difference: 0.09357359498153528 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 6x6x6
+          Mat3ra job id: ZMwke8iAWYQZEQ4EP
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+\ [Mat3ra Jobs] Submitted:0 Active:0 Finished:4 Errored:0 (updates every 10 s)
+Jobs complete.
+    -5862.93950727933 eV - 5x5x5  VS
+    -5862.968841435962 eV - 6x6x6
+    Energy difference: 0.029334156631193764 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 7x7x7
+          Mat3ra job id: zGY6Kwbxm8eKaGF98
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:5 Errored:0 (updates every 10 s)
+Jobs complete.
+    -5862.968841435962 eV - 6x6x6  VS
+    -5862.9784348135 eV - 7x7x7
+    Energy difference: 0.00959337753829459 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 6x6x6 k-point grid is converged within 0.01 eV
+    Required jobs: 5
+Finishing...
+================================================================================

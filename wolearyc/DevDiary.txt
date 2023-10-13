@@ -43,5 +43,7 @@ Some options:
 
 From a user's standpoint, option 1 gives the most flexiblity as they can specify which pseudopotentials to use (I'm not sure what logic is used by QEPWXInputDataManager). Regardless, I'll implement stategy (2) as I think it's a bit cleaner and is good enough for a prototype convergencetester. To do this, I'll need to generate a new material for a pw.in file.
 
-Successfully carried out convergence test on TiO2. Next I'll do SrTiO3, but the Mat3ra's website is not very responsive at the moment.
+Successfully carried out convergence test on TiO2. Continued with a variety of other systems containing up to 30 atoms. Also added an option to specify the core count for the jobs.
+
+
 
