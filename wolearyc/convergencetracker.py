@@ -52,12 +52,13 @@ def wait_for_jobs_to_finish(endpoint: JobEndpoints, job_ids: list, poll_interval
         active_jobs    = len([status for status in statuses if status == "active"])
         finished_jobs  = len([status for status in statuses if status == "finished"])
         submitted_jobs = len([status for status in statuses if status == "submitted"])
-        print(f"{next(cursor)} [Mat3ra Jobs] Active:{active_jobs} Submitted:{submitted_jobs} Finished:{finished_jobs} Errored:{errored_jobs} (updates every {poll_interval} s)",
+        print(f"{next(cursor)} [Mat3ra Jobs] Submitted:{submitted_jobs} Active:{active_jobs} Finished:{finished_jobs} Errored:{errored_jobs} (updates every {poll_interval} s)",
                end = '\r')
         time.sleep(0.5)
         counter += 0.5
         
         if all([status not in ["pre-submission", "submitted", "active"] for status in statuses]):
+            print()
             break 
 
 def modify_pw_kpoints(pw_in_file, kpoints):
@@ -84,7 +85,6 @@ def modify_pw_kpoints(pw_in_file, kpoints):
             kpoints_flag = True
 
     return(result)
-
 
 def gen_qe_workflow(input_file_path, kpoints, name):
     """
@@ -133,7 +133,7 @@ def gen_qe_job(input_file_path, kpoints):
         "workflow": {"_id": workflow["_id"]},
         "name"    : name,
         "compute" : job_endpoints.get_compute(cluster = 'master-production-20160630-cluster-001.exabyte.io',
-                                              ppn=8,queue='R')
+                                              ppn=1,queue='OR')
     }
 
     job = job_endpoints.create(config)
@@ -167,7 +167,6 @@ def print_job_info(kpoints, workflow, job):
     """
     Prints some info about a job.
     """
-    print(f'Submitting job...')
     print(f"           k-point grid: {kpoints[0]}x{kpoints[1]}x{kpoints[2]}")
     print(f"          Mat3ra job id: {job['_id']}")
     print(f"    Mat3ra flowchart id: {workflow['subworkflows'][0]['units'][0]['flowchartId']}")
@@ -212,6 +211,7 @@ class KConverger:
         print(f"Running initial calculations...")
         # Generate initial two datapoints
         for kpoints in [self.initial_kpoints, find_next_kpoints(self.initial_kpoints)]:
+            print(f'Generating and submitting job...')
             workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints)
             job_endpoints.submit(job["_id"])
             print_job_info(kpoints, workflow, job)
@@ -225,14 +225,13 @@ class KConverger:
         wait_for_jobs_to_finish(job_endpoints, [j['_id'] for j in all_jobs], 10)
         converged, energy, ref_energy = self.check_convergence(all_workflows[-2], all_jobs[-2],
                                                                all_workflows[-1], all_jobs[-1])
-        converged = False; energy = 0; ref_energy = 1
         print_results(all_kpoints[-2], energy, all_kpoints[-1], ref_energy)
-        if converged:
-            print('Convergence reached.')
-        else:
+        if not converged:
             while not converged:
                 print(f"-" * 80)
                 kpoints = find_next_kpoints(kpoints)
+
+                print(f'Generating and submitting job...')
                 workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', 
                                            kpoints)
 
@@ -246,7 +245,6 @@ class KConverger:
 
                 converged, energy, ref_energy = self.check_convergence(all_workflows[-2], all_jobs[-2],
                                                                all_workflows[-1], all_jobs[-1])
-                converged = False; energy = 0; ref_energy = 1
                 print_results(all_kpoints[-2], energy, all_kpoints[-1], ref_energy)
                 if converged:
                     print('Convergence reached.')
@@ -318,7 +316,10 @@ def main(argv):
     # Default arguments:
     if args.initialk is None:
         args.initialk = (1,1,1)
+    else:
+        args.initialk = tuple(args.initialk)
     
+    # Print header
     print(f"=" * 80)
     print(f"CONVERGENCE TRACKER - by Willis O'Leary")
     print(f"")
@@ -327,10 +328,21 @@ def main(argv):
     print(f"Initial k-point grid: {args.initialk[0]}x{args.initialk[1]}x{args.initialk[2]}")
     print(f"=" * 80)
 
-    # Initialize converger
+    # Initialize and execute converger
     converger = KEnergyConverger(args.input_file_dir, args.threshold, 
                                  args.initialk)
     converger.execute()
+
+    result_kpoints = converger.kpoints[-2]
+
+    # Print results
+    print(f"=" * 80)
+    print(f"CONVERGENCE REACHED")
+    print(f"A {result_kpoints[0]}x{result_kpoints[1]}x{result_kpoints[2]} k-point grid is converged within {args.threshold} eV")
+    print(f"    Required jobs: {len(converger.jobs)}")
+    print(f"Finishing...")
+    print(f"=" * 80)
+
 
 if __name__ == "__main__":
    main(sys.argv[1:])

@@ -31,3 +31,15 @@ October 12th
 
 Started implementation. Going well so far. Wait times for calculations increased (maybe under maintenance), so will return tomorrow.
 
+October 13th
+
+Silly mistake - submitting to a queue that may not exist 'R' rather than 'OR'. Now Si is working well.
+I improved some of the printing and tested the convergence tester on a new system: TiO2
+The submitted jobs failed - looks like the pseudopotentials for Ti and O are missing. This is presumably done somewhere in the background. In the pw.in template normally, we have an input.ATOMIC_SPECIES that handles this. However in my current implementation, the lack of material endpoint probably prevents the pseudopotentials from being downloaded. 
+
+Some options:
+1) Use the shell script approach as in the API examples on github.
+2) Link a material endpoint to the workflow. This seemed to work on the website, so the material endpoint is really important to ensure that pseudopotentials are downloaded. 
+
+From a user's standpoint, option 1 gives the most flexiblity as they can specify which pseudopotentials to use (I'm not sure what logic is used by QEPWXInputDataManager). Regardless, I'll implement stategy (2) as I think it's a bit cleaner and is good enough for a prototype convergencetester. To do this, I'll need to generate a new material for a pw.in file.
+
