@@ -1,16 +1,5 @@
 """K-point convergence tracker."""
 
-#  User-facing interface.
-#  User should be able to run the script directly (python ___.py) giving two 
-#  arguments:
-#     1. Path to input data (a pw.in or POSCAR, INCAR, KPOINTS, POTCAR)
-#     2. Optionally, a kinetic energy cutoff (this will override the value in
-#         INCAR)
-#  
-#  The program should print status messages, detailing status of submitted jobs, 
-#  verifying job success, giving updates on the convergence, and finally
-#  returning the result.
-
 import sys
 import json
 import argparse
@@ -97,8 +86,8 @@ def modify_pw_ecut(pw_in_lines: list[str], ecutwfc: float, ecutrho: float):
 
     Args:
         pw_in_lines (list): contents of a pw.in file
-        ecutwtf (str): wavefunction kinetic energy cutoff in Ry
-        ecutrho (str): charge density/potential kinetic energy cutoff in Ry
+        ecutwtf (float): wavefunction kinetic energy cutoff in Ry
+        ecutrho (float): charge density/potential kinetic energy cutoff in Ry
 
     Returns:
         list
@@ -126,6 +115,8 @@ def gen_qe_workflow(input_file_path: str, kpoints: tuple[int,int,int], name: str
         input_file_path (str): path to a pw.in input file (directories templated)
         kpoints (tuple): 3-tuple with k-point grid
         name (str): name of the workflow
+        ecutwtf (float): wavefunction kinetic energy cutoff in Ry
+        ecutrho (float): charge density/potential kinetic energy cutoff in Ry
 
     Returns:
         dict: the workflow
@@ -155,6 +146,8 @@ def gen_qe_job(input_file_path: str, kpoints: tuple[int,int,int], material: dict
         kpoints (tuple): 3-tuple with k-point grid
         material (dict): Mat3ra material
         cores (int): number of CPU cores to use
+        ecutwtf (float): wavefunction kinetic energy cutoff in Ry
+        ecutrho (float): charge density/potential kinetic energy cutoff in Ry
 
     Returns:
         (dict,dict): the workflow and job
@@ -236,7 +229,14 @@ def get_structure(pw_in_lines: list[str]):
     return(elements, coordinates, cell_vectors)
 
 def get_cell_parameters(cell_vectors: list[list]):
-    """Calculates cell parameters from a set of cell vectors"""
+    """Calculates cell parameters from a set of cell vectors.
+
+    Args:
+        cell_vectors(list): list of cell vectors
+
+    Returns:
+        float,float,float,float,float,float: a,b,c,alpha,beta,gamma
+    """
     
     a = np.linalg.norm(cell_vectors[0])
     b = np.linalg.norm(cell_vectors[1])
@@ -257,6 +257,9 @@ def gen_material(pw_in_path: str):
 
     Args:
         pw_in_path (str): path to pw.in file
+
+    Returns:
+        dict: the material
     """
     pw_in_lines = None
     with open(pw_in_path, 'r') as f:
@@ -408,11 +411,13 @@ class KConverger:
         Tests whether or not a job is converged.
 
         Args:
-            job (dict): Mat3ra job
-            ref_job (dict): reference Mat3ra job (should be more accurate than job)
+            workflow (dict): a workflow
+            job (dict): job corresponding to workflow
+            ref_workflow (dict): a more accurate workflow
+            ref_job (dict): job corresponding to ref_workflow
 
         Returns:
-            bool, float, float
+            bool, float, float: whether converged, the score, and the reference score
 
         """
         raise NotImplementedError
@@ -427,7 +432,16 @@ class KEnergyConverger(KConverger):
     
     def check_convergence(self, workflow: dict, job: dict, ref_workflow: dict, ref_job: dict):
         """ 
-        Checks for total convergence.
+        Checks for total convergence of a workflow/job pair
+
+        Args:
+            workflow (dict): a workflow
+            job (dict): job corresponding to workflow
+            ref_workflow (dict): a more accurate workflow
+            ref_job (dict): job corresponding to ref_workflow
+
+        Returns:
+            bool, float, float: whether we have convergence, energy, and reference energy
         """
         raw_property_endpoints = RawPropertiesEndpoints(*ENDPOINT_ARGS)
 

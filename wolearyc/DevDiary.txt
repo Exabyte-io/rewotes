@@ -45,5 +45,9 @@ From a user's standpoint, option 1 gives the most flexiblity as they can specify
 
 Successfully carried out convergence test on TiO2. Continued with a variety of other systems containing up to 30 atoms. Also added an option to specify the core count for the jobs.
 
+Oct 14th
+
+Implemented kinetic energy cutoff options. Passing the same parameters through a bunch of functions is a pain. Future versions could use OOP practices to eliminate this, either by passing a object containing those parameters around or by defining some sort of utility object containing that functions as methods.
+
 
 
