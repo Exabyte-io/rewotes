@@ -74,15 +74,15 @@ def modify_pw_kpoints(pw_in_lines: list[str], kpoints: tuple[int,int,int]):
         kpoints (tuple): 3-tuple with k-point grid
 
     Returns:
-        str
+        list[str]
     """
-    result = ''
+    result = []
     kpoints_flag = False
     for line in pw_in_lines:
         if kpoints_flag == False:
-            result += line
+            result.append(line)
         else:
-            result += f"{kpoints[0]} {kpoints[1]} {kpoints[2]} 0 0 0"
+            result.append(f"{kpoints[0]} {kpoints[1]} {kpoints[2]} 0 0 0")
             kpoint_flag = False
         if 'K_POINTS' in line:
             assert('automatic' in line)
@@ -90,7 +90,35 @@ def modify_pw_kpoints(pw_in_lines: list[str], kpoints: tuple[int,int,int]):
 
     return(result)
 
-def gen_qe_workflow(input_file_path: str, kpoints: tuple[int,int,int], name: str):
+def modify_pw_ecut(pw_in_lines: list[str], ecutwfc: float, ecutrho: float):
+    """
+    Modifies the kinetic energy cutoffs in a pw.in. Adds an ecutrho entry if
+    not specified.
+
+    Args:
+        pw_in_lines (list): contents of a pw.in file
+        ecutwtf (str): wavefunction kinetic energy cutoff in Ry
+        ecutrho (str): charge density/potential kinetic energy cutoff in Ry
+
+    Returns:
+        list
+    """
+    ecutrho_specified = 'ecutrho' in ''.join(pw_in_lines)
+    result = []
+    for line in pw_in_lines:
+        if 'ecutwfc' in line:
+            result.append(f"    ecutwfc = {ecutwfc}\n")
+            if not ecutrho_specified:
+                result.append(f"    ecutrho = {ecutrho}\n")
+        elif 'ecutrho' in line:
+            result.append(f"    ecutrho = {ecutrho}\n")
+        else:
+            result.append(line)
+
+    return(result)
+
+def gen_qe_workflow(input_file_path: str, kpoints: tuple[int,int,int], name: str,
+                    ecutwfc: float, ecutrho: float):
     """
     Constructs and uploades a qe Mat3ra workflow using a pw.in file.
 
@@ -108,13 +136,17 @@ def gen_qe_workflow(input_file_path: str, kpoints: tuple[int,int,int], name: str
     workflow_body = workflow_endpoints.list({"isDefault": True, "owner._id": ACCOUNT_ID})[0]
     workflow_body["name"] = name
     with open(input_file_path, "r") as f:
-        content = modify_pw_kpoints(f, kpoints)
+        content = modify_pw_kpoints(f.readlines(), kpoints)
+        if ecutwfc and ecutrho:
+            content = modify_pw_ecut(content, ecutwfc, ecutrho)
+        content = ''.join(content)
         workflow_body["subworkflows"][0]["units"][0]["input"][0]["content"] = content
     workflow = workflow_endpoints.create(workflow_body)
     return(workflow)
 
 
-def gen_qe_job(input_file_path: str, kpoints: tuple[int,int,int], material: dict, cores: int):
+def gen_qe_job(input_file_path: str, kpoints: tuple[int,int,int], material: dict, cores: int,
+               ecutwfc: float, ecutrho: float):
     """ 
     Constructs and runs a qe job on Mat3ra.
     
@@ -132,7 +164,7 @@ def gen_qe_job(input_file_path: str, kpoints: tuple[int,int,int], material: dict
     # A descriptive name for the job and workflow (hacky)
     name = f"{input_file_path.split('/')[-2]}_{kpoints}"
 
-    workflow = gen_qe_workflow(input_file_path, kpoints, name)
+    workflow = gen_qe_workflow(input_file_path, kpoints, name, ecutwfc, ecutrho)
 
     config = {
         "owner"   : {"_id": ACCOUNT_ID},
@@ -285,13 +317,22 @@ class KConverger:
         input_file_dir (str): path to directory containing a pw.in file
         initial_kpoints (tuple): 3-tuple with initial k-point grid
         threshold (float): some positive threshold for convergence
+        ecutwfc (float): wavefunction kinetic energy cutoff in Ry
+        ecutrho (float): charge density/potential kinetic energy cutoff in Ry
+        kpoints (list): all kpoints evaluated so far
+        workflows (list): all workflows generated so far
+        jobs (list): all jobs generated so far
+        material (dict): the relevant material generated for all jobs 
 
     """
 
-    def __init__(self,input_file_dir: str, threshold: float, initial_kpoints: tuple[int,int,int]):
+    def __init__(self,input_file_dir: str, threshold: float, initial_kpoints: tuple[int,int,int],
+                 ecutwfc: float, ecutrho: float):
         self.input_file_dir = input_file_dir
         self.initial_kpoints = initial_kpoints
         self.threshold = threshold
+        self.ecutwfc = ecutwfc
+        self.ecutrho = ecutrho
         self.kpoints = []
         self.workflows = []
         self.jobs = []
@@ -318,7 +359,8 @@ class KConverger:
         # Generate initial two datapoints
         for kpoints in [self.initial_kpoints, find_next_kpoints(self.initial_kpoints)]:
             print(f'Generating and submitting job...')
-            workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints, self.material, cores)
+            workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', kpoints, self.material, cores,
+                                       self.ecutwfc, self.ecutrho)
             job_endpoints.submit(job["_id"])
             print_job_info(kpoints, workflow, job)
 
@@ -339,7 +381,8 @@ class KConverger:
 
                 print(f'Generating and submitting job...')
                 workflow, job = gen_qe_job(f'{self.input_file_dir}/pw.in', 
-                                           kpoints, self.material, cores)
+                                           kpoints, self.material, cores, 
+                                           self.ecutwfc, self.ecutrho)
 
                 job_endpoints.submit(job["_id"])
                 print_job_info(kpoints, workflow, job)
@@ -378,8 +421,9 @@ class KEnergyConverger(KConverger):
     """
     Converges k-points with respect to total energy.
     """
-    def __init__(self,input_file_dir: str, threshold: float, initial_kpoints: tuple[int,int,int]):
-        super().__init__(input_file_dir,threshold,initial_kpoints)
+    def __init__(self,input_file_dir: str, threshold: float, initial_kpoints: tuple[int,int,int],
+                 ecutwfc: float, ecutrho: float):
+        super().__init__(input_file_dir,threshold,initial_kpoints, ecutwfc, ecutrho)
     
     def check_convergence(self, workflow: dict, job: dict, ref_workflow: dict, ref_job: dict):
         """ 
@@ -409,8 +453,10 @@ def main(argv: list[str]):
                         help='path to directory containing a pw.in file')
     parser.add_argument('threshold', type=float,
                         help='convergence threshold (in eV)')
-    parser.add_argument('-i', '--initialk', metavar = 'K', type=int, nargs = 3,
+    parser.add_argument('-i', '--initialk', type=int, nargs = 3,
                         help='initial k-point grid')
+    parser.add_argument('-e', '--ecuts', type=float, nargs = 2,
+                        help='kinetic energy cutoffs (Ry) for wavefunctions and charge density/potential')
     parser.add_argument('-c', '--cores', type = int, 
                         help='number of cores to use in calculations')
     args = parser.parse_args(argv)
@@ -422,6 +468,8 @@ def main(argv: list[str]):
         args.initialk = tuple(args.initialk)
     if args.cores is None:
         args.cores = 1
+    if args.ecuts == None:
+        args.ecuts = (None, None)
     
     # Print header
     print(f"=" * 80)
@@ -435,7 +483,7 @@ def main(argv: list[str]):
 
     # Initialize and execute converger
     converger = KEnergyConverger(args.input_file_dir, args.threshold, 
-                                 args.initialk)
+                                 args.initialk, args.ecuts[0], args.ecuts[1])
     converger.execute(args.cores)
 
     result_kpoints = converger.kpoints[-2]
