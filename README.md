@@ -4,9 +4,7 @@ REal WOrld TEstS
 
 ## Overview
 
-This repository contains example test assignments used during our hiring process at Mat3ra.com.
-
-We find that regular job interview questions can often be misleading and so use the "real-world" examples instead.
+This repository contains example test assignments used during the hiring process at Mat3ra.com. Regular job interview questions can often be misleading, so use the "real-world" examples instead.
 
 Each file represents an assignment similar to what one would get when hired.
 
@@ -37,14 +35,28 @@ See [dev branch](https://github.com/Exabyte-io/rewotes/tree/dev) also.
 
 ## Notes
 
-Examples listed here are only meant as guidelines and do not necessarily reflect on the type of work to be performed at the company. Modifications to the individual assignments with an advance notice are encouraged.
+The examples listed here are only meant as guidelines and do not necessarily reflect the type of work to be performed at the company. Modifications to the individual assignments with advance notice are encouraged.
 
-We will screen for the ability to (1) pick up new concepts quickly, (2) implement a working proof-of-concept solution, and (3) outline how the PoC can become more mature. We value attention to details and modularity.
+We will screen for the ability to:
 
+1. pick up new concepts quickly
+2. explain one's thoughts and process
+3. implement a working proof-of-concept solution.
+
+We value attention to detail and modularity.
+
+## Who we look for
+
+We look for people who:
+
+1. Think like founders or want to be founders in the future, want to join a company at a very early stage, and understand the risk vs reward ratio.
+2. Can learn quickly and have demonstrated it in the past. Advanced degrees help with this, but not a requirement.
+3. Know their $hit and have measurable ways to prove it. Here, we can, for example, look at GitHub profiles (and compare with https://github.com/timurbazhirov), a list of publications (and compare with https://scholar.google.com/citations?user=7SxfHbMAAAAJ), writing skills, and the ability to consume technical knowledge.
+4. Are honest and energetic.
 
 ## Hiring process
 
-Our hiring process in more details:
+Our hiring process in more detail:
 
 | Stage             | Target Duration   | Topic                          |
 | ----------------- | ----------------- | ------------------------------ |
@@ -58,9 +70,8 @@ Our hiring process in more details:
 
 TOTAL: ~2 weeks tentative.
 
-
 ## Contact info
 
-With any questions about this repository or our hiring process please contact us at info@mat3ra.com.
+With any questions about this repository or our hiring process, please get in touch with us at info@mat3ra.com.
 
 © 2023 Exabyte Inc. / Mat3ra.com
