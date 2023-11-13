@@ -1,0 +1,52 @@
+willis@edna wolearyc % python3 convergencetracker.py CsCl 0.01 -i 1 1 1
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: CsCl
+           Threshold: 0.01 eV
+Initial k-point grid: 1x1x1
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: gFZ9sKg7SZvs9vY37
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 1x1x1
+          Mat3ra job id: NQeuM2aF2Bqw4dQHZ
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 2x2x2
+          Mat3ra job id: b9so6HMtyNyhLk7Ww
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+/ [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -1313.0544711882592 eV - 1x1x1  VS
+    -1314.9498278904225 eV - 2x2x2
+    Energy difference: 1.8953567021633262 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 3x3x3
+          Mat3ra job id: yJXLbw2dCkSsm4cry
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+| [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -1314.9498278904225 eV - 2x2x2  VS
+    -1314.9669068507917 eV - 3x3x3
+    Energy difference: 0.0170789603691901 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: aJyX26qfFNziXmH8v
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+| [Mat3ra Jobs] Submitted:0 Active:0 Finished:4 Errored:0 (updates every 10 s)
+Jobs complete.
+    -1314.9669068507917 eV - 3x3x3  VS
+    -1314.9677619689003 eV - 4x4x4
+    Energy difference: 0.0008551181085749704 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 3x3x3 k-point grid is converged within 0.01 eV
+    Required jobs: 4
+Finishing...
+================================================================================

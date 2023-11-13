@@ -1,0 +1,42 @@
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: Li6Fe2
+           Threshold: 0.01 eV
+Initial k-point grid: 3x3x3
+               Cores: 4
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: 52poyKj6qTHBGPpsx
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 3x3x3
+          Mat3ra job id: 3DfBcBKFEPAfMNBDr
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: 4aGLfMxehEicf4Xc4
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+\ [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -7988.4954122979 eV - 3x3x3  VS
+    -7988.473801007469 eV - 4x4x4
+    Energy difference: 0.021611290430882946 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 5x5x5
+          Mat3ra job id: yJaokDWExFjCwa8Mv
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -7988.473801007469 eV - 4x4x4  VS
+    -7988.479706288498 eV - 5x5x5
+    Energy difference: 0.005905281029299658 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 4x4x4 k-point grid is converged within 0.01 eV
+    Required jobs: 3
+Finishing...
+================================================================================

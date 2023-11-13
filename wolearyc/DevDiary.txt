@@ -1,0 +1,53 @@
+October 10th
+
+Forked repo, set up directories.
+Established rough architecture.
+Familiarized myself with running calculations on mat3ra using a Jupyter notebook.
+- Use of the RESTful API is taking some getting used to, as is running calculations
+  through a platform, rather than directly on a HPC system.
+- Managed to get an energy for Si2.
+- Managed to adapt code to run TiO2.
+? Still unclear how exactly k-point grids are chosen using the current workflow. 
+  I suspect is has something to do with context.
+? I am still debating using explicit pw.in files to run jobs. This may not really
+  make much sense, as context is important (e.g. JOB_WORK_DIR)
+? Encountering some strange behavior on mat3ra.com When applying a workflow
+  to a new material, the old material (and pw.in) is displayed for some time...
+
+October 11th
+
+After more thought, using explicit pw.in files offers the most flexibility to the 
+end user. To do this, I will replace 'content' in the default workflow with the desired
+pw.in. This failed. Jobs gave an error, but could not access error info on the web app! Makes debugging very difficult...maybe there's an API? Submitted again through the web interface, error information this time was available...weird. Calculation is failing is strange ways, no pseudopotential files are generated on AWS. Hm.
+
+The error was in my pw.in file. This file is a template, therefore the directory
+parameters should have been surrounded by {% raw %} tags. Fixing this, I can now run calculations with a (nearly) explicit pw.in file.
+
+So far, all jobs have contained a material. With an explicit pw.in file, there is no guarantee that the material is in Mat3ra. For now, I'll try running a job without an associated material. The job is successful, though the web interface seems to break? Still, using the API, I can extract an energy.
+
+I can now run quantum espresso calculations on Mat3ra based on a template pw.in file. to make this work, I create a workflow for each pw.in template. This is not ideal - perhaps there's a way to create a workflow that uses a pw.in file as an input. However, for the purposes of creating a working prototype, I'm happy enough with this solution.
+
+October 12th
+
+Started implementation. Going well so far. Wait times for calculations increased (maybe under maintenance), so will return tomorrow.
+
+October 13th
+
+Silly mistake - submitting to a queue that may not exist 'R' rather than 'OR'. Now Si is working well.
+I improved some of the printing and tested the convergence tester on a new system: TiO2
+The submitted jobs failed - looks like the pseudopotentials for Ti and O are missing. This is presumably done somewhere in the background. In the pw.in template normally, we have an input.ATOMIC_SPECIES that handles this. However in my current implementation, the lack of material endpoint probably prevents the pseudopotentials from being downloaded. 
+
+Some options:
+1) Use the shell script approach as in the API examples on github.
+2) Link a material endpoint to the workflow. This seemed to work on the website, so the material endpoint is really important to ensure that pseudopotentials are downloaded. 
+
+From a user's standpoint, option 1 gives the most flexiblity as they can specify which pseudopotentials to use (I'm not sure what logic is used by QEPWXInputDataManager). Regardless, I'll implement stategy (2) as I think it's a bit cleaner and is good enough for a prototype convergencetester. To do this, I'll need to generate a new material for a pw.in file.
+
+Successfully carried out convergence test on TiO2. Continued with a variety of other systems containing up to 30 atoms. Also added an option to specify the core count for the jobs.
+
+Oct 14th
+
+Implemented kinetic energy cutoff options. Passing the same parameters through a bunch of functions is a pain. Future versions could use OOP practices to eliminate this, either by passing a object containing those parameters around or by defining some sort of utility object containing that functions as methods.
+
+
+

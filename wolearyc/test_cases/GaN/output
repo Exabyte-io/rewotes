@@ -1,0 +1,53 @@
+willis@edna wolearyc % python3 convergencetracker.py GaN 0.01 -i 4 4 4 -c 2 
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: GaN
+           Threshold: 0.01 eV
+Initial k-point grid: 4x4x4
+               Cores: 2
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: FkRsuCuaJz7c9LW6E
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: bacuAMnqukiwzxhHQ
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 5x5x5
+          Mat3ra job id: rkqL3z4icCdQHznm2
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+/ [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -11851.813921554221 eV - 4x4x4  VS
+    -11851.860971689994 eV - 5x5x5
+    Energy difference: 0.047050135772224166 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 6x6x6
+          Mat3ra job id: QsPEKfQrfqEKm99my
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+/ [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -11851.860971689994 eV - 5x5x5  VS
+    -11851.872266460046 eV - 6x6x6
+    Energy difference: 0.011294770052700187 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 7x7x7
+          Mat3ra job id: CwRynGmvsviRzaGMz
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+/ [Mat3ra Jobs] Submitted:0 Active:0 Finished:4 Errored:0 (updates every 10 s)
+Jobs complete.
+    -11851.872266460046 eV - 6x6x6  VS
+    -11851.875293047528 eV - 7x7x7
+    Energy difference: 0.0030265874811448157 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 6x6x6 k-point grid is converged within 0.01 eV
+    Required jobs: 4
+Finishing...
+================================================================================

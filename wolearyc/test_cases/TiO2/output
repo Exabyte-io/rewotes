@@ -1,0 +1,41 @@
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: TiO2
+           Threshold: 0.01 eV
+Initial k-point grid: 4x4x4
+================================================================================
+Generating and uploading material...
+    Mat3ra material id: eH2p5FKhcHsCbqdH3
+--------------------------------------------------------------------------------
+Running initial calculations...
+Generating and submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: SEneoKKXDkWR3rBFT
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Generating and submitting job...
+           k-point grid: 5x5x5
+          Mat3ra job id: sd7dqNurr2NWrRT2E
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -2506.1604594304135 eV - 4x4x4  VS
+    -2506.179991225987 eV - 5x5x5
+    Energy difference: 0.01953179557358453 eV
+--------------------------------------------------------------------------------
+Generating and submitting job...
+           k-point grid: 6x6x6
+          Mat3ra job id: omahR4fGMYa8JE43B
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+\ [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -2506.179991225987 eV - 5x5x5  VS
+    -2506.1826768546816 eV - 6x6x6
+    Energy difference: 0.0026856286945076135 eV
+Convergence reached.
+================================================================================
+CONVERGENCE REACHED
+A 5x5x5 k-point grid is converged within 0.01 eV
+    Required jobs: 3
+Finishing...
+================================================================================

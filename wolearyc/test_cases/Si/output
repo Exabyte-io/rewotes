@@ -1,0 +1,82 @@
+================================================================================
+CONVERGENCE TRACKER - by Willis O'Leary
+
+           Directory: Si
+           Threshold: 0.01 eV
+Initial k-point grid: 1x1x1
+================================================================================
+Running initial calculations...
+Submitting job...
+           k-point grid: 1x1x1
+          Mat3ra job id: FS9cAnmYTQDg8rbj6
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+Submitting job...
+           k-point grid: 2x2x2
+          Mat3ra job id: 7QKjkGoqiKjy2pJhL
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+/ [Mat3ra Jobs] Submitted:0 Active:0 Finished:2 Errored:0 (updates every 10 s)
+Jobs complete.
+    -244.34531872840225 eV - 1x1x1  VS
+    -258.6293950171692 eV - 2x2x2
+    Energy difference: 14.284076288766954 eV
+--------------------------------------------------------------------------------
+Submitting job...
+           k-point grid: 3x3x3
+          Mat3ra job id: kJQHdn2ss46mFsTnk
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+/ [Mat3ra Jobs] Submitted:0 Active:0 Finished:3 Errored:0 (updates every 10 s)
+Jobs complete.
+    -258.6293950171692 eV - 2x2x2  VS
+    -260.53352372089324 eV - 3x3x3
+    Energy difference: 1.9041287037240409 eV
+--------------------------------------------------------------------------------
+Submitting job...
+           k-point grid: 4x4x4
+          Mat3ra job id: ffBDr4XpCuXLcfGhs
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+| [Mat3ra Jobs] Submitted:0 Active:0 Finished:4 Errored:0 (updates every 10 s)
+Jobs complete.
+    -260.53352372089324 eV - 3x3x3  VS
+    -260.95604921116217 eV - 4x4x4
+    Energy difference: 0.4225254902689244 eV
+--------------------------------------------------------------------------------
+Submitting job...
+           k-point grid: 5x5x5
+          Mat3ra job id: MwGTq8x5cjZeXPgRE
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+| [Mat3ra Jobs] Submitted:0 Active:0 Finished:5 Errored:0 (updates every 10 s)
+Jobs complete.
+    -260.95604921116217 eV - 4x4x4  VS
+    -261.07728278165644 eV - 5x5x5
+    Energy difference: 0.12123357049426886 eV
+--------------------------------------------------------------------------------
+Submitting job...
+           k-point grid: 6x6x6
+          Mat3ra job id: fFx9TBsWDwda38mxt
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:6 Errored:0 (updates every 10 s)
+Jobs complete.
+    -261.07728278165644 eV - 5x5x5  VS
+    -261.11699931024236 eV - 6x6x6
+    Energy difference: 0.039716528585927335 eV
+--------------------------------------------------------------------------------
+Submitting job...
+           k-point grid: 7x7x7
+          Mat3ra job id: sLjxBWnNZzDST6Pou
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+\ [Mat3ra Jobs] Submitted:0 Active:0 Finished:7 Errored:0 (updates every 10 s)
+Jobs complete.
+    -261.11699931024236 eV - 6x6x6  VS
+    -261.1312356321645 eV - 7x7x7
+    Energy difference: 0.014236321922112438 eV
+--------------------------------------------------------------------------------
+Submitting job...
+           k-point grid: 8x8x8
+          Mat3ra job id: NtaZMNnnKFW6uMNhT
+    Mat3ra flowchart id: 139044b1-f2c2-4cd0-aa2e-1d2804afd1b8
+- [Mat3ra Jobs] Submitted:0 Active:0 Finished:8 Errored:0 (updates every 10 s)
+Jobs complete.
+    -261.1312356321645 eV - 7x7x7  VS
+    -261.1366893400818 eV - 8x8x8
+    Energy difference: 0.005453707917297379 eV
+Convergence reached.

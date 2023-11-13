@@ -1,0 +1,63 @@
+&CONTROL
+    calculation = 'scf'
+    title = ''
+    verbosity = 'low'
+    restart_mode = 'from_scratch'
+    wf_collect = .true.
+    tstress = .true.
+    tprnfor = .true.
+    outdir = {% raw %}'{{ JOB_WORK_DIR }}/outdir'{% endraw %}
+    wfcdir = {% raw %}'{{ JOB_WORK_DIR }}/outdir'{% endraw %}
+    prefix = '__prefix__'
+    pseudo_dir = {% raw %}'{{ JOB_WORK_DIR }}/pseudo'{% endraw %}
+/
+&SYSTEM
+    ibrav = 0
+    nat = 19
+    ntyp = 3
+    ecutwfc = 40
+    ecutrho = 200
+    occupations = 'smearing'
+    degauss = 0.005
+/
+&ELECTRONS
+    diagonalization = 'david'
+    diago_david_ndim = 4
+    diago_full_acc = .true.
+    mixing_beta = 0.3
+    startingwfc = 'atomic+random'
+/
+&IONS
+/
+&CELL
+/
+ATOMIC_SPECIES
+Y 88.90585 y_pbe_gbrv_1.4.upf
+Zr 91.224 zr_pbe_gbrv_1.0.upf
+O 15.9994 o_pbe_gbrv_1.2.upf
+ATOMIC_POSITIONS crystal
+Y   0.696992700 0.865309320 0.390711810 
+Y   0.387533560 0.699649070 0.865818750 
+Y   0.303007300 0.134690680 0.609288190 
+Y   0.612466440 0.300350930 0.134181250 
+Zr  0.000000000 0.000000000 0.000000000 
+Zr  0.848918300 0.397380560 0.670916470 
+Zr  0.151081700 0.602619440 0.329083530 
+O   0.586351410 0.416939900 0.820696460 
+O   0.828726480 0.570016050 0.425834400 
+O   0.410730130 0.811655250 0.565261020 
+O   0.413648590 0.583060100 0.179303540 
+O   0.171273520 0.429983950 0.574165600 
+O   0.589269870 0.188344750 0.434738980 
+O   0.023371080 0.678512860 0.883902130 
+O   0.921509130 0.086763090 0.695156770 
+O   0.686119880 0.933423830 0.059013230 
+O   0.976628920 0.321487140 0.116097870 
+O   0.078490870 0.913236910 0.304843230 
+O   0.313880120 0.066576170 0.940986770 
+CELL_PARAMETERS angstrom
+6.254819018 0.000000000 -0.935013294
+-1.239106536 6.152073027 -1.088098353
+0.000000000 0.000000000 6.541956000
+K_POINTS automatic
+1 1 1 0 0 0 

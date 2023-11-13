@@ -1,0 +1,47 @@
+&CONTROL
+    calculation = 'scf'
+    title = ''
+    verbosity = 'low'
+    restart_mode = 'from_scratch'
+    wf_collect = .true.
+    tstress = .true.
+    tprnfor = .true.
+    outdir = {% raw %}'{{ JOB_WORK_DIR }}/outdir'{% endraw %}
+    wfcdir = {% raw %}'{{ JOB_WORK_DIR }}/outdir'{% endraw %}
+    prefix = '__prefix__'
+    pseudo_dir = {% raw %}'{{ JOB_WORK_DIR }}/pseudo'{% endraw %}
+/
+&SYSTEM
+    ibrav = 0
+    nat = 4
+    ntyp = 2
+    ecutwfc = 40
+    ecutrho = 200
+    occupations = 'smearing'
+    degauss = 0.005
+/
+&ELECTRONS
+    diagonalization = 'david'
+    diago_david_ndim = 4
+    diago_full_acc = .true.
+    mixing_beta = 0.3
+    startingwfc = 'atomic+random'
+/
+&IONS
+/
+&CELL
+/
+ATOMIC_SPECIES
+Ga 69.723 ga_pbe_gbrv_1.4.upf
+N 14.00674 n_pbe_gbrv_1.2.upf
+ATOMIC_POSITIONS crystal
+Ga  0.333333300 0.666666700 0.000000000 
+Ga  0.666666700 0.333333300 0.499536900 
+N   0.333333300 0.666666700 0.376263400 
+N   0.666666700 0.333333300 0.876263400 
+CELL_PARAMETERS angstrom
+3.216727000 0.000000000 0.000000000
+-1.608363000 2.785766433 0.000000000
+0.000000000 0.000000000 5.240240000
+K_POINTS automatic
+2 2 1 0 0 0 
