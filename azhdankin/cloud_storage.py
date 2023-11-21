@@ -14,16 +14,11 @@ class CloudStorageGCP(CloudStorage):
     def __init__(self, bucket_name, project=None):
         super().__init__("CloudStorageGCP")
         self.project = project
+        self.bucket_name = bucket_name
         self.client = storage.Client(project=self.project)
-        buckets = list(self.client.list_buckets())
-        bucket_is_found = False
-        for bucket in buckets:
-          if bucket.name == bucket_name: 
-            self.bucket = self.client.bucket(bucket_name)
-            bucket_is_found = True
-            break
-        if not bucket_is_found:
-           self.bucket = self.client.create_bucket(bucket_name)
+        self.bucket = self.client.bucket(self.bucket_name)
+        if not self.bucket.exists():
+          self.bucket = self.client.create_bucket(self.bucket_name)
 
     def upload_object(self, object_name, source_file_name):
         # Create a new blob object

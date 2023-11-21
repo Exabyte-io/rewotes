@@ -1,5 +1,5 @@
 import os
-from cloud_storage import CloudStorage
+from cloud_storage import CloudStorageGCP
 
 class FileUploader:
     def __init__(self, storage, files, start_idx, count):
