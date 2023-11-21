@@ -21,7 +21,7 @@ for entry in glob.iglob(path, recursive=True):
       if os.path.isfile(element):
         file_list.append(element)
 
-MAX_UPLOAD_WORKERS = 10
+MAX_UPLOAD_WORKERS = 50 
 
 file_list_len = len(file_list)
 
@@ -37,15 +37,16 @@ i=0
 time_start = time.time()
 
 while i < (file_list_len - remainder):
+  print(i)
   #storage = CloudStorageGCP("azhdanki-test-bucket1", project='rewotes')
   uploader = FileUploader (storage, file_list, i, step)
-  pool.submit (uploader.run())
+  pool.submit (uploader.run)
   i += step
 
 if remainder > 0:
   #storage = CloudStorageGCP("azhdanki-test-bucket1", project='rewotes')
   uploader = FileUploader (storage, file_list, i, remainder)
-  pool.submit (uploader.run())
+  pool.submit (uploader.run)
 
 pool.shutdown (wait=True)
 
