@@ -22,4 +22,4 @@ This is a python application that uploads a set of given files to a cloud object
       number of file sto be created as a cmd line parameter (i.e. ./create_files.py 10000 to create 10000 files).
   3. Run ./upload_files.py to upload the files to the Cloud Storage.
 
-
+# Notes
