@@ -1,5 +1,12 @@
+"""
+This module contains the definitions for the CloudStorage base class which acta like an "abstract class" or
+the equivalent of the "interface" for the Cloud storage.
+It also has an implementation of the Cloud storage implememntation for GCP, which allows to upload the files.
+"""
+
 from google.cloud import storage
 
+#Base CloudStorage class
 class CloudStorage:
     def __init__(self, name):
         self.name = name 
@@ -10,13 +17,18 @@ class CloudStorage:
     def __str__(self):
         return self.name
 
+#Cloud storage implementation for GCP
 class CloudStorageGCP(CloudStorage):
     def __init__(self, bucket_name, project=None):
         super().__init__("CloudStorageGCP")
         self.project = project
         self.bucket_name = bucket_name
         self.client = storage.Client(project=self.project)
+
+        #Resolve the reference to the destination bucket
         self.bucket = self.client.bucket(self.bucket_name)
+
+        #If target bucket does not exist it will be created
         if not self.bucket.exists():
           self.bucket = self.client.create_bucket(self.bucket_name)
 
