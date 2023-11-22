@@ -13,15 +13,38 @@ into a destination file and naming the destination file by appending sequentiall
 incremented number to the base file name.
 
 """
-
-
 import sys
 import os
 import random
 
+#Performs the file creation
+def create_files (path, num_files):
+   #Specify the "seed" for the generated files' content.
+   seed_file = "./seed-file.txt"
+   name_prefix = "file-2-upload"
+
+   #Create the destination directory if it does not exist
+   if not os.path.exists(path):
+     os.makedirs(path)
+
+   #Populate the seed string for the files to be created and initialize the content
+   file=open(seed_file,"r")
+   seed_content = file.read()
+   target_file_content = ""
+
+   #Create the files for upload
+   for target_file_idx  in range (0, num_files):
+     #Replicate the seed content a random number of times
+     repeat = random.randint(1,100)
+     for chunk_num in range (0, repeat):
+       target_file_content = target_file_content + seed_content
+     target_file = open (path + name_prefix + str(target_file_idx) + ".txt", 'w')
+     target_file.write (target_file_content)
+     target_file_content = ""
+
+
 #Set the root of the files location and the name prefix for the files to be generated
 path = "./files/"
-name_prefix = "file-2-upload"
 
 #Set the default number of files to be generated
 num_files = 10
@@ -30,26 +53,5 @@ num_files = 10
 if len(sys.argv) > 1:
  num_files = int(sys.argv[1])
 
-#Specify the "seed" for the generated files' content.
-seed_file = "./seed-file.txt"
-
-#Create the destination directory if it does not exist
-if not os.path.exists(path):
-  os.makedirs(path)
-
-#Populate the seed string for the files to be created and initialize the content
-file=open(seed_file,"r")
-seed_content = file.read()
-target_file_content = ""
-
-#Create the files for upload
-for target_file_idx  in range (0, num_files):
-  #Replicate the seed content a random number of times
-  repeat = random.randint(1,100)
-  for chunk_num in range (0, repeat):
-    target_file_content = target_file_content + seed_content 
-  target_file = open (path + name_prefix + str(target_file_idx) + ".txt", 'w')
-  target_file.write (target_file_content)  
-  target_file_content = ""
-
+create_files(path, num_files)
 
