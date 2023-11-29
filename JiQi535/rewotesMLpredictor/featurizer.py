@@ -1,6 +1,6 @@
 import numpy as np
 
-from maml.base import BaseDescriber
+from maml.describers._m3gnet import BaseDescriber, M3GNetStructure
 from matminer.featurizers.composition import ElementProperty
 from pymatgen.core import Structure, Composition
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -11,7 +11,7 @@ MATMINER_ELEMENT_PRESETS = ["magpie", "deml", "matminer", "matscholar_el", "megn
 
 class CompositionFeaturizer(BaseEstimator, TransformerMixin):
     """
-    Featurizer encodes structure or stoichiometry into features.
+    Featurizer encodes composition into features.
     """
 
     def __init__(self, featurizers: List[ElementProperty] = []):
@@ -40,8 +40,8 @@ class CompositionFeaturizer(BaseEstimator, TransformerMixin):
         featurizers = [ElementProperty.from_preset(p) for p in presets]
         return CompositionFeaturizer(featurizers=featurizers)
 
-    def fit(self, compositions: Union[List[str], List[Composition]] = None, y: list = None):
-        return self.transform(compositions), y
+    def fit(self, X = None, y = None):
+        return self
 
     def transform(self, compositions: Union[List[str], List[Composition]] = None):
         compositions = self._check_compositions(compositions)
@@ -59,3 +59,39 @@ class CompositionFeaturizer(BaseEstimator, TransformerMixin):
         if any(type(x) == str for x in compositions):
             compositions = [Composition(str(x)) for x in compositions]
         return compositions
+
+
+class StructureFeaturizer(BaseEstimator, TransformerMixin):
+    """
+    Featurizer encodes structure into features.
+    """
+
+    def __init__(self, featurizers: List[BaseDescriber] = []):
+        if featurizers:
+            if not (isinstance(featurizers, list) and
+                    all(type(x) == BaseDescriber for x in featurizers)):
+                raise TypeError(
+                    f"Featurizers of StructureFeaturizer must be a list of maml BaseDescriber object."
+                    "Check out maml: https://github.com/materialsvirtuallab/maml."
+                )
+        else:
+            featurizers = [M3GNetStructure()]
+        self.featurizers = featurizers
+
+    def fit(self, X = None, y = None):
+        return self
+
+    def transform(self, structures: List[Structure] = None):
+        structures = self._check_structures(structures)
+        features = np.concatenate([f.transform(structures) for f in self.featurizers], axis=1)
+        return features
+
+    def predict(self, structures: List[Structure] = None):
+        return self.transform(structures)
+
+    @staticmethod
+    def _check_structures(structures: List[Structure] = None):
+        if not (isinstance(structures, list) and
+                all(type(x) == Structure for x in structures)):
+            raise TypeError("Structures must be provided as a list of pymatgen Structures.")
+        return structures
