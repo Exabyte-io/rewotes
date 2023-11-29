@@ -1,7 +1,6 @@
-from pymatgen.core import Structure, Composition
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
-from typing import Union, List
+from typing import Union
 from .featurizer import CompositionFeaturizer, StructureFeaturizer
 
 
@@ -14,11 +13,14 @@ class Predictor(Pipeline):
             self,
             featurizer: Union[CompositionFeaturizer, StructureFeaturizer] = CompositionFeaturizer(),
             model=LinearRegression(),
-            question_type="regression",
     ):
+        """
+        Initialize the ML property predictors.
+        :param featurizer: CompositionFeaturizer or StructureFeaturizer. Default is CompositionFeaturizer.
+        :param model: The regression model in sklearn to use. Default is LinearRegression model.
+        """
         self.featurizer = featurizer
         self.model = model
-        self.question_type = question_type
         steps = [
             (i.__class__.__name__, i)
             for i in [
