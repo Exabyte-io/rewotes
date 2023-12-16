@@ -7,7 +7,7 @@ class Config:
                  resume='', train_ratio=None, train_size=None, val_ratio=0.1, 
                  val_size=None, test_ratio=0.1, test_size=None, optim='SGD', 
                  atom_fea_len=64, h_fea_len=128, n_conv=3, n_h=1, orig_atom_fea_len=92,
-                 nbr_fea_len=76):
+                 nbr_fea_len=76, lr=0.01):
         """
         data_options: list of paths to data
         task: 'regression' or 'classification'
@@ -20,7 +20,7 @@ class Config:
         lr_milestones: list of int (epochs to decrease learning rate)
         momentum: float (SGD momentum)
         weight_decay: float (weight decay)
-        print_freq: int (frequency of printing training status)
+        print_freq: int (frequency of printing training status per batch)
         resume: str (path to checkpoint)
         train_ratio: float (ratio of training set)
         train_size: int (size of training set)
@@ -35,6 +35,7 @@ class Config:
         n_h: int (number of hidden layers)
         orig_atom_fea_len: int (length of original atom feature vector)
         nbr_fea_len: int (length of neighbor feature vector)
+        lr: float (learning rate)
         """
         self.data_options = data_options if data_options is not None else []
         self.task = task
@@ -62,6 +63,7 @@ class Config:
         self.n_h = n_h
         self.orig_atom_fea_len = orig_atom_fea_len
         self.nbr_fea_len = nbr_fea_len
+        self.lr = lr
 
         self.cuda = not self.disable_cuda and torch.cuda.is_available()
 

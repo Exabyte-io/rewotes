@@ -46,7 +46,7 @@ def create_dataset(df, path='data/cif_files'):
         writer.write_file(filename)
         # print(f'Crystal structure {i+1} of {len(df)} written to {filename}.')
     
-    df[['material_id', 'band_gap']].to_csv(path / 'id_prop.csv', index=False)
+    df[['material_id', 'band_gap']].to_csv(path / 'id_prop.csv', index=False, header=False)
     import shutil
     shutil.copy(elem_embedding_file, path / 'atom_init.json')
 
