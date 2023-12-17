@@ -1,5 +1,4 @@
 import mlband.mp as MP
-from .cgcnn.cgcnn.data import CIFData, DataLoader, collate_pool, get_train_val_test_loader
 from pathlib import Path
 import pandas as pd
 
@@ -50,3 +49,21 @@ def create_dataset(df, path='data/cif_files'):
     import shutil
     shutil.copy(elem_embedding_file, path / 'atom_init.json')
 
+def get_data_loaders(args):
+    from cgcnn.data import CIFData, collate_pool, get_train_val_test_loader
+    dataset = CIFData(args.data_path)
+    collate_fn = collate_pool
+    train_loader, val_loader, test_loader = get_train_val_test_loader(
+        dataset=dataset,
+        collate_fn=collate_fn,
+        batch_size=args.batch_size,
+        train_ratio=args.train_ratio,
+        num_workers=args.workers,
+        val_ratio=args.val_ratio,
+        test_ratio=args.test_ratio,
+        pin_memory=args.cuda,
+        train_size=args.train_size,
+        val_size=args.val_size,
+        test_size=args.test_size,
+        return_test=True)
+    return train_loader, val_loader, test_loader
