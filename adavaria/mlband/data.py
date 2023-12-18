@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 
-elem_embedding_file='mlband/cgcnn/data/sample-regression/atom_init.json'
+# elem_embedding_file='cgcnn/data/sample-regression/atom_init.json'
 
 def get_list_of_materials(filter=True, num_chunks=1):
     fields=['material_id', 'composition', 'band_gap', 'structure']
@@ -32,6 +32,7 @@ def get_list_of_materials(filter=True, num_chunks=1):
     
     return df, data
 
+
 def create_dataset(df, path='data/cif_files'):
     path = Path(path)
     path.mkdir(parents=True, exist_ok=True)
@@ -46,8 +47,9 @@ def create_dataset(df, path='data/cif_files'):
         # print(f'Crystal structure {i+1} of {len(df)} written to {filename}.')
     
     df[['material_id', 'band_gap']].to_csv(path / 'id_prop.csv', index=False, header=False)
-    import shutil
-    shutil.copy(elem_embedding_file, path / 'atom_init.json')
+    # import shutil
+    # shutil.copy(elem_embedding_file, path / 'atom_init.json')
+
 
 def get_data_loaders(args):
     from cgcnn.data import CIFData, collate_pool, get_train_val_test_loader
