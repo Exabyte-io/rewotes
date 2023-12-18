@@ -1,19 +1,21 @@
 import torch
-import os
+# import os
 from pathlib import Path
+import warnings
 
 
 class Config:
-    def __init__(self, data_path, disable_cuda=True, workers=0, epochs=30, 
-                 batch_size=64, learning_rate=0.01, lr_milestones=None, momentum=0.9, 
-                 weight_decay=0, print_freq=10, resume='', train_ratio=None, 
-                 train_size=None, val_ratio=0.1, val_size=None, test_ratio=0.1, 
-                 test_size=None, optim='Adam', atom_fea_len=64, h_fea_len=128, 
+    def __init__(self, data_path, disable_cuda=True, workers=0, epochs=30,
+                 batch_size=64, learning_rate=0.01, lr_milestones=None, momentum=0.9,
+                 weight_decay=0, print_freq=10, resume='', train_ratio=None,
+                 train_size=None, val_ratio=0.1, val_size=None, test_ratio=0.1,
+                 test_size=None, optim='Adam', atom_fea_len=64, h_fea_len=128,
                  n_conv=3, n_h=1, task='regression',
                  results_dir='./results',
                  original_features=False,
                  discrete_columns=None,
                  continuous_columns=None,
+                 start_epoch=0,
                  ):
         """
         data_path: str (path to data), e.g. './data/mp/'
@@ -39,6 +41,7 @@ class Config:
         n_conv: int (number of convolutional layers), default: 3
         n_h: int (number of hidden layers), default: 1
         task: str (regression or classification), default: regression
+        start_epoch: int (start epoch for training), default: 0
 
         results_dir: str (path to save results), default: './results'
         """
@@ -75,6 +78,8 @@ class Config:
         self.original_features = original_features
         self.discrete_columns = discrete_columns
         self.continuous_columns = continuous_columns
+        self.start_epoch = start_epoch
+
 
     def generate_args(self, absolute_path=True):
         # args = [self.data_path]

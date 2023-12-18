@@ -1,5 +1,6 @@
 from .imports import *
 
+
 # Data table: https://github.com/ramv2/magpie_python/tree/master/lookup-data
 
 

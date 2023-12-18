@@ -1,3 +1,5 @@
+import numpy as np
+
 import mlband.mp as MP
 from pathlib import Path
 import pandas as pd
@@ -5,8 +7,8 @@ import pandas as pd
 
 # elem_embedding_file='cgcnn/data/sample-regression/atom_init.json'
 
-def get_list_of_materials(filter=True, num_chunks=1):
-    fields=['material_id', 'composition', 'band_gap', 'structure']
+def get_list_of_materials(filter_data=True, num_chunks=1):
+    fields = ['material_id', 'composition', 'band_gap', 'structure']
     data = MP.mpr.materials.summary.search(
         # chemsys="Si-O", 
         fields=fields,
@@ -20,16 +22,16 @@ def get_list_of_materials(filter=True, num_chunks=1):
         'structure': [doc.structure for doc in data],
     })
     # df = df[fields]
-    
-    if filter:
+
+    if filter_data:
         # Checking the missing values
         ind = ~(df['band_gap'] >= 0)
-        print('Number of missing values: ', ind.sum())
+        print('Number of missing values: ', np.sum(ind))
         # Drop the missing values
         df = df.loc[~ind, :]
         # Reset the index
         df.reset_index(drop=True, inplace=True)
-    
+
     return df, data
 
 
@@ -45,14 +47,14 @@ def create_dataset(df, path='data/cif_files'):
         writer = MP.CifWriter(structure)
         writer.write_file(filename)
         # print(f'Crystal structure {i+1} of {len(df)} written to {filename}.')
-    
+
     df[['material_id', 'band_gap']].to_csv(path / 'id_prop.csv', index=False, header=False)
     # import shutil
     # shutil.copy(elem_embedding_file, path / 'atom_init.json')
 
 
 def get_data_loaders(args):
-    from cgcnn.data import CIFData, collate_pool, get_train_val_test_loader
+    from .cgcnn.data import CIFData, collate_pool, get_train_val_test_loader
     dataset = CIFData(args.data_path)
     collate_fn = collate_pool
     train_loader, val_loader, test_loader = get_train_val_test_loader(

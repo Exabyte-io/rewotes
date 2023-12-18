@@ -8,16 +8,17 @@ def get_mp_api_connector():
     api_key = 'pJmFwIk6qWCnMwEuGvzwLBT1qfdPpElH'
     return MPRester(api_key)
 
+
 mpr = None
-try:    
+try:
     mpr = get_mp_api_connector()
 except:
     warnings.warn('Could not connect to MP API.')
     pass
+
 
 def mp_summary_to_df(data, drop_fields_not_requested=True):
     df = pd.DataFrame([doc.dict() for doc in data])
     if drop_fields_not_requested:
         df.drop(columns=['fields_not_requested'], inplace=True)
     return df
-

@@ -2,57 +2,57 @@ import torch
 import contextlib
 
 
-class Normalizer(object):
-    """
-    Normalize a Tensor and restore it later. 
-    Taken from: https://github.com/txie-93/cgcnn
-    """
+# class Normalizer(object):
+#     """
+#     Normalize a Tensor and restore it later. 
+#     Taken from: https://github.com/txie-93/cgcnn
+#     """
 
-    def __init__(self, tensor=torch.zeros(3)):
-        """tensor is taken as a sample to calculate the mean and std"""
-        self.mean = torch.mean(tensor)
-        self.std = torch.std(tensor)
+#     def __init__(self, tensor=torch.zeros(3)):
+#         """tensor is taken as a sample to calculate the mean and std"""
+#         self.mean = torch.mean(tensor)
+#         self.std = torch.std(tensor)
 
-    def norm(self, tensor):
-        """Normalize a tensor"""
-        return (tensor - self.mean) / self.std
+#     def norm(self, tensor):
+#         """Normalize a tensor"""
+#         return (tensor - self.mean) / self.std
 
-    def denorm(self, normed_tensor):
-        """Denormalize a normalized tensor"""
-        return normed_tensor * self.std + self.mean
+#     def denorm(self, normed_tensor):
+#         """Denormalize a normalized tensor"""
+#         return normed_tensor * self.std + self.mean
 
-    def state_dict(self):
-        """Returns a dictionary containing a whole state of the module."""
-        return {'mean': self.mean,
-                'std': self.std}
+#     def state_dict(self):
+#         """Returns a dictionary containing a whole state of the module."""
+#         return {'mean': self.mean,
+#                 'std': self.std}
 
-    def load_state_dict(self, state_dict):
-        """Loads a state dict."""
-        self.mean = state_dict['mean']
-        self.std = state_dict['std']
-        return self
+#     def load_state_dict(self, state_dict):
+#         """Loads a state dict."""
+#         self.mean = state_dict['mean']
+#         self.std = state_dict['std']
+#         return self
 
 
-class AverageMeter(object):
-    """
-    Computes and stores the average and current value.
-    Taken from: https://github.com/txie-93/cgcnn
-    """
+# class AverageMeter(object):
+#     """
+#     Computes and stores the average and current value.
+#     Taken from: https://github.com/txie-93/cgcnn
+#     """
 
-    def __init__(self):
-        self.reset()
+#     def __init__(self):
+#         self.reset()
 
-    def reset(self):
-        self.val = 0
-        self.avg = 0
-        self.sum = 0
-        self.count = 0
+#     def reset(self):
+#         self.val = 0
+#         self.avg = 0
+#         self.sum = 0
+#         self.count = 0
 
-    def update(self, val, n=1):
-        self.val = val
-        self.sum += val * n
-        self.count += n
-        self.avg = self.sum / self.count
+#     def update(self, val, n=1):
+#         self.val = val
+#         self.sum += val * n
+#         self.count += n
+#         self.avg = self.sum / self.count
 
 
 @contextlib.contextmanager
@@ -86,17 +86,17 @@ def mae(prediction, target):
 def mse(prediction, target):
     return torch.mean((target - prediction)**2)
 
-def adjust_learning_rate(optimizer, epoch, k, lr):
-    """Sets the learning rate to the initial LR decayed by 10 every k epochs"""
-    assert type(k) is int
-    lr = lr * (0.1 ** (epoch // k))
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
+# def adjust_learning_rate(optimizer, epoch, k, lr):
+#     """Sets the learning rate to the initial LR decayed by 10 every k epochs"""
+#     assert type(k) is int
+#     lr = lr * (0.1 ** (epoch // k))
+#     for param_group in optimizer.param_groups:
+#         param_group['lr'] = lr
 
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-    """Saves checkpoint to disk"""
-    torch.save(state, filename)
-    if is_best:
-        import shutil
-        shutil.copyfile(filename, 'model_best.pth.tar')
+# def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
+#     """Saves checkpoint to disk"""
+#     torch.save(state, filename)
+#     if is_best:
+#         import shutil
+#         shutil.copyfile(filename, 'model_best.pth.tar')
 

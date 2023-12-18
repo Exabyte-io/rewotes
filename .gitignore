@@ -1,3 +1,5 @@
 .idea*
 adavaria/mlband/__pycache__*
 adavaria/data*
+**/*.pyc
+adavaria/results/*

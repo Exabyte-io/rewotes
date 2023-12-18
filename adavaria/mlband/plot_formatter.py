@@ -4,7 +4,6 @@ import matplotlib
 # import seaborn as sns
 import pandas as pd
 
-
 # Defining all the parameters for the plots
 font_size = 9
 golden_ratio = (5 ** .5 - 1) / 2

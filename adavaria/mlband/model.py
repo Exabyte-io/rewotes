@@ -6,15 +6,19 @@ import torch.nn as nn
 from . import utility
 
 
-cgcnn_path = Path('./cgcnn/').absolute().__str__()
-if cgcnn_path not in sys.path:
-    sys.path.append(cgcnn_path)
+# cgcnn_path = Path('./cgcnn/').absolute().__str__()
+# if cgcnn_path not in sys.path:
+#     sys.path.append(cgcnn_path)
 
-def train(config, ignore_warnings=True):
+
+def train_by_original_code(config, ignore_warnings=True):
     """
     Training the model. Usage example:
     config = Config(epochs=50, learning_rate=0.005, batch_size=128)
     train(config)
+
+    When using this function, cgccn must be cloned in the parent directory of mlband.
+    git clone https://github.com/txie-93/cgcnn.git
     """
     print('Training the model...')
     results_dir = config.results_dir
@@ -26,7 +30,7 @@ def train(config, ignore_warnings=True):
     if cgcnn_path not in sys.path:
         sys.path.append(cgcnn_path)
 
-    #ignore warnings
+    # ignore warnings
     if ignore_warnings:
         os.environ['PYTHONWARNINGS'] = "ignore"
 
@@ -57,16 +61,74 @@ def train(config, ignore_warnings=True):
     print('Training and test evaluation completed!')
 
 
-def get_cgcnn_model(args, 
-                    orig_atom_fea_len=None, 
+def train(config, ignore_warnings=True):
+    """
+    Training the model. Usage example:
+    config = Config(epochs=50, learning_rate=0.005, batch_size=128)
+    train(config)
+    """
+    print('Training the model...')
+    args = config
+    results_dir = config.results_dir
+    Path(results_dir).mkdir(parents=True, exist_ok=True)
+
+    if args.task == 'regression':
+        best_mae_error = 1e10
+    else:
+        best_mae_error = 0.
+
+    train_loader, val_loader, test_loader = mlband.data.get_data_loaders(config)
+    normalizer = get_normalizer(config)
+    model = get_cgcnn_model(config)
+    criterion = nn.MSELoss()
+    optimizer = get_optimizer(config, model)
+    from torch.optim.lr_scheduler import MultiStepLR
+    scheduler = MultiStepLR(optimizer, milestones=args.lr_milestones,
+                            gamma=0.1)
+    # Train the model
+    for epoch in range(args.start_epoch, args.epochs):
+        from .cgcnn.train import train_epoch, validate, save_checkpoint
+        # train for one epoch
+        train_epoch(config, train_loader, model, criterion, optimizer, epoch, normalizer)
+
+        # evaluate on validation set
+        mae_error = validate(config, val_loader, model, criterion, normalizer)
+
+        if mae_error != mae_error:
+            print('Exit due to NaN')
+            sys.exit(1)
+
+        scheduler.step()
+
+        # remember the best mae_eror and save checkpoint
+        if args.task == 'regression':
+            is_best = mae_error < best_mae_error
+            best_mae_error = min(mae_error, best_mae_error)
+        else:
+            is_best = mae_error > best_mae_error
+            best_mae_error = max(mae_error, best_mae_error)
+        save_checkpoint({
+            'epoch': epoch + 1,
+            'state_dict': model.state_dict(),
+            'best_mae_error': best_mae_error,
+            'optimizer': optimizer.state_dict(),
+            'normalizer': normalizer.state_dict(),
+            'args': vars(args)
+        }, is_best, cd=results_dir)
+
+    print('Training and test evaluation completed!')
+
+
+def get_cgcnn_model(args,
+                    orig_atom_fea_len=None,
                     nbr_fea_len=None,
                     atom_fea_len=None,
                     n_conv=None,
                     h_fea_len=None,
                     n_h=None,
                     ):
-    from cgcnn.data import CIFData
-    from cgcnn.model import CrystalGraphConvNet
+    from .cgcnn.data import CIFData
+    from .cgcnn.model import CrystalGraphConvNet
 
     if orig_atom_fea_len is None or nbr_fea_len is None:
         dataset = CIFData(args.data_path)
@@ -86,12 +148,33 @@ def get_cgcnn_model(args,
     return model
 
 
+def get_normalizer(config, ignore_warnings=True):
+    from .cgcnn.data import CIFData, collate_pool
+    from .cgcnn.utility import Normalizer
+    from random import sample
+
+    dataset = CIFData(config.data_path)
+
+    with utility.mute_warnings(enabled=ignore_warnings):
+        if len(dataset) < 500:
+            warnings.warn('Dataset has less than 500 data points. '
+                        'Lower accuracy is expected. ')
+            sample_data_list = [dataset[i] for i in range(len(dataset))]
+        else:
+            sample_data_list = [dataset[i] for i in
+                                sample(range(len(dataset)), 500)]
+        _, sample_target, _ = collate_pool(sample_data_list)
+        normalizer = Normalizer(sample_target)
+    return normalizer
+
+
 def load_model(config):
+    from .cgcnn.utility import Normalizer
     # Load the model
-    best_checkpoint = torch.load(config.results_dir/'model_best.pth.tar')
+    best_checkpoint = torch.load(config.results_dir / 'model_best.pth.tar')
     model = get_cgcnn_model(config)
     model.load_state_dict(best_checkpoint['state_dict'])
-    normalizer = utility.Normalizer(torch.zeros(3))
+    normalizer = Normalizer(torch.zeros(3))
     normalizer.load_state_dict(best_checkpoint['normalizer'])
     return model, normalizer
 
@@ -108,7 +191,7 @@ def evaluate_model(config):
     # normalizer.load_state_dict(best_checkpoint['normalizer'])
     # # criterion = nn.MSELoss()
     model, normalizer = load_model(config)
-    
+
     # Evaluate the model
     for loader, name in zip([train_loader, val_loader, test_loader], ['train', 'val', 'test']):
         print('Evaluating the {} set...'.format(name))
@@ -117,7 +200,9 @@ def evaluate_model(config):
         # print mse
         import sklearn.metrics
         mse = sklearn.metrics.mean_squared_error(df['True_Label'], df['Prediction'])
+        mae = sklearn.metrics.mean_absolute_error(df['True_Label'], df['Prediction'])
         print(f'MSE for {name} set: {mse:.4f}')
+        print(f'MAE for {name} set: {mae:.4f}')
 
 
 def predict_model(loader, model, normalizer, output_filename, mute_warnings=True):
@@ -127,9 +212,9 @@ def predict_model(loader, model, normalizer, output_filename, mute_warnings=True
     ids = []
 
     with torch.no_grad(), utility.mute_warnings(enabled=mute_warnings):
-        for i, (input, labels, batch_ids) in enumerate(loader):
+        for i, (inp, labels, batch_ids) in enumerate(loader):
             # Assuming your model and data are on the same device (CPU or CUDA)
-            input_var = (input[0], input[1], input[2], input[3])
+            input_var = (inp[0], inp[1], inp[2], inp[3])
 
             # Compute output
             output = model(*input_var)
@@ -158,14 +243,13 @@ def get_optimizer(config, model):
     import torch.optim as optim
     args = config
     if args.optim == 'SGD':
-        optimizer = optim.SGD(model.parameters(), args.lr,
+        optimizer = optim.SGD(model.parameters(), args.learning_rate,
                               momentum=args.momentum,
                               weight_decay=args.weight_decay)
     elif args.optim == 'Adam':
-        optimizer = optim.Adam(model.parameters(), args.lr,
+        optimizer = optim.Adam(model.parameters(), args.learning_rate,
                                weight_decay=args.weight_decay)
-        
+    else:
+        raise NotImplementedError
+
     return optimizer
-
-    
-
