@@ -299,7 +299,7 @@ class CIFData(Dataset):
     """
     def __init__(self, root_dir, max_num_nbr=12, radius=8, dmin=0, step=0.2,
                  random_seed=123):
-        self.root_dir = root_dir
+        self.root_dir = str(root_dir)
         self.max_num_nbr, self.radius = max_num_nbr, radius
         assert os.path.exists(root_dir), f'{root_dir} does not exist!'
         id_prop_file = os.path.join(self.root_dir, 'id_prop.csv')

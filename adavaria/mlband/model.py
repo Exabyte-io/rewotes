@@ -35,7 +35,9 @@ def train_by_original_code(config, ignore_warnings=True):
         os.environ['PYTHONWARNINGS'] = "ignore"
 
     # Define the command and arguments
-    script_path = Path('./cgcnn/main.py').absolute().__str__()
+    # script_path = Path('./cgcnn/main.py').absolute().__str__()
+    # script_path based on the relative path of this file
+    script_path = Path(__file__).parent / 'cgcnn' / 'main.py'
     args = config.generate_args()
     command = ['python', script_path] + args
 
@@ -168,11 +170,11 @@ def get_normalizer(config, ignore_warnings=True):
     return normalizer
 
 
-def load_model(config):
+def load_model(config, orig_atom_fea_len=None, nbr_fea_len=None,):
     from .cgcnn.utility import Normalizer
     # Load the model
     best_checkpoint = torch.load(config.results_dir / 'model_best.pth.tar')
-    model = get_cgcnn_model(config)
+    model = get_cgcnn_model(config, orig_atom_fea_len=orig_atom_fea_len, nbr_fea_len=nbr_fea_len)
     model.load_state_dict(best_checkpoint['state_dict'])
     normalizer = Normalizer(torch.zeros(3))
     normalizer.load_state_dict(best_checkpoint['normalizer'])
@@ -196,7 +198,7 @@ def evaluate_model(config):
     for loader, name in zip([train_loader, val_loader, test_loader], ['train', 'val', 'test']):
         print('Evaluating the {} set...'.format(name))
         output_filename = os.path.join(config.results_dir, 'predictions_{}.csv'.format(name))
-        df = predict_model(loader, model, normalizer, output_filename)
+        df = predict_model(loader, model, normalizer, output_filename=output_filename)
         # print mse
         import sklearn.metrics
         mse = sklearn.metrics.mean_squared_error(df['True_Label'], df['Prediction'])
@@ -205,7 +207,7 @@ def evaluate_model(config):
         print(f'MAE for {name} set: {mae:.4f}')
 
 
-def predict_model(loader, model, normalizer, output_filename, mute_warnings=True):
+def predict_model(loader, model, normalizer, output_filename=None, mute_warnings=True):
     model.eval()  # Set the model to evaluation mode
     predictions = []
     true_labels = []
@@ -227,15 +229,16 @@ def predict_model(loader, model, normalizer, output_filename, mute_warnings=True
             else:
                 true_labels.append(labels.item())
             ids.extend(batch_ids)  # Assuming batch_ids is a list or similar
-
-    # Save the predictions, true labels, and IDs to a CSV file
-    print('Saving the predictions to {}'.format(output_filename))
+    
     df = pd.DataFrame({
         'ID': ids,
         'True_Label': true_labels,
         'Prediction': predictions
     })
-    df.to_csv(output_filename, index=False)
+    if output_filename is not None:
+        # Save the predictions, true labels, and IDs to a CSV file
+        print('Saving the predictions to {}'.format(output_filename))
+        df.to_csv(output_filename, index=False)
     return df
 
 
@@ -253,3 +256,16 @@ def get_optimizer(config, model):
         raise NotImplementedError
 
     return optimizer
+
+
+def predict(data_path, config=None, model=None, normalizer=None):
+    if config is None:
+        from .config import Config
+        model_dir = Path(__file__).parent / 'pretrained_model'
+        config = Config(data_path=data_path, results_dir=model_dir)
+
+    data_loader = mlband.data.get_data_loader(config)
+    if model is None or normalizer is None:
+        model, normalizer = load_model(config)
+    df = predict_model(data_loader, model, normalizer)
+    return df

@@ -71,3 +71,15 @@ def get_data_loaders(args):
         test_size=args.test_size,
         return_test=True)
     return train_loader, val_loader, test_loader
+
+
+def get_data_loader(args):
+    from .cgcnn.data import CIFData, collate_pool, DataLoader
+    dataset = CIFData(args.data_path)
+    collate_fn = collate_pool
+
+    data_loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True,
+                            num_workers=args.workers, collate_fn=collate_fn,
+                            pin_memory=args.cuda)
+    
+    return data_loader

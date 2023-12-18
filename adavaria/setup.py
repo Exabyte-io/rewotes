@@ -15,11 +15,11 @@ setup(
     version=0.01,
     packages=find_packages(),
     package_data={
-        'mlband': ['atom_init.json', 'magpie_data.csv'],
-        'mlband': ['pretrained_model/*'],
+        # 'mlband': ['atom_init.json', 'magpie_data.csv'],
+        'mlband': ['pretrained_model/*', 'atom_init.json', 'magpie_data.csv'],
     },
     author='Ali Davariashtiyani',
     author_email='a.davari871@gmail.com',
     description='CGCNN for band gap prediction',
-    python_requires='>=3.7',
+    # python_requires='>=3.',
 )

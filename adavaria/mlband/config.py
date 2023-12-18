@@ -119,6 +119,12 @@ class Config:
             args.extend(['--test-size', str(self.test_size)])
 
         return args
+    
+
+    # def load_default_model(self):
+    #     path = Path(__file__).parent / 'pretrained_model'
+    #     self.results_dir = path
+
 
 
 if __name__ == '__main__':

@@ -25,9 +25,15 @@ def one_hot_encode_elements(config=None, discrete_columns=None, continuous_colum
     if config is not None:
         if config.original_features:
             import shutil
-            shutil.copy('mlband/atom_init.json', config.data_path)
-            return
-        filename = config.data_path / 'atom_init.json'
+            # shutil.copy('mlband/atom_init.json', config.data_path)
+            json_file = Path(Path(__file__).parent, 'atom_init.json')
+            shutil.copy(json_file, config.data_path)
+            # read the json file
+            import json
+            with open(json_file) as f:
+                data = json.load(f)
+            return data, 'original_features'
+        filename = Path(config.data_path) / 'atom_init.json'
         discrete_columns = config.discrete_columns
         continuous_columns = config.continuous_columns
 
