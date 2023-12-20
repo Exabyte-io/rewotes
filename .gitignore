@@ -1,1 +1,10 @@
 .idea*
+adavaria/mlband/__pycache__*
+adavaria/data*
+**/*.pyc
+adavaria/results/*
+adavaria/build/*
+adavaria/mlband.egg-info/*
+adavaria/dist/*
+.DS_Store
+
