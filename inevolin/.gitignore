@@ -1,0 +1,8 @@
+data/
+upload/
+dummy.dat
+__pycache__/
+tests.py
+meta.json
+*.txt
+Config.py
