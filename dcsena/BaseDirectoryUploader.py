@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-# Interface for Directory Uploading
+# Abstract class for Directory Uploading
 class BaseDirectoryUploader(ABC):
-    def upload_directory_async(self, root_dir):
+    def upload_directory_async(self, root_dir: str):
         pass

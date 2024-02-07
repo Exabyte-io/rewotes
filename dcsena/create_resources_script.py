@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import random
 
@@ -6,17 +7,18 @@ RESOURCES_DIR = "./resources"
 FILE_CONTENT = "hi1234"
 
 
+# Creating a directory full of files and subdirectories full of files
 def create_files(target_dir, num_files, max_depth):
     depth = 0
     current_dir = target_dir
     for num in range(0, num_files):
         random_num = random.randint(0, 100)
-        if random_num < 20 and depth < max_depth:
-            current_dir += "/child-dir-" + str(depth)
+        if random_num < 50 and depth < max_depth:
+            current_dir += "/child-dir-{}".format(depth)
             if not os.path.exists(current_dir):
                 os.mkdir(current_dir)
             depth += 1
-        target_file_name = current_dir + "/" + str(num) + ".txt"
+        target_file_name = "{}/{}.txt".format(current_dir, num)
         with open(target_file_name, 'w') as f:
             f.write(FILE_CONTENT)
 
