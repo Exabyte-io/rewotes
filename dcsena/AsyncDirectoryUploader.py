@@ -17,7 +17,7 @@ class AsyncDirectoryUploader(BaseDirectoryUploader):
     @staticmethod
     def get_files_to_upload(root_dir: str):
         files = glob.glob("**/*", root_dir=root_dir, recursive=True)
-        # We don't want to upload directories so first need to filter them out
+        # We can't upload directories so first need to filter them out
         return [f for f in files if os.path.isfile(os.path.join(root_dir, f))]
 
     # Using asyncio and thread pool executor to make async file upload calls
