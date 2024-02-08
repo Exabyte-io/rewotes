@@ -7,8 +7,14 @@ RESOURCES_DIR = "./resources"
 FILE_CONTENT = "hi1234"
 
 
-# Creating a directory full of files and subdirectories full of files
 def create_files(target_dir, num_files, max_depth):
+    """Creating a directory full of files and subdirectories full of files
+
+    Args:
+        target_dir: File directory to create files in
+        num_files: Number of files to create
+        max_depth: How many subdirectories to create
+    """
     depth = 0
     current_dir = target_dir
     for num in range(0, num_files):
