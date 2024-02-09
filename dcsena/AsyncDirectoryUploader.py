@@ -45,10 +45,10 @@ class AsyncDirectoryUploader(BaseDirectoryUploader):
         loop = asyncio.get_running_loop()
         tasks = []
         for f in self.get_files_to_upload(root_dir):
-            file_name = os.path.join(root_dir, f)
+            file_path = os.path.join(root_dir, f)
             key = f.replace("\\", "/")
             tasks.append(loop.run_in_executor(self.executor, functools.partial(self.file_uploader.upload_file, key=key,
-                                                                               file_name=file_name)))
+                                                                               file_path=file_path)))
         completed, pending = await asyncio.wait(tasks)
         results = [t.result() for t in completed]
         return results

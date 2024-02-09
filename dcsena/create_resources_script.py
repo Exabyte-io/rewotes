@@ -31,4 +31,4 @@ def create_files(target_dir, num_files, max_depth):
 
 # Run script to create files for testing purposes
 if __name__ == "__main__":
-    create_files(RESOURCES_DIR, num_files=1000, max_depth=5)
+    create_files(RESOURCES_DIR, num_files=100000, max_depth=5)
