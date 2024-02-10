@@ -46,5 +46,34 @@ describe('App', () => {
       expect(screen.queryByTestId("item-0")).toBeNull();
     });
   });
+
+  describe('editing a todo', () => {
+    test('renders edit button', async () => {
+      render(<App />);
+      const input = screen.getByTestId("add-input");
+      const button = screen.getByTestId("add-button");
+      fireEvent.change(input, { target: { value: "test" } });
+      await button.click();
+      expect(screen.getByTestId("edit-button-0")).toBeVisible();
+    });
+
+    test('edits a todo', async () => {
+      render(<App />);
+      const input = screen.getByTestId("add-input");
+      const button = screen.getByTestId("add-button");
+      fireEvent.change(input, { target: { value: "test" } });
+      await button.click();
+      expect(screen.getByTestId("edit-button-0")).toBeVisible();
+      await screen.getByTestId("edit-button-0").click();
+
+      expect(screen.getByTestId("add-input")).toHaveValue("test");
+      expect(screen.getByTestId("add-button")).toHaveTextContent("Save");
+
+      fireEvent.change(input, { target: { value: "edited" } });
+      await button.click();
+      expect(screen.getByTestId("item-0")).toHaveTextContent("0. editedEditDelete");
+      expect(screen.getByTestId("add-button")).toHaveTextContent("Add");
+    });
+  });
 });
 

@@ -4,9 +4,19 @@ import './App.css'
 function App() {
   const [todo, setTodo] = useState([] as string[])
   const [input, setInput] = useState("")
+  const [editMode, setEditMode] = useState(false)
+  const [editIdx, setEditIdx] = useState(-1)
 
   const addTodo = () => {
-    setTodo([...todo, input])
+    if (editMode) {
+      const newTodo = [...todo]
+      newTodo[editIdx] = input
+      setTodo(newTodo)
+      setEditMode(false)
+      setEditIdx(-1)
+    } else {
+      setTodo([...todo, input])
+    }
     setInput("")
   }
 
@@ -16,6 +26,12 @@ function App() {
 
   const onDelete = (idxToRemove: number) => {
     setTodo(todo.filter((_item, idx) => idx !== idxToRemove))
+  }
+
+  const onEdit = (idxToEdit: number) => {
+    setEditMode(true)
+    setEditIdx(idxToEdit)
+    setInput(todo[idxToEdit])
   }
 
   return (
@@ -29,6 +45,7 @@ function App() {
             return (
               <li data-testid={`item-${idx}`} key={idx}>
                 {idx}. {item}
+                <button data-testid={`edit-button-${idx}`} onClick={() => onEdit(idx)}>Edit</button>
                 <button data-testid={`delete-button-${idx}`} onClick={() => onDelete(idx)}>Delete</button>
               </li>)
           })
@@ -36,7 +53,7 @@ function App() {
       </ul>
 
       <input data-testid="add-input" type="text" onChange={onChange}value={input}/>
-      <button data-testid="add-button" onClick={addTodo}>Add</button>
+      <button data-testid="add-button" onClick={addTodo}>{editMode ? "Save" : "Add" }</button>
 
     </>
   )
