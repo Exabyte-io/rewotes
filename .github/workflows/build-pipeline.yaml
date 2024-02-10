@@ -80,7 +80,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: gidjin
-        run: pnpm install --with-deps
+        run: pnpm install
 
       - name: Build project
         working-directory: gidjin
