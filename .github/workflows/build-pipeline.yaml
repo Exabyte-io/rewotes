@@ -15,8 +15,8 @@ jobs:
         with:
           node-version: 18
 
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
         with:
           version: 8
           run_install: false
@@ -47,3 +47,57 @@ jobs:
         with:
           name: coverage-report
           path: gidjin/coverage/
+  end-to-end-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        working-directory: gidjin
+        run: pnpm install --with-deps
+
+      - name: Build project
+        working-directory: gidjin
+        run: pnpm vite build && pnpm vite optimize
+
+      - name: Start server
+        working-directory: gidjin
+        run: pnpm vite preview &
+
+      - name: Run Playwright tests
+        working-directory: gidjin
+        run: TEST_URL=http://localhost:4173 pnpm e2e:test
+
+      - name: Upload playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

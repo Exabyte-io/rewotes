@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:5173');
+  const url = process.env.TEST_URL || 'http://localhost:5173';
+  await page.goto(url);
 });
 
 test('user can add todos', async ({ page }) => {
