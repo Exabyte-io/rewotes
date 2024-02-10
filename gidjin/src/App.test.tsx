@@ -1,8 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from "./App";
 
 describe('App', () => {
+  const user = userEvent.setup()
+
   describe('adding a todo', () => {
     test('renders form', () => {
       render(<App />);
@@ -14,12 +17,12 @@ describe('App', () => {
       render(<App />);
       const input = screen.getByTestId("add-input");
       const button = screen.getByTestId("add-button");
-      fireEvent.change(input, { target: { value: "test" } });
-      await button.click();
+      await user.type(input, "test");
+      await user.click(button);
       expect(screen.getByTestId("item-0")).toBeVisible();
       expect(screen.getByTestId("item-0")).toHaveTextContent("0. testEditDelete");
-      fireEvent.change(input, { target: { value: "second" } });
-      await button.click();
+      await user.type(input, "second");
+      await user.click(button);
       expect(screen.getByTestId("item-1")).toBeVisible();
       expect(screen.getByTestId("item-1")).toHaveTextContent("1. secondEditDelete");
     });
@@ -30,8 +33,8 @@ describe('App', () => {
       render(<App />);
       const input = screen.getByTestId("add-input");
       const button = screen.getByTestId("add-button");
-      fireEvent.change(input, { target: { value: "test" } });
-      await button.click();
+      await user.type(input, "test");
+      await user.click(button);
       expect(screen.getByTestId("delete-button-0")).toBeVisible();
     });
 
@@ -39,10 +42,10 @@ describe('App', () => {
       render(<App />);
       const input = screen.getByTestId("add-input");
       const button = screen.getByTestId("add-button");
-      fireEvent.change(input, { target: { value: "test" } });
-      await button.click();
+      await user.type(input, "test");
+      await user.click(button);
       expect(screen.getByTestId("delete-button-0")).toBeVisible();
-      await screen.getByTestId("delete-button-0").click();
+      await user.click(screen.getByTestId("delete-button-0"));
       expect(screen.queryByTestId("item-0")).toBeNull();
     });
   });
@@ -52,8 +55,8 @@ describe('App', () => {
       render(<App />);
       const input = screen.getByTestId("add-input");
       const button = screen.getByTestId("add-button");
-      fireEvent.change(input, { target: { value: "test" } });
-      await button.click();
+      await user.type(input, "test");
+      await user.click(button);
       expect(screen.getByTestId("edit-button-0")).toBeVisible();
     });
 
@@ -61,16 +64,17 @@ describe('App', () => {
       render(<App />);
       const input = screen.getByTestId("add-input");
       const button = screen.getByTestId("add-button");
-      fireEvent.change(input, { target: { value: "test" } });
-      await button.click();
+      await user.type(input, "test");
+      await user.click(button);
       expect(screen.getByTestId("edit-button-0")).toBeVisible();
-      await screen.getByTestId("edit-button-0").click();
+      await user.click(screen.getByTestId("edit-button-0"));
 
       expect(screen.getByTestId("add-input")).toHaveValue("test");
       expect(screen.getByTestId("add-button")).toHaveTextContent("Save");
 
-      fireEvent.change(input, { target: { value: "edited" } });
-      await button.click();
+      await user.clear(input);
+      await user.type(input, "edited");
+      await user.click(button);
       expect(screen.getByTestId("item-0")).toHaveTextContent("0. editedEditDelete");
       expect(screen.getByTestId("add-button")).toHaveTextContent("Add");
     });
