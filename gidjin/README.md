@@ -77,4 +77,5 @@ For example, here is the output for a successful run from [this job](https://git
 - Store todos in a database or browser local storage
 - Use a library such as [dnd-kit](https://dndkit.com/) to allow drag and drop rearrangement
 - Setup the workflow jobs so that e2e tests only run if unit tests are passing
+- Update workflow to run on pull requests and the default branch (main or dev) only vs current configuration to run on the push of any branch
 - Move png images to a `docs/images` folder to avoid cluttering up the repo
