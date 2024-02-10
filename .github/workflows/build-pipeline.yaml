@@ -40,4 +40,4 @@ jobs:
 
       - name: Run unit tests
         working-directory: gidjin
-        run: pnpm vitest run
+        run: pnpm test:coverage

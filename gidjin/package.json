@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "e2e": "playwright",
     "e2e:test": "playwright test",
     "e2e:report": "playwright show-report",
@@ -28,6 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.2.2",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
