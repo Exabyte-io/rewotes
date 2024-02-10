@@ -17,7 +17,11 @@ describe('App', () => {
       fireEvent.change(input, { target: { value: "test" } });
       await button.click();
       expect(screen.getByTestId("item-0")).toBeVisible();
-      expect(screen.getByTestId("item-0").textContent).toEqual("0. testDelete");
+      expect(screen.getByTestId("item-0")).toHaveTextContent("0. testEditDelete");
+      fireEvent.change(input, { target: { value: "second" } });
+      await button.click();
+      expect(screen.getByTestId("item-1")).toBeVisible();
+      expect(screen.getByTestId("item-1")).toHaveTextContent("1. secondEditDelete");
     });
   });
 
