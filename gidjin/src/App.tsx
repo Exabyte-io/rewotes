@@ -8,6 +8,9 @@ function App() {
 
   return (
     <>
+      <h1 className="text-3xl font-bold underline">
+        H1 that uses tailwindcss
+      </h1>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -24,6 +27,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
