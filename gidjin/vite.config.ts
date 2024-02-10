@@ -12,6 +12,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       exclude: ['**/*.config.*', '.eslintrc.cjs', '**/main.tsx', '**/vite-env.d.ts'],
+      reporter: ['text', 'json-summary', 'json', 'lcov'],
       // Example threshold
       threshold: {
         statements: 90,
