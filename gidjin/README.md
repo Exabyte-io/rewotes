@@ -53,7 +53,8 @@ run each test against a running local instance of the application in firefox, ch
 I added a single workflow file for simplicity, it has 2 jobs defined inside. The first `build-and-test` builds the app and
 runs all the unit tests and uploads the coverage report to the GitHub Actions summary. The second job `end-to-end-test`
 creates a producution build of the app and runs the end to end tests against, and uploads the playwright results to
-GitHub Actions summary.
+GitHub Actions summary. GitHub Action workflows are in `.github/workflows/build-pipeline.yaml` file, which is in the
+root of this project one directory up. GitHub Action workflows need to be in the repo root for GitHub to read them.
 
 ## User story
 
