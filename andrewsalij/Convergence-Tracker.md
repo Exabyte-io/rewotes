@@ -1,5 +1,14 @@
 # K-point convergence tracker (Materials)
 
+Dependencies for this project may be installed by running in the following install script.
+
+```bash
+pip install numpy matplotlib scipy 
+pip install pymatgen
+pip install ase 
+```
+
+
 > Ideal candidate: scientists skilled in Density Functional Theory and proficient in python.
 
 # Overview
