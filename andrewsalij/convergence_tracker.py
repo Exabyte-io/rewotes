@@ -1,5 +1,8 @@
+import numpy as np
+import warnings
 
 
+'''Convergence tracking of k points'''
 class ConvergenceTester:
     '''Base class for convergence testing some system'''
     def __init__(self,path):
@@ -19,8 +22,44 @@ class ConvergenceTester:
         '''
         return None
 
+
 class KPointConvergenceTester(ConvergenceTester):
     '''Subclass for k-point convergence testing'''
     def __init__(self,path):
         super().__init__(path)
 
+    @staticmethod
+    def create_k_point_array(k_iterator,k_index = 0,effective_weight_array = np.array([1,1,1]),fixed_k_points = None):
+        '''
+        :param k_iterator:
+        :param k_index:
+        :param effective_weight:
+        :return:
+        '''
+        k_index,k_iterator = int(k_index), float(k_iterator)
+        normalized_weight_array = np.array((effective_weight_array.astype(float))/float(effective_weight_array[k_index])) #normalized to iterator
+        k_point_array = (normalized_weight_array*k_iterator).astype(int)
+        if fixed_k_points is not None: #for fixed k points, overrides calculated k point array
+            try:
+                for i in np.arange(3):
+                    k_point_force = fixed_k_points[i]
+                    if (k_point_force is not None): k_point_array[i] = int(k_point_force)
+            except:
+                warnings.warn("Manually overriding k points failed: defaulting to initial values")
+                pass
+        return k_point_array
+    def get_effective_k_point_weight(self,weight_type = "uniform"):
+        '''
+        :param weight_type: str
+        :return:
+        '''
+        if weight_type=="uniform":
+            effective_weight_array = np.array([1,1,1]) #no special weighting
+        if weight_type=="lattice":
+            lattice_array = self.get_lattice_vectors() #a,b,c (in real space)
+            effective_weight_array = 1/lattice_array  #now in reciprocal space
+        return effective_weight_array
+    def get_lattice_vectors(self):
+        '''
+        :return:
+        '''
