@@ -9,6 +9,19 @@ pip install ase
 pip install pydantic 
 ```
 
+Tests have been run on a variety of materials, whose provenance is below:
+
+Materials Project (DOI 10.17188/1190959)
+(CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode)
+Si2 (mp-149)
+
+Pseudopotentials Tested:
+NC SR 0.4.1 from Pseudo Dojo 
+	Paper: 10.1016/j.cpc.2018.01.012 arxiv preprint 
+	Method Paper: 10.1103/PhysRevB.88.085117
+	License: (CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode) 
+	(see https://github.com/PseudoDojo/pseudodojo)
+		
 
 > Ideal candidate: scientists skilled in Density Functional Theory and proficient in python.
 

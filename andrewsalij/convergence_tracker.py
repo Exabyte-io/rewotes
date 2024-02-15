@@ -1,5 +1,5 @@
 import copy
-
+import matplotlib.pyplot as plt
 import numpy as np
 import warnings
 import os
@@ -156,5 +156,35 @@ class KPointConvergenceTester(ConvergenceTester):
         for char in char_list_to_remove:
             k_array_string = k_array_string.replace(char,"")
         return k_array_string
+    def make_report_figure(self,filename,output_directory = None,x_axis_type = "iteration_number",x_label = "Convergence Iteration",y_label = "Energy (Ry)",
+                           plot_params = {},to_show = True):
+        '''
+        Creates basic report figure for k point convergence testing. Plot parameters may be
+        overridden via matplotlib.pyplot.rcParams.update()
+        '''
+        fig, ax = plt.subplots()
+        if output_directory is not None:
+            full_filename = os.sep.join((output_directory,filename))
+        else:full_filename = filename
+        n_its = len(self.convergence_energy_list)
+        iteration_array = np.linspace(1, n_its, n_its)
+        energy_array = np.array(self.convergence_energy_list)
+        ax.plot(iteration_array,energy_array,**plot_params)
+        ax.set_ylabel(y_label)
+        ax.set_xlabel(x_label)
+        if (x_axis_type == "iteration_number"):
+            #No additional functionality at present--kept for case switching
+            dummy_var = None
+        elif (x_axis_type == "convergence_parameter"):
+            x_ticks = ax.get_xticks()[1:-1]# removing edge indices that give left and right bounds of axis
+            x_labels = self.convergence_parameter_list
+            x_tick_indices = (x_ticks-1).astype(int) #shifting index from iteration 1 to pythonic 0
+            x_labels_subset = [x_labels[idx] for idx in list(x_tick_indices)]
+            ax.set_xticks(x_ticks,labels = x_labels_subset)
+        else:
+            ValueError("Invalid x_axis_type: "+str(x_axis_type))
+
+        fig.savefig(full_filename)
+        if to_show: fig.show()
 
 

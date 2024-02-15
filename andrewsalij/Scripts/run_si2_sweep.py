@@ -24,8 +24,10 @@ update_job = copy.deepcopy(base_job)
 sections = update_job.input.sections
 
 
-convergence_tester.find_convergence(-.001)
+convergence_tester.find_convergence(-.005)
 
 convergence_list = convergence_tester.convergence_parameter_list
 convergence_energy_list = convergence_tester.convergence_energy_list
+
+convergence_tester.make_report_figure("si2_k_converged.png",x_axis_type="convergence_parameter")
 
