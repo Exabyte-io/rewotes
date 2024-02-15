@@ -1,27 +1,39 @@
 import numpy as np
 import warnings
-
-
+import os
+import andrewsalij.io
 '''Convergence tracking of k points'''
 class ConvergenceTester:
     '''Base class for convergence testing some system'''
-    def __init__(self,path):
+    def __init__(self,path,output_dir = None,job_type = "pwscf"):
         '''
         Initializes general convergence tester
         :param path: str
+        :param output_dir: str or None
+        :param job_type : str
         Path to file containing system for convergence testing
         '''
         self.path = path
         self.convergence_list = []
         self.converged_value = None
+        if (path):
+            self.init_directory, self.filename = os.path.split(self.path)
+            self.base_output_directory = self._initialize_convergence_output_dir(output_dir=output_dir)
+            self.base_job= andrewsalij.io.load_job(self.path,job_type=job_type)
     def find_convergence(self,convergence_delta):
         '''
         Convergence parameter tolerance in units of parameter
-        :param convergence_delta:
+        :param convergence_delta: float
         :return:
         '''
-        return None
 
+        return None
+    def _initialize_convergence_output_dir(self,output_dir = None):
+        '''Initializes the convergence testing by creating output directory. If output_dir = None, makes directory 'conv' in self.path'''
+        if output_dir is None:
+            output_dir = os.sep.join((self.init_directory,"conv"))
+        os.makedirs(output_dir,exist_ok=True)
+        return output_dir
 
 class KPointConvergenceTester(ConvergenceTester):
     '''Subclass for k-point convergence testing'''

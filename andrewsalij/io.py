@@ -6,19 +6,32 @@ Formats supported: Quantum Espresso (PWscf input)
 '''
 #TODO: add additional format support
 
+def load_job(path,job_type = "pwscf"):
+    '''
+    General function for loading a job from an input--handles various job types (e.g., 'pwscf', ...)
+    :param path: str
+    :param job_type: str
+    '''
+    job_type = job_type.lower() #to avoid capitalization input issues
+    if (job_type=="pwscf"):
+        job = QEJob(path)
+    else:
+        ValueError("Unsupported job_type "+job_type)
+    return job
 class Job():
     '''
     Base class for a file to run calculations
     '''
-    def __init__(self,path,to_load = False):
+    def __init__(self,path):
         self.path = path
 class QEJob(Job):
     '''
     Class for running Quantum Espresso calculations. Extends Job()
     '''
-    def __init__(self,path,to_load = False):
-        super().__init__(path,to_load)
+    def __init__(self,path):
+        super().__init__(path)
         self.input = self.load(path) #PWInput object
+        self.output = None
     @staticmethod
     def load(path):
         '''Loads PWInput object from filepath'''
@@ -31,11 +44,12 @@ class QEJob(Job):
         '''Saves a Quantum Espresso input file for self.input at path'''
         self.input.write_file(path)
     def run(self,output_path = None,prefix_str = ""):
-        #TODO: check in Linux bash
         '''Saves and runs self.input'''
         base, ext = os.path.splitext(self.path)
         if (output_path is None):output_path = base+".out"
         qe_process_str = prefix_str+" pw.x -i "+self.path+" > "+output_path
         #TODO: add parallelism
         subprocess.run(qe_process_str,shell=True)
+        self.output = pwscf.PWOutput(output_path)
+
 
