@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 import os
 import andrewsalij.io
-'''Convergence tracking of k points'''
+'''Convergence tracking of parameters, particularly testing for k point convergence.'''
 class ConvergenceTester:
     '''Base class for convergence testing some system'''
     def __init__(self,path,output_dir = None,job_type = "pwscf"):
@@ -43,15 +43,24 @@ class ConvergenceTester:
 class KPointConvergenceTester(ConvergenceTester):
     '''Subclass for k-point convergence testing'''
     def __init__(self,path,output_dir = None,job_type = "pwscf"):
+        '''Initializes KPointConvergenceTester as an instance of ConvergenceTester
+        :param path: str
+        :param output_dir: str or None
+        :param job_type: str
+            "pwscf": Quantum Espresso calculation (pw.x)
+        '''
         super().__init__(path,output_dir=output_dir,job_type=job_type)
 
     @staticmethod
     def create_k_point_array(k_iterator,k_index = 0,effective_weight_array = np.array([1,1,1]),fixed_k_points = None):
         '''
-        :param k_iterator:
-        :param k_index:
-        :param effective_weight:
-        :return:
+        Static method for the creation of a np.ndarray (size 3). See find_convergence() for details
+        :param k_iterator: int
+        :param k_index: int
+        :param effective_weight_array: np.ndarray (size 3) (default: np.array([1,1,1]))
+            Array for weighting of k indices. Defaults to uniform weighting.
+        :param fixed_k_points: (value, value, value) where value is int or None
+        :return: np.ndarray (size 3, type int)
         '''
         k_index,k_iterator = int(k_index), float(k_iterator)
         normalized_weight_array = np.array((effective_weight_array.astype(float))/float(effective_weight_array[k_index])) #normalized to iterator
@@ -65,10 +74,11 @@ class KPointConvergenceTester(ConvergenceTester):
                 warnings.warn("Manually overriding k points failed: defaulting to initial values")
                 pass
         return k_point_array
-    def get_effective_k_point_weight(self,weight_type = "uniform"):
+    def _get_effective_k_point_weight(self,weight_type = "uniform"):
         '''
+        See find_convergence() for weight_type descriptions
         :param weight_type: str
-        :return:
+        :return: np.ndarray (size 3, type int)
         '''
         if weight_type=="uniform":
             effective_weight_array = np.array([1,1,1]) #no special weighting
@@ -121,7 +131,7 @@ class KPointConvergenceTester(ConvergenceTester):
             convergence_delta = -1*np.abs(convergence_delta)
         cur_convergence_delta = convergence_delta-1 # initial value that must be lower that converged value
         cur_k_iterator = k_iterator_init #index for k array construction
-        effective_weight_array = self.get_effective_k_point_weight(weight_type = weight_type)
+        effective_weight_array = self._get_effective_k_point_weight(weight_type = weight_type)
         run_counter = 0 #index for convergence lists
         convergence_flag = False
         while (not convergence_flag): #absolutes taken in case convergence

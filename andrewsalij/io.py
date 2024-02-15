@@ -25,21 +25,27 @@ class Job():
     Base class for a file to run calculations
     '''
     def __init__(self,path):
+        '''
+        :param path: str
+        '''
         self.path = path
 class QEJob(Job):
     '''
     Class for running Quantum Espresso calculations. Extends Job()
     '''
     def __init__(self,path):
+        '''
+        :param path: str
+        '''
         super().__init__(path)
         self.input = self.load(path) #PWInput object
         self.output = None
     @staticmethod
     def load(path):
-        '''Loads PWInput object from filepath'''
+        '''Loads PWInput object from filepath (str)'''
         return pwscf.PWInput.from_file(path)
     def update_k_points(self,k_points):
-        '''Updates kpoints_grid for PWInput'''
+        '''Updates kpoints_grid for PWInput with given k_points arraylike size 3, type int'''
         k_points_tuple = tuple(k_points) #force type
         self.input.__setattr__("kpoints_grid",k_points_tuple)
     def update_input_sections(self,update_dict):
@@ -49,11 +55,15 @@ class QEJob(Job):
         '''Saves a Quantum Espresso input file for self.input at path'''
         self.input.write_file(path)
     def run(self,output_path = None,prefix_str = ""):
-        '''Saves and runs self.input'''
+        '''Saves and runs self.input. No return value
+        :param output_path: str or None (default: None)
+            Optional parameter for output .out file. If None given, defaults to same directory as input (self.path)
+        :param prefix_str: str (default: "")
+            Optional parameter for prefix for running job (e.g., "mpirun -np 4").
+        '''
         base, ext = os.path.splitext(self.path)
         if (output_path is None):output_path = base+".out"
         qe_process_str = prefix_str+" pw.x -i "+self.path+" > "+output_path
-        #TODO: add parallelism
         subprocess.run(qe_process_str,shell=True)
         self.output = pwscf.PWOutput(output_path)
     def get_output_filename(self):
