@@ -1,0 +1,245 @@
+:root {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.5;
+    font-weight: 500;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+
+    --input-color: #f8f5b9;
+    --binary-color: #eec2f9;
+    --unary-color: #f7c4d4;
+    --comparison-color: #c1e8f9;
+    --output-color: #b5f7c6;
+    --gray: rgba(51, 51, 51, 0.5);
+    --light-gray: #ccc;
+    --blue: #007bff;
+    --xsmall-padding: 5px;
+    --small-padding: 10px;
+    --med-padding: 15px;
+    --large-padding: 35px;
+    --small-radius: 5px;
+    --ft-wt-bold: 600;
+    --ft-wt-norm: 400;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.flowchart-container {
+    display: flex;
+}
+
+.buttons-panel {
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    justify-content: left;
+    align-items: center;
+    background-color: rgba(51, 51, 51, 0.3);
+    display: flex;
+}
+
+.buttons-panel.dark-mode {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.clear {
+    margin-right: var(--small-padding);
+    margin-left: auto;
+    background: none;
+    border: 2px solid #7a7a7a;
+    color: #7a7a7a;
+    padding: var(--xsmall-padding) var(--small-padding);
+    font-weight: var(--ft-wt-bold);
+}
+
+.react-split {
+    height: 100vh;
+}
+
+.node {
+    border: 1px solid #000;
+    padding: var(--med-padding);
+    border-radius: var(--small-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.node.button {
+    margin: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: var(--ft-wt-bold);
+    height: 40px;
+}
+
+.node.button > span {
+    padding: var(--med-padding);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.handle {
+    width: 7px;
+    height: 7px;
+}
+
+.handle.input {
+    background-color: #fff;
+    border-color: #000;
+}
+
+.handle.output {
+    background-color: #000;
+    border-color: #fff;
+}
+
+.json-viewer {
+    position: absolute;
+    padding: var(--small-padding);
+    line-height: 1;
+    white-space: pre-wrap;
+    width: 100%;
+    border-left: 2px solid var(--light-gray);
+    overflow-y: auto;
+}
+
+.round {
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+.input {
+    background-color: var(--input-color);
+}
+
+.binary {
+    background-color: var(--binary-color);
+}
+
+.unary {
+    background-color: var(--unary-color);
+}
+
+.comparison {
+    background-color: var(--comparison-color);
+}
+
+.output {
+    background-color: var(--output-color);
+}
+
+input {
+    width: 80px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: var(--ft-wt-bold);
+}
+
+.node-dropdown {
+    width: 40px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: var(--ft-wt-bold);
+    font-size: small;
+    background-color: transparent;
+    border: 1px solid #000;
+    border-radius: var(--small-radius);
+    appearance: none;
+    text-align: center;
+}
+
+.darkmode-switch {
+    position: absolute !important;
+    right: var(--large-padding);
+    z-index: 10;
+}
+
+.json-contents {
+    position: absolute;
+    z-index: 1;
+}
+
+.react-flow__node-default {
+    width: 400px;
+    white-space: pre-wrap;
+    text-align: left;
+    font-weight: var(--ft-wt-bold);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
+        sans-serif;
+}
+
+.react-flow__edge.selected > path {
+    stroke: var(--blue) !important;
+    stroke-width: 2px;
+}
+
+.selected > .node {
+    border-width: 2px;
+    border-color: var(--blue);
+    transform: translate(-1px, -1px);
+}
+
+.save-control-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.save-control-panel select {
+    margin-right: var(--med-padding);
+    padding: var(--xsmall-padding);
+    border-radius: var(--small-radius);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: var(--ft-wt-bold);
+    font-size: small;
+    background-color: transparent;
+    border: 1px solid #7a7a7a;
+    /* appearance: none; */
+    color: #7a7a7a;
+}
+
+.save-control-panel select option {
+    color: #000;
+}
+
+.save-control-panel button {
+    margin-right: var(--med-padding);
+    padding: var(--xsmall-padding);
+    border-radius: var(--small-radius);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: var(--ft-wt-bold);
+    font-size: small;
+    background-color: var(--blue);
+    border: none;
+    color: #fff;
+}
+
+.save-control-panel input {
+    margin-right: var(--med-padding);
+    padding: var(--xsmall-padding);
+    border-radius: var(--small-radius);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: var(--ft-wt-bold);
+    font-size: small;
+    /* background-color: var(--input-color); */
+    border: 1px solid #000;
+    color: #000;
+}
+
+.dark-mode {
+    background-color: rgba(30, 30, 30, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
+.react-flow.dark-mode {
+    background-color: rgba(40, 40, 40, 1);
+}
