@@ -80,7 +80,40 @@ class KPointConvergenceTester(ConvergenceTester):
                          fixed_k_points = None,weight_type = "uniform",run_prefix_str = "",max_iterations = 20,talk = True,
                          force_energy_decrease = False):
         '''
-        Finds the converged energy
+        Finds the converged energy for a given convergence delta for the input from the initialization.
+        Creates and runs in subdirectories within self.output_dir scf calculations for target system.
+        Convergence defined where the latest decrease in energy is less than the provided convergence_delta.
+        Convergence iterates over a single k point index (default: first lattice dimension) from k_iterator_init (default: 1)
+        in increments of k_step (default: 1). Terminates after set max_iterations (default: 20).
+        :param convergence_delta : float (in units of method energy)
+            Tolerance for convergence
+        :param k_iterator_init : int (default: 1)
+            Initial value to begin the iterated k_index
+        :param k_step: int  (default: 1)
+            Value to increase the k_iterator by each iteration
+        :param k_index: int (default: 0)
+            Scalar index of k points to iterate over
+        :param fixed_k_points: (value, value, value) where value is int or None
+            Optional parameter to fix certain k point values to arbitrary integers.
+            None either as a whole parameter or in the given tuple index implies that k point
+            value increases with iteration.
+        :param weight_type: str (default: "uniform")
+            Scaling type for k point iteration:
+            "uniform":
+                All free (not in fixed_k_points) indices are identical
+            "lattice":
+                K points scaled according to integers closed to reciprocal lattice vectors
+        :param run_prefix_str (default: "")
+            String to inset (e.g. "mpirun -np 4", before method call (e.g., "pw.x")).
+            Enables support for method parallelism
+        :param max_iterations: int (default: 20)
+            Number of iterations to run before killing convergence
+        :param talk: bool (default: True)
+            If True, outputs progress to console
+        :param force_energy_decrease: bool (default: False)
+            If True, kills convergence if energy ever increases
+        :return: np.ndarray (size 3, type int) or None
+            returns None if run failed to converge
         '''
         k_iterator_init,k_step = int(k_iterator_init),int(k_step)
         if (convergence_delta > 0):
