@@ -77,7 +77,8 @@ class KPointConvergenceTester(ConvergenceTester):
             effective_weight_array = 1/lattice_array  #now in reciprocal space
         return effective_weight_array
     def find_convergence(self,convergence_delta,k_iterator_init = int(1),k_step = int(1),k_index = 0,
-                         fixed_k_points = None,weight_type = "uniform",run_prefix_str = "",max_iterations = 20,talk = True):
+                         fixed_k_points = None,weight_type = "uniform",run_prefix_str = "",max_iterations = 20,talk = True,
+                         force_energy_decrease = False):
         '''
         Finds the converged energy
         '''
@@ -90,7 +91,7 @@ class KPointConvergenceTester(ConvergenceTester):
         effective_weight_array = self.get_effective_k_point_weight(weight_type = weight_type)
         run_counter = 0 #index for convergence lists
         convergence_flag = False
-        while (cur_convergence_delta < convergence_delta): #absolutes taken in case convergence
+        while (not convergence_flag): #absolutes taken in case convergence
             if run_counter >= max_iterations:
                 print("Max iterations "+str(max_iterations)+" reached. Terminating convergence run")
                 break 
@@ -100,10 +101,11 @@ class KPointConvergenceTester(ConvergenceTester):
             if (run_counter>=int(1)):
                 cur_convergence_delta = self.convergence_energy_list[run_counter]-self.convergence_energy_list[int(run_counter-1)]
 
-            if cur_convergence_delta>0:
+            if cur_convergence_delta>0 and force_energy_decrease:
                 print("Energy increased in final convergence step. Terminating convergence run")
                 break
-            if (cur_convergence_delta>convergence_delta):
+            if (cur_convergence_delta>convergence_delta and cur_convergence_delta<0):
+                print("Run converged")
                 convergence_flag=True
                 break
             cur_k_iterator = cur_k_iterator + k_step
@@ -178,12 +180,13 @@ class KPointConvergenceTester(ConvergenceTester):
         elif (x_axis_type == "convergence_parameter"):
             x_ticks = ax.get_xticks()[1:-1]# removing edge indices that give left and right bounds of axis
             x_labels = self.convergence_parameter_list
-            x_tick_indices = (x_ticks-1).astype(int) #shifting index from iteration 1 to pythonic 0
+            x_tick_indices = np.unique((x_ticks-1).astype(int)) #shifting index from iteration 1 to pythonic 0
+            x_ticks = x_tick_indices+1 #resetting after removing duplicates
             x_labels_subset = [x_labels[idx] for idx in list(x_tick_indices)]
             ax.set_xticks(x_ticks,labels = x_labels_subset)
         else:
             ValueError("Invalid x_axis_type: "+str(x_axis_type))
-
+        plt.tight_layout()
         fig.savefig(full_filename)
         if to_show: fig.show()
 
