@@ -6,6 +6,7 @@ Dependencies for this project may be installed by running in the following insta
 pip install numpy matplotlib scipy 
 pip install pymatgen
 pip install ase 
+pip install pydantic 
 ```
 
 

@@ -1,6 +1,8 @@
 from pymatgen.io import pwscf
 import subprocess
 import os
+import numpy as np
+import pydantic.v1.utils
 '''Input and output handling
 Formats supported: Quantum Espresso (PWscf input)
 '''
@@ -40,6 +42,9 @@ class QEJob(Job):
         '''Updates kpoints_grid for PWInput'''
         k_points_tuple = tuple(k_points) #force type
         self.input.__setattr__("kpoints_grid",k_points_tuple)
+    def update_input_sections(self,update_dict):
+        '''Updates dictionary of PWInput'''
+        self.input.sections = pydantic.v1.utils.deep_update(self.input.sections,update_dict)
     def save(self,path):
         '''Saves a Quantum Espresso input file for self.input at path'''
         self.input.write_file(path)
@@ -51,5 +56,12 @@ class QEJob(Job):
         #TODO: add parallelism
         subprocess.run(qe_process_str,shell=True)
         self.output = pwscf.PWOutput(output_path)
-
+    def get_output_filename(self):
+        '''Returns pwscf filename corresponding to input '.in' given in self.path'''
+        base_dir, input_filename = os.path.split(self.path)
+        input_filename_base, ext = os.path.splitext(input_filename)
+        return input_filename_base+".out"
+    def get_lattice_vectors(self):
+        '''Returns lattice vectors a np.ndarray from PWInput'''
+        return np.array(self.input.structure.lattice.abc)
 
