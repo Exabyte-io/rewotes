@@ -10,13 +10,18 @@ pip install pydantic
 
 Tests (see Scripts folder) have been run on a variety of materials, whose provenance is below:
 
-Materials Project (DOI: doi:10.1063/1.4812323)
-(CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode)
-Si2 (mp-149) (DOI 10.17188/1190959)
+Materials Project
+link: https://legacy.materialsproject.org/
+(DOI: 10.1063/1.4812323)
+(CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode), see https://legacy.materialsproject.org/terms
+
+Si2 (mp-149) (DOI 10.17188/1190959) (https://legacy.materialsproject.org/materials/mp-149/)
 
 Materials Cloud three-dimensional crystals database (MC3D) 
+link: https://archive.materialscloud.org/record/2022.38
+(DOI: 10.24435/materialscloud:rw-t0)
 (CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode)
-DOI:10.24435/materialscloud:rw-t0
+
 
 GaN (mc3d-3763/pbe)
 BN (mc3d-13290/pbe)
@@ -26,10 +31,11 @@ Cs2La2Te6Zn2 (mc3d-11071/pbe)
 C2Ce2Os4P2 (mc3d-10335/pbe)
 
 Materials Cloud two-dimensional crystals database (MC2D)
-(CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode)
+link: https://archive.materialscloud.org/record/2020.158
 DOI:10.24435/materialscloud:az-b2 
-DOI:10.24435/materialscloud:36-nd 
- 
+DOI:10.24435/materialscloud:36-nd (expansion)
+(CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode)
+
 C (graphene, from graphite exfoliation) (https://www.materialscloud.org/discover/mc2d/details/C, graphite (2H) initial)
 MoS2 (https://www.materialscloud.org/discover/mc2d/details/MoS2-MoS2)
 AgCO2 (https://www.materialscloud.org/discover/mc2d/details/AgCO2)
