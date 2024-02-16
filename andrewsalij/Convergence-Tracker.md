@@ -3,13 +3,12 @@
 Dependencies for this project may be installed by running in the following install script.
 
 ```bash
-pip install numpy matplotlib scipy 
+pip install numpy matplotlib 
 pip install pymatgen
-pip install ase 
 pip install pydantic 
 ```
 
-Tests have been run on a variety of materials, whose provenance is below:
+Tests (see Scripts folder) have been run on a variety of materials, whose provenance is below:
 
 Materials Project (DOI: doi:10.1063/1.4812323)
 (CC-BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode)
