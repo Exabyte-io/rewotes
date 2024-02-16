@@ -28,7 +28,7 @@ BN (mc3d-13290/pbe)
 O4Ru2 (mc3d-1930/pbe)
 Br4Ca2 (mc3d-30836/pbe)
 Cs2La2Te6Zn2 (mc3d-11071/pbe)
-C2Ce2Os4P2 (mc3d-10335/pbe)
+F2Fe2O8S2 (mc3d-14425/pbe)
 
 Materials Cloud two-dimensional crystals database (MC2D)
 link: https://archive.materialscloud.org/record/2020.158

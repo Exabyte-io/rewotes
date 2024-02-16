@@ -65,6 +65,7 @@ class KPointConvergenceTester(ConvergenceTester):
         k_index,k_iterator = int(k_index), float(k_iterator)
         normalized_weight_array = np.array((effective_weight_array.astype(float))/float(effective_weight_array[k_index])) #normalized to iterator
         k_point_array = (normalized_weight_array*k_iterator).astype(int)
+        k_point_array = np.where(k_point_array<1,1,k_point_array) #removing 0 indices-->imposing 1 minimum
         if fixed_k_points is not None: #for fixed k points, overrides calculated k point array
             try:
                 for i in np.arange(3):
@@ -88,11 +89,12 @@ class KPointConvergenceTester(ConvergenceTester):
         return effective_weight_array
     def find_convergence(self,convergence_delta,k_iterator_init = int(1),k_step = int(1),k_index = 0,
                          fixed_k_points = None,weight_type = "uniform",run_prefix_str = "",max_iterations = 20,talk = True,
-                         force_energy_decrease = False):
+                         force_energy_decrease = False,allow_convergence_pos_delta= True):
         '''
         Finds the converged energy for a given convergence delta for the input from the initialization.
         Creates and runs in subdirectories within self.output_dir scf calculations for target system.
-        Convergence defined where the latest decrease in energy is less than the provided convergence_delta.
+        Convergence defined where the latest change in energy is less than the provided convergence_delta (to compel convergence to be negative
+        in final iteration, set allow_covergence_pos_delta to False.
         Convergence iterates over a single k point index (default: first lattice dimension) from k_iterator_init (default: 1)
         in increments of k_step (default: 1). Terminates after set max_iterations (default: 20).
         :param convergence_delta : float (in units of method energy)
@@ -122,6 +124,10 @@ class KPointConvergenceTester(ConvergenceTester):
             If True, outputs progress to console
         :param force_energy_decrease: bool (default: False)
             If True, kills convergence if energy ever increases
+        :param allow_convergence_pos_delta: bool (default: True)
+            If True, final convergence step can have a positive increase in energy less than convergence_delta and
+            force_energy_decrease is False.
+            If False, requires that final step is a negative change in energy
         :return: np.ndarray (size 3, type int) or None
             returns None if run failed to converge
         '''
@@ -147,10 +153,14 @@ class KPointConvergenceTester(ConvergenceTester):
             if cur_convergence_delta>0 and force_energy_decrease:
                 print("Energy increased in final convergence step. Terminating convergence run")
                 break
-            if (cur_convergence_delta>convergence_delta and cur_convergence_delta<0):
-                print("Run converged")
-                convergence_flag=True
-                break
+            if (np.abs(cur_convergence_delta)<np.abs(convergence_delta)):
+                if (allow_convergence_pos_delta):
+                    convergence_flag=True
+                elif (cur_convergence_delta<0):
+                    convergence_flag=True
+                if (convergence_flag):
+                    print("Run converged")
+                    break
             cur_k_iterator = cur_k_iterator + k_step
             run_counter = int(run_counter + 1)
         if (convergence_flag):
