@@ -206,6 +206,20 @@ class KPointConvergenceTester(ConvergenceTester):
         '''
         Creates basic report figure for k point convergence testing. Plot parameters may be
         overridden via matplotlib.pyplot.rcParams.update()
+        :param filename: str
+            Figure filename to save. Passed to matplotlib.pyplot.Figure.savefig()
+        :param output_directory: str or None
+            If None, outputs figure to working directory
+        :param x_axis_type: str
+            "iteration_number":
+                X axis tick labels relate to the number of the convergence iterations
+            "convergence_parameter":
+                X axis tick labels are the k point arrays
+        :param x_label: str (default: "Convergence Iteration")
+        :param y_label: str (default: "Energy (Ry)")
+        :param plot_params: dict
+            Dictionary to pass to matplotlib.pyplot.Axis.plot()
+        :param to_show: bool (default: True)
         '''
         fig, ax = plt.subplots()
         if output_directory is not None:
