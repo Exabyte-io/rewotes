@@ -1,0 +1,14 @@
+
+nav{ justify-content:space-around; box-shadow: inset 0px 2px 4px 0px rgba(0,0,0,0.25); }
+nav>*{ padding:0.3rem;display: flex;flex-direction: column; align-items:center; text-align: center; }
+nav abbr{ font-size: 3.5vw; }
+nav dfn{ display: none; }
+
+nav a:hover { color: #2a8d9c; text-decoration: none; }
+nav a { color: #313131; padding-top: 9px; text-decoration: none; }
+
+@media (min-width: 45rem)
+{
+    nav abbr{ display: none; }
+    nav dfn{ display: block; }
+}
