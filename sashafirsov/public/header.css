@@ -110,7 +110,7 @@ header aside li{ padding: .5em; white-space: nowrap; }
 
 
     header aside a{font-weight: 600; text-transform: uppercase; letter-spacing: .4px;}
-    header form #hdrSearch{ display: flex; flex-grow: 3; opacity: 0.8; }
+    header form #hdrSearch{ display: flex; flex-grow: 3; opacity: 0.8; padding-left: 0.25em; }
     header form #hdrSearch:focus{ opacity: 1; flex-grow: 10; }
     header form #hdrSearch:focus+*+*+div{ width:3em; overflow: hidden;}
     header button{ display: flex; padding: 0.2rem; align-items: center;}
