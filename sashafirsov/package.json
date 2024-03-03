@@ -33,6 +33,7 @@
         "@types/node": "18.16.9",
         "@types/react": "18.2.33",
         "@types/react-dom": "18.2.14",
+        "@types/three": "^0.162.0",
         "@typescript-eslint/eslint-plugin": "^6.13.2",
         "@typescript-eslint/parser": "^6.13.2",
         "@vitejs/plugin-react": "^4.2.0",
