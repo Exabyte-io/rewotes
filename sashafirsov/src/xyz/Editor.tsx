@@ -7,6 +7,7 @@ import styles from './Editor.module.css';
 // from https://github.com/microsoft/monaco-editor/blob/main/samples/browser-esm-vite-react/src/main.tsx
 
 import Xyz, { ElementXyz, XyzSlide } from '../xyz/Xyz';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 export const Editor: VFC = () => {
     const [drawing, saveDrawing] = useLocalStorage<Xyz>('xyzdrawing');
@@ -51,14 +52,18 @@ H       -0.180226841     -1.796059882     -0.917077970
                     // const m = mEditor.getModel();
                     const xyz = new Xyz();
 
-                    const lines = mEditor.getValue().split('\n').filter(t => t.trim());
+                    const lines = mEditor.getValue().split('\n');//.filter(t => t.trim());
 
                     for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line || line.startsWith('#')) // ignore blank lines and comments
+                            continue;
+
                         const n = parseInt(lines[i++]);
                         const comment = lines[i++];
                         const elements = lines.slice(i, i + n).map((line) => {
                             const [element, x, y, z] = line.split(/\s+/);
-                            return new ElementXyz(element, parseFloat(x), parseFloat(y), parseFloat(z));
+                            return new ElementXyz(element, parseFloat(x), parseFloat(y), parseFloat(z), i);
                         });
                         const slide = new XyzSlide();
                         slide.comment = comment;
@@ -69,6 +74,47 @@ H       -0.180226841     -1.796059882     -0.917077970
                     saveDrawing(xyz);
 
                 });
+
+                // @ts-expect-error always available in browser
+                document.getElementById('import-file').addEventListener(
+                    'change',
+                    () => {
+                        const fileInput = document.getElementById('import-file') as HTMLInputElement;
+                        if (fileInput.files && fileInput.files.length > 0) {
+                            // @ts-expect-error iterable in browser
+                            for (const file of fileInput.files) {
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    if (file.name.endsWith('.poscar')) {
+                                        // convert poscar to xyz
+
+                                        const contents = e.target?.result as string;
+                                        const [comment, scaling, a1, a2, a3, ionSpecies, ionNumbers, directOrCartesian, ...positions] = contents.split('\n');
+
+                                        const species = ionSpecies.trim().split(/\s+/);
+                                        const speciesCount = ionNumbers.trim().split(/\s+/).map(n=>parseInt(n));
+                                        const xyzLines = [
+                                            '###########',
+                                            '# ' + file.name,
+                                            '# ' + comment,
+                                            '# scaling ' + scaling,
+                                            speciesCount.reduce((total, v) => total + v, 0)];
+                                        let pi = 0;
+                                        for (let si = 0; si < species.length; si++) {
+                                            for (let sci = 0; sci < speciesCount[si]; sci++, pi++)
+                                                xyzLines.push(`${species[si]} ${positions[pi]}`);
+                                        }
+                                        mEditor.setValue(mEditor.getValue() + xyzLines.join('\n'));
+                                    } else {
+                                        // no need to convert
+                                        const contents = e.target?.result as string;
+                                        mEditor.setValue(mEditor.getValue() + `\n###################\n# ${file.name}\n\n` + contents);
+                                    }
+                                };
+                                reader.readAsText(file);
+                            }
+                        }
+                    });
                 return mEditor;
             });
         }

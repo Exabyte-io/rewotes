@@ -48,6 +48,10 @@ header.search-gr-on>*>.search-gr{ display: flex; }
 header input:checked+label+aside{ display: flex;}
 header aside{ display:none;  position: fixed; right: 0; top: 3rem;  padding: 1rem; flex-wrap: wrap; background-color: cadetblue;
     z-index: 2;/* fix hidden menu by monaco editor */
+    li>label{
+        display: flex!important; align-items: center; gap: 1rem;
+        input[type="file"]{display: none;}
+    }
 }
 header aside,
 header aside>div
