@@ -1,12 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
 
-import NxWelcome from './nx-welcome';
+import { Editor } from '../xyz/Editor';
+import View3d from '../view3d/View3d';
 
 export function App() {
   return (
-    <div>
-      <NxWelcome title="sashafirsov" />
+    <div className={styles['views-container']}>
+        <Editor />
+        <button></button>
+        <View3d />
     </div>
   );
 }

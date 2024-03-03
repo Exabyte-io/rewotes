@@ -36,7 +36,8 @@
 
         main {
             flex-wrap: wrap;
-            padding: 1rem;
+            padding: 0;
+            &>*{ flex:1; display: flex; }
         }
 
         section {
@@ -67,7 +68,8 @@
 <body>
 <header>
     <form method="GET" action="#">
-        <a href="https://github.com/sashafirsov/rewotes" title="home"><i class="fa-brands fa-github"></i></a>
+        <a href="https://github.com/sashafirsov/rewotes/blob/sashafirsov/sashafirsov/README.md" title="Project home"
+            ><i class="fa-brands fa-github"></i></a>
         <h1> Materials Designer </h1>
 
         <i class="tr-expand"></i>
@@ -87,6 +89,27 @@
             <input type="checkbox" class="fas" id="tr-menu-trigger" />
             <label for="tr-menu-trigger"><i class="fas fa-bars"></i></label><!-- fix for Edge & IE -->
             <aside>
+                <div>
+                    <a href="#"
+                       aria-expanded="true" aria-haspopup="true" role="menuitem"
+                    > View </a>
+                    <ul>
+                        <li><i class="fa-solid fa-cube"></i> Project </li>
+                        <li><i class="fa-solid fa-pen-to-square"></i> Source </li>
+                        <li><i class="fa-solid fa-cube"></i> 3D</li>
+                        <li>Reset to default, fit   <var>CTRL+0          </var></li>
+                        <li>Zoom in                 <var>SHIFT+PLUS      </var></li>
+                        <li>Zoom out                <var>SHIFT+MINUS     </var></li>
+                        <li>Spin  Right             <var>RIGHT           </var></li>
+                        <li>Shift Right             <var>SHIFT+RIGHT     </var></li>
+                        <li>Spin  Left              <var>LEFT            </var></li>
+                        <li>Shift Left              <var>SHIFT+LEFT      </var></li>
+                        <li>Spin  Up                <var>UP              </var></li>
+                        <li>Shift Up                <var>SHIFT+Up        </var></li>
+                        <li>Spin  Down              <var>DOWN            </var></li>
+                        <li>Shift Down              <var>SHIFT+DOWN      </var></li>
+                    </ul>
+                </div>
                 <div>
                     <a href="#"
                        aria-expanded="true" aria-haspopup="true" role="menuitem"
@@ -125,7 +148,7 @@
     <a href="#" title="Create new Material">
         <i class="fa-solid fa-plus"></i>
         <abbr> New </abbr>
-        <dfn> Create </dfn>
+        <dfn> Create Material </dfn>
     </a>
     <a href="#">
         <i class="fas fa-copy"></i>
@@ -148,243 +171,9 @@
         <dfn> Change Project </dfn>
     </a>
 </nav>
-<main>
+<main >
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-
-    <section>
-        <h1>Responsive First</h1>
-        <p> Page is designed for mobile UI and adopted to wider desktop layout</p>
-        <p> CSS rules are defined for smallest supported screen and adjusted with media queries for wider screen </p>
-    </section>
-    <section>
-        <h1> Layout </h1>
-        <article>
-            <header><b>header</b> acts as toolbar with title:</header>
-            <ul>
-                <li> back nav link</li>
-                <li> search controls</li>
-                <li> logo &amp; title</li>
-                <li> main menu entries</li>
-                <li> login/account controls</li>
-                <li> mobile menu controls</li>
-            </ul>
-        </article>
-        <article>
-            <header><b>nav</b> main navigation toolbar:</header>
-            <ul>
-                <li> back nav link</li>
-                <li> search controls</li>
-                <li> logo &amp; title</li>
-                <li> main menu entries</li>
-                <li> login/account controls</li>
-                <li> mobile menu controls</li>
-            </ul>
-        </article>
-        <article>
-            <header><b>main</b> content:</header>
-            <ul>
-                <li><b>section</b>s with own topics</li>
-                <li> &dash; <b>article</b>s</li>
-                <li> &dash;&dash; <b>header</b></li>
-            </ul>
-        </article>
-        <article>
-            <h2>Responsive layout</h2>
-            <h3>html body</h3>
-            <p>For <b>html</b> and <b>body</b> padding and margins are eliminated
-                as those would be responsibility of immediate content:
-                <b>header</b>, <b>nav</b>, <b>main</b>
-            </p>
-            <p>Vertical flex layout on <b>body</b> level defined top, main, and toolbar zones.
-                Header resides on top, toolbar in mobile mode sits on bottom, leaving main zone
-                scrollable.
-            </p>
-            <h3> Main section scrolling </h3>
-            <p>Achieved by <code> flex-grow: 100; overflow: auto; </code>
-                for main content;
-            </p>
-            <h3> Toolbar position </h3>
-            <p> in default (mobile) layout it is set on the bottom for one-hand
-                operations convenience. For same reason the most frequent operations
-                like "schedule" in sample are set closer to right side.
-                <sub>Apologies to left-handed folks.</sub>
-            </p>
-        </article>
-
-    </section>
-    <section>
-        <h1> header </h1>
-        <article> To make H1 text scale down the <b>font-size</b> is set relative to viewport width.<br />
-            The initial value <code>6vw</code> is set to make font size growing till the moment
-            the height matches default browser one: <code>2em</code> or <code>xx-large</code>. <br />
-            The default font size and view-port width relative equality defines the breakpoint when
-            <b>@media(min-width: 34.35rem)</b> (550px in 100% zoom) would set the H1 font size to default one.<br />
-            Two parameters above are critical to a) keep increasing the font not more than default while expanding
-            the width, b) keep header from changing the height when text become 2-liner on narrow view or
-            font size increased in wide view. <br />
-            Those numbers would need adjustment to accommodate the header text length change.
-
-        </article>
-        <article>
-            <h1><i class="fas fa-bars"></i> menu </h1>
-            <p> Menu is triggered by restyled checkbox.<br />
-                For browser without support of checkbox restyling the LABEL tag would hover and mimic checkbox UI. </p>
-            <p><b>onchange</b> checkbox event handler triggers <b>search-gr-on</b> header class which changes search
-                group visibility. </p>
-        </article>
-        <article>
-            <h1><i class="fas fa-search"></i> search </h1>
-            <p><b>mobile</b> behavior<br />
-                By default (mobile) the search UI is hidden behind of icon button( same as in menu ).
-                Once triggered, search group expands and takes over whole header space.
-                The trigger icon changes to <i class="fas fa-angle-right"></i> on the left,
-                the center is taken by search input field, and "search" button on the right.<br />
-                Since trigger button stays same, SPACE multiple times would trigger search group on and off.
-                To get into input field use TAB (as expected).
-            </p>
-            <p><b>Desktop</b> behavior<br />
-                Enabled by "large mobile screen" breakpoint. Search group in this mode comprise the input field and
-                button.
-            </p>
-            <p><b>unfocused</b> input filed is translucent and takes small width just barely sufficient for hint text.
-                On <b>focus</b> input became opaque and expands, covering the menu space. Menu is kept 3 chars wide to
-                keeping ability to use menu and unfocus the search.
-            </p>
-        </article>
-    </section>
-    <section>
-        <h1> nav </h1>
-        <article> Serves as primary actions toolbar along with menu floating over page content.
-            <p> In Desktop mode navigation shifted beneath header. </p>
-        </article>
-    </section>
-    <section>
-        <h1> main </h1>
-        <article>
-            <p><b>main</b> content is surrounded by header and actions bar. It has own scroll area which replaces the
-                page scrolling. <b>flex</b> css styling helps to stretch main content to view area remaining after
-                header and action bar.
-            </p>
-        </article>
-    </section>
-    <section>
-        <h1> Responsive breakpoints </h1>
-        <article>
-            <p> Overriding the browser font side on page is a disrespectful to user and
-                breaks the accessibility of page. User could change the default page font size
-                according to own vision or situation. It could be also changed dynamically reflecting
-                say user preferences in portrait/landscape mode or connecting external screen like TV.
-            </p>
-            <p> Since the letter size could vary from user to user, the pixel defined breakpoints do not
-                reflect the visual design which in most of web applications rely on text dimensions.
-            </p>
-            <h2>How to define true responsive breakpoints?</h2>
-
-            <dl>
-                <dt> By visual design</dt>
-                <dd> Usually mockups are created for targeted devices which reflect as physical dimensions
-                    as conditions the user observing and interacts with UI. <br />
-                    Sometimes mockup is created per UX component instead of page which created.
-                    It is natural to use component-aware and component-specific breakpoints.
-                    Which could lead to inconsistent across page and applications series of breakpoints.
-                    Leading to user confusion, additional effort of test automation, customer support issues, etc.<br />
-
-                    <em>It is up to product to enforce media breakpoints</em> across
-                    applications/pages/components.<br />
-                    By reducing the number of media breakpoints app will reduce the number of UX variations
-                    at expense of per-component UX polishing.
-                </dd>
-
-                <dt> REM match to pixel</dt>
-                <dd> "classic" pixel-perfect approach operates in pixels and responsive breakpoints
-                    usually defined same way. To define same size in REM units, the simplest way is to set
-                    two sibling DOM nodes and assign the width in PX and REM accordingly. In given page
-                    45rem breakpoint matches 720px taken in Desktop Chrome.
-                    <h5>Popular Breakpoints in REM & PX</h5>
-                    <table>
-                        <tr>
-                            <th> pixels</th>
-                            <th> REM</th>
-                            <th> Description</th>
-                        </tr>
-                        <tr>
-                            <td> 320px</td>
-                            <td> 20rem</td>
-                            <td> small mobile screen</td>
-                        </tr>
-                        <tr>
-                            <td> 720px</td>
-                            <td> 45rem</td>
-                            <td> large mobile screen, in this page used as mobile breakpoint</td>
-                        </tr>
-                        <tr>
-                            <td> 1024px</td>
-                            <td> 64rem</td>
-                            <td> tablet screen</td>
-                        </tr>
-                        <tr>
-                            <td> 1152px</td>
-                            <td> 72rem</td>
-                            <td> small desktop</td>
-                        </tr>
-                    </table>
-                    <h5> List of resolutions by Sause Labs : </h5>
-                    <code>
-                        800x600 1024x768 1152x864 1280x768 1280x800 1280x960 1440x900 1280x1024
-                        1400x1050 1600x1200 1680x1050 1920x1080 1920x1200 2560x1600
-                    </code>
-                </dd>
-            </dl>
-        </article>
-    </section>
-    <section>
-        <h1> Icons </h1>
-        <article> Even simplified image in order to be clearly recognized has to be at least 2x
-            larger than than letter symbols next to it with exception of large title text.<br />
-            That is why icon font size here is set to <code>2rem</code>
-
-        </article>
-    </section>
-    <section>
-        <h1> Accessibility </h1>
-        <article><b>Keyboard navigation</b> is supported by DOM order of focus-able components.
-            <p>
-                <b>Focus UX</b> should be distinctive and do not hide the outline. In this page it is
-                done by radical pink color and visually destructive inset shadow with 1 second transition
-                animation.<br />
-                The shadow is used instead of border color to <br />
-                a) avoid collision with styles of navigation components which often use borders ( i.e. button links )
-            </p>
-            <p>
-                Frameworks with component set always have own way of making focused elements visually and dynamically
-                exposed.
-            </p>
-        </article>
-    </section>
-    <section>
-        <h1> Unadvised </h1>
-        <article>
-            <a href="-/search-bar.html">order-dependent selectors</a> for groups visibility switch<br />
-            <a href="-/details-menu.html">DETAILS/SUMMARY</a> for groups visibility switch, Edge browser does not
-            support it.<br />
-            <a href="-/checkbox-menu.html">checkbox</a> as group visibility switch, Edge browser does not support UI
-            customization.
-            Work around(used here) exist on HTML+CSS level.
-            <br />
-            <p><b>Use LABEL for visibility group change</b>. I.e. do not use LABEL for focus to input field if it
-                leads to components group visibility change like in case of search input. It prevents to focus on
-                triggering element and breaks the keyboard navigation. Instead, use A link with in-page navigation. </p>
-        </article>
-    </section>
-    <section>
-        <h1> Not covered </h1>
-        <ul>
-            <li> Dark mode</li>
-            <li> Voice navigation</li>
-            <li> Screen Reader</li>
-        </ul>
-    </section>
 </main>
+<script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

@@ -58,7 +58,14 @@ header aside>div
 }
 
 header aside a{ display: flex;align-items: center; padding: .5rem; }
-header aside li{ padding: .5em; white-space: nowrap; }
+header aside li{
+    padding: .5em; white-space: nowrap; display: flex; align-items: center; gap: 1em;
+    cursor: pointer;
+    &:hover{
+        box-shadow: inset 0px 0px 3px 3px rgba(191, 40, 168, 1);
+        transition: all 0.3s ease-out;
+    }
+}
 
 /* fix for Edge, to use label hovering the checkbox. Disabled by default. */
 #tr-menu-trigger+label{ display:none; }

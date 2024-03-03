@@ -3,14 +3,18 @@
     "version": "0.0.0",
     "license": "MIT",
     "scripts": {
+        "dev": "nx serve",
         "start": "nx serve",
         "build": "nx build",
         "test": "nx test"
     },
     "private": true,
     "dependencies": {
+        "@react-three/fiber": "^8.15.16",
+        "monaco-editor": "^0.46.0",
         "react": "18.2.0",
-        "react-dom": "18.2.0"
+        "react-dom": "18.2.0",
+        "three": "^0.162.0"
     },
     "devDependencies": {
         "@nx/cypress": "18.0.5",
