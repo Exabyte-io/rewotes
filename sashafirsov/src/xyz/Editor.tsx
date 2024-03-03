@@ -23,7 +23,15 @@ export const Editor: VFC = () => {
                     automaticLayout: true,
                     readOnly: false,
                     value:
-                        `11
+                        `6
+Created by chemcoord http://chemcoord.readthedocs.io/en/latest/
+O 0.000000 0.000000  0.000000
+H 0.758602 0.000000  0.504284
+H 0.260455 0.000000 -0.872893
+O 3.000000 0.500000  0.000000
+H 3.758602 0.500000  0.504284
+H 3.260455 0.500000 -0.872893
+11
 # pyridine molecule 
 C       -0.180226841      0.360945118     -1.120304970
 C       -0.180226841      1.559292118     -0.407860970

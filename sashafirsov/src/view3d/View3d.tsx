@@ -61,7 +61,6 @@ export default function View3d() {
                 <hemisphereLight position={[0, 1, 0]} args={[0xffffff, 0x888888, 3]} />
                 <pointLight position={[10, 10, 10]} />
                 <Box position={[-1.2, 0, 0]} />
-                <Sphere position={[1.2, 0, 0]} color={Symbol2Element.H.color} />
 
                 {drawing && drawing.slides[0].elements.map((e, i) => (
                     <Sphere position={[e.x, e.y, e.z]} key={i}
