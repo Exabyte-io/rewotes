@@ -69,10 +69,9 @@ H       -0.180226841     -1.796059882     -0.917077970
                         slide.comment = comment;
                         slide.elements = elements;
                         xyz.addSlide(slide);
-                        i += n;
+                        i += n-1;
                     }
                     saveDrawing(xyz);
-
                 }
 
                 mEditor.onDidChangeModelContent(onEditChanged);

@@ -39,7 +39,6 @@ interface SphereProps extends MeshProps {
 
 function showTooltip(x: number, y: number, text: string) {
     const t = document.getElementById('tooltip')!;
-    console.log({ x, y, text });
     t.style.left = (x - 380) + 'px';
     t.style.top = (y - 32) + 'px';
     t.style.display = 'block';
@@ -110,7 +109,6 @@ export default function View3d() {
             document.removeEventListener('keyup', keyUpHandler);
         };
     }, [keyUpHandler]);
-    console.log({ zoom });
     return (
         <div className={styles.content}>
             <div id="tooltip" className={styles.tooltip}></div>
