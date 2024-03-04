@@ -126,8 +126,10 @@ export default function View3d() {
     }, [keyUpHandler]);
     return (
         <div className={styles.content}>
-            <div id="tooltip" className={styles.tooltip}></div>
-            <Canvas camera={{ fov: 75, near: 0.1, far: 1000, position: [zoom, zoom, zoom] }}>
+            <div id="tooltip" data-testid="view3d-tooltip" className={styles.tooltip}></div>
+            <Canvas camera={{ fov: 75, near: 0.1, far: 1000, position: [zoom, zoom, zoom] }}
+                data-testid="view3d-canvas"
+            >
                 <CameraControls ref={cameraControlRef} />
 
                 <hemisphereLight position={[0, 1, 0]} args={[0xffffff, 0x888888, 3]} />
