@@ -1,11 +1,12 @@
 .content{
     flex: 8;
+    nav{ position: absolute; z-index: 1;}
 }
 .tooltip {
     position: absolute;
     left: 0;
     top: 0;
-    min-width: 100px;
+    min-width: 20rem;
     text-align: center;
     padding: 5px 12px;
     font-family: monospace;

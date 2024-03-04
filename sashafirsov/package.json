@@ -10,6 +10,7 @@
     },
     "private": true,
     "dependencies": {
+        "@react-three/drei": "^9.99.5",
         "@react-three/fiber": "^8.15.16",
         "@uidotdev/usehooks": "^2.4.1",
         "monaco-editor": "^0.46.0",
