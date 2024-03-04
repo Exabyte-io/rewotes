@@ -37,8 +37,7 @@ export const Editor: VFC = () => {
                 mEditor.onDidChangeCursorSelection(e => {
                     shareSelection([e.selection.startLineNumber, e.selection.endLineNumber]);
                 });
-                // @ts-expect-error document always available in browser
-                document.getElementById('import-file').addEventListener(
+                document.getElementById('import-file')?.addEventListener(
                     'change',
                     () => {
                         const fileInput = document.getElementById('import-file') as HTMLInputElement;
