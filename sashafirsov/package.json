@@ -6,7 +6,8 @@
         "dev": "nx serve",
         "start": "nx serve",
         "build": "nx build",
-        "test": "nx test"
+        "test": "nx test",
+        "coverage": "vitest run --coverage"
     },
     "private": true,
     "dependencies": {
