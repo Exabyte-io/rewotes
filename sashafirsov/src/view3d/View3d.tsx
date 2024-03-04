@@ -85,16 +85,15 @@ export default function View3d() {
 
     const cameraControlRef = useRef<CameraControls | null>(null);
 
-    const [drawing, saveDrawing] = useLocalStorage<Xyz>('xyzdrawing');
+    const [drawing] = useLocalStorage<Xyz>('xyzdrawing');
 
     const [selection] = useLocalStorage<number[]>('EditorSelection');
-    let slide:XyzSlide =  new XyzSlide();
-    if( drawing && drawing.slides?.length){
+    let slide: XyzSlide = new XyzSlide();
+    if (drawing && drawing.slides?.length) {
         slide = drawing.slides[0];
-        for( const s of drawing.slides )
-            if(s.elements.find(e=>e.sourceLine>= selection[0] && e.sourceLine <= selection[1] )){
+        for (const s of drawing.slides)
+            if (s.elements.find(e => e.sourceLine >= selection[0] && e.sourceLine <= selection[1])) {
                 slide = s;
-                console.log(slide)
                 break;
             }
     }
