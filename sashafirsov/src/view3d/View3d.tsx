@@ -7,7 +7,7 @@ import { CameraControls } from '@react-three/drei';
 
 import styles from './View3d.module.css';
 
-import Xyz from '../xyz/Xyz';
+import Xyz, { XyzSlide } from '../xyz/Xyz';
 import { Symbol2Element } from '../Elements';
 
 const DEG45 = Math.PI / 4;
@@ -32,11 +32,6 @@ function Box(props: ThreeElements['mesh']) {
     );
 }
 
-interface SphereProps extends MeshProps {
-    color: string;
-    tooltipText: string;
-}
-
 function showTooltip(x: number, y: number, text: string) {
     const t = document.getElementById('tooltip')!;
     t.style.left = (x - 380) + 'px';
@@ -51,15 +46,24 @@ function hideTooltip() {
     t.style.display = 'none';
 }
 
+interface SphereProps extends MeshProps {
+    color: string;
+    tooltipText: string;
+    sourceLine: number;
+}
+
 function Sphere(props: SphereProps) {
     const ref = useRef<THREE.Mesh>(null!);
     const [hovered, hover] = useState(false);
     const [clicked, click] = useState(false);
+    const [selection] = useLocalStorage<number[]>('EditorSelection');
+    const isSelected = props.sourceLine >= selection[0] && props.sourceLine <= selection[1];
+    const color = hovered ? 'hotpink' : isSelected ? 'violet' : props.color;
     return (
         <mesh
             {...props}
             ref={ref}
-            scale={clicked ? 1.5 : 1}
+            scale={isSelected ? 2 : clicked ? 1.5 : 1}
             onClick={(event) => click(!clicked)}
             onPointerOver={(event) => {
                 showTooltip(event.x, event.y, props.tooltipText);
@@ -72,7 +76,7 @@ function Sphere(props: SphereProps) {
             userData={{ tooltipText: props.tooltipText }}
         >
             <sphereGeometry args={[0.1, 32, 32]} />
-            <meshStandardMaterial color={hovered ? 'hotpink' : props.color} wireframe />
+            <meshStandardMaterial color={color} wireframe />
         </mesh>
     );
 }
@@ -82,6 +86,18 @@ export default function View3d() {
     const cameraControlRef = useRef<CameraControls | null>(null);
 
     const [drawing, saveDrawing] = useLocalStorage<Xyz>('xyzdrawing');
+
+    const [selection] = useLocalStorage<number[]>('EditorSelection');
+    let slide:XyzSlide =  new XyzSlide();
+    if( drawing && drawing.slides?.length){
+        slide = drawing.slides[0];
+        for( const s of drawing.slides )
+            if(s.elements.find(e=>e.sourceLine>= selection[0] && e.sourceLine <= selection[1] )){
+                slide = s;
+                console.log(slide)
+                break;
+            }
+    }
 
     const zoom = 10;
     const keyUpHandler = useCallback((ev: KeyboardEvent) => {
@@ -119,9 +135,10 @@ export default function View3d() {
                 <pointLight position={[10, 10, 10]} />
                 <Box position={[-1.2, 0, 0]} />
 
-                {drawing && drawing.slides[0]?.elements.map((e, i) => (
+                {slide.elements.map((e, i) => (
                     <Sphere position={[e.x, e.y, e.z]} key={i}
                             color={Symbol2Element[e.element]?.color ?? 'silver'}
+                            sourceLine={e.sourceLine}
                             tooltipText={JSON.stringify(e)}
                     />
                 ))}

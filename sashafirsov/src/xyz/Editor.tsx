@@ -7,13 +7,14 @@ import styles from './Editor.module.css';
 // from https://github.com/microsoft/monaco-editor/blob/main/samples/browser-esm-vite-react/src/main.tsx
 
 import Xyz, { ElementXyz, XyzSlide } from '../xyz/Xyz';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import * as console from 'console';
 
 export const Editor: VFC = () => {
     const [drawing, saveDrawing] = useLocalStorage<Xyz>('xyzdrawing');
 
     const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
     const monacoEl = useRef(null);
+    const [_selection, setSelection] = useLocalStorage('EditorSelection', [0, 0]);
 
     useEffect(() => {
         if (monacoEl) {
@@ -69,13 +70,16 @@ H       -0.180226841     -1.796059882     -0.917077970
                         slide.comment = comment;
                         slide.elements = elements;
                         xyz.addSlide(slide);
-                        i += n-1;
+                        i += n - 1;
                     }
                     saveDrawing(xyz);
                 }
 
                 mEditor.onDidChangeModelContent(onEditChanged);
                 onEditChanged();
+                mEditor.onDidChangeCursorSelection(e => {
+                    setSelection([e.selection.startLineNumber, e.selection.endLineNumber]);
+                });
                 // @ts-expect-error always available in browser
                 document.getElementById('import-file').addEventListener(
                     'change',
