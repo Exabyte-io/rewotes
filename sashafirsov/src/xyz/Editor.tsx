@@ -48,8 +48,8 @@ H       -0.180226841     -1.796059882     -0.917077970
 `,
                     language: 'python'
                 });
-                mEditor.onDidChangeModelContent(function(e) {
-                    // const m = mEditor.getModel();
+
+                function onEditChanged() {
                     const xyz = new Xyz();
 
                     const lines = mEditor.getValue().split('\n');//.filter(t => t.trim());
@@ -61,9 +61,9 @@ H       -0.180226841     -1.796059882     -0.917077970
 
                         const n = parseInt(lines[i++]);
                         const comment = lines[i++];
-                        const elements = lines.slice(i, i + n).map((line) => {
+                        const elements = lines.slice(i, i + n).map((line, k) => {
                             const [element, x, y, z] = line.split(/\s+/);
-                            return new ElementXyz(element, parseFloat(x), parseFloat(y), parseFloat(z), i);
+                            return new ElementXyz(element, parseFloat(x), parseFloat(y), parseFloat(z), i + k + 1);
                         });
                         const slide = new XyzSlide();
                         slide.comment = comment;
@@ -73,8 +73,10 @@ H       -0.180226841     -1.796059882     -0.917077970
                     }
                     saveDrawing(xyz);
 
-                });
+                }
 
+                mEditor.onDidChangeModelContent(onEditChanged);
+                onEditChanged();
                 // @ts-expect-error always available in browser
                 document.getElementById('import-file').addEventListener(
                     'change',
@@ -92,7 +94,7 @@ H       -0.180226841     -1.796059882     -0.917077970
                                         const [comment, scaling, a1, a2, a3, ionSpecies, ionNumbers, directOrCartesian, ...positions] = contents.split('\n');
 
                                         const species = ionSpecies.trim().split(/\s+/);
-                                        const speciesCount = ionNumbers.trim().split(/\s+/).map(n=>parseInt(n));
+                                        const speciesCount = ionNumbers.trim().split(/\s+/).map(n => parseInt(n));
                                         const xyzLines = [
                                             '###########',
                                             '# ' + file.name,
