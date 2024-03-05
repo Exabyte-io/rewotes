@@ -32,7 +32,7 @@ function Box(props: ThreeElements['mesh']) {
     );
 }
 
-function showTooltip(x: number, y: number, text: string) {
+export function showTooltip(x: number, y: number, text: string) {
     const t = document.getElementById('tooltip')!;
     t.style.left = (x - 380) + 'px';
     t.style.top = (y - 32) + 'px';
@@ -41,7 +41,7 @@ function showTooltip(x: number, y: number, text: string) {
     t.innerText = text;
 }
 
-function hideTooltip() {
+export function hideTooltip() {
     const t = document.getElementById('tooltip')!;
     t.style.display = 'none';
 }
@@ -65,11 +65,11 @@ function Sphere(props: SphereProps) {
             ref={ref}
             scale={isSelected ? 2 : clicked ? 1.5 : 1}
             onClick={(event) => click(!clicked)}
-            onPointerOver={(event) => {
+            onPointerEnter={(event) => {
                 showTooltip(event.x, event.y, props.tooltipText);
                 hover(true);
             }}
-            onPointerOut={(event) => {
+            onPointerLeave={(event) => {
                 hideTooltip();
                 hover(false);
             }}
@@ -82,6 +82,21 @@ function Sphere(props: SphereProps) {
 }
 
 export default function View3d() {
+
+    const zoom = 5;
+    return (
+        <div className={styles.content}>
+            <div id="tooltip" data-testid="view3d-tooltip" className={styles.tooltip}></div>
+            <Canvas camera={{ fov: 75, near: 0.1, far: 1000, position: [zoom, zoom, zoom] }}
+                    data-testid="view3d-canvas"
+            >
+                <View3dCanvas/>
+            </Canvas>
+        </div>
+    );
+}
+
+export function View3dCanvas() {
 
     const cameraControlRef = useRef<CameraControls | null>(null);
 
@@ -125,25 +140,21 @@ export default function View3d() {
         };
     }, [keyUpHandler]);
     return (
-        <div className={styles.content}>
-            <div id="tooltip" data-testid="view3d-tooltip" className={styles.tooltip}></div>
-            <Canvas camera={{ fov: 75, near: 0.1, far: 1000, position: [zoom, zoom, zoom] }}
-                data-testid="view3d-canvas"
-            >
-                <CameraControls ref={cameraControlRef} />
 
-                <hemisphereLight position={[0, 1, 0]} args={[0xffffff, 0x888888, 3]} />
-                <pointLight position={[10, 10, 10]} />
-                <Box position={[-1.2, 0, 0]} />
+        <>
+            <CameraControls ref={cameraControlRef} />
 
-                {slide.elements.map((e, i) => (
-                    <Sphere position={[e.x, e.y, e.z]} key={i}
-                            color={Symbol2Element[e.element]?.color ?? 'silver'}
-                            sourceLine={e.sourceLine}
-                            tooltipText={JSON.stringify(e)}
-                    />
-                ))}
-            </Canvas>
-        </div>
+            <hemisphereLight position={[0, 1, 0]} args={[0xffffff, 0x888888, 3]} />
+            <pointLight position={[10, 10, 10]} />
+            <Box position={[-1.2, 0, 0]} />
+
+            {slide.elements.map((e, i) => (
+                <Sphere position={[e.x, e.y, e.z]} key={i}
+                        color={Symbol2Element[e.element]?.color ?? 'silver'}
+                        sourceLine={e.sourceLine}
+                        tooltipText={JSON.stringify(e)}
+                />
+            ))}
+        </>
     );
 }

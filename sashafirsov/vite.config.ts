@@ -45,7 +45,7 @@ export default defineConfig({
         coverage: {
             reportsDirectory: './coverage/sashafirsov',
             provider: 'v8',
-            exclude: [...configDefaults.exclude, 'e2e/*']
+            exclude: [...configDefaults.exclude, 'e2e/*', 'src/main.tsx']
         }
     }
 });
