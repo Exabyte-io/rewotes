@@ -1,0 +1,28 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_size = 4
+indent_style = space
+insert_final_newline = false
+max_line_length = 120
+tab_width = 4
+
+[*.scss]
+indent_size = 4
+
+[{*.ats,*.cts,*.mts,*.template,*.ts,*.ts1}]
+indent_size = 4
+tab_width = 4
+
+[{*.cjs,*.js}]
+indent_size = 4
+tab_width = 4
+
+[{*.har,*.jsb2,*.jsb3,*.json,*.jsonc,*.postman_collection,*.postman_collection.json,*.postman_environment,*.postman_environment.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
+indent_size = 4
+
+[{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml}]
+indent_size = 4
+tab_width = 4

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Sasha Firsov demo</title>
+    <base href="/" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!--
+        Responsive HTML design explainer
+        https://cdn.xml4jquery.com/web-elements-loader/build/esm-unbundled/demo/true-responsive/true-responsive.html
+    -->
+
+    <link rel="icon" type="image/x-icon" href="/Favicon32х32.svg" />
+    <link rel="stylesheet" href="/src/styles.scss" />
+
+    <style>
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+        @import url('https://fonts.googleapis.com/css?family=Material+Icons&display=block');
+
+        @import "/page-layout.css";
+        @import "/header.css";
+        @import "/nav.css";
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        *:focus {
+            box-shadow: inset 0px 0px 3px 3px rgba(191, 40, 168, 1);
+            transition: all 1s ease-out;
+        }
+
+        main {
+            flex-wrap: wrap;
+            padding: 0;
+            &>*{ flex:1; display: flex; }
+            .monaco-editor{ z-index: 1; /* menu overlap fix */ }
+        }
+
+        section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        section h1 {
+            width: 100%;
+        }
+
+        td {
+            padding: 0.3rem;
+            border-bottom: 1px solid silver;
+        }
+
+        dt {
+            padding-top: 1rem;
+        }
+
+        .fa-brands, .fa-regular, .fa-solid, .fas {
+            font-size: 2rem;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <form method="GET" action="#">
+        <a href="https://github.com/sashafirsov/rewotes/blob/sashafirsov/sashafirsov/README.md" title="Project home"
+            ><i class="fa-brands fa-github"></i></a>
+        <h1> Materials Designer </h1>
+
+        <i class="tr-expand"></i>
+
+        <input type="checkbox" class="fas" id="tr-search-trigger"
+               onchange="document.querySelector('header').classList.toggle( 'search-gr-on', document.getElementById('tr-search-trigger').checked )" />
+        <label for="tr-search-trigger"><i class="fas fa-search"></i></label><!-- fix for Edge & IE -->
+        <input class="search-gr" type="search" name="q" placeholder="Search" title="Search" id="hdrSearch" />
+        <button class="search-gr"><i class="fas fa-search"></i></button>
+
+
+        <a href="#" id="login-btn"
+        ><i class="fas fa-user"></i>
+            <dd>Log in</dd>
+        </a>
+        <div>
+            <input type="checkbox" class="fas" id="tr-menu-trigger" />
+            <label for="tr-menu-trigger"><i class="fas fa-bars"></i></label><!-- fix for Edge & IE -->
+            <aside>
+                <div>
+                    <a href="#"
+                       aria-expanded="true" aria-haspopup="true" role="menuitem"
+                    > File </a>
+                    <ul>
+                        <li><label><i class="fa-solid fa-folder-open"></i> <input type="file" multiple id="import-file"  accept=".xyz,.POSCAR"  /> Import </label></li>
+                        <li><i class="fa-solid fa-save"></i> Save (todo) </li>
+                    </ul>
+                </div>
+                <div>
+                    <a href="#"
+                       aria-expanded="true" aria-haspopup="true" role="menuitem"
+                    > View </a>
+                    <ul>
+                        <li><i class="fa-solid fa-cube"></i> Project </li>
+                        <li><i class="fa-solid fa-pen-to-square"></i> Source </li>
+                        <li><i class="fa-solid fa-cube"></i> 3D</li>
+                        <li>Reset to default, fit   <var>0          </var></li>
+                        <li>Zoom in                 <var>PLUS      </var></li>
+                        <li>Zoom out                <var>MINUS     </var></li>
+                        <li>Spin  Right             <var>RIGHT           </var></li>
+                        <li>Shift Right             <var>SHIFT+RIGHT     </var></li>
+                        <li>Spin  Left              <var>LEFT            </var></li>
+                        <li>Shift Left              <var>SHIFT+LEFT      </var></li>
+                        <li>Spin  Up                <var>UP              </var></li>
+                        <li>Shift Up                <var>SHIFT+Up        </var></li>
+                        <li>Spin  Down              <var>DOWN            </var></li>
+                        <li>Shift Down              <var>SHIFT+DOWN      </var></li>
+                    </ul>
+                </div>
+                <div>
+                    <a href="#"
+                       aria-expanded="true" aria-haspopup="true" role="menuitem"
+                    > Help </a>
+                    <ul>
+                        <li> How to use Materials Designer</li>
+                        <li> Case Studies</li>
+                        <li><i class="fa-brands fa-discord"></i> Discord Channel</li>
+                        <li><a
+                            href="https://cdn.xml4jquery.com/web-elements-loader/build/esm-unbundled/demo/true-responsive/true-responsive.html?q=#"
+                        >About True Responsive</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <a href="#"
+                       aria-expanded="true" aria-haspopup="true" role="menuitem"
+                    > Corp </a>
+                    <ul>
+                        <li><a href="https://www.mat3ra.com/pricing">Shop Plans</a></li>
+                        <li> Services</li>
+                    </ul>
+                </div>
+                <div>
+                    <a href="#"> Professionals </a>
+                    <ul>
+                        <li> Careers</li>
+                        <li> Training</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+    </form>
+</header>
+<nav>
+    <a href="#" title="Create new Material">
+        <i class="fa-solid fa-plus"></i>
+        <abbr> New </abbr>
+        <dfn> Create Material </dfn>
+    </a>
+    <a href="#">
+        <i class="fas fa-copy"></i>
+        <abbr> Copy </abbr>
+        <dfn> Copy to Clipboard </dfn>
+    </a>
+    <a href="#" title="Rename Material">
+        <i class="fas fa-file-pen"></i>
+        <abbr> Rename </abbr>
+        <dfn> Rename </dfn>
+    </a>
+    <a href="#" title="Remove material from project">
+        <i class="fas fa-trash"></i>
+        <abbr> Del </abbr>
+        <dfn> Remove </dfn>
+    </a>
+    <a href="#" title="Change Project">
+        <i class="fas fa-diagram-project"></i>
+        <abbr> Proj </abbr>
+        <dfn> Change Project </dfn>
+    </a>
+</nav>
+<main >
+    <div id="root"></div>
+</main>
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
