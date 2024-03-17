@@ -1,0 +1,38 @@
+{
+  "pw": {
+    "control": {
+      "pseudo_dir": "./pseudos/"
+    },
+    "system": {
+      "degauss": "0.1",
+      "ecutwfc": "20",
+      "occupations": "smearing"
+    },
+    "electrons": {
+      "conv_thr": "1e-6"
+    },
+    "ions": {},
+    "cell": {},
+    "k_points": "1 1 1 0 0 0"
+  },
+  "ph": {
+    "inputph": {
+      "ldisp": "true",
+      "nq1": "1",
+      "nq2": "1",
+      "nq3": "1"
+    }
+  },
+  "q2r": {
+    "input": {
+      "zasr": "simple"
+    }
+  },
+  "matdyn": {
+    "input": {
+      "asr": "simple",
+      "q_in_band_form": "true",
+      "q_in_cryst_coord": "true"
+    }
+  }
+}
