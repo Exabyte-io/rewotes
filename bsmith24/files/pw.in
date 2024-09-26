@@ -1,0 +1,45 @@
+&CONTROL
+    calculation= 'scf'
+    title= ''
+    verbosity= 'low'
+    restart_mode= 'from_scratch'
+    wf_collect= .true.
+    tstress= .true.
+    tprnfor= .true.
+    outdir= './'
+    wfcdir= './'
+    prefix= '__prefix__'
+    pseudo_dir= '/export/share/pseudo/si/gga/pbe/gbrv/1.0/us/'
+/
+&SYSTEM
+    ibrav=0
+    nat=2
+    ntyp=1
+    ecutwfc= 40
+    ecutrho= 200
+    occupations= 'smearing'
+    degauss= 0.005
+/
+&ELECTRONS
+    diagonalization= 'david'
+    diago_david_ndim= 4
+    diago_full_acc= .true.
+    mixing_beta= 0.3
+    startingwfc='atomic+random'
+/
+&IONS
+/
+&CELL
+/
+ATOMIC_SPECIES
+Si 28.0855 si_pbe_gbrv_1.0.upf
+CELL_PARAMETERS angstrom
+3.867000000 0.000000000 0.000000000
+1.933500000 3.348920236 0.000000000
+1.933500000 1.116306745 3.157392278
+ATOMIC_POSITIONS crystal
+Si 0.000000000 0.000000000 0.000000000
+Si 0.250000000 0.250000000 0.250000000
+K_POINTS automatic
+4 4 4 0 0 0
+
