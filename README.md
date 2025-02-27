@@ -8,17 +8,18 @@ This repository contains example test assignments used during the hiring process
 
 Each file represents an assignment similar to what one would get when hired.
 
-| Focus          | ReWote                    | Keywords                        |
-| ---------------| --------------------------| ------------------------------- |
-| Comp. Science  | [Convergence Tracker](Convergence-Tracker.md) | Python, OOD, DFT, Planewaves    |
-| Comp. Science  | [Basis Set Selector](Basis-Set-Selector.md)  | Python, OOD, DFT, Local-orbital |
-| Data. Science  | [ML Property Predict](ML-Band-Gaps.md) | Python, ML Models, Scikit, Featurization |
-| Front-End / UX | [Materials Designer](Materials-Designer.md)  | ReactJS / UX Design, ThreeJS   |
-| Front-End / UX | [Flowchart Designer](Flowchart-Designer.md)  | ReactJS / UX Design, DAG       |
-| Back-End / Ops | [Parallel Uploader](Parallel-File-Uploader.md)   | Python, OOD, Threading, Objectstore |
-| CI/CD, DevOps  | [End-to-End Tests](End-to-End-Tests.md)    | BDD tests, CI/CD workflows, Cypress |
-| HPC, Cloud Inf | [Cloud HPC Bench.](Cloud-Infrastructure.md)    | HPC Cluster, Linpack, Benchmarks |
-| HPC, Containers| [Containerized HPC](Containerization-HPC.md)    | HPC Cluster, Containers, Benchmarks |
+| Focus          | ReWote                                         | Keywords                                 |
+| ---------------|------------------------------------------------|------------------------------------------|
+| Comp. Science  | [Convergence Tracker](Convergence-Tracker.md)  | Python, OOD, DFT, Planewaves             |
+| Comp. Science  | [Basis Set Selector](Basis-Set-Selector.md)    | Python, OOD, DFT, Local-orbital          |
+| Comp. Science  | [Design w/ `mat3ra-made`](Design-Structures.md) | Python, Crystallography, Interfaces      |
+| Data. Science  | [ML Property Predict](ML-Band-Gaps.md)         | Python, ML Models, Scikit, Featurization |
+| Front-End / UX | [Materials Designer](Materials-Designer.md)    | ReactJS / UX Design, ThreeJS             |
+| Front-End / UX | [Flowchart Designer](Flowchart-Designer.md)    | ReactJS / UX Design, DAG                 |
+| Back-End / Ops | [Parallel Uploader](Parallel-File-Uploader.md) | Python, OOD, Threading, Objectstore      |
+| CI/CD, DevOps  | [End-to-End Tests](End-to-End-Tests.md)        | BDD tests, CI/CD workflows, Cypress      |
+| HPC, Cloud Inf | [Cloud HPC Bench.](Cloud-Infrastructure.md)    | HPC Cluster, Linpack, Benchmarks         |
+| HPC, Containers| [Containerized HPC](Containerization-HPC.md)   | HPC Cluster, Containers, Benchmarks      |
 
 ## Usage
 
