@@ -1,0 +1,35 @@
+name: ml-band-gaps
+channels:
+  - conda-forge
+dependencies:
+  - pip
+  - tqdm
+  - joblib
+  - numpy
+  - pandas
+  - pytables
+  - scipy
+  - scikit-learn
+  - xgboost
+  - pytorch
+  - torchvision
+  - skorch
+  - matplotlib
+  - pymatgen
+  - phonopy
+  - ipykernel
+  - ipywidgets
+  - ipympl
+  - pandoc
+  - notebook
+  - jupyter_client
+  - pytest
+  - pytest-cov
+  - pytest-xdist
+  - coverage
+  - autopep8
+  - black
+  - flake8
+  - pip:
+     - "--editable=git+https://github.com/materialsproject/api.git@main#egg=mp-api"
+    

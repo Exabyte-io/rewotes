@@ -1,1 +1,10 @@
 .idea*
+
+**/.DS_Store
+*.pyc
+
+**/data/*
+**/models/*
+
+.vscode
+api_key.txt
