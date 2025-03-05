@@ -1,0 +1,27 @@
+{
+  "name": "paralel-file-uploader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint lib",
+    "lint:fix": "eslint lib --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1112.0",
+    "commander": "^9.2.0",
+    "dotenv": "^16.0.0",
+    "jest": "^27.5.1",
+    "piscina": "^3.2.0",
+    "recursive-readdir": "^2.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  }
+}
