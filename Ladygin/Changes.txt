@@ -1,0 +1,4 @@
+Day 1; 04/17/25
+
+- Made base and qe classes for driver and tracker
+- Tested on base case of Si
