@@ -1,0 +1,45 @@
+#!/pscratch/sd/v/vladygin/doped-Si_project/MLFF_TDEP/testbench/bin/python
+
+import argparse
+
+# Custom dependences
+from ConvergenceTracker import *
+
+def parser():
+    """Parser of the arguments"""
+    parser = argparse.ArgumentParser(description='ConvTrack - tool for tracking kpoint convergence of point calcs')
+    parser.add_argument('-mode', type=str, default='qe', help='What software is used for simulation')
+
+    # Arguments for the conv tracker
+    parser.add_argument('-workdir', type=str, default='./', help='Path to the working folder')
+    parser.add_argument('-target', type=str, default='total_energy', help='Target for error minimization')
+    parser.add_argument('-eps', type=float, default=1e-2, help='Convergence cryteria')
+    
+
+    # Arguments for the driver
+    parser.add_argument('-input', type=str, default='pw.in', help='Input file with point calc settings')
+    parser.add_argument('-encut', type=float, default=40, help='Energy cutoff in Ry')
+
+
+    # Arguments for the scheduler
+    parser.add_argument('-k_sch', type=str, default='uniform', help='Which scheduler to use to obtain new kpoint')
+    parser.add_argument('-k_range', type=int, default= [2, 30, 2], nargs=3, help='k_start, k_end, k_step for uniform scheduler')
+
+    args = parser.parse_args()
+    return args
+
+if __name__ == "__main__":
+
+    args = parser()
+
+    if args.k_sch == 'uniform':
+        k_sch = kpoint_scheduler_uniform(*args.k_sch)
+
+    if args.mode == 'qe':
+        driver = DriverQE(args.workdir, args.input, args.encut)
+        tracker = ConvergenceTrackerQE(args.workdir, args.target, args.eps)
+
+
+    kpoint_opt, errors = tracker.find_opt(driver = driver, k_sch = k_sch)
+
+    print(f"Optimal value of kpoint is {kpoint_opt} with error of {errors[-1]*1e3} meV")

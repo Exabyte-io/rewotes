@@ -1,7 +1,7 @@
 import pickle
 import os
 from driver import Driver
-
+from kpoint_scheduler import kpoint_scheduler_uniform
 
 class ConvergenceTracker():
     """Base class for convergence tracker
@@ -19,9 +19,19 @@ class ConvergenceTracker():
         self.encut = encut
         self.eps = eps
         self.kpoint_opt = None # optimal kpoint value
+
+    def _step(self, k_curr: int) -> float:
+        """Step of the kpoint scheduler
+
+           k_curr - current k point
+        """
+    
+    def find_opt(self, driver: Driver, k_sch: kpoint_scheduler_uniform) -> None:
+        """Finds optimal kpoint by running simulations and refining the parameter until convergence reached
         
-    def find_opt(self, driver: Driver) -> None:
-        """Finds optimal kpoint by running simulations and refining the parameter until convergence reached"""
+           driver - drives for simulations
+           k_sch - kpoint generator
+        """
         pass
 
     def save(self, name:str) -> None:

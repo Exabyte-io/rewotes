@@ -2,3 +2,14 @@ Day 1; 04/17/25
 
 - Made base and qe classes for driver and tracker
 - Tested on base case of Si
+
+
+Day 2; 04/17/25
+
+- Polished the code
+- Finished the parser
+- Extracted the Scheduler to separate file
+- Organized as a lib
+- Created main script
+
+

@@ -16,8 +16,6 @@ module unload cudatoolkit/12.2
 #module load nvhpc/23.1
 module load cray-libsci/23.02.1.1
 module load cray-hdf5-parallel
-module load python/3.11
-
 module swap gpu cpu 
 
-python ../convergence_tracker_qe.py
+python ../ConvergenceTracker/driver.py
