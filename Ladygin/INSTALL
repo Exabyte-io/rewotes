@@ -1,0 +1,5 @@
+To install simply type in the main dir
+
+python setup.py install 
+
+This will install lib and 'ConvTrack' binary file 

@@ -33,13 +33,14 @@ if __name__ == "__main__":
     args = parser()
 
     if args.k_sch == 'uniform':
-        k_sch = kpoint_scheduler_uniform(*args.k_sch)
+        k_sch = kpoint_scheduler_uniform(*args.k_range)
 
     if args.mode == 'qe':
         driver = DriverQE(args.workdir, args.input, args.encut)
         tracker = ConvergenceTrackerQE(args.workdir, args.target, args.eps)
 
 
-    kpoint_opt, errors = tracker.find_opt(driver = driver, k_sch = k_sch)
-
-    print(f"Optimal value of kpoint is {kpoint_opt} with error of {errors[-1]*1e3} meV")
+    k_list, target_list, errors = tracker.find_opt(driver = driver, k_sch = k_sch)
+    
+    
+    print(f"Optimal value of kpoint is {k_list[-1]} with error of {errors[-1]*1e3} meV")

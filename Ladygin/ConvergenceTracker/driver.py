@@ -2,8 +2,8 @@ from ase.io import read
 import subprocess as sp
 from ase.io import espresso
 import warnings
-from exceptions import NofileWarning, MissingPseudoError, OutdirInconsistencyWarning
-from utils import pw_template, atoms_template, parse_qe_input, convert_settings
+from .exceptions import NofileWarning, MissingPseudoError, OutdirInconsistencyWarning
+from .utils import pw_template, atoms_template, parse_qe_input, convert_settings
 import os
 
 class Driver():
@@ -55,7 +55,6 @@ class DriverQE(Driver):
             settings = parse_qe_input(f'{self.workdir}/pw.in')
 
         # Convert to ase format
-        print(settings)
         settings_ase, pseudo = convert_settings(settings)
         
         for key in pseudo:

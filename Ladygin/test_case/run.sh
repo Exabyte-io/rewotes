@@ -18,4 +18,4 @@ module load cray-libsci/23.02.1.1
 module load cray-hdf5-parallel
 module swap gpu cpu 
 
-python ../ConvergenceTracker/driver.py
+ConvTrack -workdir "./" -mode "qe" -target "total_energy" -eps 0.01 -input "pw.in" -encut 40

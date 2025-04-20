@@ -4,7 +4,7 @@ Day 1; 04/17/25
 - Tested on base case of Si
 
 
-Day 2; 04/17/25
+Day 2; 04/18/25
 
 - Polished the code
 - Finished the parser
@@ -12,4 +12,7 @@ Day 2; 04/17/25
 - Organized as a lib
 - Created main script
 
+Day 3; 04/18/25
 
+- Finished debugging lib and binary
+- Added stats save
