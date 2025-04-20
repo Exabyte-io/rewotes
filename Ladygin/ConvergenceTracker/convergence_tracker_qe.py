@@ -17,7 +17,9 @@ class ConvergenceTrackerQE(ConvergenceTracker):
            encut - kinetic energy cutoff (in eV)
            eps - convergence criteria (in meV)
         """
-        super().__init__(workdir, target, eps)
+        self.workdir = workdir
+        self.target = target
+        self.eps = eps
         self.driver = DriverQE(workdir = self.workdir,
                                input_file_name = "pw.in", 
                                encut = 40)
@@ -39,7 +41,7 @@ class ConvergenceTrackerQE(ConvergenceTracker):
            k_curr - current k point
         """
         self.driver.gen_input(k_curr)
-        self.driver.run()
+        self.driver.calc()
         return self.driver.extract_target(self.target)
     
     def find_opt(self, driver: DriverQE = None, k_sch: kpoint_scheduler_uniform = kpoint_scheduler_uniform(2, 30)) -> tuple:

@@ -7,7 +7,7 @@ class ConvergenceTracker():
     """Base class for convergence tracker
            Contains methods nessasure for any conv tracker"""
     
-    def __init__(self, workdir: str = './', target:str = 'total_energy', eps = 1e-2) -> None:
+    def __init__(self, workdir: str, target:str, eps) -> None:
         """workdir - directory for input files and calculations
            target - target property to optimize
            encut - kinetic energy cutoff (in eV)

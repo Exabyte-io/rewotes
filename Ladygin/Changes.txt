@@ -16,3 +16,5 @@ Day 3; 04/18/25
 
 - Finished debugging lib and binary
 - Added stats save
+- Separated job_runner into separate class
+- made remodelling of class inits

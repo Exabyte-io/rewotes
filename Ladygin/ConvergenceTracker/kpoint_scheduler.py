@@ -7,9 +7,7 @@ class kpoint_scheduler():
            k_start - kpoint to start
            k_end - kpoint to end
         """
-        
-        self.k_start = k_start
-        self.k_end = k_end
+        pass
 
     def get_next(self, errors: list) -> int:
         """A way to find next kpoint based on list of errors"""
@@ -28,7 +26,8 @@ class kpoint_scheduler_uniform():
 
            k_step - kpoint step
         """
-        super().__init__()
+        self.k_start = k_start
+        self.k_end = k_end
 
         self.k_step = k_step
         self.k_list = range(k_start, k_end, k_step)

@@ -8,13 +8,18 @@ from ConvergenceTracker import *
 def parser():
     """Parser of the arguments"""
     parser = argparse.ArgumentParser(description='ConvTrack - tool for tracking kpoint convergence of point calcs')
-    parser.add_argument('-mode', type=str, default='qe', help='What software is used for simulation')
+    parser.add_argument('-mode', type=str, default='qe', help='What software is used for simulation', choices= ['qe', 'vasp'])
 
     # Arguments for the conv tracker
     parser.add_argument('-workdir', type=str, default='./', help='Path to the working folder')
     parser.add_argument('-target', type=str, default='total_energy', help='Target for error minimization')
     parser.add_argument('-eps', type=float, default=1e-2, help='Convergence cryteria')
     
+
+    # Arguments for the calcutor
+    parser.add_argument('-mode_calc', type=str, default='shell', help='Which calculator to use (script or batch format will be supported)', choices= ['shell', 'job'])
+    parser.add_argument('-path_to_exec', type=str, default='/pscratch/sd/v/vladygin/tools/q-e_new/q-e/bin', help='Path to executables of the calculator')
+    parser.add_argument('-nk', type=int, default=1, help='Kpoint parralelization settings for quantum espresso')
 
     # Arguments for the driver
     parser.add_argument('-input', type=str, default='pw.in', help='Input file with point calc settings')
@@ -36,7 +41,10 @@ if __name__ == "__main__":
         k_sch = kpoint_scheduler_uniform(*args.k_range)
 
     if args.mode == 'qe':
-        driver = DriverQE(args.workdir, args.input, args.encut)
+        if args.mode_calc == 'shell':
+            calculator = job_runner_qe(args.path_to_exec, args.nk)
+
+        driver = DriverQE(args.workdir, calculator, args.input, args.encut)
         tracker = ConvergenceTrackerQE(args.workdir, args.target, args.eps)
 
 
