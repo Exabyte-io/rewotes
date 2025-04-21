@@ -1,43 +1,18 @@
 from ase.io import read
 from ase.io import espresso
 import warnings
-from .exceptions import NofileWarning, MissingPseudoError, OutdirInconsistencyWarning
-from .utils import pw_template, atoms_template, parse_qe_input, convert_settings
-from .job_runner import job_runner_qe
-
 import os
 
-class Driver():
-    """Base class for running simulation"""
 
-    def __init__(self, workdir: str, calculator:job_runner_qe, input_file_name: str, encut: float) -> None:
-        """input_file - simulation settings input file name
-           workdir - working directory
-           calculator - job runner for point calculation
-           encut - energy cutoff for point calc
-        """
-        pass
+from ..utils import NofileWarning, MissingPseudoError, OutdirInconsistencyWarning
+from ..utils import pw_template, atoms_template, parse_qe_input, convert_settings
+from .calculator import calculator_qe
 
-
-    def gen_input(self, kpoint: float):
-        """Generates the input file for the driver based on input parameters
-        
-            kpoint - kpoint dimension    
-        """
-        pass
-
-    def calc(self) -> None:
-        """Runs point simulation in the current folder"""
-        pass
-
-
-    def extract_target(self, target:str) -> float:
-        """Extracts the target from the simulation output"""
-        pass
+from .driver_base import Driver
 
 
 class DriverQE(Driver):
-    def __init__(self, workdir: str = './', calculator:job_runner_qe = job_runner_qe(), input_file_name: str = 'pw.in', encut: float = 40) -> None:
+    def __init__(self, workdir: str = './', calculator:calculator_qe = calculator_qe(), input_file_name: str = 'pw.in', encut: float = 40) -> None:
         """input_file - simulation settings input file name
            calculator - job runner for point calculation
            workdir - working directory

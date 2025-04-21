@@ -18,3 +18,9 @@ Day 3; 04/18/25
 - Added stats save
 - Separated job_runner into separate class
 - made remodelling of class inits
+
+Day 4: 04/19/25
+
+- Added parrallelization option to the driver and job scheduler
+- Organized the lib in the modular fation
+- separated the metrix into the class

@@ -16,9 +16,10 @@ def parser():
     parser.add_argument('-eps', type=float, default=1e-2, help='Convergence cryteria')
     
 
-    # Arguments for the calcutor
-    parser.add_argument('-mode_calc', type=str, default='shell', help='Which calculator to use (script or batch format will be supported)', choices= ['shell', 'job'])
+    # Arguments for the calculator
+    parser.add_argument('-calc', type=str, default='shell', help='Which calculator to use (script or batch format will be supported)', choices= ['shell', 'par', 'job'])
     parser.add_argument('-path_to_exec', type=str, default='/pscratch/sd/v/vladygin/tools/q-e_new/q-e/bin', help='Path to executables of the calculator')
+    parser.add_argument('-ncores', type=int, default=1, help='Number of cores for parralel run')
     parser.add_argument('-nk', type=int, default=1, help='Kpoint parralelization settings for quantum espresso')
 
     # Arguments for the driver
@@ -30,6 +31,9 @@ def parser():
     parser.add_argument('-k_sch', type=str, default='uniform', help='Which scheduler to use to obtain new kpoint')
     parser.add_argument('-k_range', type=int, default= [2, 30, 2], nargs=3, help='k_start, k_end, k_step for uniform scheduler')
 
+    # Metrix mode
+    parser.add_argument('-metrix', type=str, default='mae', help='Which scheduler to use to obtain new kpoint')
+
     args = parser.parse_args()
     return args
 
@@ -40,15 +44,29 @@ if __name__ == "__main__":
     if args.k_sch == 'uniform':
         k_sch = kpoint_scheduler_uniform(*args.k_range)
 
+    if args.metrix == 'mae':
+        metrix = mae()
+
     if args.mode == 'qe':
-        if args.mode_calc == 'shell':
-            calculator = job_runner_qe(args.path_to_exec, args.nk)
+        if args.calc == 'shell':
+            calculator = calculator_qe(args.path_to_exec)
+        if args.calc == 'par':
+            calculator = calculator_qe_par(args.path_to_exec, args.ncores, args.nk)
+        if args.calc == 'job':
+            calculator = calculator_qe_par(args.path_to_exec, args.ncores, args.nk, job = True, workdir = args.workdir)
 
         driver = DriverQE(args.workdir, calculator, args.input, args.encut)
-        tracker = ConvergenceTrackerQE(args.workdir, args.target, args.eps)
 
 
-    k_list, target_list, errors = tracker.find_opt(driver = driver, k_sch = k_sch)
+        tracker = ConvergenceTrackerQE(workdir = args.workdir,
+                                       target = args.target, 
+                                       eps = args.eps, 
+                                       driver = driver, 
+                                       k_sch = k_sch, 
+                                       metrix = metrix)
+
+
+    k_list, target_list, errors = tracker.find_opt()
     
     
     print(f"Optimal value of kpoint is {k_list[-1]} with error of {errors[-1]*1e3} meV")

@@ -1,13 +1,13 @@
 import pickle
 import os
 from .driver import Driver
-from .kpoint_scheduler import kpoint_scheduler_uniform
+from .search import kpoint_scheduler
 
 class ConvergenceTracker():
     """Base class for convergence tracker
            Contains methods nessasure for any conv tracker"""
     
-    def __init__(self, workdir: str, target:str, eps) -> None:
+    def __init__(self, workdir: str, target:str, eps: float, driver: Driver) -> None:
         """workdir - directory for input files and calculations
            target - target property to optimize
            encut - kinetic energy cutoff (in eV)
@@ -30,7 +30,7 @@ class ConvergenceTracker():
         """
         pass
         
-    def find_opt(self, driver: Driver, k_sch: kpoint_scheduler_uniform) -> None:
+    def find_opt(self, driver: Driver, k_sch: kpoint_scheduler) -> None:
         """Finds optimal kpoint by running simulations and refining the parameter until convergence reached
         
            driver - drives for simulations

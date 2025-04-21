@@ -1,7 +1,5 @@
 from ase import Atoms
 import os
-# Some usefull consts
-consts = {'Ry': 13.6}
 
 # Silicon template in case no pw.in
 pw_template = {'control': {'calculation': 'scf',
