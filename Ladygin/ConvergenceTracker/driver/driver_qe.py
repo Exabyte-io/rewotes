@@ -55,7 +55,7 @@ class DriverQE(Driver):
             settings_ase['pseudo_dir'] = os.path.join(self.workdir, "pseudo")
 
         # Setting the new incut
-        settings_ase['encut'] = self.encut
+        settings_ase['ecutwfc'] = self.encut
 
         # Saving updated pw.in
         with open(self.input_file, 'w') as f:

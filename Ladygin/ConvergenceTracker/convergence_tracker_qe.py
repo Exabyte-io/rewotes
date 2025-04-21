@@ -76,8 +76,10 @@ class ConvergenceTrackerQE(ConvergenceTracker):
 
         it = 1
         print(f"iter, k_curr, {self.target}, error")
-        while errors[-1] > self.eps * 1e-3 and k_curr > 0:
+        while errors[-1] > self.eps * 1e-3:
             k_curr = self.k_sch.get_next()
+            if k_curr < 0:
+                break
             k_list.append(k_curr)
             
             target_curr = self._step(k_curr)
@@ -88,7 +90,7 @@ class ConvergenceTrackerQE(ConvergenceTracker):
             print("%d %d %.6f %.6f" % (it, k_curr, target_curr, errors[-1]))
             it += 1
             
-        if errors[-1] > self.eps:
+        if errors[-1] > self.eps * 1e-3:
             warnings.warn("The search procedure not converged. Result will return last kpoint and error", NotConvergedWarning)
 
         # Saving statistics

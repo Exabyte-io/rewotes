@@ -1,0 +1,35 @@
+&control
+        calculation='scf'
+        restart_mode='from_scratch'
+        prefix = 'scf'
+        outdir='./'
+        pseudo_dir='./'
+        verbosity='high'
+        tstress=.true.
+        tprnfor=.true.
+/
+&system
+        ibrav=1
+        nat=5
+        ntyp=3
+        ecutwfc=  40
+        A = 5.874
+/
+&electrons
+        diagonalization='david'
+        mixing_mode='plain'
+        mixing_beta=0.7
+        conv_thr=1e-13
+/
+ATOMIC_SPECIES
+Cs 132.90545 Cs.upf
+Pb 207.2  Pb.upf
+Br 79.904 Br.upf
+K_POINTS {automatic}
+4 4 4 0 0 0
+ATOMIC_POSITIONS (crystal)
+ Cs  0.500000 0.500000 0.500000
+ Pb  0.000000 0.000000 0.000000
+ Br  0.000000 0.000000 0.500000
+ Br  0.000000 0.500000 0.000000
+ Br  0.500000 0.000000 0.000000
