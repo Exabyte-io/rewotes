@@ -24,3 +24,5 @@ Day 4: 04/19/25
 - Added parrallelization option to the driver and job scheduler
 - Organized the lib in the modular fation
 - separated the metrix into the class
+- Started computing for other systems
+- Made summery notebook
