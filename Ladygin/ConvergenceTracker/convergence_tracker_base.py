@@ -77,13 +77,3 @@ class ConvergenceTracker(ABC):
     
     def __repr__(self) -> str:
         return f"Convergence Tracker of {self.target}) with eps equal to {self.eps} with results saved at {self.workdir}"
-
-
-# Usage examples
-if __name__ == "__main__":
-    Tracker = ConvergenceTracker()
-    print(Tracker)
-    Tracker.save('TestTracker')
-    Tracker.load()
-    print(Tracker)
-    os.remove('TestTracker.dat')
