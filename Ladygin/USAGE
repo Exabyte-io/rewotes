@@ -1,0 +1,16 @@
+Software can be run either from the lib class 'ConvergenceTrackerQE' or using ConvTrack scriptt as in ./examples/run.sh
+```
+ConvTrack -workdir "${curr_path}/calcs/${mat}" -eps 0.01 -encut 40
+```
+
+Standard options assume "pw.in" provided withing a working directory. User suppose to arrange working "pw.in" to ensure calculation to run. In this case workdir structure is
+```
+workdir/
+	pw.in
+	pseudo/
+	pseudo.UPF
+```
+
+For calculations I used NERSC cluster (I do not have access to terminal and or server at exabyte.io where I can add files other than python notebooks).
+
+

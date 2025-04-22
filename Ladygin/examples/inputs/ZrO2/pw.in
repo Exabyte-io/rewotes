@@ -1,0 +1,36 @@
+&control
+  calculation = 'scf'
+  prefix      = 'zro2'
+  outdir      = '/tmp/'
+  pseudo_dir  = '../pseudos/'
+  verbosity   = 'high'
+  wf_collect  = .true.
+/
+
+&system
+  ibrav = 2
+  celldm(1) = 9.732025293
+  nat = 3
+  ntyp = 2
+  ecutwfc = 60
+  ecutrho = 244
+/
+
+&electrons
+  mixing_mode = 'plain'
+  mixing_beta = 0.7
+  conv_thr = 1.0e-13
+/
+
+ATOMIC_SPECIES
+  Zr 91.224 Zr.pbe-spn-kjpaw_psl.1.0.0.UPF
+  O 15.999 O.pbe-n-kjpaw_psl.1.0.0.UPF
+
+ATOMIC_POSITIONS
+Zr 0.000000 0.000000 0.000000
+O 0.250000 0.250000 0.250000
+O 0.750000 0.750000 0.750000
+
+
+K_POINTS {automatic}
+  8 8 8 0 0 0
