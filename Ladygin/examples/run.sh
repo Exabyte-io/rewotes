@@ -20,8 +20,9 @@ module swap gpu cpu
 
 curr_path=$( pwd  )
 
-for mat in CsPbBr3; do
+for mat in Al Si MbB2 NaCl Ni GaAs Cu2O ZrO2 SiO2 CsPdBr3 Pb; do
+        rm -r calcs/${mat}
         cp -r inputs/${mat} calcs
-	ConvTrack -workdir "${curr_path}/calcs/${mat}" -mode "qe" -target "total_energy" -eps 0.01 -input "pw.in" -encut 40 -calc "par" -ncores 8 -nk 8 -k_range 2 80 4
+	ConvTrack -workdir "${curr_path}/calcs/${mat}" -mode "qe" -target "total_energy" -eps 0.01 -input "pw.in" -encut 40 -calc "par" -ncores 32 -nk 8 -k_range 2 80 4
 
 done

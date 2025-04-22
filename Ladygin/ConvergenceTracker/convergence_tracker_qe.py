@@ -16,7 +16,8 @@ class ConvergenceTrackerQE(ConvergenceTracker):
     def __init__(self, workdir: str = './', target:str = 'total_energy', eps:float = 1e-2, 
                  driver: DriverQE = DriverQE(),
                  k_sch: kpoint_scheduler = kpoint_scheduler_uniform(2, 30),
-                 metrix: metrix = mae()) -> None:
+                 metrix: metrix = mae(),
+                 **kwargs) -> None:
         """workdir - directory for input files and calculations
            target - target property to optimize
            encut - kinetic energy cutoff (in eV)
@@ -26,13 +27,7 @@ class ConvergenceTrackerQE(ConvergenceTracker):
            k_sch - kpoint scheduler for seach kpoint gen
            metrix - metrix to compute an error
         """
-        self.workdir = workdir
-        self.target = target
-        self.eps = eps
-        
-        self.driver = driver
-        self.k_sch = k_sch
-        self.metrix = metrix
+        super().__init__(workdir, target, eps, driver, k_sch, metrix, **kwargs)
 
 
     def save_stat(self, k_list: list, target_list: list, errors: list) -> None:
@@ -97,17 +92,3 @@ class ConvergenceTrackerQE(ConvergenceTracker):
         self.save_stat(k_list[1:], target_list[2:], errors[2:])
         
         return k_list[1:], target_list[2:], errors[2:]
-
-if __name__ == """__main__""":
-
-    driver = DriverQE(workdir = './', 
-                      input_file_name = "pw.in", 
-                      encut = 40)
-    
-    Tracker = ConvergenceTrackerQE('./', 'total_energy', 
-                                    driver = driver)
-    
-    k_list, target_list, errors = Tracker.find_opt()
-    
-    
-    print(f"Optimal/Final value of kpoint is {k_list[-1]} with error of {errors[-1]*1e3} meV")

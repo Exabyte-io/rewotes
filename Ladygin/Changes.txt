@@ -12,17 +12,24 @@ Day 2; 04/18/25
 - Organized as a lib
 - Created main script
 
-Day 3; 04/18/25
+Day 3; 04/19/25
 
 - Finished debugging lib and binary
 - Added stats save
 - Separated job_runner into separate class
 - made remodelling of class inits
 
-Day 4: 04/19/25
+Day 4: 04/20/25
 
 - Added parrallelization option to the driver and job scheduler
 - Organized the lib in the modular fation
 - separated the metrix into the class
 - Started computing for other systems
 - Made summery notebook
+
+Day 5: 04/21/25
+
+- Added pytest
+- Finished calculation for 10 materials
+- Removed unnesessury tests inside the folder
+- Added error for vectors

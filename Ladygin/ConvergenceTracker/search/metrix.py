@@ -1,17 +1,29 @@
-class metrix():
-    """Measures error of convergence testing"""
+from abc import ABC, abstractmethod
 
+
+class metrix(ABC):
+    """Measures error of convergence testing"""
+    
+    @abstractmethod
     def __init__(self):
         pass
 
-    def __call__(self, value_1: float, value_2: float) -> float:
+    @abstractmethod
+    def __call__(self, value_1, value_2) -> float:
         """Measures error between two points"""
-        pass
+        raise NotImplementedError
 
 
 class mae(metrix):
     """Mean absolute error for convergence testing"""
+    def __init__(self):
+        super().__init__()
 
-    def __call__(self, value_1: float, value_2: float) -> float:
+    
+    def __call__(self, value_1, value_2) -> float:
         """Measures error between two points as mean absolute error"""
-        return abs(value_1 - value_2)
+        try:
+            return sum(map(lambda x1, x2: abs(x1 - x2), value_1, value_2))/len(value_1)
+        except TypeError:
+            return abs(value_1 - value_2)
+    

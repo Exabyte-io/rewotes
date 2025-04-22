@@ -4,7 +4,7 @@
         prefix = 'scf'
         outdir='./'
         pseudo_dir='./'
-        verbosity='high'
+        verbosity='low'
         tstress=.true.
         tprnfor=.true.
 /
@@ -13,18 +13,18 @@
         nat=5
         ntyp=3
         ecutwfc=  40
-        A = 5.874
+        celldm(1)        = 11.100251309530327
 /
 &electrons
         diagonalization='david'
         mixing_mode='plain'
         mixing_beta=0.7
-        conv_thr=1e-13
+        conv_thr=1e-8
 /
 ATOMIC_SPECIES
-Cs 132.90545 Cs.upf
-Pb 207.2  Pb.upf
-Br 79.904 Br.upf
+Cs 132.90545 Cs.pbe-spn-kjpaw_psl.1.0.0.UPF
+Pb 207.2  Pb.pbe-dn-kjpaw_psl.1.0.0.UPF
+Br 79.904 Br.pbe-dn-kjpaw_psl.1.0.0.UPF
 K_POINTS {automatic}
 4 4 4 0 0 0
 ATOMIC_POSITIONS (crystal)

@@ -12,18 +12,23 @@ from .driver_base import Driver
 
 
 class DriverQE(Driver):
-    def __init__(self, workdir: str = './', calculator:calculator_qe = calculator_qe(), input_file_name: str = 'pw.in', encut: float = 40) -> None:
-        """input_file - simulation settings input file name
+    """Driver for point calculations using quantum espresso"""
+    
+    def __init__(self, 
+                 workdir: str = './',
+                 calculator:calculator_qe = calculator_qe(),
+                 input_file_name: str = 'pw.in',
+                 encut: float = 40,
+                 **kwargs) -> None:
+        """input_file_name - simulation settings input file name
            calculator - job runner for point calculation
            workdir - working directory
            encut - energy cutoff for point calc
         """
-        self.workdir = workdir
-        self.calculator = calculator
-        self.input_file_name = input_file_name
-        self.input_file = os.path.join(self.workdir, self.input_file_name)
-        self.encut = encut
+        super().__init__(workdir, calculator, input_file_name, encut, **kwargs)
 
+        self.input_file = os.path.join(workdir, input_file_name)
+    
     
     def gen_input(self, kpoint: float) -> None:
         """Generates the input file for the driver based on input parameters
@@ -75,13 +80,3 @@ class DriverQE(Driver):
         data = read(out_file)
         if target == 'total_energy':
             return data.get_total_energy()
-
-
-
-if __name__ == '__main__':
-    driver = DriverQE()
-
-    driver.gen_input(4)
-    driver.calc()
-    total_energy = driver.extract_target('total_energy')
-    print("Total energy is equal to", total_energy, 'eV')

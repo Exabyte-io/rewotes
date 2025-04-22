@@ -1,14 +1,20 @@
-class kpoint_scheduler():
+from abc import ABC, abstractmethod
+
+
+class kpoint_scheduler(ABC):
     """Base class for updating kpoints using convergence search"""
 
-    def __init__(self, k_start: int, k_end: int) -> None:
+    @abstractmethod
+    def __init__(self, k_start: int, k_end: int, **kwargs) -> None:
         """Let's do seach on an interval [k_start, k_end]
 
            k_start - kpoint to start
            k_end - kpoint to end
         """
-        pass
+        self.k_start = k_start
+        self.k_end = k_end
 
+    @abstractmethod
     def get_next(self, errors: list) -> int:
         """A way to find next kpoint based on list of errors"""
         pass
@@ -18,7 +24,7 @@ class kpoint_scheduler():
 class kpoint_scheduler_uniform(kpoint_scheduler):
     """Base class for updating kpoints using convergence search"""
 
-    def __init__(self, k_start: int, k_end: int, k_step: int = 2) -> None:
+    def __init__(self, k_start: int, k_end: int, k_step: int = 2, **kwargs) -> None:
         """Let's do seach on an interval [k_start, k_end]
 
            k_start - kpoint to start
@@ -26,8 +32,7 @@ class kpoint_scheduler_uniform(kpoint_scheduler):
 
            k_step - kpoint step
         """
-        self.k_start = k_start
-        self.k_end = k_end
+        super().__init__(k_start, k_end)
 
         self.k_step = k_step
         self.k_list = range(k_start, k_end, k_step)

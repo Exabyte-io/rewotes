@@ -22,9 +22,9 @@
         conv_thr=1e-13
 /
 ATOMIC_SPECIES
-Cs 132.90545 Cs.upf
-Pb 207.2  Pb.upf
-Br 79.904 Br.upf
+Cs 132.90545 Cs.pbe-spn-kjpaw_psl.1.0.0.UPF
+Pb 207.2  Pb.pbe-dn-kjpaw_psl.1.0.0.UPF
+Br 79.904 Br.pbe-dn-kjpaw_psl.1.0.0.UPF
 K_POINTS {automatic}
 4 4 4 0 0 0
 ATOMIC_POSITIONS (crystal)
