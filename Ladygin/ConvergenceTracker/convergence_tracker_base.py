@@ -53,7 +53,7 @@ class ConvergenceTracker(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def find_opt(self, driver: Driver, k_sch: kpoint_scheduler) -> None:
+    def find_opt(self) -> None:
         """Finds optimal kpoint by running simulations and refining the parameter until convergence reached
         
            driver - drives for simulations
